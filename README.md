@@ -12,10 +12,10 @@ It allows students to:
 
 ##  🚀 Tech Stack
 - **Frontend:** Angular  
-- **Backend:** 
+- **Backend:** PHP
 - **Database:** MySQL  
 - **Version Control:** GitHub  
-- **Deployment:** 
+- **Deployment:** Hostinger
 
 ## 🌱 Git Workflow
 
@@ -27,6 +27,7 @@ We follow a **branching strategy** based on GitHub Flow
 - `feature/<feature-name>` → feature development (e.g., `feature/login-system`)  
 - `bugfix/<bug-name>` → bug fixes  
 - `hotfix/<hotfix-name>` → urgent production fixes  
+- `document/<document-name>` → document/documentation updates  
 
 ### Workflow Steps
 1. **Create Feature Branch**
