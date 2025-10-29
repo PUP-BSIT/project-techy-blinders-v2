@@ -1,20 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SideBar } from './side-bar';
-import { provideRouter } from '@angular/router';
+import { CommunityPage } from './community-page';
 
-describe('SideBar', () => {
-  let component: SideBar;
-  let fixture: ComponentFixture<SideBar>;
+describe('CommunityPage', () => {
+  let component: CommunityPage;
+  let fixture: ComponentFixture<CommunityPage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SideBar],
-      providers: [provideRouter([])]
+      imports: [CommunityPage]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SideBar);
+    fixture = TestBed.createComponent(CommunityPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
