@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute } from '@angular/router';
 import { LandingPage } from './landing-page';
 
 describe('LandingPage', () => {
@@ -8,9 +9,9 @@ describe('LandingPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LandingPage]
-    })
-    .compileComponents();
+      imports: [RouterTestingModule, LandingPage],
+      providers: [{ provide: ActivatedRoute, useValue: {} }]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LandingPage);
     component = fixture.componentInstance;
