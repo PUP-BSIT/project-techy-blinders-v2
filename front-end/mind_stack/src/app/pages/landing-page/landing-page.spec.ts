@@ -9,7 +9,7 @@ describe('LandingPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, LandingPage], // LandingPage is standalone
+      imports: [RouterTestingModule, LandingPage],
       providers: [{ provide: ActivatedRoute, useValue: {} }]
     }).compileComponents();
 
