@@ -9,7 +9,9 @@ describe('RegistrationPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RegistrationPage]
+      imports: [RouterTestingModule, RegistrationPage],
+      providers: [{ provide: ActivatedRoute, useValue: {} }]
+
     })
     .compileComponents();
 
