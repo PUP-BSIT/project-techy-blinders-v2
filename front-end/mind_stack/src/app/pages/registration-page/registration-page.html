@@ -1,1 +1,41 @@
-<p>registration-page works!</p>
+<app-nav-bar></app-nav-bar>
+<div class="registration-form">
+    <form [formGroup]="registrationFrom" (ngSubmit)="registrationValidation()">
+        <input type="text" formControlName="email" placeholder="email">
+            @if (emailControl?.touched) {
+                @if (emailControl?.errors?.['required']) {
+                    <span>Input Email</span>
+                }@else if(emailControl?.errors?.['email']) {
+                    <span>Invalid Email</span>
+                }@else if (emailControl?.errors?.['maxlength']) {
+                    <span>Email can only contain up to 20 characters</span>
+                }
+            }
+
+        <input type="text" formControlName="username" placeholder="username">
+            @if (usernameControl?.touched) {
+                @if(usernameControl?.errors?.['required']) {
+                    <span>Input Username</span>
+                }@else if (usernameControl?.errors?.['maxlength']) {
+                    <span>Username can only contain up to 20 characters</span>
+                }
+            }
+        <input type="password" formControlName="password" placeholder="password">
+            @if(passwordControl?.touched) {
+                @if(passwordControl?.errors?.['required']){
+                    <span>Input password</span>
+                }
+            }
+        <input type="password" formControlName="confirmPassword" placeholder="confirm password">
+            @if (confirmPasswordControl?.touched) {
+                @if(confirmPasswordControl?.errors?.['required']) {
+                    <span>Confirm your password</span>
+                }
+                @if(confirmPasswordControl?.value !== passwordControl?.value) {
+                    <span>Password is not match</span>
+                }
+            }
+
+        <button type="submit">Submit</button>
+    </form>
+</div>
