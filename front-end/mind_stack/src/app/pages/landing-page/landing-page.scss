@@ -4,7 +4,7 @@
 
 :host {
     display: block;
-    min-height: 100vh;
+    height: 100vh;
     background-color: #ebebeb;
 }
 
@@ -15,7 +15,7 @@
     display: block;
     border: 0px solid;
     width: 40%;
-    margin-left: 5%;
+    margin-left: 10%;
     margin-top: 10%;
 }
 
@@ -29,7 +29,7 @@
 
 .trademark-class {
     margin-top: 1%;
-    margin-left: 14%;
+    margin-left: 19%;
 }
 
 .trademark-class p {
@@ -39,23 +39,32 @@
     font-weight: 600;
 }
 
-.arrow-class {
-    display: block;
-    width: 20px;
+.header-class {
+    display: flex;
+    width: 100%;
     height: 20px;
+    gap: 33%;
 }
 
-.arrow-class img {
+.header-class img {
     width: 80px;
     height: 80px;
-    transform: rotate(100deg);
     margin-top: 120px;
-    margin-left: 20px;
+    margin-left: 5%;
+}
+
+.megaphone-class {
+    transform: rotate(20deg);
+    margin-top: 7%;
+}
+
+.arrow-two {
+    transform: rotate(200deg);
 }
 
 .button-class {
     display: flex;
-    margin-left: 12%;
+    margin-left: 18%;
     margin-top: 2%;
     gap: 110px;
 }
@@ -102,7 +111,7 @@
 .favorite-class {
     display: block;
     position: absolute;
-    width: 20px;
+    width: 100%;
     height: 20px;
 }
 
@@ -110,14 +119,14 @@
     width: 40px;
     height: 40px;
     margin-top: 425px;
-    margin-left: 140px;
+    margin-left: 15%;
     transform: rotate(90deg);
 }
 
 .pencil-class {
     display: block;
     position: absolute;
-    width: 20px;
+    width: 100%;
     height: 20px;
 }
 
@@ -125,94 +134,18 @@
     width: 40px;
     height: 40px;
     margin-top: 425px;
-    margin-left: 570px;
+    margin-left: 43%;
     transform: rotate(20deg);
 }
 
 .kid-class-design {
     display: block;
-    position: absolute;
-    width: 100%;
-    height: 80%;
-}
-
-.border-one-class {
-    position: absolute;
-    z-index: 1;
-    border: 0px solid;
-    width: 30%;
-    height: 25%;
-    margin-left: 65%;
-    margin-top: 3%;
-    border-radius: 10px;
-    background-color: #45f8a4;
-}
-
-.border-two-class {
-    position: absolute;
-    z-index: 2;
-    border: 0px solid;
-    width: 20%;
-    height: 25%;
-    margin-left: 55%;
-    margin-top: 15%;
-    border-radius: 10px;
-    background-color: #45f8a4;
-}
-
-.border-three-class {
-    position: absolute;
-    z-index: 3;
-    border: 0px solid;
+    position: fixed;
     width: 40%;
-    height: 30%;
-    margin-left: 55%;
-    margin-top: 28%;
-    border-radius: 10px;
-    background-color: #45f8a4;   
-}
-
-.kid-picutre-class {
-    display: block;
-    position: absolute;
-    width: 100%;
-    height: 100%;
 }
 
 .kid-class-design img {
-    display: block;
-    position: absolute;
-    z-index: 4;
-    margin-left: 48%;
-    margin-top:4%;
-    width: 100vh;
-}
-
-.border-one-class img {
-    position: absolute;
-    z-index: 5;
-    width: 100px;
-    height: 100px;
-    margin-left: 50%;
-    transform: rotate(70deg);
-}
-
-.border-two-class img {
-    position: absolute;
-    margin-top: 10%;
-    z-index: 5;
-    width: 80px;
-    height: 80px;
-    margin-left: 30%;
-    transform: rotate(190deg); 
-}
-
-.border-three-class img {
-    position: absolute;
-    margin-top: 5%;
-    z-index: 5;
-    width: 100px;
-    height: 100px;
-    margin-left: 80%;
-    transform: rotate(20deg); 
+    margin-top: -3%;
+    width: 100%;
+    margin-left: 145%;
 }
