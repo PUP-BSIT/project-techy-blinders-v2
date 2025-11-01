@@ -1,1 +1,26 @@
 <app-nav-bar></app-nav-bar>
+<div class="contact-form">
+    <form [formGroup]="contactForm" (ngSubmit)="contactValidation()">
+        <input type="text" formControlName="name" placeholder="name">
+            @if (nameControl?.touched) {
+                @if(nameControl?.errors?.['required']) {
+                    <span>Input your name</span>
+                }
+            }
+        <input type="text" formControlName="email" placeholder="email">
+            @if (emailControl?.touched) {
+                @if(emailControl?.errors?.['required']) {
+                    <span>Input email</span>
+                }@else if (emailControl?.errors?.['email']) {
+                    <span>Invalid Email Format</span>
+                }
+            }
+        <textarea rows="3" formControlName="message" placeholder="message"></textarea>
+            @if (messageControl?.touched) {
+                @if (messageControl?.errors?.['required']) {
+                    <span>Input Message</span>
+                }
+            }
+        <button type="submit">Submit</button>
+    </form>
+</div>

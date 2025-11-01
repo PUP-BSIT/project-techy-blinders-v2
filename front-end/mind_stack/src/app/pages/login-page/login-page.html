@@ -1,2 +1,22 @@
 <app-nav-bar></app-nav-bar>
+<div class="login-form">
+    <form [formGroup]="loginForm" (ngSubmit)="loginValidation()">
+        <input formControlName="userId" type="text" placeholder="User ID">
+            @if (userIdControl?.touched) {
+                @if(userIdControl?.errors?.['required']) {
+                    <span>Input a User ID</span>
+                }@else if (userIdControl?.errors?.['maxlength']) {
+                    <span>User ID can only contain up to 10 digits</span>
+            }
+        }
+        <input formControlName="password" type="password">
+            @if (passwordControl?.touched) {
+                @if(passwordControl?.errors?.['required']) {
+                    <span>Input a password</span>
+                }
+            }
 
+        <button type="submit">Submit</button>
+    </form>
+
+</div>

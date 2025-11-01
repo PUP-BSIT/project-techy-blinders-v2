@@ -12,9 +12,9 @@ import { LoginPage } from './pages/login-page/login-page';
 import { RegistrationPage } from './pages/registration-page/registration-page';
 
 export const routes: Routes = [
-    { path: '', component: LandingPage },  
-    { path: 'about', component: AboutPage },
-    { path: 'contact', component: ContactPage },
+    {path: '', component: LandingPage },  
+    {path: 'about', component: AboutPage },
+    {path: 'contact', component: ContactPage },
     {path: 'login', component: LoginPage},
     {path: 'registration', component: RegistrationPage},
 
