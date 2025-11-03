@@ -1,1 +1,93 @@
-<p>community-page works!</p>
+<div class="community-wrapper">
+  <div class="community-container">
+    <div class="community-header">
+      <input type="text" 
+              class="question-input" 
+              placeholder="Ask a Question"
+              [(ngModel)]="newQuestionText"
+              (keyup.enter)="askQuestion()">
+      <button class="ask-btn" (click)="askQuestion()">Ask a Question</button>
+    </div>
+
+    <div class="posts-container">
+      @for (post of posts; track post.id) {
+        <div class="post-card">
+          <div class="post-header">
+            <div class="user-avatar">
+              <img src="assets/19-193486_kid-studying-sing-learn-phonics-volume-1-removebg-preview.png" 
+                    alt="User" 
+                    class="avatar-img">
+            </div>
+            <span class="user-name">{{ post.userName }}</span>
+          </div>
+
+          <h3 class="post-title">{{ post.title }}</h3>
+
+          @if (post.content) {
+            <p class="post-content">{{ post.content }}</p>
+          }
+
+          @if (post.quizTitle) {
+            <div class="quiz-card">
+              <h4 class="quiz-title">{{ post.quizTitle }}</h4>
+              <p class="flashcard-count">{{ post.flashcardCount }} Flashcards</p>
+              <button class="answer-btn">
+                <span class="play-icon">▶</span> Answer
+              </button>
+            </div>
+          }
+
+          <div class="post-actions">
+            <button class="comment-btn" (click)="toggleComments(post.id)">
+              <img src="assets/comment_icon.png" 
+                    alt="Comments" 
+                    class="action-icon">
+              {{ post.comments.length }} comment
+            </button>
+          </div>
+
+          @if (post.showComments) {
+            <div class="comments-section">
+              @for (comment of post.comments; track comment.id) {
+                <div class="comment-item">
+                  <div class="comment-header">
+                    <div class="user-avatar-small">
+                      <img src="assets/19-193486_kid-studying-sing-learn-phonics-volume-1-removebg-preview.png" 
+                            alt="User" class="avatar-img-small">
+                    </div>
+                    <div class="comment-info">
+                      <span class="comment-user">{{ comment.userName }}</span>
+                      <p class="comment-text">{{ comment.content }}</p>
+                      <div class="star-rating">
+                        @for (star of getStarArray(5); track $index) {
+                          <span 
+                            class="star"
+                            [class.filled]="$index < comment.rating"
+                            (click)="rateComment(post, comment, $index + 1)">
+                            ★
+                          </span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+
+              <div class="comment-input-container">
+                <input type="text" 
+                        class="comment-input" 
+                        placeholder="Write a comment..."
+                        [(ngModel)]="newCommentText"
+                        (keyup.enter)="submitComment(post.id)">
+                <button class="submit-comment-btn" 
+                         (click)="submitComment(post.id)">
+                  <span class="send-icon">➤</span>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
