@@ -1,41 +1,98 @@
 <app-nav-bar></app-nav-bar>
-<div class="registration-form">
-    <form [formGroup]="registrationFrom" (ngSubmit)="registrationValidation()">
-        <input type="text" formControlName="email" placeholder="email">
-            @if (emailControl?.touched) {
-                @if (emailControl?.errors?.['required']) {
-                    <span>Input Email</span>
-                }@else if(emailControl?.errors?.['email']) {
-                    <span>Invalid Email</span>
-                }@else if (emailControl?.errors?.['maxlength']) {
-                    <span>Email can only contain up to 20 characters</span>
-                }
-            }
 
-        <input type="text" formControlName="username" placeholder="username">
-            @if (usernameControl?.touched) {
-                @if(usernameControl?.errors?.['required']) {
-                    <span>Input Username</span>
-                }@else if (usernameControl?.errors?.['maxlength']) {
-                    <span>Username can only contain up to 20 characters</span>
-                }
-            }
-        <input type="password" formControlName="password" placeholder="password">
-            @if(passwordControl?.touched) {
-                @if(passwordControl?.errors?.['required']){
-                    <span>Input password</span>
-                }
-            }
-        <input type="password" formControlName="confirmPassword" placeholder="confirm password">
-            @if (confirmPasswordControl?.touched) {
-                @if(confirmPasswordControl?.errors?.['required']) {
-                    <span>Confirm your password</span>
-                }
-                @if(confirmPasswordControl?.value !== passwordControl?.value) {
-                    <span>Password is not match</span>
-                }
-            }
+<div class="container">
+    <div class="logo-class">
+        <div class="header-class">
+            <h1>Join today and transform your notes into smarter study tools.</h1>
+        </div>
 
-        <button type="submit">Submit</button>
-    </form>
+        <div class="image-class">
+            <img src="assets/register.png">
+        </div>
+    </div>
+
+    <div class="seperator-class">
+
+    </div>
+
+    <div class="registration-form">
+        <form [formGroup]="registrationFrom" (ngSubmit)="registrationValidation()">
+            <div>
+                <label>Email </label>
+            </div>
+            <input type="text" formControlName="email" placeholder="Email">
+                @if (emailControl?.touched) {
+                    @if (emailControl?.errors?.['required']) {
+                        <div>
+                            <span>Input Email</span>
+                        </div>
+                    }@else if(emailControl?.errors?.['email']) {
+                        <div>
+                            <span>Invalid Email</span>
+                        </div>
+                        
+                    }@else if (emailControl?.errors?.['maxlength']) {
+                        <div>
+                            <span>Email can only contain up to 20 characters</span>
+                        </div>
+                        
+                    }
+                }
+
+            <div>
+                <label>Username </label>
+            </div>
+            <input type="text" formControlName="username" placeholder="Username">
+                @if (usernameControl?.touched) {
+                    @if(usernameControl?.errors?.['required']) {
+                        <div>
+                            <span>Input Username</span>
+                        </div>
+                        
+                    }@else if (usernameControl?.errors?.['maxlength']) {
+                        <div>
+                            <span>Username can only contain up to 20 characters</span>
+                        </div>
+                    }
+                }
+            <div>
+                <label>Passowrd </label>
+            </div>
+
+            <input type="password" formControlName="password" placeholder="Password">
+                @if(passwordControl?.touched) {
+                    @if(passwordControl?.errors?.['required']){
+                        <div>
+                            <span>Input password</span>
+                        </div>
+                        
+                    }
+                }
+            
+            <div>
+                <label>Confirm Password </label>
+            </div>
+            <input type="password" formControlName="confirmPassword" placeholder="Confirm password">
+                @if (confirmPasswordControl?.touched) {
+                    @if(confirmPasswordControl?.errors?.['required']) {
+                        <div>
+                            <span>Confirm your password</span>
+                        </div>
+                        
+                    }
+                    @if(confirmPasswordControl?.value !== passwordControl?.value) {
+                        <div>
+                            <span>Password is not match</span>
+                        </div>
+                        
+                    }
+                }
+            <div class="submit-class">
+                <button type="submit">Register</button>
+            </div>
+            <div class="cancel-button">
+                <button type="reset">Cancel</button>
+            </div>
+        </form>
+    </div>
 </div>

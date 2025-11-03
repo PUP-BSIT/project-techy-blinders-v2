@@ -23,7 +23,7 @@ export class LoginPage {
   constructor () {
     this.loginForm = this.formBuilder.group ({
       userId: ['', {
-        validators: [Validators.required, Validators.maxLength(10)],
+        validators: [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]+$/)],
         updateOn: 'change'
       }],
 
