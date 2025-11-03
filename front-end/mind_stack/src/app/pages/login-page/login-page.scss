@@ -7,3 +7,148 @@
     min-height: 100vh;
     background-color: #ebebeb;
 }
+
+.container {
+    display: flex;
+    margin-top: 2%;
+    margin-left: 15px;
+}
+
+.login-form {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    border: solid 0px;
+    width: 30%;
+    margin-left: 45%;
+    margin-top: 5%;
+    padding: 40px;
+    height: 300px;
+    border-radius: 30px;
+    z-index: 1;
+    background-color: #6cdbb9;
+}
+
+.login-form label {
+    display: flex;
+    font-family: "Roboto", sans-serif;
+    font-size: 15px;
+    font-weight: bolder;
+    color: #02542d;
+    margin-top: 5%;
+}
+
+.userid-class input, .password-class input{
+    margin-top: 5%;
+    border: solid 0px;
+    width: 130%;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.login-form span {
+    display: flex;
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+    font-weight: bolder;
+    color: #034626;
+    margin-top: 10px;
+}
+
+.forgot-password {
+    width: 100%;
+}
+
+.forgot-password a {
+    display: flex;
+    margin-left: 43%;
+    text-decoration: none;
+    margin-top: 5%;
+    color: #11271e;
+    font-weight: 500;
+    font-size: 15px;
+    font-family: "Roboto", sans-serif;
+}
+
+
+.register-class {
+    display: flex;
+    width: 100%;
+    margin-top: 15%;
+    margin-left: 20%;
+}
+
+.register-class p {
+    font-family: "Roboto", sans-serif;
+    color: #285846;
+    font-weight: 500;
+}
+
+.register-class a {
+    text-decoration: none;
+    color: #285846;
+}
+
+.login-button {
+    margin-top: 10%;
+    width: 100%;
+    margin-left: 20%;
+}
+
+.login-button button {
+    border: solid 0px;
+    padding: 10px;
+    width: 100%;
+    border-radius: 10px;
+    background-color: #3e7b69;
+    font-family: "Roboto", sans-serif;
+    font-weight: bold;
+    color: white;
+    font-size: 16px;
+}
+
+.seperator-class {
+    position: absolute;
+    z-index: 2;
+    border: solid 0px;
+    width: 10%;
+    height: 379px;
+    margin-left: 40%;
+    margin-top: 5%;
+    background-color: #478f79;
+}
+
+.logo-class {
+    position: absolute;
+    z-index: 3;
+    border: solid 0px;
+    width: 20%;
+    height: 379px;
+    margin-left:25%;
+    margin-top: 5%;
+    background-color: #478f79;
+    border-radius: 30px;
+}
+
+.header-class {
+    display: flex;
+    width: 90%;
+}
+
+.header-class h1 {
+    text-align: center;
+    color: white;
+    margin-left: 25%;
+    margin-top: 10%;
+    font-size: 20px;
+    font-family: "Poppins", sans-serif;
+}
+.image-class {
+    width: 100%;
+    margin-top: -5%;
+    margin-left: 10%;
+}
+
+.image-class img {
+    width: 100%;
+}

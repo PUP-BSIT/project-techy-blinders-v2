@@ -1,22 +1,72 @@
 <app-nav-bar></app-nav-bar>
-<div class="login-form">
-    <form [formGroup]="loginForm" (ngSubmit)="loginValidation()">
-        <input formControlName="userId" type="text" placeholder="User ID">
-            @if (userIdControl?.touched) {
-                @if(userIdControl?.errors?.['required']) {
-                    <span>Input a User ID</span>
-                }@else if (userIdControl?.errors?.['maxlength']) {
-                    <span>User ID can only contain up to 10 digits</span>
-            }
-        }
-        <input formControlName="password" type="password">
-            @if (passwordControl?.touched) {
-                @if(passwordControl?.errors?.['required']) {
-                    <span>Input a password</span>
-                }
-            }
 
-        <button type="submit">Submit</button>
-    </form>
+<div class="container">
+    <div class="logo-class">
+        <div class="header-class">
+            <h1>Your Study Journey Starts Here!</h1>
+        </div>
 
+        <div class="image-class">
+            <img src="assets/toga.png">
+        </div>
+    </div>
+
+    <div class="seperator-class">
+
+    </div>
+
+    <div class="login-form">
+        <form [formGroup]="loginForm" (ngSubmit)="loginValidation()">
+            <div class="userid-class">
+                <div>
+                    <label>User ID</label>
+                </div>
+                <input formControlName="userId" type="text" placeholder="User ID">
+                    @if (userIdControl?.touched) {
+
+                        @if(userIdControl?.errors?.['required']) {
+                            <div>
+                            <span>Input a User ID</span> 
+                            </div>
+                            
+                        }@else if (userIdControl?.errors?.['maxlength']) {
+                            <div>
+                                <span>User ID can only contain up to 10 digits</span>
+                            </div>
+                           
+                         }@else if(userIdControl?.errors?.['pattern']) {
+                            <div>
+                                <span>User ID can only contain numbers</span>
+                            </div>
+                         }
+                    }
+            </div>
+
+            <div class="password-class">
+                <div>
+                    <label>Password</label>
+                </div>
+                <input formControlName="password" type="password">
+                    @if (passwordControl?.touched) {
+                        @if(passwordControl?.errors?.['required']) {
+                            <div>
+                                <span>Input a password</span>
+                            </div>
+                        }
+                    }
+            </div>
+
+            <div class="forgot-password">
+                <a routerLink="/forgot-passowrd">Forgot Password</a>
+            </div>
+
+            <div class="login-button">
+                <button type="submit">Login</button>
+            </div>
+
+            <div class="register-class">
+                <p>Don't have account ? <a routerLink="register">Register</a></p>
+            </div>
+        </form>
+    </div>
 </div>

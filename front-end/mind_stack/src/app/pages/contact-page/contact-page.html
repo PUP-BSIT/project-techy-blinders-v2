@@ -1,26 +1,65 @@
 <app-nav-bar></app-nav-bar>
-<div class="contact-form">
-    <form [formGroup]="contactForm" (ngSubmit)="contactValidation()">
-        <input type="text" formControlName="name" placeholder="name">
-            @if (nameControl?.touched) {
-                @if(nameControl?.errors?.['required']) {
-                    <span>Input your name</span>
+
+<div class="container">
+    <div class="logo-class">
+        <div class="header-class">
+            <h1>Reach out anytime with your questions or feedback.</h1>
+        </div>
+
+        <div class="image-class">
+            <img src="assets/customer-service.png">
+        </div>
+    </div>
+
+    <div class="seperator-class">
+
+    </div>
+
+    <div class="contact-form">
+        <form [formGroup]="contactForm" (ngSubmit)="contactValidation()">
+            <div>
+                <label>Name </label>
+            </div>
+            <input type="text" formControlName="name" placeholder="Name">
+                @if (nameControl?.touched) {
+                    @if(nameControl?.errors?.['required']) {
+                        <div>
+                           <span>Input your name</span> 
+                        </div>
+                    }
                 }
-            }
-        <input type="text" formControlName="email" placeholder="email">
-            @if (emailControl?.touched) {
-                @if(emailControl?.errors?.['required']) {
-                    <span>Input email</span>
-                }@else if (emailControl?.errors?.['email']) {
-                    <span>Invalid Email Format</span>
+            <div>
+                <label>Email </label>
+            </div>
+            <input type="text" formControlName="email" placeholder="Email">
+                @if (emailControl?.touched) {
+                    @if(emailControl?.errors?.['required']) {
+                        <div>
+                            <span>Input email</span> 
+                        </div>
+                        
+                    }@else if (emailControl?.errors?.['email']) {
+                        <div>
+                            <span>Invalid Email Format</span>
+                        </div>
+                        
+                    }
                 }
-            }
-        <textarea rows="3" formControlName="message" placeholder="message"></textarea>
-            @if (messageControl?.touched) {
-                @if (messageControl?.errors?.['required']) {
-                    <span>Input Message</span>
+            <div>
+                <label>Message </label>
+            </div>
+            <textarea rows="4" formControlName="message" placeholder="message"></textarea>
+                @if (messageControl?.touched) {
+                    @if (messageControl?.errors?.['required']) {
+                        <div>
+                            <span>Input Message</span>
+                        </div>
+                        
+                    }
                 }
-            }
-        <button type="submit">Submit</button>
-    </form>
+            <div class="submit-class">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
 </div>
