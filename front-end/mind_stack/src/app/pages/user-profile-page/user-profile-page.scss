@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+// background-color: #d1ffdd;
+h1 {
+    position: absolute;
+    display: block;
+    margin-top: 5%;
+    margin-left: 20%;
+    font-family: "Poppins";
+}
+
+#upper_div {
+    position: absolute;
+    display: block;
+    margin-top: 8%;
+    margin-left: 19%;
+    display: flex;
+}
+
+#username {
+    font-weight: 500;
+}
+
+.upper-div-content {
+    padding: 20px;
+    margin: auto;
+    font-family: "Poppins";
+}
+
+.upper-div-content img {
+    height: 150px;
+}
+
+#edit_profile_button {
+    border: solid 0px;
+    background: #3fc28b;
+    color: white;
+    font-family: "Poppins";
+    font-weight: 500;
+    font-size: 18px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+#edit_profile_button:hover {
+    transition: background 0.3s ease;
+    background: #297b59;
+}
+
+#mid_nav {
+    position: absolute;
+    display: block;
+    margin-top: 20%;
+    margin-left: 21%;
+    display: flex;
+    font-family: "Poppins";
+    color: #297b59;
+    font-weight: 400;
+}
+
+#mid_nav .mid_nav_content {
+    margin: 20px;
+}
+
+.mid_nav_content {
+    transition: color 0.3s ease;
+}
+
+.mid_nav_content:hover {
+    cursor: pointer;
+    color: #49d89a;
+}
+
+#overview {
+  font-family: "Poppins";
+  position: absolute;
+  display: flex;
+  gap: 30px;
+  margin-top: 27%;
+  margin-left: 23%;
+}
+
+#overview .overview_content {
+  background-color: #2edd5d;
+  border-radius: 15px;
+  padding: 20px;
+  width: 200px;
+  min-height: 120px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+#overview .overview_content:hover {
+  background-color: #33bd5d;
+  cursor: pointer;
+}
+
+#overview img {
+  width: 40px;
+  height: auto;
+  margin: 10px 0;
+}
+
+.a {
+  display: flex;
+  padding: 5px;
+}
+
+#activity p {
+    padding-top: 15px;
+}
+
+#badge p {
+    padding: 10px 10px;
+}
