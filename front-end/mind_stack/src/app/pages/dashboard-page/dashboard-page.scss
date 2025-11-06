@@ -1,3 +1,260 @@
-p {
-    margin-left: 20%;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.dashboard-wrapper {
+  margin-left: 260px;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #E8F5E9, #C8E6C9);
+}
+
+.dashboard-container {
+  padding: 24px 32px;
+  min-height: 100vh;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #3DAC78;
+  margin-bottom: 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+.study-progress-section {
+  margin-bottom: 32px;
+}
+
+.progress-cards {
+  display: grid;
+  grid-template-columns: auto repeat(3, 1fr);
+  gap: 16px;
+  align-items: center;
+}
+
+.progress-circle-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle-progress {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.circle-progress svg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+
+.circle-bg {
+  fill: none;
+  stroke: #E0E0E0;
+  stroke-width: 8;
+}
+
+.circle-fill {
+  fill: none;
+  stroke: #3DAC78;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 339.292;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  font-weight: 700;
+  color: #3DAC78;
+  font-family: "Poppins", sans-serif;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #616161;
+  margin-bottom: 8px;
+  font-family: "Poppins", sans-serif;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2d5f3f;
+  font-family: "Poppins", sans-serif;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.quick-actions-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  background: white;
+  border: 2px solid #3DAC78;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #2d5f3f;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "Poppins", sans-serif;
+
+  &:hover {
+    background: #E8F5E9;
+    transform: translateX(4px);
+  }
+}
+
+.action-icon {
+  width: 24px;
+  height: 24px;
+  filter: invert(48%) sepia(79%) saturate(434%) hue-rotate(103deg) brightness(91%) contrast(87%);
+}
+
+.recent-activity-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #F5F5F5;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #2d5f3f;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+}
+
+.activity-icon {
+  width: 20px;
+  height: 20px;
+  filter: invert(48%) sepia(79%) saturate(434%) hue-rotate(103deg) brightness(91%) contrast(87%);
+}
+
+// Study Library Section
+.study-library-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.library-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.library-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #F5F5F5;
+  border-radius: 8px;
+  border-bottom: 2px solid #E0E0E0;
+}
+
+.library-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d5f3f;
+  font-family: "Poppins", sans-serif;
+}
+
+.view-btn {
+  padding: 8px 20px;
+  background: #3DAC78;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-family: "Poppins", sans-serif;
+
+  &:hover {
+    background: #2d8a5f;
+  }
+}
+
+@media (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .progress-circle-card {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-wrapper {
+    margin-left: 0;
+  }
+
+  .dashboard-container {
+    padding: 16px;
+  }
+
+  .progress-cards {
+    grid-template-columns: 1fr;
+  }
 }
