@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MindStackIdApplication<mind_stack_id>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.mindstack.mind_stack_id.MindStackIdApplication",
+            "projectName": "mind_stack_id",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
