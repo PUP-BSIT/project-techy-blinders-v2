@@ -1,22 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-$sidebar-bg: #3DAC78;
-$sidebar-text: #ffffff;
-$sidebar-hover-underline: #ffffff;
-
-$sidebar-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-$sidebar-bg: #3DAC78;
-$sidebar-text: #ffffff;
-$sidebar-hover-underline: #ffffff;
-
-$sidebar-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-$sidebar-font-size: x-large;
-
-$sidebar-width: 220px;
-$sidebar-padding: 20px;
-$sidebar-gap: 10px;
-
-
+// background-color: #d1ffdd;
 h1 {
     position: absolute;
     display: block;
@@ -86,5 +70,48 @@ h1 {
 
 .mid_nav_content:hover {
     cursor: pointer;
-    color: #3dd392;
+    color: #49d89a;
+}
+
+#overview {
+  font-family: "Poppins";
+  position: absolute;
+  display: flex;
+  gap: 30px;
+  margin-top: 27%;
+  margin-left: 23%;
+}
+
+#overview .overview_content {
+  background-color: #2edd5d;
+  border-radius: 15px;
+  padding: 20px;
+  width: 200px;
+  min-height: 120px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+#overview .overview_content:hover {
+  background-color: #33bd5d;
+  cursor: pointer;
+}
+
+#overview img {
+  width: 40px;
+  height: auto;
+  margin: 10px 0;
+}
+
+.a {
+  display: flex;
+  padding: 5px;
+}
+
+#activity p {
+    padding-top: 15px;
+}
+
+#badge p {
+    padding: 10px 10px;
 }
