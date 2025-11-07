@@ -1,0 +1,45 @@
+<app-side-bar></app-side-bar>
+
+<h1>User Profile</h1>
+
+<div id="upper_div">
+    <div id="profile_icon" class="upper-div-content">
+        <img src="assets/profile-icon.png">
+    </div>
+    <div class="upper-div-content">
+        <h2 id="username">John Doe</h2>
+        <p>johndoe147@gmail.com</p>
+    </div>
+    <div class="upper-div-content">
+        <button id="edit_profile_button">Edit Profile</button>
+    </div>
+</div>
+
+<div id="mid_nav">
+    <div class="mid_nav_content">
+        <h3>Overview</h3>
+    </div>
+    <div class="mid_nav_content">
+        <h3>Account Settings</h3>
+    </div>
+</div>
+
+<div id="account_settings">
+    <div id="password_management">
+        <h4>Password Management</h4>
+        <form id="change_password_form">
+            <input type="text" class="inputs" placeholder="Enter Current Password">
+            <input type="text" class="inputs" placeholder="Enter Current Password">
+            <div class="button-container">
+                <button id="cancel_button" type="button">Cancel</button>
+                <button id="save_button" type="button">Save</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="data_privacy">
+        <h4>Data & Privacy</h4>
+        <button type="button" id="delete_account_button">Delete Account</button>
+        <p id="delete_warning">This will permanently delete your Account in MindStack.</p>
+    </div>
+</div>
