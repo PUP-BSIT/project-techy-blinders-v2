@@ -48,3 +48,27 @@ h1 {
     transition: background 0.3s ease;
     background: #297b59;
 }
+
+#mid_nav {
+    position: absolute;
+    display: block;
+    margin-top: 20%;
+    margin-left: 21%;
+    display: flex;
+    font-family: "Poppins";
+    color: #297b59;
+    font-weight: 400;
+}
+
+#mid_nav .mid_nav_content {
+    margin: 20px;
+}
+
+.mid_nav_content {
+    transition: color 0.3s ease;
+}
+
+.mid_nav_content:hover {
+    cursor: pointer;
+    color: #49d89a;
+}
