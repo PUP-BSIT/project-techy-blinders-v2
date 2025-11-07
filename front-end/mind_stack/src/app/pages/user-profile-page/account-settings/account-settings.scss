@@ -72,3 +72,30 @@ h1 {
     cursor: pointer;
     color: #49d89a;
 }
+
+#account_settings {
+    position: absolute;
+    display: block;
+    margin-top: 25%;
+    margin-left: 21%;
+    width: 40%;
+    height: 40%;
+}
+
+#password_management {
+    margin-left: 5%;
+    width: 70%;
+    height: 55%;
+    font-family: "Poppins";
+    background-color: rgb(212, 212, 212);;
+    border-radius: 20px;
+    padding: 15px;
+}
+
+.inputs {
+    display: block;
+    margin: 10px 0 0 10px;
+    padding: 10px;
+    width: 90%;
+    border-radius: 10px;
+}
