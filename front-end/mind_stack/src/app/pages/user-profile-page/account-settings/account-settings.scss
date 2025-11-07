@@ -125,3 +125,33 @@ h1 {
 #save_button{
     background-color: green;
 }
+
+#data_privacy {
+    width: 50%;
+    height: 40%;
+    margin-left: 5%;
+    margin-top: 10px;
+    font-family: "Poppins";
+    background-color: rgb(224, 224, 224);;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+#delete_account_button {
+    font-family: "Poppins";
+    width: 80%;
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px;
+    border-radius: 10px;
+    margin-left: 10%;
+    margin-top: 15px;
+}
+
+#delete_warning {
+    font-size: 0.7rem;
+    color: red;
+    font-weight: 300;
+    margin-top: 15px;
+}
