@@ -35,6 +35,10 @@ export class CommunityPage {
   newQuestionText: string = '';
   newCommentText: string = '';
   activeCommentPostId: string = '';
+  
+  showQuestionModal: boolean = false;
+  modalTitle: string = '';
+  modalContent: string = '';
 
   posts: Post[] = [
     {
@@ -61,21 +65,33 @@ export class CommunityPage {
     }
   ];
 
+  openQuestionModal() {
+    this.showQuestionModal = true;
+    this.modalTitle = '';
+    this.modalContent = '';
+  }
+
+  closeQuestionModal() {
+    this.showQuestionModal = false;
+    this.modalTitle = '';
+    this.modalContent = '';
+  }
+
   askQuestion() {
-    if (this.newQuestionText.trim()) {
+    if (this.modalTitle.trim()) {
       const newPost: Post = {
         id: Date.now().toString(),
         userId: 'currentUser',
         userName: 'John Doe',
-        title: this.newQuestionText,
-        content: '',
+        title: this.modalTitle,
+        content: this.modalContent,
         timestamp: new Date(),
         comments: [],
         showComments: false
       };
 
       this.posts.unshift(newPost);
-      this.newQuestionText = '';
+      this.closeQuestionModal();
     }
   }
 
