@@ -5,8 +5,12 @@
               class="question-input" 
               placeholder="Ask a Question"
               [(ngModel)]="newQuestionText"
-              (keyup.enter)="askQuestion()">
-      <button class="ask-btn" (click)="askQuestion()">Ask a Question</button>
+              (keyup.enter)="openQuestionModal()"
+              (click)="openQuestionModal()"
+              readonly>
+      <button class="ask-btn" 
+               (click)="openQuestionModal()">Ask a Question
+      </button>
     </div>
 
     <div class="posts-container">
@@ -38,7 +42,8 @@
           }
 
           <div class="post-actions">
-            <button class="comment-btn" (click)="toggleComments(post.id)">
+            <button class="comment-btn" 
+                      (click)="toggleComments(post.id)">
               <img src="assets/comment_icon.png" 
                     alt="Comments" 
                     class="action-icon">
@@ -90,4 +95,48 @@
       }
     </div>
   </div>
+
+  @if (showQuestionModal) {
+    <div class="modal-overlay" (click)="closeQuestionModal()">
+      <div class="modal-container" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2 class="modal-title">Ask a Question</h2>
+          <button class="close-btn" (click)="closeQuestionModal()">✕</button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="form-group">
+            <input 
+              type="text" 
+              class="modal-input title-input" 
+              placeholder="Title*"
+              [(ngModel)]="modalTitle"
+              maxlength="300">
+            <div class="char-count">{{ modalTitle.length }}/300</div>
+          </div>
+
+          <div class="form-group">
+            <label class="tags-label">Add flair and tags*</label>
+          </div>
+
+          <div class="form-group">
+            <textarea class="modal-textarea" 
+                       placeholder="Body text (optional)"
+                      [(ngModel)]="modalContent"
+                      rows="8"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="save-draft-btn" 
+                   (click)="closeQuestionModal()">Save Draft
+          </button>
+          <button class="post-btn" 
+                   (click)="askQuestion()" 
+                   [disabled]="!modalTitle.trim()">Post
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 </div>
