@@ -1,16 +1,10 @@
 package com.mindstack.mind_stack_id.Models;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Random;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.cglib.core.Local;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -42,7 +36,7 @@ public class User {
 
     @PrePersist
     protected void onCreate() {
-        this.userId = generateRandom9DigitId();
+        this.userId = generateRandomDigitId();
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
@@ -52,7 +46,7 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 
-    private long generateRandom9DigitId() {
+    private long generateRandomDigitId() {
         Random random = new Random();
         return 100_000_000 + random.nextLong(900_000_000);
     }
