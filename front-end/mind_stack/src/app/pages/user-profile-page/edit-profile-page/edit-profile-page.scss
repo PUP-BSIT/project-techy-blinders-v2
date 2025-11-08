@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+// background-color: #d1ffdd;
+h1 {
+    position: absolute;
+    display: block;
+    margin-top: 5%;
+    margin-left: 20%;
+    font-family: "Poppins";
+}
+
+#upper_div {
+    position: absolute;
+    display: block;
+    margin-top: 8%;
+    margin-left: 19%;
+    display: flex;
+}
+
+#username {
+    font-weight: 500;
+}
+
+.upper-div-content {
+    padding: 20px;
+    margin: auto;
+    font-family: "Poppins";
+}
+
+.upper-div-content img {
+    height: 150px;
+}
+
+#personal_information_container {
+    position: absolute;
+    display: block;
+    font-family: "Poppins";
+    border: solid 2px black;
+    width: 30%;
+    height: 52%;
+    margin-top: 20%;
+    margin-left: 30%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: rgb(224, 224, 224);
+}
+
+#edit_profile_form {
+    position: absolute;
+    display: block;
+    font-family: "Poppins";
+    width: 90%;
+    height: 90%;
+    margin-left: 1%;
+    padding: 10px;
+
+}
+
+label {
+    margin-left: 5%;
+    font-weight: 500;
+}
+
+.inputs {
+    display: block;
+    margin: 5px auto 10px auto;
+    padding: 10px;
+    width: 85%;
+    border-radius: 10px;
+}
+
+#cancel_button, #save_button {
+    font-family: "Poppins";
+    padding: 10px 20px;
+    border-radius: 15px;
+    border: none;
+    background-color: green;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+#button-container {
+    text-align: right;
+    margin-right: 5%;
+    margin-top: 15px;
+}
+
+#cancel_button {
+    background-color: red;
+}
+
+#save_button{
+    background-color: green;
+}
