@@ -37,7 +37,7 @@ h1 {
     font-family: "Poppins";
     border: solid 2px black;
     width: 30%;
-    height: 50%;
+    height: 52%;
     margin-top: 20%;
     margin-left: 30%;
     padding: 10px;
@@ -68,4 +68,30 @@ label {
     padding: 10px;
     width: 85%;
     border-radius: 10px;
+}
+
+#cancel_button, #save_button {
+    font-family: "Poppins";
+    padding: 10px 20px;
+    border-radius: 15px;
+    border: none;
+    background-color: green;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+#button-container {
+    text-align: right;
+    margin-right: 5%;
+    margin-top: 15px;
+}
+
+#cancel_button {
+    background-color: red;
+}
+
+#save_button{
+    background-color: green;
 }
