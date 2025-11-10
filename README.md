@@ -14,10 +14,10 @@ It allows students to:
 ## 🚀 Tech Stack
 
 - **Frontend:** Angular
-- **Backend:** PHP
+- **Backend:** Spring Boot (Java)
 - **Database:** MySQL
 - **Version Control:** GitHub
-- **Deployment:** Hostinger
+- **Deployment:** VPS Hostinger
 
 ## 🌐 Live Demo / Web hosting
 
