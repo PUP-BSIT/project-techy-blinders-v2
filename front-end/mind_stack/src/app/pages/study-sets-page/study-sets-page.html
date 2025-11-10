@@ -1,1 +1,49 @@
-<p>study-sets-page works!</p>
+<div class="container">
+    <div class="top box">
+        <p>My Study Sets</p>
+        <button (click)="openModal()" class="add">
+            <img src="assets/add-button.png" alt="Add Button">
+            Create New Study Set
+        </button>
+    </div>
+
+    <div class="bottom box">
+        <div class="study-sets-container">
+            <div *ngIf="studySets.length === 0" class="empty-state">
+                <p class="empty-message">
+                    create your first study set to get started
+                </p>
+            </div>
+
+            <div class="study-sets-grid" *ngIf="studySets.length > 0">
+                <div class="study-set-card" 
+                        *ngFor="let studySet of studySets" 
+                        (click)="openStudySet(studySet.flashcard_id)">
+
+                    <div class="card-header">
+                        <h3 class="card-title">{{ studySet.title }}</h3>
+                        <button class="delete-btn" 
+                                (click)="deleteStudySet(studySet.flashcard_id, $event)" 
+                                title="Delete study set">
+                            ×
+                        </button>
+                    </div>
+                    
+                    <p class="card-description">{{ studySet.description }}</p>
+                    <div class="card-footer">
+                        <span class="flashcard-count">{{ studySet.flashcards.length }} 
+                                {{ studySet.flashcards.length === 1 ? 'flashcard' : 'flashcards' }}
+                        </span>
+                        <span class="public-badge" *ngIf="studySet.is_public">Public</span>
+                        <span class="private-badge" *ngIf="!studySet.is_public">Private</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-add-flash-card [isOpen]="isModalOpen"
+                    (closeModal)="closeModal()"
+                    (studySetCreated)="saveStudySet($event)">
+</app-add-flash-card>

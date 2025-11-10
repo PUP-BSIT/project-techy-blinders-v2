@@ -1,0 +1,81 @@
+<div class="modal-overlay" *ngIf="isOpen" (click)="onBackdropClick($event)">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="create-study-set-container">
+            <h1 class="page-title">Create new study set</h1>
+
+            <div class="question-title-section">
+                <h2 class="section-title">Study Set Title</h2>
+                <div class="title-card">
+                    <input type="text" 
+                            class="title-input" 
+                            placeholder="Enter the title of your study set"
+                            [(ngModel)]="studySetTitle"
+                            name="studySetTitle">
+                </div>
+                
+                <h2 class="section-title description-title">Description</h2>
+                <div class="title-card">
+                    <textarea class="description-input" 
+                                placeholder="Definition of the study set"
+                                [(ngModel)]="studySetDescription"
+                                name="studySetDescription"
+                                rows="4">
+                    </textarea>
+                </div>
+            </div>
+
+            <div class="flashcards-section">
+                <h2 class="section-title">Add Flashcards</h2>
+                <div class="flashcards-container">
+                    <div class="flashcard-card" *ngFor="let flashcard of flashcards; let i = index">
+
+                        <div class="flashcard-header">
+                            <span class="flashcard-number">Flashcard {{ i + 1 }}</span>
+                        </div>
+
+                        <div class="flashcard-inputs">
+                            <div class="input-group">
+                                <input type="text" 
+                                        class="flashcard-input" 
+                                        placeholder="Type your key term here..."
+                                        [(ngModel)]="flashcard.keyTerm"
+                                        name="keyTerm{{i}}">
+                                <label class="input-label">Key term</label>
+                            </div>
+                            <div class="input-group">
+                                <textarea class="flashcard-input definition-input" 
+                                            placeholder="Add your definition here"
+                                            [(ngModel)]="flashcard.definition"
+                                            name="definition{{i}}"
+                                            rows="3">
+                                </textarea>
+                                <label class="input-label">Definition</label>
+                            </div>
+                        </div>
+
+                        <button class="delete-btn" (click)="removeFlashcard(i)"
+                                *ngIf="flashcards.length > 1"
+                                title="Delete flashcard">
+                            ×
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <div class="left-buttons">
+                    <button class="btn btn-secondary" (click)="savePrivate()">
+                        Save Private
+                    </button>
+                    <button class="btn btn-primary"(click)="publishPublic()">
+                        Publish Public
+                    </button>
+                    <button class="btn btn-secondary" (click)="addFlashcard()">
+                        <span class="plus-icon">+</span> Add Flashcards
+                    </button>
+                </div>
+                <button class="btn btn-cancel" (click)="close()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
