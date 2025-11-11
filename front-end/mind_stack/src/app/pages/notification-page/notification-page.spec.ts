@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NotificationPage } from './notification-page';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('NotificationPage', () => {
   let component: NotificationPage;
@@ -8,7 +9,10 @@ describe('NotificationPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NotificationPage]
+      imports: [
+        NotificationPage,
+        RouterTestingModule
+      ]
     })
     .compileComponents();
 
