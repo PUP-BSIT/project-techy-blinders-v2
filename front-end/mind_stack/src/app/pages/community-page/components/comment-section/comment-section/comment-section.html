@@ -1,1 +1,43 @@
-<p>comment-section works!</p>
+<div class="comments-section">
+  @for (comment of getComments(); track comment.id) {
+    <div class="comment-item">
+      <div class="comment-header">
+        <div class="user-avatar-small">
+          <img 
+            src="assets/default-avatar.png" 
+            alt="User avatar" 
+            class="avatar-img-small"
+          />
+        </div>
+        <div class="comment-info">
+          <span class="comment-user">{{ comment.userName }}</span>
+          <p class="comment-text">{{ comment.content }}</p>
+          <div class="star-rating">
+            @for (star of getStarArray(5); track $index) {
+              <span 
+                class="star" 
+                [class.filled]="$index < comment.rating"
+                (click)="onRateComment(comment.id, $index + 1)"
+              >
+                ★
+              </span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+  
+  <div class="comment-input-container">
+    <input 
+      type="text" 
+      class="comment-input" 
+      [(ngModel)]="newCommentText"
+      placeholder="Write a comment..."
+      (keyup.enter)="onSubmitComment()"
+    />
+    <button class="submit-comment-btn" (click)="onSubmitComment()">
+      <span class="send-icon">➤</span>
+    </button>
+  </div>
+</div>
