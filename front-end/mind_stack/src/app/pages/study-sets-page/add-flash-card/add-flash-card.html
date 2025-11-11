@@ -1,0 +1,198 @@
+<div class="modal-overlay" [hidden]="!isOpen" (click)="onBackdropClick($event)">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="create-study-set-container">
+            <h1 class="page-title">Create new study set</h1>
+
+            <div class="question-title-section">
+                <h2 class="section-title">Study Set Title</h2>
+                <div class="title-card">
+                    <input type="text" 
+                            class="title-input" 
+                            placeholder="Enter the title of your study set"
+                            [(ngModel)]="studySetTitle"
+                            name="studySetTitle">
+                </div>
+                
+                <h2 class="section-title description-title">Description</h2>
+                <div class="title-card">
+                    <textarea class="description-input" 
+                                placeholder="Definition of the study set"
+                                [(ngModel)]="studySetDescription"
+                                name="studySetDescription"
+                                rows="4">
+                    </textarea>
+                </div>
+            </div>
+
+            <div class="flashcards-section">
+                <h2 class="section-title">Add Flashcards</h2>
+                <div class="flashcards-container">
+                    <div class="flashcard-card" [hidden]="visibleSlotsCount <= 0">
+                        <div class="flashcard-header">
+                            <span class="flashcard-number">Flashcard 1</span>
+                        </div>
+                        <div class="flashcard-inputs">
+                            <div class="input-group">
+                                <input type="text" 
+                                        class="flashcard-input" 
+                                        placeholder="Type your key term here..."
+                                        [(ngModel)]="flashcards[0].keyTerm"
+                                        name="keyTerm0">
+                                <label class="input-label">Key term</label>
+                            </div>
+                            <div class="input-group">
+                                <textarea class="flashcard-input definition-input" 
+                                            placeholder="Add your definition here"
+                                            [(ngModel)]="flashcards[0].definition"
+                                            name="definition0"
+                                            rows="3">
+                                </textarea>
+                                <label class="input-label">Definition</label>
+                            </div>
+                        </div>
+                        <button class="delete-btn" (click)="removeFlashcard(0)" 
+                                [hidden]="visibleSlotsCount <= 1" 
+                                title="Delete flashcard">
+                            ×
+                        </button>
+                    </div>
+
+                    <div class="flashcard-card" [hidden]="visibleSlotsCount <= 1">
+                        <div class="flashcard-header">
+                            <span class="flashcard-number">Flashcard 2</span>
+                        </div>
+                        <div class="flashcard-inputs">
+                            <div class="input-group">
+                                <input type="text" class="flashcard-input" 
+                                        placeholder="Type your key term here..." 
+                                        [(ngModel)]="flashcards[1].keyTerm" 
+                                        name="keyTerm1">
+                                <label class="input-label">Key term</label>
+                            </div>
+                            <div class="input-group">
+                                <textarea class="flashcard-input definition-input" 
+                                            placeholder="Add your definition here" 
+                                            [(ngModel)]="flashcards[1].definition" 
+                                            name="definition1" 
+                                            rows="3"></textarea>
+                                <label class="input-label">Definition</label>
+                            </div>
+                        </div>
+                        <button class="delete-btn" (click)="removeFlashcard(1)" 
+                                [hidden]="visibleSlotsCount <= 1" 
+                                title="Delete flashcard">
+                            ×
+                        </button>
+                    </div>
+
+                    <div class="flashcard-card" [hidden]="visibleSlotsCount <= 2">
+                        <div class="flashcard-header">
+                            <span class="flashcard-number">Flashcard 3</span>
+                        </div>
+
+                        <div class="flashcard-inputs">
+                            <div class="input-group">
+                                <input type="text" 
+                                        class="flashcard-input" 
+                                        placeholder="Type your key term here..." 
+                                        [(ngModel)]="flashcards[2].keyTerm" 
+                                        name="keyTerm2">
+                                <label class="input-label">Key term</label>
+                            </div>
+
+                            <div class="input-group">
+                                <textarea class="flashcard-input definition-input" 
+                                            placeholder="Add your definition here" 
+                                            [(ngModel)]="flashcards[2].definition" 
+                                            name="definition2" 
+                                            rows="3"></textarea>
+                                <label class="input-label">Definition</label>
+                            </div>
+                        </div>
+                        <button class="delete-btn" 
+                                (click)="removeFlashcard(2)" 
+                                [hidden]="visibleSlotsCount <= 1" 
+                                title="Delete flashcard">
+                            ×
+                        </button>
+                    </div>
+
+                    <div class="flashcard-card" [hidden]="visibleSlotsCount <= 3">
+                        <div class="flashcard-header">
+                            <span class="flashcard-number">Flashcard 4</span>
+                        </div>
+                        <div class="flashcard-inputs">
+                            <div class="input-group">
+                                <input type="text" 
+                                        class="flashcard-input" 
+                                        placeholder="Type your key term here..." 
+                                        [(ngModel)]="flashcards[3].keyTerm" 
+                                        name="keyTerm3">
+                                <label class="input-label">Key term</label>
+                            </div>
+                            <div class="input-group">
+                                <textarea class="flashcard-input definition-input" 
+                                        placeholder="Add your definition here" 
+                                        [(ngModel)]="flashcards[3].definition" 
+                                        name="definition3" 
+                                        rows="3"></textarea>
+                                <label class="input-label">Definition</label>
+                            </div>
+                        </div>
+                        <button class="delete-btn" 
+                                (click)="removeFlashcard(3)" 
+                                [hidden]="visibleSlotsCount <= 1" 
+                                title="Delete flashcard">
+                            ×
+                        </button>
+                    </div>
+
+                    <div class="flashcard-card" [hidden]="visibleSlotsCount <= 4">
+                        <div class="flashcard-header">
+                            <span class="flashcard-number">Flashcard 5</span>
+                        </div>
+                        <div class="flashcard-inputs">
+                            <div class="input-group">
+                                <input type="text" 
+                                        class="flashcard-input" 
+                                        placeholder="Type your key term here..."
+                                        [(ngModel)]="flashcards[4].keyTerm" 
+                                        name="keyTerm4">
+                                <label class="input-label">Key term</label>
+                            </div>
+                            <div class="input-group">
+                                <textarea class="flashcard-input definition-input" 
+                                            placeholder="Add your definition here" 
+                                            [(ngModel)]="flashcards[4].definition"
+                                            name="definition4" 
+                                            rows="3"></textarea>
+                                <label class="input-label">Definition</label>
+                            </div>
+                        </div>
+                        <button class="delete-btn" 
+                                (click)="removeFlashcard(4)" 
+                                [hidden]="visibleSlotsCount <= 1" 
+                                title="Delete flashcard">
+                            ×
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <div class="left-buttons">
+                    <button class="btn btn-secondary" (click)="savePrivate()">
+                        Save Private
+                    </button>
+                    <button class="btn btn-primary"(click)="publishPublic()">
+                        Publish Public
+                    </button>
+                    <button class="btn btn-secondary" (click)="addFlashcard()" [disabled]="visibleSlotsCount >= MAX_SLOTS">
+                        <span class="plus-icon">+</span> Add Flashcards
+                    </button>
+                </div>
+                <button class="btn btn-cancel" (click)="close()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
