@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { RenderMode } from '@angular/ssr';
 import { AboutPage } from './pages/about-page/about-page';
 import { ContactPage } from './pages/contact-page/contact-page';
 import { LandingPage } from './pages/landing-page/landing-page';
@@ -11,6 +12,12 @@ import { NotificationPage } from './pages/notification-page/notification-page';
 import { AppLayout } from './shared/components/app-layout/app-layout';
 import { LoginPage } from './pages/login-page/login-page';
 import { RegistrationPage } from './pages/registration-page/registration-page';
+
+declare module '@angular/router' {
+    interface Route {
+        renderMode?: RenderMode;
+    }
+}
 
 export const routes: Routes = [
     {path: '', component: LandingPage },  
@@ -26,7 +33,11 @@ export const routes: Routes = [
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             { path: 'dashboard', component: DashboardPage },
             { path: 'study-sets', component: StudySetsPage },
-            { path: 'study-sets/:id', component: OpenStudySet },
+            {
+                path: 'study-sets/:id',
+                component: OpenStudySet,
+                renderMode: RenderMode.Client
+            },
             { path: 'quizzes', component: QuizzesPage },
             { path: 'community', component: CommunityPage },
             { path: 'notifications', component: NotificationPage },
