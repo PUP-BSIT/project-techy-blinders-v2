@@ -1,1 +1,42 @@
-<p>question-modal works!</p>
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">Ask a Question</h2>
+      <button class="close-btn" (click)="onClose()">✕</button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="form-group">
+        <input 
+          type="text" 
+          class="modal-input title-input" 
+          [(ngModel)]="title"
+          placeholder="Enter your question title"
+          maxlength="300"
+        />
+        <span class="char-count">{{ title.length }}/300</span>
+      </div>
+      
+      <div class="form-group">
+        <label class="tags-label">Add flair and tags*</label>
+        <textarea 
+          class="modal-textarea" 
+          [(ngModel)]="content"
+          placeholder="Provide more details about your question..."
+          rows="6"
+        ></textarea>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="save-draft-btn" (click)="onSaveDraft()">Save Draft</button>
+      <button 
+        class="post-btn" 
+        (click)="onSubmit()"
+        [disabled]="!title.trim()"
+      >
+        Post
+      </button>
+    </div>
+  </div>
+</div>

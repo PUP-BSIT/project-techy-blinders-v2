@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PostCard } from './post-card';
+
 
 describe('PostCard', () => {
   let component: PostCard;

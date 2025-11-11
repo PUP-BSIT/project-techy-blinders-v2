@@ -1,142 +1,26 @@
 <div class="community-wrapper">
   <div class="community-container">
     <div class="community-header">
-      <input type="text" 
-              class="question-input" 
-              placeholder="Ask a Question"
-              [(ngModel)]="newQuestionText"
-              (keyup.enter)="openQuestionModal()"
-              (click)="openQuestionModal()"
-              readonly>
-      <button class="ask-btn" 
-               (click)="openQuestionModal()">Ask a Question
+      <input 
+        type="text" 
+        class="question-input" 
+        placeholder="Ask a question..."
+        readonly
+        (click)="communityService.openModal()"
+      />
+      <button class="ask-btn" (click)="communityService.openModal()">
+        Ask a Question
       </button>
     </div>
-
+    
     <div class="posts-container">
-      @for (post of posts; track post.id) {
-        <div class="post-card">
-          <div class="post-header">
-            <div class="user-avatar">
-              <img src="assets/19-193486_kid-studying-sing-learn-phonics-volume-1-removebg-preview.png" 
-                    alt="User" 
-                    class="avatar-img">
-            </div>
-            <span class="user-name">{{ post.userName }}</span>
-          </div>
-
-          <h3 class="post-title">{{ post.title }}</h3>
-
-          @if (post.content) {
-            <p class="post-content">{{ post.content }}</p>
-          }
-
-          @if (post.quizTitle) {
-            <div class="quiz-card">
-              <h4 class="quiz-title">{{ post.quizTitle }}</h4>
-              <p class="flashcard-count">{{ post.flashcardCount }} Flashcards</p>
-              <button class="answer-btn">
-                <span class="play-icon">▶</span> Answer
-              </button>
-            </div>
-          }
-
-          <div class="post-actions">
-            <button class="comment-btn" 
-                      (click)="toggleComments(post.id)">
-              <img src="assets/comment_icon.png" 
-                    alt="Comments" 
-                    class="action-icon">
-              {{ post.comments.length }} comment
-            </button>
-          </div>
-
-          @if (post.showComments) {
-            <div class="comments-section">
-              @for (comment of post.comments; track comment.id) {
-                <div class="comment-item">
-                  <div class="comment-header">
-                    <div class="user-avatar-small">
-                      <img src="assets/19-193486_kid-studying-sing-learn-phonics-volume-1-removebg-preview.png" 
-                            alt="User" class="avatar-img-small">
-                    </div>
-                    <div class="comment-info">
-                      <span class="comment-user">{{ comment.userName }}</span>
-                      <p class="comment-text">{{ comment.content }}</p>
-                      <div class="star-rating">
-                        @for (star of getStarArray(5); track $index) {
-                          <span 
-                            class="star"
-                            [class.filled]="$index < comment.rating"
-                            (click)="rateComment(post, comment, $index + 1)">
-                            ★
-                          </span>
-                        }
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              }
-
-              <div class="comment-input-container">
-                <input type="text" 
-                        class="comment-input" 
-                        placeholder="Write a comment..."
-                        [(ngModel)]="newCommentText"
-                        (keyup.enter)="submitComment(post.id)">
-                <button class="submit-comment-btn" 
-                         (click)="submitComment(post.id)">
-                  <span class="send-icon">➤</span>
-                </button>
-              </div>
-            </div>
-          }
-        </div>
+      @for (post of communityService.posts; track post.id) {
+        <app-post-card></app-post-card>
       }
     </div>
   </div>
-
-  @if (showQuestionModal) {
-    <div class="modal-overlay" (click)="closeQuestionModal()">
-      <div class="modal-container" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h2 class="modal-title">Ask a Question</h2>
-          <button class="close-btn" (click)="closeQuestionModal()">✕</button>
-        </div>
-        
-        <div class="modal-body">
-          <div class="form-group">
-            <input 
-              type="text" 
-              class="modal-input title-input" 
-              placeholder="Title*"
-              [(ngModel)]="modalTitle"
-              maxlength="300">
-            <div class="char-count">{{ modalTitle.length }}/300</div>
-          </div>
-
-          <div class="form-group">
-            <label class="tags-label">Add flair and tags*</label>
-          </div>
-
-          <div class="form-group">
-            <textarea class="modal-textarea" 
-                       placeholder="Body text (optional)"
-                      [(ngModel)]="modalContent"
-                      rows="8"></textarea>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button class="save-draft-btn" 
-                   (click)="closeQuestionModal()">Save Draft
-          </button>
-          <button class="post-btn" 
-                   (click)="askQuestion()" 
-                   [disabled]="!modalTitle.trim()">Post
-          </button>
-        </div>
-      </div>
-    </div>
+  
+  @if (communityService.showQuestionModal) {
+    <app-question-modal></app-question-modal>
   }
 </div>

@@ -1,1 +1,44 @@
-<p>post-card works!</p>
+@if (post) {
+  <div class="post-card">
+    <div class="post-header">
+      <div class="user-avatar">
+        <img 
+          src="assets/19-193486_kid-studying-sing-learn-phonics-volume-1-removebg-preview.png" 
+          alt="User avatar" 
+          class="avatar-img"
+        />
+      </div>
+      <span class="user-name">{{ post.userName }}</span>
+    </div>
+    
+    <h3 class="post-title">{{ post.title }}</h3>
+    
+    @if (post.content) {
+      <p class="post-content">{{ post.content }}</p>
+    }
+    
+    @if (post.quizTitle) {
+      <div class="quiz-card">
+        <h4 class="quiz-title">{{ post.quizTitle }}</h4>
+        <p class="flashcard-count">{{ post.flashcardCount }} Flashcards</p>
+        <button class="answer-btn" (click)="onQuizClick()">
+          <span class="play-icon">▶</span>
+          Answer
+        </button>
+      </div>
+    }
+    
+    <div class="post-actions">
+      <button class="comment-btn" (click)="onToggleComments()">
+       <img src="assets/comment_icon.png" 
+                    alt="Comments" 
+                    class="action-icon">
+        {{ post.comments.length }} comment{{ post.comments.length !== 1 ? 's' : '' }}
+      </button>
+    </div>
+    
+    @if (post.showComments) {
+      <app-comment-section [postId]="post.id!"></app-comment-section>
+    }
+  </div>
+}
