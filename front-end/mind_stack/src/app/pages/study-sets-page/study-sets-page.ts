@@ -16,7 +16,7 @@ export class StudySetsPage implements OnInit {
   studySets: StudySet[] = [];
 
   constructor(
-    private router: Router,
+    private router: Router, 
     private studySetsService: StudySetsService
   ) {}
 
