@@ -8,7 +8,6 @@ import com.mindstack.mind_stack_id.Models.QuizCreation;
 import com.mindstack.mind_stack_id.Models.FlashcardCreation;
 import com.mindstack.mind_stack_id.repositories.Flashcard;
 import com.mindstack.mind_stack_id.repositories.Quiz;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;

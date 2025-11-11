@@ -13,7 +13,6 @@ import com.mindstack.mind_stack_id.Models.QuizAttempt;
 import com.mindstack.mind_stack_id.Models.QuizCreation;
 import com.mindstack.mind_stack_id.repositories.QuizAttemptRepository;
 import com.mindstack.mind_stack_id.repositories.Quiz;
-
 @RestController
 @RequestMapping("/api/quiz_attempts")
 public class QuizAttemptController {
@@ -54,8 +53,32 @@ public class QuizAttemptController {
         return ResponseEntity.ok(attempts);
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getAttemptsByUserId(@PathVariable Long userId) {
+        List<QuizAttempt> attempts = attemptRepo.findByUserId(userId);
+        return ResponseEntity.ok(attempts);
+    }
+
+    @GetMapping("/user/{userId}/quiz/{quizId}")
+    public ResponseEntity<?> getAttemptsByUserAndQuiz(@PathVariable Long userId, @PathVariable Long quizId) {
+        Optional<QuizCreation> quiz = quizRepo.findById(quizId);
+        
+        if (quiz.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Quiz not found");
+        }
+        
+        List<QuizAttempt> attempts = attemptRepo.findByUserIdAndQuizId(userId, quizId);
+        return ResponseEntity.ok(attempts);
+    }
+
     @PostMapping
     public ResponseEntity<?> submitQuizAttempt(@RequestBody QuizAttempt attempt) {
+        if (attempt.getUserId() == 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("User ID is required");
+        }
+
         if (attempt.getQuizId() == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Quiz ID is required");
@@ -92,6 +115,7 @@ public class QuizAttemptController {
 
         System.out.println("Quiz attempt submitted:");
         System.out.println("Attempt ID: " + savedAttempt.getQuizAttemptId());
+        System.out.println("User ID: " + savedAttempt.getUserId());
         System.out.println("Quiz ID: " + savedAttempt.getQuizId());
         System.out.println("Selected Answer: " + savedAttempt.getSelectedAnswer());
         System.out.println("Is Correct: " + savedAttempt.getIsCorrect());
@@ -159,6 +183,18 @@ public class QuizAttemptController {
         return ResponseEntity.ok(new QuizStats(quizId, totalAttempts, correctAttempts, accuracy));
     }
 
+    @GetMapping("/user/{userId}/stats")
+    public ResponseEntity<?> getUserStats(@PathVariable Long userId) {
+        List<QuizAttempt> attempts = attemptRepo.findByUserId(userId);
+        
+        long totalAttempts = attempts.size();
+        long correctAttempts = attempts.stream().filter(QuizAttempt::getIsCorrect).count();
+        double accuracy = totalAttempts > 0 ? (double) correctAttempts / totalAttempts * 100 : 0;
+        int totalScore = attempts.stream().mapToInt(QuizAttempt::getTotalScore).sum();
+        
+        return ResponseEntity.ok(new UserStats(userId, totalAttempts, correctAttempts, accuracy, totalScore));
+    }
+
     public static class QuizStats {
         private long quizId;
         private long totalAttempts;
@@ -186,6 +222,42 @@ public class QuizAttemptController {
 
         public double getAccuracy() {
             return accuracy;
+        }
+    }
+
+    public static class UserStats {
+        private long userId;
+        private long totalAttempts;
+        private long correctAttempts;
+        private double accuracy;
+        private int totalScore;
+
+        public UserStats(long userId, long totalAttempts, long correctAttempts, double accuracy, int totalScore) {
+            this.userId = userId;
+            this.totalAttempts = totalAttempts;
+            this.correctAttempts = correctAttempts;
+            this.accuracy = accuracy;
+            this.totalScore = totalScore;
+        }
+
+        public long getUserId() {
+            return userId;
+        }
+
+        public long getTotalAttempts() {
+            return totalAttempts;
+        }
+
+        public long getCorrectAttempts() {
+            return correctAttempts;
+        }
+
+        public double getAccuracy() {
+            return accuracy;
+        }
+
+        public int getTotalScore() {
+            return totalScore;
         }
     }
 }

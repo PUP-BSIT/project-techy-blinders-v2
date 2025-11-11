@@ -18,6 +18,9 @@ public class QuizAttempt {
     @Column(name = "quiz_id")
     private long quizId;
 
+    @Column (name ="user_id")
+    private long userId;
+
     @Column(name = "selected_answer")
     private String selectedAnswer;
 
@@ -92,5 +95,13 @@ public class QuizAttempt {
 
     public void setStudyStreak(int studyStreak) {
         this.studyStreak = studyStreak;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }
