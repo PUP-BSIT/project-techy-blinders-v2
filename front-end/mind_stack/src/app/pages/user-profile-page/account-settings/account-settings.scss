@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-// background-color: #d1ffdd;
+body {
+    background-color: rgb(209, 255, 221);
+}
+
 h1 {
     position: absolute;
     display: block;
@@ -33,20 +36,30 @@ h1 {
 
 #edit_profile_button {
     border: solid 0px;
-    background: #3fc28b;
+    background: #3DAC78;
     color: white;
     font-family: "Poppins";
     font-weight: 500;
     font-size: 18px;
     width: 100%;
     padding: 10px;
-    border-radius: 50px;
+    border-radius: 20px;
     cursor: pointer;
 }
 
 #edit_profile_button:hover {
     transition: background 0.3s ease;
     background: #297b59;
+}
+
+#save_button:hover {
+    transition: background 0.3s ease;
+    background: #297b59;
+}
+
+#cancel_button:hover {
+    transition: background 0.3s ease;
+    background: rgb(226, 30, 30);
 }
 
 #mid_nav {
@@ -65,12 +78,13 @@ h1 {
 }
 
 .mid_nav_content {
-    transition: color 0.3s ease;
+    transition: color 0.5s ease;
 }
 
 .mid_nav_content:hover {
     cursor: pointer;
-    color: #49d89a;
+    color: #42c48c;
+    transform: translateY(-2px);
 }
 
 #account_settings {
@@ -87,9 +101,10 @@ h1 {
     width: 70%;
     height: 55%;
     font-family: "Poppins";
-    background-color: rgb(224, 224, 224);;
+    background-color: #FFFFFF;
     border-radius: 20px;
     padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .inputs {
@@ -98,6 +113,7 @@ h1 {
     padding: 10px;
     width: 90%;
     border-radius: 10px;
+    border: rgba(0, 0, 0, 0.199) 1px solid;
 }
 
 #cancel_button, #save_button {
@@ -119,11 +135,11 @@ h1 {
 
 
 #cancel_button {
-    background-color: red;
+    background-color: rgba(255, 49, 49, 0.979);
 }
 
 #save_button{
-    background-color: green;
+    background: #3DAC78;
 }
 
 #data_privacy {
@@ -132,26 +148,32 @@ h1 {
     margin-left: 5%;
     margin-top: 10px;
     font-family: "Poppins";
-    background-color: rgb(224, 224, 224);;
+    background-color: #FFFFFF;
     border-radius: 20px;
     padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 #delete_account_button {
     font-family: "Poppins";
     width: 80%;
-    background-color: red;
+    background-color: rgba(255, 49, 49, 0.979);
     color: white;
     border: none;
     padding: 5px;
     border-radius: 10px;
     margin-left: 10%;
     margin-top: 15px;
+    cursor: pointer;
+}
+
+#delete_account_button:hover {
+    transition: background 0.3s ease;
+    background: rgb(226, 30, 30);
 }
 
 #delete_warning {
     font-size: 0.7rem;
-    color: red;
     font-weight: 300;
     margin-top: 15px;
 }
