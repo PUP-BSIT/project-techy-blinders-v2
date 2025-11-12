@@ -5,7 +5,6 @@ import { Post, QuestionData, Comment } from '../shared/interfaces/community.inte
   providedIn: 'root'
 })
 export class CommunityService {
-  // All posts data
   posts: Post[] = [
     {
       id: '1',
@@ -31,20 +30,16 @@ export class CommunityService {
     }
   ];
 
-  // Modal state
   showQuestionModal: boolean = false;
 
-  // Open the question modal
   openModal() {
     this.showQuestionModal = true;
   }
 
-  // Close the question modal
   closeModal() {
     this.showQuestionModal = false;
   }
 
-  // Add a new post/question
   addPost(data: QuestionData) {
     const newPost: Post = {
       id: Date.now().toString(),
@@ -61,13 +56,10 @@ export class CommunityService {
     this.closeModal();
   }
 
-  // Save draft
   saveDraft(data: QuestionData) {
     console.log('Draft saved:', data);
-    // Implement draft saving logic here
   }
 
-  // Toggle comments visibility for a post
   toggleComments(postId: string) {
     const post = this.posts.find(p => p.id === postId);
     if (post) {
@@ -75,7 +67,6 @@ export class CommunityService {
     }
   }
 
-  // Add a comment to a post
   addComment(postId: string, commentText: string) {
     const post = this.posts.find(p => p.id === postId);
     if (post) {
