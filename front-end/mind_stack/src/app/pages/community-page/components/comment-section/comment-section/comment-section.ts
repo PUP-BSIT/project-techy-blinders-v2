@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommunityService } from '../../../../../services/community.service';
-import { Comment } from '../../../../../shared/interfaces/community.interface';
+import { Comment } from '../../../../../models/community.model';
 
 @Component({
   selector: 'app-comment-section',

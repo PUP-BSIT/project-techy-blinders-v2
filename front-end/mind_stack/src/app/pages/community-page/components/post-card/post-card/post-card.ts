@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CommentSection } from '../../comment-section/comment-section/comment-section';
-import { Post } from '../../../../../shared/interfaces/community.interface';
 import { CommunityService } from '../../../../../services/community.service';
+import { Post } from '../../../../../models/community.model';
 
 @Component({
   selector: 'app-post-card',
