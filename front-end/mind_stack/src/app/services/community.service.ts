@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Post, QuestionData, Comment } from '../shared/interfaces/community.interface';
+import { Post, QuestionData, Comment } from '../models/community.model';
 
 @Injectable({
   providedIn: 'root'
