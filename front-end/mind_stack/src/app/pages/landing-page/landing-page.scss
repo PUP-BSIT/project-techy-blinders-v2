@@ -10,6 +10,7 @@
 
 .landing-page-class {
     margin-top: -1%;
+    position: relative;
 }
 .header-note {
     display: block;
@@ -107,7 +108,6 @@
     background: #297b59;
 }
 
-
 .favorite-class {
     display: block;
     position: absolute;
@@ -140,7 +140,7 @@
 
 .kid-class-design {
     display: block;
-    position: fixed;
+    position: absolute;
     width: 40%;
 }
 
@@ -148,4 +148,205 @@
     margin-top: -3%;
     width: 100%;
     margin-left: 145%;
+}
+
+.laptop-section {
+    margin-top: 150px;
+    padding: 60px 20px 40px;
+    background-color: #d4d4d4;
+    text-align: center;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.laptop-tagline {
+    color: #4a4a4a;
+    font-size: 32px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    margin-bottom: 40px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.laptop-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.laptop-container img {
+    max-width: 700px;
+    width: 100%;
+    height: auto;
+}
+
+.testimonials-section {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 60px 20px 80px;
+    background-color: #3fc28b;
+    flex-wrap: wrap;
+    width: 100%;
+    margin: 0;
+}
+
+.testimonial-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    width: 280px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial-card h4 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.testimonial-card .stars {
+    color: #3fc28b;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.testimonial-card p {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+}
+
+.reviewers-section {
+    padding: 60px 20px;
+    background-color: #EBEBEB;
+    width: 100%;
+    margin: 0;
+}
+
+.reviewers-section > * {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.reviewers-section h3 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.review-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px;
+    margin-bottom: 20px;
+    background-color:#ffffff;
+    border-radius: 8px;
+    gap: 20px;
+}
+
+.review-content {
+    flex: 1;
+}
+
+.review-content h4 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.review-content p {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+}
+
+.review-button {
+    background-color: #d4d4d4;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 6px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.review-button:hover {
+    background-color: #c0c0c0;
+    transition: background 0.3s ease;
+}
+
+.recently-opened-section {
+    padding: 60px 20px 80px;
+    background-color: #3fc28b;
+    width: 100%;
+    margin: 0;
+}
+
+.recently-opened-section h3 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 30px;
+    text-align: left;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.recent-cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.recent-card {
+    background: white;
+    border-radius: 12px;
+    padding: 40px 30px;
+    width: 300px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.recent-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.recent-card h4 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.recent-card p {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #999;
+    line-height: 1.6;
 }
