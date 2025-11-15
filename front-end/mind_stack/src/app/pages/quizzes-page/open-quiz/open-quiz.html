@@ -1,0 +1,105 @@
+<div class="quiz-container" [hidden]="!quiz" [attr.aria-hidden]="!quiz">
+    <div class="quiz-header">
+        <h1 class="quiz-title">Quiz: {{ quiz?.title }}</h1>
+    </div>
+
+    <div class="progress-section">
+        <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="progress"></div>
+        </div>
+        <p class="question-counter">Question {{ currentQuestionIndex + 1 }} of {{ quiz?.questions?.length }}</p>
+    </div>
+
+    <div class="question-section">
+        <div class="question-card">
+            <div class="question-text" 
+                    [hidden]="!currentQuestion" 
+                    [attr.aria-hidden]="!currentQuestion">
+                {{ currentQuestion?.question }}
+            </div>
+
+            <div class="answer-options multiple-choice" 
+                    [hidden]="quiz?.questionType !== QuestionType.MULTIPLE_CHOICE || !currentQuestion" 
+                    [attr.aria-hidden]="quiz?.questionType !== QuestionType.MULTIPLE_CHOICE || !currentQuestion">
+                <button type="button" 
+                        class="option-btn" 
+                        [class.selected]="selectedAnswer === 'A'"
+                        (click)="selectAnswer('A')"
+                        [hidden]="!currentQuestion?.optionA" 
+                        [attr.aria-hidden]="!currentQuestion?.optionA">
+                    <span class="option-label">A</span>
+                    <span class="option-text">{{ currentQuestion?.optionA }}</span>
+                </button>
+                <button type="button" 
+                        class="option-btn" 
+                        [class.selected]="selectedAnswer === 'B'"
+                        (click)="selectAnswer('B')"
+                        [hidden]="!currentQuestion?.optionB" 
+                        [attr.aria-hidden]="!currentQuestion?.optionB">
+                    <span class="option-label">B</span>
+                    <span class="option-text">{{ currentQuestion?.optionB }}</span>
+                </button>
+                <button type="button" 
+                        class="option-btn" 
+                        [class.selected]="selectedAnswer === 'C'"
+                        (click)="selectAnswer('C')"
+                        [hidden]="!currentQuestion?.optionC" 
+                        [attr.aria-hidden]="!currentQuestion?.optionC">
+                    <span class="option-label">C</span>
+                    <span class="option-text">{{ currentQuestion?.optionC }}</span>
+                </button>
+                <button type="button" 
+                        class="option-btn" 
+                        [class.selected]="selectedAnswer === 'D'"
+                        (click)="selectAnswer('D')"
+                        [hidden]="!currentQuestion?.optionD"
+                        [attr.aria-hidden]="!currentQuestion?.optionD">
+                    <span class="option-label">D</span>
+                    <span class="option-text">{{ currentQuestion?.optionD }}</span>
+                </button>
+            </div>
+
+            <div class="answer-options true-false" 
+                    [hidden]="quiz?.questionType !== QuestionType.TRUE_FALSE" 
+                    [attr.aria-hidden]="quiz?.questionType !== QuestionType.TRUE_FALSE">
+                <button type="button" 
+                        class="true-false-btn" 
+                        [class.selected]="selectedAnswer === 'True'"
+                        (click)="selectAnswer('True')">
+                    True
+                </button>
+                <button type="button" 
+                        class="true-false-btn" 
+                        [class.selected]="selectedAnswer === 'False'"
+                        (click)="selectAnswer('False')">
+                    False
+                </button>
+            </div>
+        </div>
+
+        <div class="action-links">
+            <a href="#" 
+                    class="action-link submit-link" 
+                    (click)="submitAnswer(); 
+                    $event.preventDefault()">
+                Submit Answer
+            </a>
+            <a href="#" 
+                    class="action-link skip-link" 
+                    (click)="skipQuestion(); 
+                    $event.preventDefault()">
+                Skip Question
+            </a>
+        </div>
+    </div>
+
+    <div class="timer-section">
+        <div class="timer-container">
+            <span class="timer-icon" aria-hidden="true">&#9201;</span>
+            <div class="timer-text">
+                <div class="current-time">{{ formatTime(timeRemaining) }}</div>
+                <div class="total-time">{{ formatTime(totalTime) }}</div>
+            </div>
+        </div>
+    </div>
+</div>

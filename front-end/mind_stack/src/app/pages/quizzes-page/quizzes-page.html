@@ -1,1 +1,66 @@
-<p>quizzes-page works!</p>
+<div class="container">
+    <div class="top box">
+        <div class="top-left">
+            <p>My Quizzes</p>
+            <button (click)="openModal()" class="add">
+                <img src="assets/plus_icon.png" alt="Add Button">
+                Create New Quiz
+            </button>
+        </div>
+        <div class="continue-quiz-card" [hidden]="!lastQuiz" [attr.aria-hidden]="!lastQuiz">
+            <div class="continue-quiz-content">
+                <p class="continue-text">Continue your last quiz</p>
+                <h3 class="continue-title">{{ lastQuiz?.title }}</h3>
+                    <p class="continue-count">{{ lastQuiz?.questionCount }} Questions</p>
+                    <button (click)="resumeQuiz(lastQuiz?.quiz_id)" class="resume-btn">
+                    <span class="icon-small" aria-hidden="true">&#9658;</span>
+                    Resume
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom box">
+        <div class="quizzes-container">
+            <div class="empty-state" 
+                    [hidden]="quizzes.length !== 0 || lastQuiz" 
+                    [attr.aria-hidden]="quizzes.length !== 0 || lastQuiz">
+                <p class="empty-message">
+                    create your first quiz to get started
+                </p>
+            </div>
+
+            <div class="quizzes-grid" 
+                    [hidden]="quizzes.length === 0 && !lastQuiz" 
+                    [attr.aria-hidden]="quizzes.length === 0 && !lastQuiz">
+                <ng-container #quizzesContainer></ng-container>
+
+                <ng-template #quizTpl let-quiz="quiz" let-i="index">
+                    <div class="quiz-card" (click)="openQuiz(quiz.quiz_id)">
+                        <div class="card-header">
+                            <h3 class="card-title">{{ quiz.title }}</h3>
+                        </div>
+                        <p class="card-flashcard-count">{{ quiz.questionCount }} 
+                                {{ quiz.questionCount === 1 ? 'Flashcard' : 'Flashcards' }}
+                        </p>
+                        <div class="card-footer">
+                            <button class="edit-btn" (click)="editQuiz(quiz.quiz_id, $event)" title="Edit quiz">
+                                <img src="assets/plus_icon.png" alt="Edit" class="icon-small">
+                                Edit
+                            </button>
+                            <button class="share-btn" (click)="shareQuiz(quiz.quiz_id, $event)" title="Share quiz">
+                                <span class="icon-small" aria-hidden="true">&#128279;</span>
+                                Share
+                            </button>
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-add-quiz [isOpen]="isModalOpen"
+                    (closeModal)="closeModal()"
+                    (quizCreated)="saveQuiz($event)">
+</app-add-quiz>
