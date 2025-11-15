@@ -12,6 +12,7 @@ import { NotificationPage } from './pages/notification-page/notification-page';
 import { AppLayout } from './shared/components/app-layout/app-layout';
 import { LoginPage } from './pages/login-page/login-page';
 import { RegistrationPage } from './pages/registration-page/registration-page';
+import { OpenQuiz } from './pages/quizzes-page/open-quiz/open-quiz';
 
 declare module '@angular/router' {
     interface Route {
@@ -39,6 +40,11 @@ export const routes: Routes = [
                 renderMode: RenderMode.Client
             },
             { path: 'quizzes', component: QuizzesPage },
+            {
+                path: 'quizzes/:id',
+                component: OpenQuiz,
+                renderMode: RenderMode.Client
+            },
             { path: 'community', component: CommunityPage },
             { path: 'notifications', component: NotificationPage },
         ]
