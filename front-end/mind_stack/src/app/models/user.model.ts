@@ -30,3 +30,14 @@ export interface LoginResponse {
 export interface AuthError {
   error_message: string;
 }
+
+export interface EditProfileRequest {
+  name: string;
+  email: string;
+  username: string;
+}
+
+export interface EditProfileResponse {
+  message: string;
+  updated: boolean;
+}
