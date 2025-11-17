@@ -21,7 +21,7 @@ It allows students to:
 
 ## 🌐 Live Demo / Web hosting
 
-Visit our live application: [https://steelblue-leopard-581448.hostingersite.com/](https://steelblue-leopard-581448.hostingersite.com/)
+Visit our live application: [http://72.61.119.6/](http://http://72.61.119.6//)
 
 ## 🌱 Git Workflow
 
