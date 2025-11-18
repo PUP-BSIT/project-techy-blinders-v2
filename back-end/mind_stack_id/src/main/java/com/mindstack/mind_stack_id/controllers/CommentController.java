@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.mindstack.mind_stack_id.Models.Comment;
 import com.mindstack.mind_stack_id.Models.FlashcardCreation;
 import com.mindstack.mind_stack_id.Models.User;
+import com.mindstack.mind_stack_id.Models.dto.CommentDTO;
 import com.mindstack.mind_stack_id.repositories.CommentRepository;
 import com.mindstack.mind_stack_id.repositories.Flashcard;
 import com.mindstack.mind_stack_id.repositories.UserRepository;
@@ -29,8 +30,15 @@ public class CommentController {
     private UserRepository userRepo;
 
     @GetMapping
-    public List<Comment> getAllComments() {
-        return commentRepo.findAll();
+    public List<CommentDTO> getAllComments() {
+        return commentRepo.findAll()
+                .stream()
+                .map(f -> new CommentDTO(
+                    f.getFlashcardId(),
+                    f.getContent(),
+                    f.getUserId()
+                ))
+                .toList();
     }
 
     @GetMapping("/{id}")
