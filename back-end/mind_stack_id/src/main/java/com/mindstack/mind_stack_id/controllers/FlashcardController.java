@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.mindstack.mind_stack_id.Models.FlashcardCreation;
+import com.mindstack.mind_stack_id.Models.dto.FlashcardDTO;
 import com.mindstack.mind_stack_id.repositories.Flashcard;
 
 @RestController
@@ -17,9 +18,16 @@ public class FlashcardController {
     @Autowired
     private Flashcard repo;
 
-    @GetMapping
-    public List<FlashcardCreation> getFlashcards() {
-        return repo.findAll();
+    @GetMapping("/getflashcards")
+    public List<FlashcardDTO> getFlashcards() {
+        return repo.findAll()
+            .stream()
+            .map(f -> new FlashcardDTO(
+                    f.getFlashcardId(),
+                    f.getTitle(),
+                    f.getDescription()
+            ))
+            .toList();
     }
 
     @GetMapping("/{id}")
