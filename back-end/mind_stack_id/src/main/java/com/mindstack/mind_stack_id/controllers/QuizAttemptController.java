@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.mindstack.mind_stack_id.Models.QuizAttempt;
 import com.mindstack.mind_stack_id.Models.QuizCreation;
+import com.mindstack.mind_stack_id.Models.dto.QuizAttemptDTO;
 import com.mindstack.mind_stack_id.repositories.QuizAttemptRepository;
 import com.mindstack.mind_stack_id.repositories.Quiz;
 @RestController
@@ -24,8 +25,16 @@ public class QuizAttemptController {
     private Quiz quizRepo;
 
     @GetMapping
-    public List<QuizAttempt> getAllQuizAttempts() {
-        return attemptRepo.findAll();
+    public List<QuizAttemptDTO> getAllQuizAttempts() {
+        return attemptRepo.findAll()
+                .stream()
+                .map(f -> new QuizAttemptDTO (
+                    f.getQuizId(),
+                    f.getQuizAttemptId(),
+                    f.getSelectedAnswer(),
+                    f.getIsCorrect()
+                ))
+                .toList();
     }
 
     @GetMapping("/{id}")
