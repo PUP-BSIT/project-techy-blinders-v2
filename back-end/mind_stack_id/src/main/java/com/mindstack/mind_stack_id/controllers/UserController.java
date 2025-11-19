@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.mindstack.mind_stack_id.Models.LoginRequest;
 import com.mindstack.mind_stack_id.Models.User;
+import com.mindstack.mind_stack_id.Models.dto.UserDTO;
 import com.mindstack.mind_stack_id.repositories.UserRepository;
 
 @RestController
@@ -22,8 +23,14 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping
-    public List<User> getUsers() {
-        return repo.findAll();
+    public List<UserDTO> getUsers() {
+        return repo.findAll()
+                .stream()
+                .map(f -> new UserDTO(
+                        f.getUsername(),
+                        f.getUserId()
+                ))
+                .toList();
     }
 
     @PostMapping
