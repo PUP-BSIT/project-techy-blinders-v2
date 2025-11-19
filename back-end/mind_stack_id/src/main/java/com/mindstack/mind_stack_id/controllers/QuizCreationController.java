@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.mindstack.mind_stack_id.Models.QuizCreation;
+import com.mindstack.mind_stack_id.Models.dto.QuizCreationDTO;
 import com.mindstack.mind_stack_id.Models.FlashcardCreation;
 import com.mindstack.mind_stack_id.repositories.Flashcard;
 import com.mindstack.mind_stack_id.repositories.Quiz;
@@ -25,8 +26,16 @@ public class QuizCreationController {
     }
 
     @GetMapping
-    public List<QuizCreation> getQuiz() {
-        return quizRepo.findAll();
+    public List<QuizCreationDTO> getQuiz() {
+        return quizRepo.findAll()
+                .stream()
+                .map(f -> new QuizCreationDTO (
+                    f.getFlashcardId(),
+                    f.getIdentifcationAnswer(),
+                    f.getQuestion(),
+                    f.getQuizId()
+                ))
+                .toList();
     }
 
     @GetMapping("/{id}")
