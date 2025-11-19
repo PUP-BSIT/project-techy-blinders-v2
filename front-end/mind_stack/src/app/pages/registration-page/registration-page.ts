@@ -5,6 +5,8 @@ import { RegisterRequest, RegisterResponse } from '../../models/user.model'; // 
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../../service/user-service';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-registration-page',
