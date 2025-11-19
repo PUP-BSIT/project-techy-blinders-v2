@@ -12,6 +12,7 @@ import com.mindstack.mind_stack_id.Models.User;
 import com.mindstack.mind_stack_id.Models.dto.UserDTO;
 import com.mindstack.mind_stack_id.services.UserService;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
