@@ -1,4 +1,16 @@
-<app-nav-bar></app-nav-bar>
+<div class="custom-nav-wrapper">
+  <app-nav-bar></app-nav-bar>
+  
+  <div class="nav-quick-buttons">
+    <button class="nav-quick-btn" (click)="scrollToSection('reviewers')">
+      Reviewers
+    </button>
+    <button class="nav-quick-btn" (click)="scrollToSection('recent')">
+      Recently Opened
+    </button>
+  </div>
+</div>
+
 <div class="landing-page-class">
     <div class="header-class">
         <img src="assets/megaphone.png" class="megaphone-class">
@@ -57,7 +69,7 @@
     </div>
   </div>
 
-  <div class="reviewers-section">
+  <div class="reviewers-section" id="reviewers">
     <h3>Reviewers</h3>
     <div class="review-item">
       <div class="review-content">
@@ -91,7 +103,7 @@
     </div>
   </div>
 
-  <div class="recently-opened-section">
+  <div class="recently-opened-section" id="recent">
     <h3>You opened recently</h3>
     <div class="recent-cards">
       <div class="recent-card">
