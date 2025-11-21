@@ -89,6 +89,12 @@
         <artifactId>protobuf-java</artifactId>
         <version>3.21.9</version>
     </dependency>
+
+	<dependency>
+		<groupId>me.paulschwarz</groupId>
+		<artifactId>spring-dotenv</artifactId>
+		<version>4.0.0</version>
+	</dependency>
  </dependencies>
 
 	<build>
