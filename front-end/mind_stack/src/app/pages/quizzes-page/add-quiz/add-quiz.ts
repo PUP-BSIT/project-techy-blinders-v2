@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges, ViewChild, TemplateRef, ViewContainerRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { QuestionType, QuestionItem } from '../../../services/quizzes.service';
+import { QuestionType, QuizRequest } from '../../../models/quiz.model';
 
 @Component({
   selector: 'app-add-quiz',
@@ -10,15 +10,15 @@ import { QuestionType, QuestionItem } from '../../../services/quizzes.service';
   templateUrl: './add-quiz.html',
   styleUrls: ['./add-quiz.scss']
 })
-export class AddQuiz implements OnChanges {
+export class AddQuiz implements OnChanges, AfterViewInit {
   @Input() isOpen: boolean = false;
   @Output() closeModal = new EventEmitter<void>();
-  @Output() quizCreated = new EventEmitter<{ title: string; description: string; questions: QuestionItem[]; questionType: QuestionType; isPublic: boolean }>();
+  @Output() quizCreated = new EventEmitter<{ title: string; description: string; questions: QuizRequest[]; questionType: QuestionType; isPublic: boolean }>();
 
   quizTitle: string = '';
   quizDescription: string = '';
   selectedQuestionType: QuestionType = QuestionType.MULTIPLE_CHOICE;
-  questions: QuestionItem[] = [];
+  questions: QuizRequest[] = [];
   readonly MAX_QUESTIONS = 20;
 
   QuestionType = QuestionType;
@@ -43,16 +43,22 @@ export class AddQuiz implements OnChanges {
   addQuestion() {
     if (this.questions.length < this.MAX_QUESTIONS) {
       if (this.selectedQuestionType === QuestionType.MULTIPLE_CHOICE) {
-        this.questions.push({ 
-          question: '', 
-          optionA: '', 
-          optionB: '', 
-          optionC: '', 
-          optionD: '', 
-          correctAnswer: 'A' 
-        });
+        this.questions.push({
+          question: '',
+          question_type: QuestionType.MULTIPLE_CHOICE,
+          option_a: '',
+          option_b: '',
+          option_c: '',
+          option_d: '',
+          correct_answer: ''
+        } as QuizRequest);
       } else {
-        this.questions.push({ question: '', answer: 'True' });
+        this.questions.push({
+          question: '',
+          question_type: QuestionType.IDENTFICATION,
+          identification_answer: '',
+          correct_answer: ''
+        } as QuizRequest);
       }
       this.renderQuestions();
     }
@@ -60,7 +66,7 @@ export class AddQuiz implements OnChanges {
 
   selectCorrectAnswer(questionIndex: number, answer: string) {
     if (this.questions[questionIndex]) {
-      this.questions[questionIndex].correctAnswer = answer;
+      this.questions[questionIndex].correct_answer = answer;
     }
   }
 
@@ -104,15 +110,7 @@ export class AddQuiz implements OnChanges {
       return;
     }
 
-    const validQuestions = this.questions.filter(q => {
-      if (this.selectedQuestionType === QuestionType.MULTIPLE_CHOICE) {
-        return q.question.trim() !== '' && 
-               (q.optionA?.trim() || q.optionB?.trim() || q.optionC?.trim() || q.optionD?.trim()) &&
-               q.correctAnswer;
-      } else {
-        return q.question.trim() !== '' && q.answer?.trim();
-      }
-    });
+    const validQuestions = this.questions.filter(q => q.question && q.question.trim() !== '');
 
     if (validQuestions.length === 0) {
       alert('Please add at least one valid question with all required fields filled');
@@ -148,15 +146,7 @@ export class AddQuiz implements OnChanges {
       return;
     }
 
-    const validQuestions = this.questions.filter(q => {
-      if (this.selectedQuestionType === QuestionType.MULTIPLE_CHOICE) {
-        return q.question.trim() !== '' && 
-               (q.optionA?.trim() || q.optionB?.trim() || q.optionC?.trim() || q.optionD?.trim()) &&
-               q.correctAnswer;
-      } else {
-        return q.question.trim() !== '' && q.answer?.trim();
-      }
-    });
+    const validQuestions = this.questions.filter(q => q.question && q.question.trim() !== '');
 
     if (validQuestions.length === 0) {
       alert('Please add at least one valid question with all required fields filled');
@@ -195,6 +185,7 @@ export class AddQuiz implements OnChanges {
       this.questionsContainer.createEmbeddedView(this.questionTpl, { question, index: i });
     }
   }
+  
 
   get hasQuestions() {
     return this.questions.length > 0;

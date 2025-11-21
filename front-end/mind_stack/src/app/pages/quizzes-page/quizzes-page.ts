@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AddQuiz } from './add-quiz/add-quiz';
 import { QuizzesService, Quiz } from '../../services/quizzes.service';
+import { QuizRequest, QuestionType as ModelQuestionType } from '../../models/quiz.model';
 
 interface QuizSet {
   quiz_id: number;
@@ -82,7 +83,7 @@ export class QuizzesPage implements OnInit, AfterViewInit {
     }
   }
 
-  saveQuiz(quizData: { title: string; description: string; questions: any[]; questionType: any; isPublic: boolean }) {
+  saveQuiz(quizData: { title: string; description: string; questions: QuizRequest[]; questionType: any; isPublic: boolean }) {
     console.log('saveQuiz called with data:', quizData);
 
     if (!quizData || !quizData.title || !quizData.questions || quizData.questions.length === 0) {
@@ -91,11 +92,31 @@ export class QuizzesPage implements OnInit, AfterViewInit {
       return;
     }
 
+    // Map QuizRequest[] to the local service QuestionItem[] shape
+    const mappedQuestions = quizData.questions.map(q => {
+      if (q.question_type === ModelQuestionType.MULTIPLE_CHOICE) {
+        return {
+          question: q.question,
+          optionA: q.option_a,
+          optionB: q.option_b,
+          optionC: q.option_c,
+          optionD: q.option_d,
+          correctAnswer: q.correct_answer
+        };
+      }
+
+      // identification / other types
+      return {
+        question: q.question,
+        answer: q.identification_answer ?? q.correct_answer
+      };
+    });
+
     const newQuiz: Quiz = {
       quiz_id: Date.now(),
       title: quizData.title,
       description: quizData.description || '',
-      questions: quizData.questions,
+      questions: mappedQuestions,
       questionType: quizData.questionType,
       created_at: new Date(),
       is_public: quizData.isPublic || false
