@@ -1,6 +1,7 @@
 export enum QuestionType {
     MULTIPLE_CHOICE = 'multiple_choice',
-    IDENTFICATION = 'identfication'
+    IDENTFICATION = 'identfication',
+    TRUE_FALSE = 'true_false'
 }
 
 export interface Quiz {
