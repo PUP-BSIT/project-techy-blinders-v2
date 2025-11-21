@@ -4,12 +4,18 @@
 
 :host {
   display: block;
-  height: 100vh;
-  background-color: #ebebeb;
+  min-height: 100vh;
+  background: radial-gradient(ellipse at center, rgba(61, 172, 120, 0.15) 0%, transparent 60%),
+    linear-gradient(180deg, #f8f8f8 0%, #ebebeb 50%, #e0e0e0 100%);
 }
 
 .custom-nav-wrapper {
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
 }
 
 .nav-quick-buttons {
@@ -58,21 +64,22 @@
   display: block;
   width: min(45%, 600px);
   margin-left: 8%;
-  margin-top: clamp(60px, 8vh, 120px);
+  margin-top: 20% clamp(60px, 8vh, 120px);
 }
 
 .header-note h3 {
+  margin-top: 10%;
   color: #595959;
-  font-size: clamp(32px, 4vw, 48px);
-  text-align: left;
+  font-size: clamp(32px, 4vw, 50px);
+  text-align: center;
   font-weight: bold;
   font-family: 'Roboto', sans-serif;
   line-height: 1.2;
 }
 
 .trademark-class {
-  margin-top: 20px;
-  margin-left: 8%;
+  margin-top: 30px;
+  margin-left: 17%;
 }
 
 .trademark-class p {
@@ -99,10 +106,6 @@
 .megaphone-class {
   transform: rotate(20deg);
   transition: transform 0.3s ease;
-  
-  &:hover {
-    transform: rotate(20deg) scale(1.1);
-  }
 }
 
 .arrow-two {
@@ -112,7 +115,7 @@
 
 .button-class {
   display: flex;
-  margin-left: 8%;
+  margin-left: 18%;
   margin-top: 30px;
   gap: 20px;
   flex-wrap: wrap;
@@ -132,13 +135,13 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 12px rgba(38, 148, 101, 0.3);
   white-space: nowrap;
-  
+
   &:hover {
     background: #185b3e;
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(38, 148, 101, 0.4);
   }
-  
+
   &:active {
     transform: translateY(-1px);
     box-shadow: 0 3px 10px rgba(38, 148, 101, 0.3);
@@ -159,13 +162,13 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 12px rgba(63, 194, 139, 0.3);
   white-space: nowrap;
-  
+
   &:hover {
     background: #297b59;
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(63, 194, 139, 0.4);
   }
-  
+
   &:active {
     transform: translateY(-1px);
     box-shadow: 0 3px 10px rgba(63, 194, 139, 0.3);
@@ -187,10 +190,6 @@
   margin-left: 12%;
   transform: rotate(90deg);
   transition: transform 0.3s ease;
-  
-  &:hover {
-    transform: rotate(90deg) scale(1.15);
-  }
 }
 
 .pencil-class {
@@ -208,29 +207,26 @@
   margin-left: 38%;
   transform: rotate(20deg);
   transition: transform 0.3s ease;
-
-  &:hover {
-    transform: rotate(20deg) scale(1.15);
-  }
 }
 
 .kid-class-design {
   display: block;
   position: absolute;
-  right: 5%;
-  top: clamp(60px, 8vh, 80px);
+  right: 20%;
+  top: clamp(10px, 8vh, 20px);
   width: clamp(280px, 30vw, 380px);
   max-width: 40%;
 }
 
 .kid-class-design img {
-  width: 100%;
+  width: 150%;
+  margin-top: 10%;
   height: auto;
-  display: block;
+  display: flex;
 }
 
 .laptop-section {
-  margin-top: 100px;
+  margin-top: 150px;
   padding: 80px 40px 100px;
   background: linear-gradient(180deg, #e8f5f0 0%, #d4ebe3 30%, #c0e1d6 70%, #acd7c9 100%);
   text-align: center;
@@ -461,17 +457,15 @@
   line-height: 1.6;
 }
 
-
-// Responsive Design - Media Queries
 @media (max-width: 1400px) {
   .header-note h3 {
     font-size: 42px;
   }
-  
+
   .kid-class-design {
     width: 350px;
   }
-  
+
   .laptop-container img {
     max-width: 750px;
   }
@@ -482,28 +476,28 @@
     width: 50%;
     margin-left: 6%;
   }
-  
+
   .header-note h3 {
     font-size: 38px;
   }
-  
+
   .trademark-class {
     margin-left: 6%;
   }
-  
+
   .button-class {
     margin-left: 6%;
   }
-  
+
   .kid-class-design {
     width: 320px;
     right: 3%;
   }
-  
+
   .laptop-tagline {
     font-size: 30px;
   }
-  
+
   .laptop-container img {
     max-width: 650px;
   }
@@ -513,55 +507,55 @@
   .nav-quick-buttons {
     gap: 12px;
   }
-  
+
   .nav-quick-btn {
     padding: 6px 16px;
     font-size: 13px;
   }
-  
+
   .header-note {
     width: 55%;
     margin-top: 8%;
   }
-  
+
   .header-note h3 {
     font-size: 34px;
   }
-  
+
   .trademark-class p {
     font-size: 16px;
   }
-  
+
   .button-class {
     gap: 15px;
   }
-  
+
   .regis-button,
   .login-button {
     font-size: 15px;
     padding: 10px 28px;
   }
-  
+
   .kid-class-design {
     width: 280px;
     top: 100px;
   }
-  
+
   .header-class img {
     width: 50px;
     height: 50px;
     margin-top: 60px;
   }
-  
+
   .laptop-section {
     padding: 80px 30px 100px;
   }
-  
+
   .laptop-tagline {
     font-size: 28px;
     margin-bottom: 60px;
   }
-  
+
   .laptop-container img {
     max-width: 600px;
   }
@@ -573,49 +567,49 @@
     gap: 8px;
     top: 18px;
   }
-  
+
   .nav-quick-btn {
     padding: 5px 14px;
     font-size: 12px;
   }
-  
+
   .landing-page-class {
     padding-top: 20px;
   }
-  
+
   .header-note {
     width: 90%;
     margin-left: 5%;
     margin-top: 15%;
   }
-  
+
   .header-note h3 {
     font-size: 28px;
     text-align: center;
   }
-  
+
   .trademark-class {
     margin-left: 5%;
     text-align: center;
   }
-  
+
   .trademark-class p {
     font-size: 15px;
   }
-  
+
   .button-class {
     margin-left: 5%;
     justify-content: center;
     gap: 12px;
     flex-wrap: wrap;
   }
-  
+
   .regis-button,
   .login-button {
     font-size: 14px;
     padding: 10px 24px;
   }
-  
+
   .kid-class-design {
     position: relative;
     right: auto;
@@ -624,7 +618,7 @@
     max-width: 300px;
     margin: 30px auto 0;
   }
-  
+
   .header-class {
     padding: 0 5%;
     flex-direction: column;
@@ -632,78 +626,78 @@
     gap: 20px;
     height: auto;
   }
-  
+
   .header-class img {
     width: 45px;
     height: 45px;
     margin-top: 40px;
   }
-  
+
   .favorite-class img,
   .pencil-class img {
     width: 30px;
     height: 30px;
     margin-top: 250px;
   }
-  
+
   .favorite-class img {
     margin-left: 8%;
   }
-  
+
   .pencil-class img {
     margin-left: 85%;
   }
-  
+
   .laptop-section {
     margin-top: 60px;
     padding: 60px 20px 80px;
   }
-  
+
   .laptop-tagline {
     font-size: 24px;
     margin-bottom: 40px;
   }
-  
+
   .laptop-container {
     margin-bottom: 40px;
   }
-  
+
   .laptop-container img {
     max-width: 100%;
   }
-  
+
   .testimonials-section {
     padding: 40px 15px 60px;
     gap: 20px;
   }
-  
+
   .testimonial-card {
     width: 100%;
     max-width: 350px;
   }
-  
+
   .reviewers-section {
     padding: 40px 15px;
   }
-  
+
   .review-item {
     flex-direction: column;
     padding: 20px;
     gap: 15px;
   }
-  
+
   .review-button {
     width: 100%;
   }
-  
+
   .recently-opened-section {
     padding: 40px 15px 60px;
   }
-  
+
   .recent-cards {
     gap: 20px;
   }
-  
+
   .recent-card {
     width: 100%;
     max-width: 350px;
@@ -715,32 +709,32 @@
     padding: 4px 12px;
     font-size: 11px;
   }
-  
+
   .header-note h3 {
     font-size: 24px;
   }
-  
+
   .trademark-class p {
     font-size: 14px;
   }
-  
+
   .button-class {
     flex-direction: column;
     align-items: center;
     gap: 10px;
   }
-  
+
   .regis-button,
   .login-button {
     width: 80%;
     max-width: 250px;
   }
-  
+
   .laptop-tagline {
     font-size: 20px;
     margin-bottom: 30px;
   }
-  
+
   .testimonial-card,
   .recent-card {
     max-width: 100%;
