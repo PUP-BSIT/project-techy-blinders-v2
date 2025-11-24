@@ -21,7 +21,7 @@ It allows students to:
 
 ## 🌐 Live Demo / Web hosting
 
-Visit our live application: [http://72.61.119.6/](http://72.61.119.6/)
+Visit our live application: [https://techymindstack.site/](https://techymindstack.site/)
 
 ## 🌱 Git Workflow
 
