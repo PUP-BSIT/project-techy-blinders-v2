@@ -87,6 +87,23 @@
                         
                     }
                 }
+                @if (isLoading) {
+                <div class="loading-message">
+                    <span>Registering...</span>
+                </div>
+                }
+
+                @if (errorMessage) {
+                <div class="error-message">
+                    <span>{{ errorMessage }}</span>
+                </div>
+                }
+
+                @if (successMessage) {
+                <div class="success-message">
+                    <span>{{ successMessage }}</span>
+                </div>
+                }
             <div class="submit-class">
                 <button type="submit">Register</button>
             </div>

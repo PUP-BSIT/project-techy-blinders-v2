@@ -1,12 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { NavBar } from "../../shared/components/nav-bar/nav-bar";
 import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
-import { RegisterRequest, RegisterResponse } from '../../models/user.model'; // Update path
+import { RegisterRequest, RegisterResponse } from '../../models/user.model';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../../service/user-service';
-import { HttpClientModule } from '@angular/common/http';
-
+import { HttpErrorResponse } from '@angular/common/http'; // Add this import
 
 @Component({
   selector: 'app-registration-page',
@@ -55,48 +54,32 @@ export class RegistrationPage {
     this.successMessage = '';
 
     if (this.registrationFrom.invalid) {
-      this.registrationFrom.markAllAsTouched();
-      return;
-    }
-
-    if (this.passwordControl?.value !== this.confirmPasswordControl?.value) {
-      this.errorMessage = 'Passwords do not match';
+      this.errorMessage = 'Fill out the form';
       return;
     }
 
     this.isLoading = true;
 
-    const registerRequest: RegisterRequest = {
-      username: this.registrationFrom.value.username,
-      email: this.registrationFrom.value.email,
-      password: this.registrationFrom.value.password
-    };
+    const userData: RegisterRequest = {
+      email: this.emailControl?.value,
+      username: this.usernameControl?.value,
+      password: this.passwordControl?.value
+    }
 
-    this.userService.createUser(registerRequest).subscribe({
-      next: (response: RegisterResponse) => {
+    this.userService.registerUser(userData).subscribe({
+      next: (value) => {
         this.isLoading = false;
-        
-        if (response.account_succesfully_created) {
-          this.successMessage = `Registration successful! Your User ID: ${response.user_id}`;
-          console.log('User created with ID:', response.user_id);
-          
-          this.registrationFrom.reset();
-          
-          setTimeout(() => {
-          }, 2000);
-        } else {
-          this.errorMessage = 'Registration failed. Please try again.';
-        }
+        this.successMessage = "Registration is Successful";
+        console.log ('User registered', value);
+
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 2000);
       },
-      error: (error: any) => {
+
+      error: (error: HttpErrorResponse) => {
         this.isLoading = false;
-        
-        if (error.error && error.error.error_message) {
-          this.errorMessage = error.error.error_message;
-        } else {
-          this.errorMessage = 'Registration failed. Please try again.';
-        }
-        
+        this.errorMessage = error.error?.message || 'Registration failed. Please try again.';
         console.error('Registration error:', error);
       }
     });
