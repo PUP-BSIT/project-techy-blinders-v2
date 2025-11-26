@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { SideBar } from '../../../shared/components/side-bar/side-bar';
 
 @Component({
@@ -8,5 +8,25 @@ import { SideBar } from '../../../shared/components/side-bar/side-bar';
   styleUrl: './account-settings.scss'
 })
 export class AccountSettings {
+  currentPassword = signal('');
+  newPassword = signal('');
 
+  constructor() {}
+
+  onCancel() {
+    this.currentPassword.set('');
+    this.newPassword.set('');
+  }
+
+  onSave() {
+    const changePassword = {
+      currentPassword: this.currentPassword(),
+      newPassword: this.newPassword()
+    };
+    // Waiting on API
+  }
+
+  onDeleteAccount() {
+    // Waiting on API
+  }
 }
