@@ -15,19 +15,23 @@
 
     <div id="personal_information_container">
         <h3>Personal Information</h3>
+
         <form id="edit_profile_form">
             <label for="full_name">Full Name</label>
-            <input type="text" class="inputs">
+            <input type="text" class="inputs" [(ngModel)]="fullName" name="fullName">
+
             <label for="username">Username</label>
-            <input type="text" class="inputs">
+            <input type="text" class="inputs" [(ngModel)]="username" name="username">
+
             <label for="email">Email</label>
-            <input type="email" class="inputs">
+            <input type="email" class="inputs" [(ngModel)]="email" name="email">
+
             <label for="Bio">Bio</label>
-            <input type="text" class="inputs">
+            <input type="text" class="inputs" [(ngModel)]="bio" name="bio">
 
             <div id="button-container">
-                <button type="button" id="cancel_button">Cancel</button>
-                <button type="button" id="save_button">Save Changes</button>
+                <button type="button" id="cancel_button" (click)="onCancel()">Cancel</button>
+                <button type="button" id="save_button" (click)="onSave()">Save Changes</button>
             </div>
         </form>
     </div>
