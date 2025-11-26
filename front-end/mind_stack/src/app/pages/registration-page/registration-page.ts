@@ -70,6 +70,7 @@ export class RegistrationPage {
       next: (value) => {
         this.isLoading = false;
         this.successMessage = "Registration is Successful";
+        this.registrationFrom.reset();
         console.log ('User registered', value);
 
         setTimeout(() => {

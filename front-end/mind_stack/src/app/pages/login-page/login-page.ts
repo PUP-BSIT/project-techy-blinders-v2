@@ -1,13 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NavBar } from "../../shared/components/nav-bar/nav-bar";
 import { RouterLink } from "@angular/router";
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
-
-interface Login {
-  userId: number;
-  password: string;
-}
+import { UserService } from '../../../service/user-service';
+import { LoginRequest } from '../../models/user.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login-page',
@@ -19,6 +17,12 @@ interface Login {
 export class LoginPage {
   formBuilder = inject(FormBuilder);
   loginForm: FormGroup;
+  userService = inject(UserService);
+  router = inject(Router);
+
+  isLoading = false;
+  errorMessage = '';
+  successMessage = '';
 
   constructor () {
     this.loginForm = this.formBuilder.group ({
@@ -35,8 +39,39 @@ export class LoginPage {
   }
 
   loginValidation () {
-    console.log(this.loginForm.value);
-    this.loginForm.reset();
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    if (this.loginForm.invalid) {
+        this.errorMessage = 'Fill out the form';
+        return;
+    }
+
+    this.isLoading = true;
+
+    const userData: LoginRequest = {
+      user_id: this.userIdControl?.value,
+      password: this.passwordControl?.value
+    }
+
+    this.userService.loginUser(userData).subscribe ({
+      next: (value) => {
+        this.isLoading = false;
+        this.errorMessage = '';
+        this.successMessage = "Login successful";
+        this.loginForm.reset();
+
+        setTimeout(() => {
+          this.router.navigate(['/dashboard'])
+        }, 2000)
+      },
+
+      error: (error: HttpErrorResponse) => {
+        this.isLoading = false;
+        this.errorMessage = error.error?.message || 'Login failed.';
+        console.error('Login error:', error);
+      }
+    })
   }
 
   get userIdControl () {

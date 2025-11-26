@@ -19,7 +19,7 @@ export interface RegisterResponse {
 
 export interface LoginRequest {
     user_id: number;
-    passowrd: string;
+    password: string;
 }
 
 export interface LoginResponse {
