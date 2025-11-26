@@ -1,64 +1,70 @@
-<div class="sidebar">
-    <div class="side-bar-header">
-        <img src="assets/image-logo.png" alt="Mindstack Logo" class="logo"/>
-        <h1 class="title">Mindstack</h1>
-    </div>
-
-    <ul class="menu">
-        <li>
-            <a routerLink="/app/dashboard" routerLinkActive="active">
-                <img src="assets/book-dashboard.png" 
-                      alt="Dashboard icon" 
-                      class="icon">
-                Dashboard
-            </a>
-        </li>
-        <li>
-            <a routerLink="/app/study-sets" routerLinkActive="active">
-                <img src="assets/Edit.png" 
-                      alt="Study Sets icon" 
-                      class="icon">
-                Study Sets
-            </a>
-        </li>
-        <li>
-            <a routerLink="/app/quizzes" routerLinkActive="active">
-                <img src="assets/Clipboard.png" 
-                      alt="Quizzes icon" 
-                      class="icon">
-                Quizzes
-            </a>
-        </li>
-        <li>
-            <a routerLink="/app/community" routerLinkActive="active">
-                <img src="assets/Trello.png" 
-                      alt="Community icon" 
-                      class="icon">
-                Community
-            </a>
-        </li>
-        <li>
-            <a routerLink="/app/notifications" routerLinkActive="active">
-                <img src="assets/bell.png" 
-                      alt="Notification icon" 
-                      class="icon">
-                Notification
-            </a>
-        </li>
-    </ul>
-
-    <div class="sidebar-user">
-        <div class="user-left">
-            <div class="user-profile-initial">J</div>
-
-            <div class="user-info">
-                <span class="user-name">John Doe</span>
-                <span class="user-email">johndoe@gmail.com</span>
-            </div>
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav mode="side" opened class="sidebar">
+        <div class="side-bar-header">
+            <img src="assets/image-logo.png" alt="Mindstack Logo" class="logo"/>
+            <h1 class="title">Mindstack</h1>
         </div>
 
-        <button class="logout-btn" (click)="onLogout()">
-            <img src="assets/logout-icon.png" class="icon-btn" alt="Logout">
-        </button>
-    </div>
-</div>
+        <ul class="menu">
+            <li>
+                <a routerLink="/app/dashboard" routerLinkActive="active">
+                    <img src="assets/book-dashboard.png" 
+                          alt="Dashboard icon" 
+                          class="icon">
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <a routerLink="/app/study-sets" routerLinkActive="active">
+                    <img src="assets/Edit.png" 
+                          alt="Study Sets icon" 
+                          class="icon">
+                    Study Sets
+                </a>
+            </li>
+            <li>
+                <a routerLink="/app/quizzes" routerLinkActive="active">
+                    <img src="assets/Clipboard.png" 
+                          alt="Quizzes icon" 
+                          class="icon">
+                    Quizzes
+                </a>
+            </li>
+            <li>
+                <a routerLink="/app/community" routerLinkActive="active">
+                    <img src="assets/Trello.png" 
+                          alt="Community icon" 
+                          class="icon">
+                    Community
+                </a>
+            </li>
+            <li>
+                <a routerLink="/app/notifications" routerLinkActive="active">
+                    <img src="assets/bell.png" 
+                          alt="Notification icon" 
+                          class="icon">
+                    Notification
+                </a>
+            </li>
+        </ul>
+
+        <div class="sidebar-user">
+            <div class="user-left">
+                <div class="user-profile-initial">J</div>
+
+                <div class="user-info">
+                    <span class="user-name">John Doe</span>
+                    <span class="user-email">johndoe@gmail.com</span>
+                </div>
+            </div>
+
+            <button class="logout-btn" (click)="onLogout()">
+                <img src="assets/logout-icon.png" class="icon-btn" alt="Logout">
+            </button>
+        </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <ng-content></ng-content>
+    </mat-sidenav-content>
+</mat-sidenav-container>
