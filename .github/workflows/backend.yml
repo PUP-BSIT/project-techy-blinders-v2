@@ -31,9 +31,10 @@ jobs:
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+          restore-keys: |
+            ${{ runner.os }}-m2
 
-      - name: Build with Maven
+      - name: Build project
         working-directory: ./back-end/mind_stack_id
         run: mvn clean install -DskipTests
 
@@ -41,7 +42,7 @@ jobs:
         working-directory: ./back-end/mind_stack_id
         run: mvn test
 
-      - name: Build JAR file
+      - name: Package JAR (main branch only)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         working-directory: ./back-end/mind_stack_id
         run: mvn package -DskipTests
@@ -66,7 +67,7 @@ jobs:
           name: spring-boot-jar
           path: ./artifact
 
-      - name: Deploy JAR to Hostinger VPS
+      - name: Upload JAR to Hostinger VPS
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -75,9 +76,9 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
           source: "artifact/*.jar"
           target: "/root/mind-stack-backend"
-          strip_components: 1
+          strip_components: 0
 
-      - name: Execute deployment on VPS
+      - name: Deploy on VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -87,42 +88,41 @@ jobs:
           script: |
             cd /root/mind-stack-backend
 
-            echo "Stopping application..."
+            echo "Stopping backend..."
             sudo systemctl stop mind-stack-backend || true
+
+            echo "Reloading systemd..."
+            sudo systemctl daemon-reload
 
             if [ -f application.jar ]; then
               echo "Backing up old JAR..."
               mv application.jar application.jar.backup.$(date +%Y%m%d_%H%M%S)
-              ls -t application.jar.backup.* | tail -n +4 | xargs rm -f 2>/dev/null || true
+              ls -t application.jar.backup.* | tail -n +6 | xargs rm -f 2>/dev/null || true
             fi
 
-            echo "Deploying new JAR..."
+            echo "Installing new JAR..."
             mv *.jar application.jar
 
-            echo "Starting application..."
+            echo "Starting backend..."
             sudo systemctl start mind-stack-backend
-
-            echo "Waiting for application to start..."
             sleep 10
 
             if sudo systemctl is-active --quiet mind-stack-backend; then
-              echo "✅ Application started successfully"
-              
-              if curl -f http://localhost:8080/actuator/health > /dev/null 2>&1; then
-                echo "✅ Health check passed"
+              echo "✔ Service is active"
+
+              if curl -sf http://localhost:8080/actuator/health >/dev/null; then
+                echo "✔ Health check passed"
               else
-                echo "⚠️  Health check failed, but service is running"
+                echo "⚠ Service started but health check failed"
               fi
             else
-              echo "❌ Application failed to start"
-              echo "Rolling back to previous version..."
-              
-              if ls application.jar.backup.* 1> /dev/null 2>&1; then
-                latest_backup=$(ls -t application.jar.backup.* | head -n 1)
-                mv "$latest_backup" application.jar
-                sudo systemctl start mind-stack-backend
-                echo "Rolled back to previous version"
-              fi
-              
+              echo "❌ Service failed to start"
+              echo "Rolling back..."
+
+              latest_backup=$(ls -t application.jar.backup.* | head -n 1)
+              mv "$latest_backup" application.jar
+              sudo systemctl start mind-stack-backend
+
+              echo "✔ Rolled back to previous version"
               exit 1
             fi
