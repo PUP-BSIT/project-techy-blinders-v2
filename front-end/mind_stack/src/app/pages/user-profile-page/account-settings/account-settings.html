@@ -29,18 +29,36 @@
         <div id="password_management">
             <h4>Password Management</h4>
             <form id="change_password_form">
-                <input type="text" class="inputs" placeholder="Enter Current Password">
-                <input type="text" class="inputs" placeholder="Enter Current Password">
+
+                <input 
+                    type="password" 
+                    class="inputs" 
+                    placeholder="Enter Current Password"
+                    [value]="currentPassword()"
+                    (input)="currentPassword.set($any($event.target).value)">
+
+                <input 
+                    type="password" 
+                    class="inputs" 
+                    placeholder="Enter New Password"
+                    [value]="newPassword()"
+                    (input)="newPassword.set($any($event.target).value)">
+
                 <div class="button-container">
-                    <button id="cancel_button" type="button">Cancel</button>
-                    <button id="save_button" type="button">Save</button>
+                    <button id="cancel_button" type="button" (click)="onCancel()">Cancel</button>
+                    <button id="save_button" type="button" (click)="onSave()">Save</button>
                 </div>
+
             </form>
         </div>
 
         <div id="data_privacy">
             <h4>Data & Privacy</h4>
-            <button type="button" id="delete_account_button">Delete Account</button>
+
+            <button type="button" id="delete_account_button" (click)="onDeleteAccount()">
+                Delete Account
+            </button>
+
             <p id="delete_warning">This will permanently delete your Account in MindStack.</p>
         </div>
     </div>

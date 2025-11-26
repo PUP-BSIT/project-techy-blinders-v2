@@ -9,4 +9,21 @@ import { SideBar } from '../../shared/components/side-bar/side-bar';
 })
 export class UserProfilePage {
 
+  activeTab: 'overview' | 'account-settings' = 'overview';
+
+  constructor() {}
+
+  onEditProfile() {
+    // Click: Edit Component displayed
+  }
+
+  showOverview() {
+    this.activeTab = 'overview';
+    // Click: Overview Component displayed
+  }
+
+  showAccountSettings() {
+    this.activeTab = 'account-settings';
+    // Click: Account Settings Component displayed
+  }
 }
