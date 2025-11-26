@@ -12,15 +12,15 @@
             <p>johndoe147@gmail.com</p>
         </div>
         <div class="upper-div-content">
-            <button id="edit_profile_button">Edit Profile</button>
+            <button id="edit_profile_button" (click)="onEditProfile()">Edit Profile</button>
         </div>
     </div>
 
     <div id="mid_nav">
-        <div class="mid_nav_content">
+        <div class="mid_nav_content" (click)="showOverview()">
             <h3>Overview</h3>
         </div>
-        <div class="mid_nav_content">
+        <div class="mid_nav_content" (click)="showAccountSettings()">
             <h3>Account Settings</h3>
         </div>
     </div>
