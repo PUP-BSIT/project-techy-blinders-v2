@@ -23,7 +23,7 @@
             <input type="text" formControlName="email" placeholder="Email">
                 @if (emailControl?.touched) {
                     @if (emailControl?.errors?.['required']) {
-                        <div>
+                        <div class="required-input">
                             <span>Input Email</span>
                         </div>
                     }@else if(emailControl?.errors?.['email']) {
@@ -45,7 +45,7 @@
             <input type="text" formControlName="username" placeholder="Username">
                 @if (usernameControl?.touched) {
                     @if(usernameControl?.errors?.['required']) {
-                        <div>
+                        <div  class="required-input">
                             <span>Input Username</span>
                         </div>
                         
@@ -62,7 +62,7 @@
             <input type="password" formControlName="password" placeholder="Password">
                 @if(passwordControl?.touched) {
                     @if(passwordControl?.errors?.['required']){
-                        <div>
+                        <div class="required-input">
                             <span>Input password</span>
                         </div>
                         
