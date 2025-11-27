@@ -1,17 +1,19 @@
 export interface Comment {
-    commnet_id: number;
-    flashcard_id: number;
-    content: string;
-    user_id: number;
-    created_at: Date;
+  comment_id: string;
+  flashcard_id?: number;
+  content: string;
+  user_id: string;
+  user_name: string;
+  created_at: Date;
 }
 
 export interface CommentRequest {
-    content: string;
+  content: string;
+  flashcard_id?: number;
 }
 
 export interface CommentResponse {
-    comment_id: number;
+  comment_id: string;
 }
 
 export interface CommentError {

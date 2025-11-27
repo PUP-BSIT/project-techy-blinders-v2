@@ -1,5 +1,5 @@
 <div class="comments-section">
-  @for (comment of getComments(); track comment.id) {
+  @for (comment of getComments(); track comment.comment_id) {
     <div class="comment-item">
       <div class="comment-header">
         <div class="user-avatar-small">
@@ -10,14 +10,14 @@
           />
         </div>
         <div class="comment-info">
-          <span class="comment-user">{{ comment.userName }}</span>
+          <span class="comment-user">{{ comment.user_name }}</span>
           <p class="comment-text">{{ comment.content }}</p>
           <div class="star-rating">
             @for (star of getStarArray(5); track $index) {
               <span 
                 class="star" 
-                [class.filled]="$index < comment.rating"
-                (click)="onRateComment(comment.id, $index + 1)"
+                [class.filled]="$index < getCommentRating(comment.comment_id)"
+                (click)="onRateComment(comment.comment_id, $index + 1)"
               >
                 ★
               </span>
