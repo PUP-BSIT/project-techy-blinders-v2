@@ -1,12 +1,3 @@
-export interface Comment {
-  id: string;
-  userId: string;
-  userName: string;
-  content: string;
-  timestamp: Date;
-  rating: number;
-}
-
 export interface Post {
   id: string;
   userId: string;
@@ -14,7 +5,7 @@ export interface Post {
   title: string;
   content: string;
   timestamp: Date;
-  comments: Comment[];
+  commentCount: number;
   showComments: boolean;
   quizTitle?: string;
   flashcardCount?: number;

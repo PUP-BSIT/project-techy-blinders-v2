@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommunityService } from '../../../../../services/community.service';
-import { Comment } from '../../../../../models/community.model';
+import { Comment } from '../../../../../models/comment.model';
 
 @Component({
   selector: 'app-comment-section',
@@ -14,6 +14,7 @@ import { Comment } from '../../../../../models/community.model';
 export class CommentSection {
   @Input() postId: string = ''; 
   newCommentText: string = '';
+  currentUserId: string = 'currentUser';
 
   constructor(public communityService: CommunityService) {}
 
@@ -26,7 +27,7 @@ export class CommentSection {
 
   onRateComment(commentId: string, rating: number) {
     if (this.postId) {
-      this.communityService.rateComment(this.postId, commentId, rating);
+      this.communityService.rateComment(commentId, this.currentUserId, rating);
     }
   }
 
@@ -35,7 +36,10 @@ export class CommentSection {
   }
 
   getComments(): Comment[] {
-    const post = this.communityService.posts.find(p => p.id === this.postId);
-    return post ? post.comments : [];
+    return this.communityService.getComments(this.postId);
+  }
+
+  getCommentRating(commentId: string): number {
+    return this.communityService.getRating(commentId, this.currentUserId);
   }
 }

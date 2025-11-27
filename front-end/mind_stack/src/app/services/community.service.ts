@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Post, QuestionData, Comment } from '../models/community.model';
+import { Post, QuestionData } from '../models/community.model';
+import { Comment } from '../models/comment.model';
+import { Rating } from '../models/rating.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,7 @@ export class CommunityService {
       title: 'What is Lorem Ipsum?',
       content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.',
       timestamp: new Date(),
-      comments: [],
+      commentCount: 0,
       showComments: false
     },
     {
@@ -23,12 +25,15 @@ export class CommunityService {
       title: 'Can you answer this?',
       content: '',
       timestamp: new Date(),
-      comments: [],
+      commentCount: 0,
       showComments: false,
       quizTitle: 'TITLE FOR QUIZ',
       flashcardCount: 24
     }
   ];
+
+  private comments: Map<string, Comment[]> = new Map();
+  private ratings: Map<string, Rating[]> = new Map();
 
   showQuestionModal: boolean = false;
 
@@ -48,7 +53,7 @@ export class CommunityService {
       title: data.title,
       content: data.content,
       timestamp: new Date(),
-      comments: [],
+      commentCount: 0,
       showComments: false
     };
 
@@ -67,30 +72,53 @@ export class CommunityService {
     }
   }
 
+  getComments(postId: string): Comment[] {
+    return this.comments.get(postId) || [];
+  }
+
   addComment(postId: string, commentText: string) {
     const post = this.posts.find(p => p.id === postId);
     if (post) {
       const newComment: Comment = {
-        id: Date.now().toString(),
-        userId: 'currentUser',
-        userName: 'John Doe',
+        comment_id: Date.now().toString(),
         content: commentText,
-        timestamp: new Date(),
-        rating: 0
-      } as Comment;
+        user_id: 'currentUser',
+        user_name: 'John Doe',
+        created_at: new Date()
+      };
 
-      post.comments.push(newComment);
+      const postComments = this.comments.get(postId) || [];
+      postComments.push(newComment);
+      this.comments.set(postId, postComments);
+
+      post.commentCount = postComments.length;
     }
   }
 
-  rateComment(postId: string, commentId: string, rating: number) {
-    const post = this.posts.find(p => p.id === postId);
-    if (post) {
-      const comment = post.comments.find(c => c.id === commentId);
-      if (comment) {
-        comment.rating = rating;
-      }
+  getRating(commentId: string, userId: string): number {
+    const commentRatings = this.ratings.get(commentId) || [];
+    const userRating = commentRatings.find(r => r.user_id === userId);
+    return userRating ? userRating.rating_value : 0;
+  }
+
+  rateComment(commentId: string, userId: string, ratingValue: number) {
+    const commentRatings = this.ratings.get(commentId) || [];
+    const existingRatingIndex = commentRatings.findIndex(r => r.user_id === userId);
+
+    if (existingRatingIndex !== -1) {
+      commentRatings[existingRatingIndex].rating_value = ratingValue;
+    } else {
+      const newRating: Rating = {
+        rating_id: Date.now().toString(),
+        comment_id: commentId,
+        user_id: userId,
+        rating_value: ratingValue,
+        created_at: new Date()
+      };
+      commentRatings.push(newRating);
     }
+
+    this.ratings.set(commentId, commentRatings);
   }
 
   handleQuizClick(postId: string) {
