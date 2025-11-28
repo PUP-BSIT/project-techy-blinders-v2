@@ -4,22 +4,81 @@
 
 :host {
     display: block;
-    min-height: 100vh;
+    height: 100vh;
     background-color: #ebebeb;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -30px;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.logo-class {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 320px;
+    height: 510px;
+    padding: 40px 30px;
+    background-color: #478f79;
+    border-radius: 20px 0 0 20px;
+}
+
+.header-class {
+    margin-bottom: 30px;
+}
+
+.logo-class h1 {
+    text-align: center;
+    color: white;
+    font-size: 22px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.image-class {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.logo-class img {
+    width: 100%;
+    max-width: 280px;
+}
+
+.seperator-class {
+    display: none;
 }
 
 .registration-form {
-    position: absolute;
     display: flex;
-    border: solid 0px;
-    width: 30%;
-    margin-left: 45%;
-    margin-top: 3%;
-    padding: 25px;
-    height: 500px;
-    border-radius: 30px;
-    z-index: 1;
+    flex-direction: column;
+    width: 380px;
+    height: 520px;
+    padding: 35px 40px;
     background-color: #6cdbb9;
+    border-radius: 0 20px 20px 0;
+    overflow: hidden;
+}
+
+.registration-form form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 10px;
 }
 
 .registration-form label {
@@ -28,7 +87,7 @@
     font-size: 14px;
     font-weight: 600;
     color: #02542d;
-    margin: 15px 0 5px 0;
+    margin: 0 0 4px 0;
     
     &::after {
         content: " *";
@@ -37,20 +96,16 @@
 }
 
 .registration-form input {
-    margin-left: 10%;
-    width: 200%;
-    padding: 12px;
+    width: 100%;
+    padding: 11px 14px;
     border: 2px solid #ddd;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 15px;
     box-sizing: border-box;
     transition: all 0.3s ease;
-    margin: 5px 0 0 0;
+    margin: 0;
+    background-color: white;
     
-    &:invalid {
-        border-color: #ff6b6b;
-    }
-
     &:focus {
         outline: none;
         border-color: #3e7b69;
@@ -58,32 +113,35 @@
     }
 }
 
-.registration-form span {
+.validation-message {
+    min-height: 16px;
+    margin-top: 3px;
     display: flex;
-    font-family: "Roboto", sans-serif;
-    font-size: 14px;
-    font-weight: bolder;
-    color: #034626;
-    margin-top: 10px;
-    margin-left: 3%;
+    align-items: flex-start;
+}
 
+.validation-message span {
+    font-family: "Roboto", sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: #ff0000;
+    line-height: 1.2;
 }
 
 .submit-class {
-    margin-top: 30px;
-    width: 200%;
+    margin-top: 12px;
+    width: 100%;
     
     button {
-        margin-left: 10%;
         width: 100%;
-        padding: 12px;
+        padding: 11px;
         border: none;
         border-radius: 8px;
         background-color: #3e7b69;
         font-family: "Roboto", sans-serif;
         font-weight: 600;
         color: white;
-        font-size: 16px;
+        font-size: 15px;
         cursor: pointer;
         transition: all 0.3s ease;
         
@@ -99,20 +157,19 @@
 }
 
 .cancel-button {
-    margin-top: 15px;
-    width: 200%;
+    margin-top: 8px;
+    width: 100%;
     
     button {
-        margin-left: 10%;
         width: 100%;
-        padding: 12px;
+        padding: 11px;
         border: none;
         border-radius: 8px;
         background-color: #172e27;
         font-family: "Roboto", sans-serif;
         font-weight: 600;
         color: white;
-        font-size: 16px;
+        font-size: 15px;
         cursor: pointer;
         transition: all 0.3s ease;
         
@@ -127,55 +184,45 @@
     }
 }
 
-.seperator-class {
-    position: absolute;
-    z-index: 3;
-    border: solid 0px;
-    width: 2%;
-    margin-left: 41.9%;
-    margin-top: 3%;
-    padding: 20px;
-    z-index: 3;
-    height: 510px;
-    background-color: #478f79;
-}
-
-.logo-class {
-    position: absolute;
-    z-index: 3;
-    border: solid 0px;
-    width: 22%;
-    margin-left: 20%;
-    margin-top: 3%;
-    padding: 20px;
-    z-index: 4;
-    height: 510px;
-    background-color: #478f79;
-    border-radius: 20px;
-}
-
-.logo-class h1 {
-    text-align: center;
-    color: white;
-    margin-left: 13%;
-    margin-top: 15%;
-    font-size: 20px;
-    font-family: "Poppins", sans-serif;
-}
-
-.logo-class img {
-    margin-top: 10%;
-    width: 90%;
-    margin-left: 12%;
-}
-
-.required-input,
-.registration-form div > span {
-    color: #ff0000;
+.loading-message,
+.error-message,
+.success-message {
+    margin-top: 8px;
+    margin-bottom: 4px;
+    padding: 8px;
+    border-radius: 5px;
+    font-family: "Roboto", sans-serif;
     font-size: 12px;
-    margin: 4px 0 0 0;
-    font-weight: 500;
-    display: block;
-    min-height: 18px;
+    text-align: center;
+    min-height: 20px;
+    
+    span {
+        font-size: 12px;
+        margin: 0;
+        line-height: 20px;
+    }
 }
 
+.loading-message {
+    background-color: #fff3cd;
+    
+    span {
+        color: #856404;
+    }
+}
+
+.error-message {
+    background-color: #f8d7da;
+    
+    span {
+        color: #721c24;
+    }
+}
+
+.success-message {
+    background-color: #d4edda;
+    
+    span {
+        color: #155724;
+    }
+}
