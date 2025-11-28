@@ -58,7 +58,7 @@ export class LoginPage {
         this.loginForm.reset();
 
         setTimeout(() => {
-          this.router.navigate(['/dashboard'])
+          this.router.navigate(['app/dashboard'])
         }, 2000)
       },
 
