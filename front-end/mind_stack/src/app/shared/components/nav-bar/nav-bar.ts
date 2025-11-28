@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
+
 @Component({
   selector: 'app-nav-bar',
   templateUrl: './nav-bar.html',
@@ -7,5 +8,28 @@ import { RouterLink } from "@angular/router";
   imports: [RouterLink]
 })
 export class NavBar {
+  constructor(private router: Router) {}
 
+  scrollToSection(sectionId: string) {
+    // Check if we're already on the landing page
+    if (this.router.url === '/' || this.router.url === '') {
+      // We're on landing page, just scroll
+      this.scrollToElement(sectionId);
+    } else {
+      // Navigate to landing page first, then scroll
+      this.router.navigate(['/']).then(() => {
+        // Wait a bit for the page to load
+        setTimeout(() => {
+          this.scrollToElement(sectionId);
+        }, 100);
+      });
+    }
+  }
+
+  private scrollToElement(sectionId: string) {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
 }
