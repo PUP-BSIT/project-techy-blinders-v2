@@ -94,8 +94,20 @@
 @if (isSuccessModalOpen) {
     <div class="modal-backdrop">
         <div class="modal-content">
-            <h2>Register successfully</h2>
+            <h2>Register Successfully</h2>
             <p>You will be redirected to the login page shortly.</p>
+
+            @if (registeredUserId !== null) {
+                <div class="user-id-row">
+                    <span class="user-id-label">User ID:&nbsp;</span>
+                    <div class="user-id-pill">
+                        <span class="user-id-value">{{ registeredUserId }}</span>
+                        <button type="button" class="copy-user-id-button" (click)="copyUserIdToClipboard()">
+                        Copy
+                        </button>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 }
