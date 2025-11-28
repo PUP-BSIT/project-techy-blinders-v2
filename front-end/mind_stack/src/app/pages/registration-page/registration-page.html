@@ -54,6 +54,8 @@
                     @if(passwordControl?.touched) {
                         @if(passwordControl?.errors?.['required']){
                             <span>Input password</span>
+                        }@else if(passwordControl?.errors?.['minlength']) {
+                            <span>Password must be at least 6 characters</span>
                         }
                     }
                 </div>
@@ -79,12 +81,6 @@
                 </div>
             }
 
-            @if (errorMessage) {
-                <div class="error-message">
-                    <span>{{ errorMessage }}</span>
-                </div>
-            }
-
             @if (successMessage) {
                 <div class="success-message">
                     <span>{{ successMessage }}</span>
@@ -92,7 +88,7 @@
             }
 
             <div class="submit-class">
-                <button type="submit">Register</button>
+                <button type="submit" [disabled]="!isFormValid() || isLoading">Register</button>
             </div>
             <div class="cancel-button">
                 <button type="reset">Cancel</button>
