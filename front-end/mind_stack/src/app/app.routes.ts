@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { RenderMode } from '@angular/ssr';
-import { AboutPage } from './pages/about-page/about-page';
 import { ContactPage } from './pages/contact-page/contact-page';
 import { LandingPage } from './pages/landing-page/landing-page';
 import { DashboardPage } from './pages/dashboard-page/dashboard-page';
@@ -22,7 +21,7 @@ declare module '@angular/router' {
 
 export const routes: Routes = [
     {path: '', component: LandingPage },  
-    {path: 'about', component: AboutPage },
+    // Removed about route since it's now part of landing page
     {path: 'contact', component: ContactPage },
     {path: 'login', component: LoginPage},
     {path: 'registration', component: RegistrationPage},
