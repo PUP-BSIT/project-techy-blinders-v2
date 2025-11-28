@@ -11,7 +11,6 @@
 .container {
     display: flex;
     margin-top: 2%;
-    margin-left: 15px;
 }
 
 .login-form {
@@ -21,12 +20,25 @@
     border: solid 0px;
     width: 30%;
     margin-left: 45%;
-    margin-top: 5%;
+    margin-top: 7%;
     padding: 40px;
-    height: 300px;
+    height: 320px;
     border-radius: 30px;
     z-index: 1;
     background-color: #6cdbb9;
+
+    .forgot-password {
+        margin-top: 190px;
+    }
+
+    .register-class {
+        p {
+            color: #fff;
+            a {
+                color: #02542d;
+            }
+        }
+    }
 }
 
 .login-form label {
@@ -39,11 +51,21 @@
 }
 
 .userid-class input, .password-class input{
-    margin-top: 5%;
     border: solid 0px;
     width: 130%;
     padding: 10px;
     border-radius: 5px;
+}
+
+.userid-class {
+    position: absolute;
+    margin-top: 17px;
+}
+
+.password-class {
+    position: absolute;
+    margin-top: 100px;
+    margin-bottom: 50px;
 }
 
 .login-form span {
@@ -51,8 +73,7 @@
     font-family: "Roboto", sans-serif;
     font-size: 14px;
     font-weight: bolder;
-    color: #034626;
-    margin-top: 10px;
+    color: red;
 }
 
 .forgot-password {
@@ -61,10 +82,9 @@
 
 .forgot-password a {
     display: flex;
-    margin-left: 43%;
+    margin-left: 35%;
     text-decoration: none;
-    margin-top: 5%;
-    color: #11271e;
+    color: #02542d;
     font-weight: 500;
     font-size: 15px;
     font-family: "Roboto", sans-serif;
@@ -112,9 +132,9 @@
     z-index: 2;
     border: solid 0px;
     width: 10%;
-    height: 379px;
+    height: 400px;
     margin-left: 40%;
-    margin-top: 5%;
+    margin-top: 7%;
     background-color: #478f79;
 }
 
@@ -123,9 +143,9 @@
     z-index: 3;
     border: solid 0px;
     width: 20%;
-    height: 379px;
+    height: 400px;
     margin-left:25%;
-    margin-top: 5%;
+    margin-top: 7%;
     background-color: #478f79;
     border-radius: 30px;
 }
