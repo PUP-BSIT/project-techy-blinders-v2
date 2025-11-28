@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Post, QuestionData } from '../models/community.model';
+import { Post, QuestionData } from '../models/blog.model';
 import { Comment } from '../models/comment.model';
 import { Rating } from '../models/rating.model';
 
