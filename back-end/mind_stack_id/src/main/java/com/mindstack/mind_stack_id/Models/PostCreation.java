@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tbl_blog")
+@Table(name = "tbl_post")
 public class PostCreation {
     public enum CategoryType {
         STUDY_TIPS ("Study Tips"),
@@ -65,6 +65,9 @@ public class PostCreation {
 
     @Column (name = "user_id")
     private long userId;
+
+    @Column (name = "username")
+    private String username;
 
     @Column (name = "title")
     private String title;
@@ -157,5 +160,13 @@ public class PostCreation {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }
