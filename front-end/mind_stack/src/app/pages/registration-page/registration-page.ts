@@ -23,6 +23,7 @@ export class RegistrationPage {
   registrationFrom: FormGroup;
   isLoading = false;
   successMessage = '';
+  isSuccessModalOpen = false;
 
   constructor() {
     this.registrationFrom = this.formBuilder.group ({
@@ -55,6 +56,7 @@ export class RegistrationPage {
 
   registrationValidation() {
     this.successMessage = '';
+    this.isSuccessModalOpen = false;
 
     if (!this.isFormValid()) {
       return;
@@ -72,6 +74,7 @@ export class RegistrationPage {
       next: (value) => {
         this.isLoading = false;
         this.successMessage = "Registration is Successful";
+        this.isSuccessModalOpen = true;
         this.registrationFrom.reset();
         console.log ('User registered', value);
 
