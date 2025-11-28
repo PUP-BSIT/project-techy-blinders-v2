@@ -125,6 +125,23 @@
     font-weight: bold;
     color: white;
     font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+        background: #2e5d4f;
+        transform: translateY(-1px);
+    }
+    
+    &:active:not(:disabled) {
+        transform: translateY(0);
+    }
+    
+    &:disabled {
+        background-color: #a0c4b8;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
 }
 
 .seperator-class {
@@ -171,4 +188,51 @@
 
 .image-class img {
     width: 100%;
+}
+
+.loading-message,
+.error-message,
+.success-message {
+    margin-top: 8px;
+    margin-bottom: 4px;
+    padding: 8px;
+    border-radius: 5px;
+    font-family: "Roboto", sans-serif;
+    font-size: 12px;
+    text-align: center;
+    min-height: 20px;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 170px;
+    
+    span {
+        font-size: 12px;
+        margin: 0;
+        line-height: 20px;
+    }
+}
+
+.loading-message {
+    background-color: #fff3cd;
+    
+    span {
+        color: #856404;
+    }
+}
+
+.error-message {
+    background-color: #f8d7da;
+    
+    span {
+        color: #721c24;
+    }
+}
+
+.success-message {
+    background-color: #d4edda;
+    
+    span {
+        color: #155724;
+    }
 }

@@ -21,7 +21,6 @@ export class LoginPage {
   router = inject(Router);
 
   isLoading = false;
-  errorMessage = '';
   successMessage = '';
 
   constructor () {
@@ -39,11 +38,9 @@ export class LoginPage {
   }
 
   loginValidation () {
-    this.errorMessage = '';
     this.successMessage = '';
 
     if (this.loginForm.invalid) {
-        this.errorMessage = 'Fill out the form';
         return;
     }
 
@@ -57,7 +54,6 @@ export class LoginPage {
     this.userService.loginUser(userData).subscribe ({
       next: (value) => {
         this.isLoading = false;
-        this.errorMessage = '';
         this.successMessage = "Login successful";
         this.loginForm.reset();
 
@@ -68,7 +64,6 @@ export class LoginPage {
 
       error: (error: HttpErrorResponse) => {
         this.isLoading = false;
-        this.errorMessage = error.error?.message || 'Login failed.';
         console.error('Login error:', error);
       }
     })

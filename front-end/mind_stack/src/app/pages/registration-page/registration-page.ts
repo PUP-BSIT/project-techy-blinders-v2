@@ -5,7 +5,7 @@ import { RegisterRequest, RegisterResponse } from '../../models/user.model';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../../service/user-service';
-import { HttpErrorResponse } from '@angular/common/http'; // Add this import
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-registration-page',
@@ -22,7 +22,6 @@ export class RegistrationPage {
   
   registrationFrom: FormGroup;
   isLoading = false;
-  errorMessage = '';
   successMessage = '';
 
   constructor() {
@@ -49,12 +48,15 @@ export class RegistrationPage {
     }); 
   }
 
+  isFormValid(): boolean {
+    return this.registrationFrom.valid && 
+           this.passwordControl?.value === this.confirmPasswordControl?.value;
+  }
+
   registrationValidation() {
-    this.errorMessage = '';
     this.successMessage = '';
 
-    if (this.registrationFrom.invalid) {
-      this.errorMessage = 'Fill out the form';
+    if (!this.isFormValid()) {
       return;
     }
 
@@ -80,7 +82,6 @@ export class RegistrationPage {
 
       error: (error: HttpErrorResponse) => {
         this.isLoading = false;
-        this.errorMessage = error.error?.message || 'Registration failed. Please try again.';
         console.error('Registration error:', error);
       }
     });

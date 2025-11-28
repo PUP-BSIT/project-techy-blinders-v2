@@ -58,13 +58,7 @@
 
             @if (isLoading) {
             <div class="loading-message">
-                <span>Registering...</span>
-            </div>
-            }
-
-            @if (errorMessage) {
-            <div class="error-message">
-                <span>{{ errorMessage }}</span>
+                <span>Logging in...</span>
             </div>
             }
 
@@ -79,7 +73,7 @@
             </div>
 
             <div class="login-button">
-                <button type="submit">Login</button>
+                <button type="submit" [disabled]="!loginForm.valid || isLoading">Login</button>
             </div>
 
             <div class="register-class">
