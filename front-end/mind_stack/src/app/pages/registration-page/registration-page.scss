@@ -232,3 +232,40 @@
         color: #155724;
     }
 }
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 24px 32px;
+    max-width: 360px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    font-family: "Roboto", sans-serif;
+
+    h2 {
+        margin: 0 0 8px 0;
+        font-size: 20px;
+        color: #02542d;
+        font-weight: 700;
+    }
+
+    p {
+        margin: 0;
+        font-size: 13px;
+        color: #333333;
+    }
+}

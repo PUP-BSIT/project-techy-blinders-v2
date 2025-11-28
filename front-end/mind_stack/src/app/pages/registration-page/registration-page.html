@@ -81,12 +81,6 @@
                 </div>
             }
 
-            @if (successMessage) {
-                <div class="success-message">
-                    <span>{{ successMessage }}</span>
-                </div>
-            }
-
             <div class="submit-class">
                 <button type="submit" [disabled]="!isFormValid() || isLoading">Register</button>
             </div>
@@ -96,3 +90,12 @@
         </form>
     </div>
 </div>
+
+@if (isSuccessModalOpen) {
+    <div class="modal-backdrop">
+        <div class="modal-content">
+            <h2>Register successfully</h2>
+            <p>You will be redirected to the login page shortly.</p>
+        </div>
+    </div>
+}

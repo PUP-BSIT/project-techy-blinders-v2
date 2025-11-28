@@ -203,8 +203,9 @@
     min-height: 20px;
     position: absolute;
     width: 100%;
-    left: 0;
-    top: 170px;
+    position: static;
+    left: auto;
+    top: auto;
     
     span {
         font-size: 12px;
