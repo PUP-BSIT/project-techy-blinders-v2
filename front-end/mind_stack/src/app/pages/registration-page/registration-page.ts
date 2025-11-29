@@ -84,10 +84,6 @@ export class RegistrationPage {
         console.log('Generated User ID:', this.registeredUserId);
         
         this.registrationFrom.reset();
-
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 5000);
       },
 
       error: (error: HttpErrorResponse) => {
@@ -114,6 +110,10 @@ export class RegistrationPage {
         alert('Failed to copy User ID. Please copy it manually.');
       });
     }
+  }
+
+  goToLoginPage() {
+    this.router.navigate(['/login']);
   }
 
   get emailControl () {
