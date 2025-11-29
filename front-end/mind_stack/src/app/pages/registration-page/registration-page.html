@@ -94,8 +94,31 @@
 @if (isSuccessModalOpen) {
     <div class="modal-backdrop">
         <div class="modal-content">
-            <h2>Register Successfully</h2>
-            <p>You will be redirected to the login page.</p>
+            <h2>Registration Successful!</h2>
+            <p>Your account has been created successfully.</p>
+
+            @if (registeredUserId !== null) {
+                <div class="user-id-section">
+                    <p class="user-id-instruction">Please save your User ID for login:</p>
+                    <div class="user-id-row">
+                        <span class="user-id-label">User ID:</span>
+                        <div class="user-id-pill">
+                            <span class="user-id-value">{{ registeredUserId }}</span>
+                            <button type="button" 
+                                    class="copy-user-id-button" 
+                                    [class.copied]="isCopied"
+                                    (click)="copyUserIdToClipboard()" 
+                                    title="Copy to clipboard">
+                                {{ isCopied ? 'Copied' : 'Copy' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+            
+            <button type="button" class="login-redirect-button" (click)="goToLoginPage()">
+                Go to Login Page
+            </button>
         </div>
     </div>
 }

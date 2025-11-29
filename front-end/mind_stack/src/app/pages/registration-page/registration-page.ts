@@ -24,6 +24,7 @@ export class RegistrationPage {
   isLoading = false;
   successMessage = '';
   isSuccessModalOpen = false;
+  registeredUserId: number | null = null;
 
   constructor() {
     this.registrationFrom = this.formBuilder.group ({
@@ -57,6 +58,7 @@ export class RegistrationPage {
   registrationValidation() {
     this.successMessage = '';
     this.isSuccessModalOpen = false;
+    this.registeredUserId = null;
 
     if (!this.isFormValid()) {
       return;
@@ -71,23 +73,47 @@ export class RegistrationPage {
     }
 
     this.userService.registerUser(userData).subscribe({
-      next: (value) => {
+      next: (response: RegisterResponse) => {
         this.isLoading = false;
+      
+        this.registeredUserId = response.user_id;
         this.successMessage = "Registration is Successful";
         this.isSuccessModalOpen = true;
+        
+        console.log('User registered successfully');
+        console.log('Generated User ID:', this.registeredUserId);
+        
         this.registrationFrom.reset();
-        console.log ('User registered', value);
-
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 2000);
       },
 
       error: (error: HttpErrorResponse) => {
         this.isLoading = false;
         console.error('Registration error:', error);
+        console.error('Error details:', error.error);
       }
     });
+  }
+
+  isCopied = false;
+
+  copyUserIdToClipboard() {
+    if (this.registeredUserId !== null) {
+      navigator.clipboard.writeText(this.registeredUserId.toString()).then(() => {
+        console.log('User ID copied to clipboard:', this.registeredUserId);
+        this.isCopied = true;
+        
+        setTimeout(() => {
+          this.isCopied = false;
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy user ID:', err);
+        alert('Failed to copy User ID. Please copy it manually.');
+      });
+    }
+  }
+
+  goToLoginPage() {
+    this.router.navigate(['/login']);
   }
 
   get emailControl () {
