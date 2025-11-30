@@ -3,14 +3,10 @@ $sidebar-text: #ffffff;
 $sidebar-hover-underline: #ffffff;
 
 $sidebar-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-$sidebar-bg: #3DAC78;
-$sidebar-text: #ffffff;
-$sidebar-hover-underline: #ffffff;
-
-$sidebar-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 $sidebar-font-size: x-large;
 
-$sidebar-width: 280px;
+$sidebar-width: 270px;
+$sidebar-width-collapsed: 80px;
 $sidebar-padding: 20px;
 $sidebar-gap: 10px;
 
@@ -20,12 +16,13 @@ $sidebar-gap: 10px;
 }
 
 mat-sidenav {
-    border-right: none !important;
-    box-shadow: none !important;
+    border-right: none;
+    box-shadow: none;
+    border-radius: 0 !important;
 }
 
 mat-sidenav-content {
-    margin-left: 0 !important;
+    margin-left: 0;
 }
 
 .sidebar {
@@ -36,10 +33,62 @@ mat-sidenav-content {
     position: fixed;
     top: 0;
     left: 0;
-    padding: $sidebar-padding;
-    padding-bottom: 0;
+    padding: 20px;
+    padding-bottom: 65px;
     display: flex;
     flex-direction: column;
+    transition: width 0.3s ease, padding 0.3s ease;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    &.collapsed {
+        width: $sidebar-width-collapsed;
+        padding: 20px 10px;
+        padding-bottom: 65px;
+        overflow: hidden;
+    }
+    
+    .text-content {
+        white-space: nowrap;
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+    
+    &.collapsed .text-content {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.1s ease, visibility 0.1s ease;
+    }
+}
+
+.toggle-btn {
+    background-color: transparent;
+    border: none;
+    color: $sidebar-text;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 51px;
+    margin-bottom: 2px;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .toggle-icon {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 1 !important;
+    }
 }
 
 .side-bar-header {
@@ -49,7 +98,7 @@ mat-sidenav-content {
 }
 
 .logo {
-    width: 70px;
+    width: 50px;
     height: 70px;
     object-fit: contain;
 }
@@ -63,13 +112,21 @@ mat-sidenav-content {
 ul {
     list-style: none;
     padding: 0;
-    margin-top: 20px;
+    margin-top: 40px;
     flex: 1;
-    overflow-y: auto;
+    overflow: hidden;
+
+    .collapsed & {
+        overflow: hidden;
+    }
 }
 
 li {
-    margin-bottom: 15px;
+    margin-bottom: 25px;
+    
+    .collapsed & {
+        overflow: hidden;
+    }
 }
 
 a {
@@ -79,39 +136,46 @@ a {
     font-family: $sidebar-font-family;
     display: flex;
     align-items: center;
-    padding: 8px 10px;
+    justify-content: flex-start;
+    padding: 8px;
     border-radius: 8px;
     font-size: $sidebar-font-size;
-    transition: color 0.3s ease;
-}
-
-a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 0%;
-    height: 2px;
-    background-color: $sidebar-hover-underline;
-    transition: width 0.3s ease;
-}
-
-a:hover::after,
-a.active::after {
-    width: 100%;
+    transition: background-color 0.3s ease;
 }
 
 a:hover {
     cursor: pointer;
-    color: $sidebar-text;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.collapsed a:hover {
+    background-color: transparent;
+}
+
+.collapsed a:hover .icon {
+    filter: brightness(0.7);
+}
+
+a.active {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.collapsed a.active {
+    background-color: transparent;
+}
+
+.collapsed a.active .icon {
+    filter: brightness(0.6);
 }
 
 .icon {
     width: 35px;
     height: 35px;
+    min-width: 35px;
     margin-right: 10px;
     object-fit: contain;
     vertical-align: middle;
+    transition: filter 0.3s ease;
 }
 
 .sidebar-user {
@@ -119,23 +183,31 @@ a:hover {
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 15px $sidebar-padding;
-    background-color: #207E52;
+    height: 65px;
+    padding: 15px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 .user-left {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0;
+    min-width: 35px;
+    height: 35px;
+    
+    .user-info {
+        margin-left: 10px;
+    }
 }
 
 .user-profile-initial {
     width: 35px;
     height: 35px;
+    min-width: 35px;
     border-radius: 50%;
     background-color: #ffffff;
     color: #000000;
@@ -145,6 +217,7 @@ a:hover {
     justify-content: center;
     font-weight: bold;
     font-size: 0.9rem;
+    flex-shrink: 0;
 
     &:hover {
         cursor: pointer;

@@ -11,8 +11,13 @@ import { MatSidenavModule } from '@angular/material/sidenav';
   styleUrls: ['./side-bar.scss']
 })
 export class SideBar {
+  isCollapsed = false;
   
   constructor(private router: Router) {}
+
+  toggleSidebar() {
+    this.isCollapsed = !this.isCollapsed;
+  }
 
   onLogout() {
     localStorage.removeItem('authToken');
