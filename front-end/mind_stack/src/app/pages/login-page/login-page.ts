@@ -25,8 +25,8 @@ export class LoginPage {
 
   constructor () {
     this.loginForm = this.formBuilder.group ({
-      userId: ['', {
-        validators: [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]+$/)],
+      email: ['', {
+        validators: [Validators.required, Validators.email],
         updateOn: 'change'
       }],
 
@@ -47,7 +47,7 @@ export class LoginPage {
     this.isLoading = true;
 
     const userData: LoginRequest = {
-      user_id: this.userIdControl?.value,
+      email: this.emailControl?.value,
       password: this.passwordControl?.value
     }
 
@@ -69,8 +69,8 @@ export class LoginPage {
     })
   }
 
-  get userIdControl () {
-    return this.loginForm.get ('userId');
+  get emailControl () {
+    return this.loginForm.get ('email');
   }
 
   get passwordControl () {
