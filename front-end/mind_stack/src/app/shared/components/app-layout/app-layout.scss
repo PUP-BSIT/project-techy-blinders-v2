@@ -6,4 +6,10 @@
 .main-content {
   flex: 1;
   overflow-y: auto;
+  margin-left: 270px;
+  transition: margin-left 0.3s ease;
+
+  &.sidebar-collapsed {
+    margin-left: 80px;
+  }
 }
