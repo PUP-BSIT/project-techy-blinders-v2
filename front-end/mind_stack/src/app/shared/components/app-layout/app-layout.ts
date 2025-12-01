@@ -9,4 +9,10 @@ import { SideBar } from '../side-bar/side-bar';
   templateUrl: './app-layout.html',
   styleUrl: './app-layout.scss'
 })
-export class AppLayout {}
+export class AppLayout {
+  isSidebarCollapsed = false;
+
+  onSidebarToggle(collapsed: boolean) {
+    this.isSidebarCollapsed = collapsed;
+  }
+}

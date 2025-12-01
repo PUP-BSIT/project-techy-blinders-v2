@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { AddFlashCard } from './add-flash-card/add-flash-card';
 import { StudySetsService, StudySet } from '../../services/study-sets.service';
 
@@ -11,30 +10,19 @@ import { StudySetsService, StudySet } from '../../services/study-sets.service';
   templateUrl: './study-sets-page.html',
   styleUrls: ['./study-sets-page.scss']
 })
-export class StudySetsPage implements OnInit {
+export class StudySetsPage {
   isModalOpen: boolean = false;
-  studySets: StudySet[] = [];
 
   constructor(
-    private router: Router, 
     private studySetsService: StudySetsService
   ) {}
 
-  ngOnInit() {
-    this.loadStudySets();
-  }
-
   openModal() {
-    this.isModalOpen = true;
+    this.isModalOpen = false;
   }
 
   closeModal() {
     this.isModalOpen = false;
-    this.loadStudySets();
-  }
-
-  loadStudySets() {
-    this.studySets = this.studySetsService.getStudySets();
   }
 
   saveStudySet(studySetData: { title: string; description: string; flashcards: { keyTerm: string; definition: string }[]; isPublic: boolean }) {
@@ -48,16 +36,5 @@ export class StudySetsPage implements OnInit {
     };
     
     this.studySetsService.addStudySet(newStudySet);
-    this.loadStudySets();
-  }
-
-  deleteStudySet(flashcardId: number, event: Event) {
-    event.stopPropagation();
-    this.studySetsService.deleteStudySet(flashcardId);
-    this.loadStudySets();
-  }
-
-  openStudySet(flashcardId: number) {
-    this.router.navigate(['/app/study-sets', flashcardId]);
   }
 }
