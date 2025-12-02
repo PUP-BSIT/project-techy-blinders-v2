@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } 
   styleUrl: './edit-profile-page.scss'
 })
 export class EditProfilePage {
-  @Output() onCancel =new EventEmitter<void>();
+  @Output() onCancel = new EventEmitter<void>();
 
   formBuilder = inject (FormBuilder);
 
@@ -17,11 +17,11 @@ export class EditProfilePage {
 
   constructor() {
     this.editInformationForm = this.formBuilder.group({
-      username: [' ', {
+      username: ['', {
         validators: [Validators.required],
         updateOn: 'change'
       }],
-      email: [' ', {
+      email: ['', {
         validators: [Validators.required, Validators.email]
       }]
     });

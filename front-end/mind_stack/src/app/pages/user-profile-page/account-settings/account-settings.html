@@ -1,65 +1,35 @@
-<app-side-bar></app-side-bar>
-
-<body>
-    <h1>User Profile</h1>
-
-    <div id="upper_div">
-        <div id="profile_icon" class="upper-div-content">
-            <img src="assets/profile-icon.png">
-        </div>
-        <div class="upper-div-content">
-            <h2 id="username">John Doe</h2>
-            <p>johndoe147@gmail.com</p>
-        </div>
-        <div class="upper-div-content">
-            <button id="edit_profile_button">Edit Profile</button>
-        </div>
+<div class="account-setting-class">
+    <div class="account-setting-label">
+        <h1>Account Setting</h1>
     </div>
 
-    <div id="mid_nav">
-        <div class="mid_nav_content">
-            <h3>Overview</h3>
-        </div>
-        <div class="mid_nav_content">
-            <h3>Account Settings</h3>
-        </div>
-    </div>
-
-    <div id="account_settings">
-        <div id="password_management">
-            <h4>Password Management</h4>
-            <form id="change_password_form">
-
-                <input 
-                    type="password" 
-                    class="inputs" 
-                    placeholder="Enter Current Password"
-                    [value]="currentPassword()"
-                    (input)="currentPassword.set($any($event.target).value)">
-
-                <input 
-                    type="password" 
-                    class="inputs" 
-                    placeholder="Enter New Password"
-                    [value]="newPassword()"
-                    (input)="newPassword.set($any($event.target).value)">
-
-                <div class="button-container">
-                    <button id="cancel_button" type="button" (click)="onCancel()">Cancel</button>
-                    <button id="save_button" type="button" (click)="onSave()">Save</button>
+    <form [formGroup]="accountSettingForm" (ngSubmit)="accountSettingInformation()">
+        <div class="form-group">
+            <div class="current-password-class">
+                <div class="current-password-label">
+                    <label>Current password</label>
                 </div>
+                <input type="password" formControlName="current_password" placeholder="Current Password">
+            </div>
 
-            </form>
+            <div class="new-password-class">
+                <div class="new-password-label">
+                    <label>New Password</label>
+                </div>
+                <input type="password" formControlName="new_password" placeholder="New Password">
+            </div>
+
+            <div class="confirm-password-class">
+                <div class="confirm-password-label">
+                    <label>Confirm Passowrd</label>
+                </div>
+                <input type="password" formControlName="confirm_password" placeholder="Confirm Passowrd">
+            </div>
         </div>
 
-        <div id="data_privacy">
-            <h4>Data & Privacy</h4>
-
-            <button type="button" id="delete_account_button" (click)="onDeleteAccount()">
-                Delete Account
-            </button>
-
-            <p id="delete_warning">This will permanently delete your Account in MindStack.</p>
-        </div>
-    </div>
-</body>
+       <div class="button-class">
+            <button type="submit" id="submit_button_password">Save</button>
+            <button type="button" id="cancel_button_password" (click)="cancel()">Cancel</button>
+        </div> 
+    </form>
+</div>

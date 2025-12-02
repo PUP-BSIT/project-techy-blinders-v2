@@ -1,179 +1,104 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
-body {
-    background-color: rgb(209, 255, 221);
-}
-
-h1 {
-    position: absolute;
-    display: block;
+.account-setting-class {
+    margin-left: 5%;
     margin-top: 5%;
-    margin-left: 20%;
-    font-family: "Poppins";
-}
-
-#upper_div {
-    position: absolute;
-    display: block;
-    margin-top: 8%;
-    margin-left: 19%;
-    display: flex;
-}
-
-#username {
-    font-weight: 500;
-}
-
-.upper-div-content {
-    padding: 20px;
-    margin: auto;
-    font-family: "Poppins";
-}
-
-.upper-div-content img {
-    height: 150px;
-}
-
-#edit_profile_button {
     border: solid 0px;
-    background: #3DAC78;
-    color: white;
-    font-family: "Poppins";
-    font-weight: 500;
-    font-size: 18px;
+    height: 400px;
     width: 100%;
-    padding: 10px;
-    border-radius: 20px;
-    cursor: pointer;
-}
-
-#edit_profile_button:hover {
-    transition: background 0.3s ease;
-    background: #297b59;
-}
-
-#save_button:hover {
-    transition: background 0.3s ease;
-    background: #297b59;
-}
-
-#cancel_button:hover {
-    transition: background 0.3s ease;
-    background: rgb(226, 30, 30);
-}
-
-#mid_nav {
-    position: absolute;
-    display: block;
-    margin-top: 20%;
-    margin-left: 21%;
-    display: flex;
-    font-family: "Poppins";
-    color: #297b59;
-    font-weight: 400;
-}
-
-#mid_nav .mid_nav_content {
-    margin: 20px;
-}
-
-.mid_nav_content {
-    transition: color 0.5s ease;
-}
-
-.mid_nav_content:hover {
-    cursor: pointer;
-    color: #42c48c;
-    transform: translateY(-2px);
-}
-
-#account_settings {
-    position: absolute;
-    display: block;
-    margin-top: 25%;
-    margin-left: 21%;
-    width: 40%;
-    height: 40%;
-}
-
-#password_management {
-    margin-left: 5%;
-    width: 70%;
-    height: 55%;
-    font-family: "Poppins";
-    background-color: #FFFFFF;
-    border-radius: 20px;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.inputs {
-    display: block;
-    margin: 10px 0 0 10px;
-    padding: 10px;
-    width: 90%;
-    border-radius: 10px;
-    border: rgba(0, 0, 0, 0.199) 1px solid;
-}
-
-#cancel_button, #save_button {
-    font-family: "Poppins";
-    padding: 10px 20px;
+    padding: 30px;
+    background-color: #b4ddba;
     border-radius: 15px;
-    border: none;
-    background-color: green;
-    color: white;
-    cursor: pointer;
-    display: inline-block;
-    margin-right: 10px;
+    box-shadow: 0 10px 40px rgba(27, 26, 26, 0.5);
+    animation: modalSlideIn 0.3s ease-out;
 }
 
-.button-container {
-    text-align: right;
-    margin-top: 10px;
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
-
-#cancel_button {
-    background-color: rgba(255, 49, 49, 0.979);
+.account-setting-label {
+    color: #1f8b58; 
 }
 
-#save_button{
-    background: #3DAC78;
+.account-setting-label h1 {
+    font-family: "Poppins", sans-serif;
+    font-weight: bold;
 }
 
-#data_privacy {
-    width: 50%;
-    height: 40%;
-    margin-left: 5%;
-    margin-top: 10px;
-    font-family: "Poppins";
-    background-color: #FFFFFF;
-    border-radius: 20px;
-    padding: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+.current-password-class, .new-password-class, .confirm-password-class {
+    margin-top: 3%;
 }
 
-#delete_account_button {
-    font-family: "Poppins";
-    width: 80%;
-    background-color: rgba(255, 49, 49, 0.979);
-    color: white;
-    border: none;
+.current-password-class label, 
+.new-password-class label,
+.confirm-password-class label {
+    font-family: "Poppins", sans-serif;
+    font-size: 17px;
+    font-weight: 200;
+}
+
+.current-password-class input, 
+.new-password-class input, 
+.confirm-password-class input {
+    margin-top: 2%;
+    border: solid 0px;
+    width: 90%;
+    height: 30px;
     padding: 5px;
     border-radius: 10px;
-    margin-left: 10%;
-    margin-top: 15px;
+}
+
+
+.button-class {
+    display: flex;
+    margin-top: 4%;
+    margin-left: 0%;
+    gap: 20px;
+}
+
+#submit_button_password {
     cursor: pointer;
+    color: white;
+    border: solid 0px;
+    width: 200px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #287c55;
+    font-family: "Inter", sans-serif;
+    font-size: 15px;
+    font-weight: bold;
 }
 
-#delete_account_button:hover {
-    transition: background 0.3s ease;
-    background: rgb(226, 30, 30);
+#cancel_button_password {
+    cursor: pointer;
+    color: white;
+    border: solid 0px;
+    width: 200px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #16dc81;
+    font-family: "Inter", sans-serif;
+    font-size: 15px;
+    font-weight: bold;
 }
 
-#delete_warning {
-    font-size: 0.7rem;
-    font-weight: 300;
-    margin-top: 15px;
+#submit_button_password:hover {
+    cursor: pointer;
+    background-color:  #174d34;
+    transition: 1s;
+}
+
+#cancel_button_password:hover {
+    cursor: pointer;
+    background-color: #11a861;
+    transition: 1s;
 }
