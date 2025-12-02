@@ -35,4 +35,12 @@ export class EditProfilePage {
   cancel() {
     this.onCancel.emit();
   }
+
+  get usernameControl() {
+    return this.editInformationForm.get('username');
+  }
+
+  get emailControl() {
+    return this.editInformationForm.get('email');
+  }
 }
