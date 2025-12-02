@@ -1,45 +1,40 @@
 <div class="dashboard-wrapper">
   <div class="dashboard-container">
-    <section class="study-progress-section">
-      <h2 class="section-title">Study Progress</h2>
-      <div class="progress-cards">
-        <div class="progress-circle-card">
-          <div class="circle-progress">
-            <svg viewBox="0 0 120 120">
-              <circle cx="60" cy="60" r="54" class="circle-bg"></circle>
-              <circle cx="60" cy="60" r="54" class="circle-fill" [style.stroke-dashoffset]="getStrokeDashoffset()"></circle>
-            </svg>
-            <div class="progress-text">{{ progressPercentage }}%</div>
-          </div>
+
+    <section class="user-header-section">
+      <div class="user-info">
+        <h1 class="user-name">{{ userName }}</h1>
+        <p class="user-id">User ID: {{ userId }}</p>
+      </div>
+      <div class="user-stats">
+        <div class="stat-badge">
+          <span class="stat-label">Quizzes</span>
+          <span class="stat-number">{{ quizCount }}</span>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Flashcards</div>
-          <div class="stat-value">{{ flashcardCount }}</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Quizzes</div>
-          <div class="stat-value">{{ quizCount }}</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Streak</div>
-          <div class="stat-value">{{ streakDays }} days</div>
+        <div class="stat-badge">
+          <span class="stat-label">Flashcards</span>
+          <span class="stat-number">{{ flashcardCount }}</span>
         </div>
       </div>
     </section>
 
     <div class="content-grid">
       <div class="left-column">
+
         <section class="quick-actions-section">
-          <h2 class="section-title">Quick Actions</h2>
-          <div class="action-buttons">
-            <button class="action-btn" (click)="createFlashcards()">
+          <div class="action-row">
+            <div class="action-label">
               <img src="assets/plus_icon.png" alt="Create" class="action-icon">
-              Create Flashcards
-            </button>
-            <button class="action-btn" (click)="createQuiz()">
+              <span>Create Flashcards</span>
+            </div>
+            <button class="create-btn" (click)="createFlashcards()">Create</button>
+          </div>
+          <div class="action-row">
+            <div class="action-label">
               <img src="assets/plus_icon.png" alt="Create" class="action-icon">
-              Create Quiz
-            </button>
+              <span>Create Quiz</span>
+            </div>
+            <button class="create-btn" (click)="createQuiz()">Create</button>
           </div>
         </section>
 
@@ -48,7 +43,6 @@
           <div class="activity-list">
             @for (activity of recentActivities; track activity.id) {
               <div class="activity-item">
-                <img [src]="getActivityIcon(activity.type)" alt="Activity" class="activity-icon">
                 <span>{{ activity.title }}</span>
               </div>
             }
@@ -57,6 +51,7 @@
       </div>
 
       <div class="right-column">
+
         <section class="study-library-section">
           <h2 class="section-title">Study Library</h2>
           <div class="library-list">
