@@ -10,6 +10,14 @@
                     <label>Current password</label>
                 </div>
                 <input type="password" formControlName="current_password" placeholder="Current Password">
+
+                @if(passwordControl?.touched) {
+                    @if (passwordControl?.errors?.['required']) {
+                        <div>
+                           <span>Input Password</span> 
+                        </div>
+                    }
+                }
             </div>
 
             <div class="new-password-class">
@@ -17,6 +25,13 @@
                     <label>New Password</label>
                 </div>
                 <input type="password" formControlName="new_password" placeholder="New Password">
+                @if (newPasswordControl?.touched) {
+                    @if(newPasswordControl?.errors?.['required']) {
+                        <div>
+                            <span>Input New Password</span>
+                        </div>
+                    }
+                }
             </div>
 
             <div class="confirm-password-class">
@@ -24,11 +39,25 @@
                     <label>Confirm Passowrd</label>
                 </div>
                 <input type="password" formControlName="confirm_password" placeholder="Confirm Passowrd">
+                @if (confirmPasswordControl?.touched) {
+                    @if(confirmPasswordControl?.errors?.['required']) {
+                        <div>
+                            <span>Input Confirm Password</span>
+                        </div>
+                    }
+                }
             </div>
+
+            @if(newPasswordControl?.value !== confirmPasswordControl?.value) {
+                <div>
+                   <span>Password is not match</span> 
+                </div>
+                
+            }
         </div>
 
        <div class="button-class">
-            <button type="submit" id="submit_button_password">Save</button>
+            <button type="submit" id="submit_button_password" [disabled]="accountSettingForm.invalid">Save</button>
             <button type="button" id="cancel_button_password" (click)="cancel()">Cancel</button>
         </div> 
     </form>

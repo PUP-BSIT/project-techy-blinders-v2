@@ -42,4 +42,15 @@ export class AccountSettings {
     this.onCancel.emit();
   }
 
+  get passwordControl() {
+    return this.accountSettingForm.get('current_password');
+  }
+
+  get newPasswordControl() {
+    return this.accountSettingForm.get('new_password');
+  }
+
+  get confirmPasswordControl() {
+    return this.accountSettingForm.get('confirm_password');
+  }
 }
