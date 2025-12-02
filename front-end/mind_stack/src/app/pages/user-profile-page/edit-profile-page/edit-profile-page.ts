@@ -1,36 +1,38 @@
-import { Component, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
 import { SideBar } from '../../../shared/components/side-bar/side-bar';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-profile-page',
-  imports: [SideBar, FormsModule],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './edit-profile-page.html',
   styleUrl: './edit-profile-page.scss'
 })
 export class EditProfilePage {
-  fullName = signal('');
-  username = signal('');
-  email = signal('');
-  bio = signal('');
+  @Output() onCancel =new EventEmitter<void>();
 
-  constructor() {}
+  formBuilder = inject (FormBuilder);
 
-  onCancel() {
-    this.fullName.set('');
-    this.username.set('');
-    this.email.set('');
-    this.bio.set('');
+  editInformationForm: FormGroup;
+
+  constructor() {
+    this.editInformationForm = this.formBuilder.group({
+      username: [' ', {
+        validators: [Validators.required],
+        updateOn: 'change'
+      }],
+      email: [' ', {
+        validators: [Validators.required, Validators.email]
+      }]
+    });
   }
 
-  onSave() {
-    const updatedUser = {
-      fullName: this.fullName(),
-      username: this.username(),
-      email: this.email(),
-      bio: this.bio()
-    };
+  editInformation() {
+    console.log(this.editInformationForm.value);
+    this.onCancel.emit();
+  }
 
-    // Waiting on API
+  cancel() {
+    this.onCancel.emit();
   }
 }

@@ -17,7 +17,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class RegistrationPage {
 
   formBuilder = inject(FormBuilder);
-  userService = inject(UserService)
+  userService = inject(UserService);
   router = inject(Router);
   
   registrationFrom: FormGroup;
