@@ -1,32 +1,45 @@
-import { Component, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
 import { SideBar } from '../../../shared/components/side-bar/side-bar';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-account-settings',
-  imports: [SideBar],
+  imports: [ReactiveFormsModule],
   templateUrl: './account-settings.html',
   styleUrl: './account-settings.scss'
 })
 export class AccountSettings {
-  currentPassword = signal('');
-  newPassword = signal('');
+  @Output() onCancel = new EventEmitter<void>();
 
-  constructor() {}
+  formBuilder = inject (FormBuilder);
+  accountSettingForm: FormGroup;
 
-  onCancel() {
-    this.currentPassword.set('');
-    this.newPassword.set('');
+  constructor() {
+    this.accountSettingForm = this.formBuilder.group({
+      current_password: ['', {
+        validators: [Validators.required],
+        updateOn: 'change'
+      }],
+
+      new_password: ['', {
+        validators: [Validators.required],
+        updateOn: 'change'
+      }],
+
+      confirm_password: ['', {
+        validators: [Validators.required],
+        updateOn: 'change'
+      }]
+    });
   }
 
-  onSave() {
-    const changePassword = {
-      currentPassword: this.currentPassword(),
-      newPassword: this.newPassword()
-    };
-    // Waiting on API
+  accountSettingInformation() {
+    console.log(this.accountSettingForm);
+    this.onCancel.emit();
   }
 
-  onDeleteAccount() {
-    // Waiting on API
+  cancel() {
+    this.onCancel.emit();
   }
+
 }

@@ -36,18 +36,19 @@
     </div>
 </div>
 
-@if (showEditModal) {
-    <div class="modal-overlay" (click)="closeModal()">
-        <div (click)="$event.stopPropagation()">
-            <app-edit-profile-page></app-edit-profile-page>
-        </div>
-    </div>
-}
 
 @if (showEditModal) {
     <div class="modal-overlay" (click)="closeModal()">
         <div (click)="$event.stopPropagation()">
             <app-edit-profile-page (onCancel)="closeModal()"></app-edit-profile-page>
+        </div>
+    </div>
+}
+
+@if (showAccountSettingsModal) {
+    <div class="modal-overlay" (click)="closeModal()">
+        <div (click)="$event.stopPropagation()">
+            <app-account-settings (onCancel)="closeModal()"></app-account-settings>
         </div>
     </div>
 }
