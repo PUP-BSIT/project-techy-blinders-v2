@@ -14,8 +14,6 @@ export class OpenStudySet implements OnInit {
   studySet: StudySet | null = null;
   currentCardIndex: number = 0;
   isDefinitionRevealed: boolean = false;
-  shuffled: boolean = false;
-  originalFlashcards: { keyTerm: string; definition: string }[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -33,12 +31,6 @@ export class OpenStudySet implements OnInit {
   loadStudySet(id: number) {
     const foundSet = this.studySetsService.getStudySetById(id);
     this.studySet = foundSet || null;
-    if (this.studySet) {
-      this.originalFlashcards = [...this.studySet.flashcards];
-      if (this.studySet.flashcards.length === 0) {
-        this.currentCardIndex = 0;
-      }
-    }
   }
 
   get currentCard() {
@@ -52,24 +44,8 @@ export class OpenStudySet implements OnInit {
     return this.studySet?.flashcards.length || 0;
   }
 
-  get masteryCount() {
-    return this.currentCardIndex;
-  }
-
-  revealDefinition() {
-    this.isDefinitionRevealed = true;
-  }
-
-  hideDefinition() {
-    this.isDefinitionRevealed = false;
-  }
-
   toggleDefinition() {
-    if (this.isDefinitionRevealed) {
-      this.hideDefinition();
-    } else {
-      this.revealDefinition();
-    }
+    this.isDefinitionRevealed = !this.isDefinitionRevealed;
   }
 
   nextCard() {
@@ -84,45 +60,6 @@ export class OpenStudySet implements OnInit {
       this.currentCardIndex--;
       this.isDefinitionRevealed = false;
     }
-  }
-
-  shuffleCards() {
-    if (!this.studySet) return;
-    
-    if (this.shuffled) {
-      this.studySet.flashcards = [...this.originalFlashcards];
-      this.shuffled = false;
-    } else {
-      const shuffled = [...this.studySet.flashcards];
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-      this.studySet.flashcards = shuffled;
-      this.shuffled = true;
-    }
-    this.currentCardIndex = 0;
-    this.isDefinitionRevealed = false;
-  }
-
-  flagCard() {
-    console.log('Flag card:', this.currentCard);
-  }
-
-  startQuiz() {
-    console.log('Start quiz for study set:', this.studySet?.flashcard_id);
-  }
-
-  savePrivate() {
-    if (!this.studySet) return;
-    this.studySet.is_public = false;
-    this.studySetsService.updateStudySet(this.studySet);
-  }
-
-  publishPublic() {
-    if (!this.studySet) return;
-    this.studySet.is_public = true;
-    this.studySetsService.updateStudySet(this.studySet);
   }
 
   goBack() {

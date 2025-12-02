@@ -1,77 +1,43 @@
-<div class="container" [hidden]="!studySet">
-    <div class="header">
-        <div class="title-section">
-            <span class="flashcard-title-label">Flashcard title: </span>
-            <span class="flashcard-title-link" (click)="goBack()">{{ studySet?.title }}</span>
+<div class="container" [class.hidden]="!studySet">
+    <button class="back-btn" (click)="goBack()">
+        ‹ Back
+    </button>
+    
+    <div class="play-card" (click)="toggleDefinition()">
+        <div class="grad-cap-icon">
+            <img src="/assets/image-logo.png" alt="Logo">
         </div>
-    </div>
-
-    <div class="main-content">
-        <div class="flashcard-section">
-            <div class="flashcard-container" (click)="toggleDefinition()">
-                <div class="flashcard" [class.revealed]="isDefinitionRevealed">
-                    <div class="key-term-section">
-                        <label class="key-term-label">Key Term:</label>
-                        <div class="key-term-content" [hidden]="!currentCard">
-                            {{ currentCard?.keyTerm }}
-                        </div>
-                    </div>
-                    <div class="divider"></div>
-                    <div class="definition-section">
-                        <div class="definition-content" [hidden]="!(isDefinitionRevealed && currentCard)">
-                            {{ currentCard?.definition }}
-                        </div>
-                        <div class="definition-placeholder" [hidden]="isDefinitionRevealed">
-                            Click to reveal definition
-                        </div>
-                    </div>
-                </div>
+        
+        <div class="play-card-content">
+            <div class="question-section" [class.hidden]="isDefinitionRevealed">
+                <h2 class="question-text">{{ currentCard?.keyTerm }}</h2>
+                <h6>Click to reveal the definition</h6>
             </div>
-
-            <div class="card-progress">
-                Card {{ currentCardIndex + 1 }} of {{ totalCards }}
-            </div>
-
-            <div class="action-buttons">
-                <button class="btn btn-secondary" (click)="previousCard()" [disabled]="currentCardIndex === 0">
-                    ← Previous
-                </button>
-                <button class="btn btn-secondary" (click)="savePrivate()">Save Private</button>
-                <button class="btn btn-primary" (click)="publishPublic()">Publish Public</button>
-                <button class="btn btn-secondary" (click)="nextCard()" [disabled]="currentCardIndex >= totalCards - 1">
-                    Next →
-                </button>
+            <div class="answer-section" [class.hidden]="!isDefinitionRevealed">
+                <h2 class="answer-text">{{ currentCard?.definition }}</h2>
+                <h6>Click to see the term</h6>
             </div>
         </div>
-
-        <div class="study-tools-section">
-            <div class="mastery-progress">
-                <div class="progress-bar-container">
-                    <div class="progress-bar" [style.width.%]="totalCards > 0 ? (masteryCount / totalCards) * 100 : 0"></div>
-                </div>
-                <div class="mastery-text">Mastery: {{ masteryCount }}/{{ totalCards }}</div>
-            </div>
-
-            <h3 class="study-tools-title">Study Tools</h3>
-            <div class="study-tools-buttons">
-                <button class="tool-btn" (click)="shuffleCards()">
-                    <span class="tool-icon">🔀</span>
-                    <span>{{ shuffled ? 'Unshuffle Cards' : 'Shuffle Cards' }}</span>
-                </button>
-                <button class="tool-btn" (click)="startQuiz()">
-                    <span class="tool-icon">📋</span>
-                    <span>Start Quiz</span>
-                </button>
-                <button class="tool-btn flag-btn" (click)="flagCard()">
-                    <span class="tool-icon">🚩</span>
-                    <span>Flag Card</span>
-                </button>
-            </div>
+        
+        <div class="play-navigation">
+            <button class="nav-btn prev" 
+                    (click)="previousCard(); $event.stopPropagation()" 
+                    [disabled]="currentCardIndex === 0">
+                ‹
+            </button>
+            
+            <span class="page-indicator">Page {{ currentCardIndex + 1 }}</span>
+            
+            <button class="nav-btn next" 
+                    (click)="nextCard(); $event.stopPropagation()" 
+                    [disabled]="currentCardIndex === totalCards - 1">
+                ›
+            </button>
         </div>
     </div>
 </div>
 
-<div class="container error-container" [hidden]="studySet">
+<div class="container error-container" [class.hidden]="studySet">
     <div class="error-message">
         <h2>Study Set Not Found</h2>
         <p>The study set you're looking for doesn't exist.</p>

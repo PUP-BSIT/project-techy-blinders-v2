@@ -3,5 +3,146 @@
         <button (click)="openModal()" class="add">
             Create New Study Set
         </button>
+
+        <div class="study-sets-wrapper" [class.hidden]="studySets.length === 0">
+            <div class="study-sets-list">
+                <div class="study-set-card" *ngFor="let studySet of paginatedStudySets">
+                    <button class="play-btn" (click)="playStudySet(studySet.flashcard_id)">
+                        ▶
+                    </button>
+                    <div class="study-set-info">
+                        <h3 class="study-set-title">{{ studySet.title }}</h3>
+                        <p class="study-set-description">{{ studySet.description || 'About the Reviewer' }}</p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="edit-btn" (click)="editStudySet(studySet.flashcard_id)">
+                            Edit
+                        </button>
+                        <button class="delete-btn" (click)="deleteStudySet(studySet.flashcard_id)">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="study-sets-pagination" [class.show]="studySetsTotalPages > 1">
+                <button class="pagination-btn prev" 
+                            (click)="previousStudySetsPage()" 
+                            [disabled]="studySetsCurrentPage === 0">
+                    ‹
+                </button>
+                <div class="pagination-dots">
+                    <span *ngFor="let page of studySetsPages" 
+                          class="pagination-dot" 
+                          [class.active]="studySetsCurrentPage === page"
+                          (click)="goToStudySetsPage(page)">
+                        {{ page + 1 }}
+                    </span>
+                </div>
+                <button class="pagination-btn next" 
+                            (click)="nextStudySetsPage()" 
+                            [disabled]="studySetsCurrentPage === studySetsTotalPages - 1">
+                    ›
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" 
+            [class.open]="isModalOpen" 
+            (click)="closeModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <div class="header-inputs">
+                    <input type="text" 
+                            class="title-input" 
+                            placeholder="Add Title"
+                            [(ngModel)]="studySetTitle"/>
+                    <input type="text" 
+                            class="description-input" 
+                            placeholder="Description"
+                            [(ngModel)]="studySetDescription"/>
+                </div>
+                <div class="header-buttons">
+                    <button class="btn-cancel" (click)="openConfirmModal()">Cancel</button>
+                    <button class="btn-save" (click)="saveStudySet()">Save</button>
+                </div>
+            </div>
+
+            <div class="flashcard-controls">
+                <button class="add-flashcard-btn" (click)="addFlashcard()">
+                    Add Flashcard
+                </button>
+                <span class="flashcard-count">
+                    {{ flashcards.length }} Flashcard
+                    <span [class.hidden]="flashcards.length === 1"></span>
+                </span>
+            </div>
+
+            <div class="carousel-wrapper" [class.has-flashcards]="flashcards.length > 0">
+                <div class="flashcards-container">
+                    <div class="flashcard-item" *ngFor="let flashcard of paginatedFlashcards; let i = index">
+                        <div class="flashcard-header">
+                            <div class="flashcard-left">
+                                <input type="text" 
+                                        class="flashcard-term" 
+                                        placeholder="Term"
+                                        [(ngModel)]="flashcard.term"/>
+                                <input type="text" 
+                                        class="flashcard-definition" 
+                                        placeholder="Definition"
+                                        [(ngModel)]="flashcard.definition"/>
+                            </div>
+                            <div class="flashcard-actions">
+                                <button class="btn-edit" 
+                                            (click)="editFlashcard(getActualIndex(i))">
+                                        Edit
+                                </button>
+                                <button class="btn-delete" 
+                                            (click)="deleteFlashcard(getActualIndex(i))">
+                                        Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pagination" [class.show]="totalPages > 1">
+                    <button class="pagination-btn prev" 
+                                (click)="previousPage()" 
+                                [disabled]="currentPage === 0">
+                        ‹
+                    </button>
+                    <div class="pagination-dots">
+                        <span *ngFor="let page of pages" 
+                                class="pagination-dot" 
+                                [class.active]="currentPage === page"
+                                (click)="goToPage(page)">
+                            {{ page + 1 }}
+                        </span>
+                    </div>
+                    <button class="pagination-btn next" 
+                                (click)="nextPage()" 
+                                [disabled]="currentPage === totalPages - 1">
+                        ›
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="confirm-overlay" 
+            [class.open]="isConfirmModalOpen" (click)="closeConfirmModal()">
+        <div class="confirm-modal" (click)="$event.stopPropagation()">
+            <h3 class="confirm-title">Are you sure?</h3>
+            <p class="confirm-message">
+                Do you really want to cancel? All unsaved changes 
+                will be lost.
+            </p>
+            <div class="confirm-actions">
+                <button class="btn-confirm-no" (click)="closeConfirmModal()">No</button>
+                <button class="btn-confirm-yes" (click)="confirmCancel()">Yes</button>
+            </div>
+        </div>
     </div>
 </div>
