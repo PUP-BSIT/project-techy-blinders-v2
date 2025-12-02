@@ -12,6 +12,9 @@ import { AppLayout } from './shared/components/app-layout/app-layout';
 import { LoginPage } from './pages/login-page/login-page';
 import { RegistrationPage } from './pages/registration-page/registration-page';
 import { OpenQuiz } from './pages/quizzes-page/open-quiz/open-quiz';
+import { UserProfilePage } from './pages/user-profile-page/user-profile-page';
+import { AccountSettings } from './pages/user-profile-page/account-settings/account-settings';
+import { EditProfilePage } from './pages/user-profile-page/edit-profile-page/edit-profile-page';
 
 declare module '@angular/router' {
     interface Route {
@@ -21,7 +24,6 @@ declare module '@angular/router' {
 
 export const routes: Routes = [
     {path: '', component: LandingPage },  
-    // Removed about route since it's now part of landing page
     {path: 'contact', component: ContactPage },
     {path: 'login', component: LoginPage},
     {path: 'registration', component: RegistrationPage},
@@ -46,6 +48,9 @@ export const routes: Routes = [
             },
             { path: 'community', component: CommunityPage },
             { path: 'notifications', component: NotificationPage },
+            { path: 'user-profile', component: UserProfilePage },
+            { path: 'edit-profile-setting', component: EditProfilePage},
+            { path: 'account-setting', component: AccountSettings}
         ]
     },
 

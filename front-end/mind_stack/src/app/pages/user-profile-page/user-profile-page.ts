@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { SideBar } from '../../shared/components/side-bar/side-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile-page',
@@ -11,19 +12,13 @@ export class UserProfilePage {
 
   activeTab: 'overview' | 'account-settings' = 'overview';
 
-  constructor() {}
-
-  onEditProfile() {
-    // Click: Edit Component displayed
+  constructor(private route: Router) {}
+  
+  editProfile() {
+    this.route.navigate(['app/edit-profile-setting']);
   }
 
-  showOverview() {
-    this.activeTab = 'overview';
-    // Click: Overview Component displayed
-  }
-
-  showAccountSettings() {
-    this.activeTab = 'account-settings';
-    // Click: Account Settings Component displayed
+  accountSetting() {
+    this.route.navigate(['app/account-setting'])
   }
 }
