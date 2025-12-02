@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile-page',
-  imports: [SideBar],
+  imports: [],
   templateUrl: './user-profile-page.html',
   styleUrl: './user-profile-page.scss'
 })
