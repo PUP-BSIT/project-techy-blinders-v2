@@ -1,38 +1,29 @@
-<app-side-bar></app-side-bar>
-
-<body>
-    <h1>User Profile</h1>
-
-    <div id="upper_div">
-        <div id="profile_icon" class="upper-div-content">
-            <img src="assets/profile-icon.png">
-        </div>
-        <div class="upper-div-content">
-            <h2 id="username">John Doe</h2>
-            <p>johndoe147@gmail.com</p>
-        </div>
+<div class="personal-information-class">
+    <div class="personal-label">
+        <h1>Personal Information</h1>
     </div>
-
-    <div id="personal_information_container">
-        <h3>Personal Information</h3>
-
-        <form id="edit_profile_form">
-            <label for="full_name">Full Name</label>
-            <input type="text" class="inputs" [(ngModel)]="fullName" name="fullName">
-
-            <label for="username">Username</label>
-            <input type="text" class="inputs" [(ngModel)]="username" name="username">
-
-            <label for="email">Email</label>
-            <input type="email" class="inputs" [(ngModel)]="email" name="email">
-
-            <label for="Bio">Bio</label>
-            <input type="text" class="inputs" [(ngModel)]="bio" name="bio">
-
-            <div id="button-container">
-                <button type="button" id="cancel_button" (click)="onCancel()">Cancel</button>
-                <button type="button" id="save_button" (click)="onSave()">Save Changes</button>
+    <form [formGroup]="editInformationForm" (ngSubmit)="editInformation()">
+        <div class="form-group">
+            <div class="username-class">
+                <div class="username-label">
+                    <label>Username</label>
+                </div>
+                <input type="text" formControlName="username" placeholder="Username">    
             </div>
-        </form>
-    </div>
-</body>
+ 
+            <div class="email-class">
+                <div class="email-label">
+                    <label>Email</label>
+                </div>
+                
+                <input type="text" formControlName="email" placeholder="Email">
+            </div>  
+        </div>
+
+        <div class="button-class">
+            <button type="submit" id="submit_button">Save</button>
+            <button type="button" id="cancel_button" (click)="cancel()">Cancel</button>
+        </div>
+
+    </form>
+</div>
