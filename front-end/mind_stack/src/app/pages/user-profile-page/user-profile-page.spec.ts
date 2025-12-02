@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserProfilePage } from './user-profile-page';
 import { RouterTestingModule } from '@angular/router/testing'; 
+import { provideHttpClient } from '@angular/common/http';
 
 describe('UserProfilePage', () => {
   let component: UserProfilePage;
@@ -10,7 +11,7 @@ describe('UserProfilePage', () => {
     await TestBed.configureTestingModule({
       imports: [
         UserProfilePage,        
-        RouterTestingModule     
+        RouterTestingModule,
       ]
     }).compileComponents();
 
