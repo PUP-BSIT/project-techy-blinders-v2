@@ -57,7 +57,7 @@ $transition-normal: 0.3s ease;
   font-weight: 700;
   color: $color-text-white;
   margin: 0 0 8px 0;
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins";
 }
 
 .user-id {
@@ -65,34 +65,36 @@ $transition-normal: 0.3s ease;
   font-weight: 500;
   color: $color-user-id;
   margin: 0;
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins";
+  padding: 5px;
 }
 
 .user-stats {
   display: flex;
-  gap: 16px;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .stat-badge {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(40, 124, 85, 0.8);
   backdrop-filter: blur(10px);
   border-radius: 12px;
-  padding: 12px 24px;
+  padding: 14px 32px;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  gap: 4px;
-  min-width: 120px;
+  gap: 20px;
+  min-width: 200px;
 
   .stat-label {
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
     color: $color-text-white;
     font-family: "Poppins", sans-serif;
   }
 
   .stat-number {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
     color: $color-text-white;
     font-family: "Poppins", sans-serif;
@@ -272,12 +274,23 @@ $transition-normal: 0.3s ease;
     font-size: 14px;
   }
 
+  .user-stats {
+    width: 100%;
+    flex-direction: row;
+    gap: 12px;
+  }
+
   .stat-badge {
-    min-width: 100px;
-    padding: 10px 16px;
+    flex: 1;
+    min-width: auto;
+    padding: 12px 20px;
+
+    .stat-label {
+      font-size: 16px;
+    }
 
     .stat-number {
-      font-size: 24px;
+      font-size: 20px;
     }
   }
 }
