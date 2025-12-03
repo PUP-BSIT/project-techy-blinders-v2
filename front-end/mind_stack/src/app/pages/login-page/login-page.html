@@ -7,72 +7,68 @@
         </div>
 
         <div class="image-class">
-            <img src="assets/toga.png">
+            <img src="assets/toga.png" alt="Logo">
         </div>
     </div>
 
-    <div class="seperator-class">
-
-    </div>
+    <div class="seperator-class"></div>
 
     <div class="login-form">
-        <form [formGroup]="loginForm" (ngSubmit)="loginValidation()">
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+            <!-- Email -->
             <div class="email-class">
-                <div>
-                    <label>Email</label>
-                </div>
-                <input formControlName="email" type="text" placeholder="User ID">
-                    @if (emailControl?.touched) {
+                <div><label>Email</label></div>
+                <input formControlName="email" type="text" placeholder="Email">
 
-                        @if(emailControl?.errors?.['required']) {
-                            <div>
-                                <span>Invalid Enter Email</span> 
-                            </div>
-                            
-                        }@else if (emailControl?.errors?.['email']) {
-                            <div>
-                                <span>Invalid Format of Email</span>
-                            </div>
-                         }
+                @if (emailControl?.touched) {
+                    @if(emailControl?.errors?.['required']) {
+                        <div><span>Enter your email</span></div>
+                    } @else if (emailControl?.errors?.['email']) {
+                        <div><span>Invalid email format</span></div>
                     }
+                }
             </div>
 
+            <!-- Password -->
             <div class="password-class">
-                <div>
-                    <label>Password</label>
-                </div>
+                <div><label>Password</label></div>
                 <input formControlName="password" type="password" placeholder="Password">
-                    @if (passwordControl?.touched) {
-                        @if(passwordControl?.errors?.['required']) {
-                            <div>
-                                <span>Input a password</span>
-                            </div>
-                        }
+
+                @if (passwordControl?.touched) {
+                    @if(passwordControl?.errors?.['required']) {
+                        <div><span>Input a password</span></div>
                     }
+                }
             </div>
 
+            <!-- Loading -->
             @if (isLoading) {
-            <div class="loading-message">
-                <span>Logging in...</span>
-            </div>
+                <div class="loading-message"><span>Logging in...</span></div>
             }
 
+            <!-- Success -->
             @if (successMessage) {
-            <div class="success-message">
-                <span>{{ successMessage }}</span>
-            </div>
+                <div class="success-message"><span>{{ successMessage }}</span></div>
             }
 
+            <!-- Error -->
+            @if (errorMessage) {
+                <div class="error-message"><span>{{ errorMessage }}</span></div>
+            }
+
+            <!-- Forgot password -->
             <div class="forgot-password">
-                <a routerLink="/forgot-passowrd">Forgot Password</a>
+                <a routerLink="/forgot-password">Forgot Password</a>
             </div>
 
+            <!-- Login button -->
             <div class="login-button">
                 <button type="submit" [disabled]="!loginForm.valid || isLoading">Login</button>
             </div>
 
+            <!-- Register link -->
             <div class="register-class">
-                <p>Don't have account ? <a routerLink="register">Register</a></p>
+                <p>Don't have an account? <a routerLink="/registration">Register</a></p>
             </div>
         </form>
     </div>

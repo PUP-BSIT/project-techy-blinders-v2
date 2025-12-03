@@ -1,4 +1,4 @@
-package com.mindstack.mind_stack_id.Models;
+package com.mindstack.mind_stack_id.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

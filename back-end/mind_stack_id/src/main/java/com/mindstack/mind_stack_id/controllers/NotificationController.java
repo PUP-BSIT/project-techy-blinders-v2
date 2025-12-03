@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.mindstack.mind_stack_id.Models.Notification;
-import com.mindstack.mind_stack_id.Models.dto.NotificationDTO;
+import com.mindstack.mind_stack_id.models.Notification;
+import com.mindstack.mind_stack_id.models.dto.NotificationDTO;
 import com.mindstack.mind_stack_id.services.NotificationService;
 
 @RestController

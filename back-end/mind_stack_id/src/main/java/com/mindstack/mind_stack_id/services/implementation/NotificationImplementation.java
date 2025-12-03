@@ -8,8 +8,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mindstack.mind_stack_id.Models.Notification;
-import com.mindstack.mind_stack_id.Models.dto.NotificationDTO;
+import com.mindstack.mind_stack_id.models.Notification;
+import com.mindstack.mind_stack_id.models.dto.NotificationDTO;
 import com.mindstack.mind_stack_id.repositories.NotificationRepository;
 import com.mindstack.mind_stack_id.services.NotificationService;
 

@@ -15,6 +15,7 @@ import { OpenQuiz } from './pages/quizzes-page/open-quiz/open-quiz';
 import { UserProfilePage } from './pages/user-profile-page/user-profile-page';
 import { AccountSettings } from './pages/user-profile-page/account-settings/account-settings';
 import { EditProfilePage } from './pages/user-profile-page/edit-profile-page/edit-profile-page';
+import { AuthGuard } from '../guards/auth.guard';
 
 declare module '@angular/router' {
     interface Route {
@@ -31,6 +32,7 @@ export const routes: Routes = [
     { 
         path: 'app',
         component: AppLayout,
+        canActivate: [AuthGuard],
         children: [
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             { path: 'dashboard', component: DashboardPage },

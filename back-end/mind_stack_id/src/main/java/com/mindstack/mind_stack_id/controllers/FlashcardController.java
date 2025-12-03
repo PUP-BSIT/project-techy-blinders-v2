@@ -7,8 +7,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.mindstack.mind_stack_id.Models.FlashcardCreation;
-import com.mindstack.mind_stack_id.Models.dto.FlashcardDTO;
+import com.mindstack.mind_stack_id.models.FlashcardCreation;
+import com.mindstack.mind_stack_id.models.dto.FlashcardDTO;
 import com.mindstack.mind_stack_id.repositories.Flashcard;
 
 @RestController

@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.mindstack.mind_stack_id.Models.QuizCreation;
-import com.mindstack.mind_stack_id.Models.dto.QuizCreationDTO;
-import com.mindstack.mind_stack_id.Models.FlashcardCreation;
+import com.mindstack.mind_stack_id.models.QuizCreation;
+import com.mindstack.mind_stack_id.models.dto.QuizCreationDTO;
+import com.mindstack.mind_stack_id.models.FlashcardCreation;
 import com.mindstack.mind_stack_id.repositories.Flashcard;
 import com.mindstack.mind_stack_id.repositories.Quiz;
 import java.util.List;

@@ -2,8 +2,8 @@ package com.mindstack.mind_stack_id.services;
 
 import java.util.List;
 
-import com.mindstack.mind_stack_id.Models.Notification;
-import com.mindstack.mind_stack_id.Models.dto.NotificationDTO;
+import com.mindstack.mind_stack_id.models.Notification;
+import com.mindstack.mind_stack_id.models.dto.NotificationDTO;
 
 public interface NotificationService {
     Notification createNotification(Notification notify);

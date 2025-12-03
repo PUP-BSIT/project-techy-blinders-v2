@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.mindstack.mind_stack_id.Models.QuizAttempt;
-import com.mindstack.mind_stack_id.Models.QuizCreation;
-import com.mindstack.mind_stack_id.Models.dto.QuizAttemptDTO;
+import com.mindstack.mind_stack_id.models.QuizAttempt;
+import com.mindstack.mind_stack_id.models.QuizCreation;
+import com.mindstack.mind_stack_id.models.dto.QuizAttemptDTO;
 import com.mindstack.mind_stack_id.repositories.QuizAttemptRepository;
 import com.mindstack.mind_stack_id.repositories.Quiz;
 @RestController

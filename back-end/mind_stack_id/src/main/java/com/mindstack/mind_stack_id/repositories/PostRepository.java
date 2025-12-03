@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.mindstack.mind_stack_id.Models.PostCreation;
-import com.mindstack.mind_stack_id.Models.PostCreation.CategoryType;
+import com.mindstack.mind_stack_id.models.PostCreation;
+import com.mindstack.mind_stack_id.models.PostCreation.CategoryType;
 
 @Repository
 public interface PostRepository extends JpaRepository<PostCreation, Long> {
