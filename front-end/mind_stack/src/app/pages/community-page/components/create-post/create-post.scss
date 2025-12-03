@@ -1,0 +1,128 @@
+.modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: #B8E5C8;
+      border-radius: 12px;
+      padding: 32px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header h2 {
+      margin: 0 0 24px 0;
+      font-size: 24px;
+      color: #059669;
+      font-weight: 700;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      line-height: 1.4;
+      background: white;
+      outline: none;
+      font-family: inherit;
+      color: #374151;
+      box-sizing: border-box; /* ensure consistent width including padding */
+    }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder,
+    .form-select {
+      color: #D1D5DB;
+    }
+
+    .form-select.has-value {
+      color: #374151;
+    }
+
+    .select-wrapper {
+      position: relative;
+      display: block;
+      width: 100%;
+    }
+
+    .form-select {
+      appearance: none;
+      padding-right: 40px; /* space for the arrow */
+      cursor: pointer;
+      width: 100%; /* match other inputs exactly */
+    }
+
+    .select-arrow {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 150px;
+      width: 100%;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    .btn-cancel,
+    .btn-save {
+      padding: 12px 32px;
+      border-radius: 8px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-cancel {
+      background: #047857;
+      color: white;
+    }
+
+    .btn-cancel:hover {
+      background: #065f46;
+    }
+
+    .btn-save {
+      background: #10b981;
+      color: white;
+    }
+
+    .btn-save:hover:not(:disabled) {
+      background: #059669;
+    }
+
+    .btn-save:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }

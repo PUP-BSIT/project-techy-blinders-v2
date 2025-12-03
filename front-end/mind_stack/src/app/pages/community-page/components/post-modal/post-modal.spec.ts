@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PostCard } from './post-card';
-import { Post } from '../../../../../models/post.model';
+import { PostModal } from './post-modal';
+import { Post } from '../../../../models/post.model';
 
-describe('PostCard', () => {
-  let component: PostCard;
-  let fixture: ComponentFixture<PostCard>;
+describe('PostModal', () => {
+  let component: PostModal;
+  let fixture: ComponentFixture<PostModal>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PostCard]
+      imports: [PostModal]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PostCard);
+    fixture = TestBed.createComponent(PostModal);
     component = fixture.componentInstance;
     
     // Provide required post input

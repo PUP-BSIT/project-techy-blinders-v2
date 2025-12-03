@@ -1,0 +1,60 @@
+<div class="modal-overlay" (click)="closeModal()">
+<div class="modal-content" (click)="$event.stopPropagation()">
+<div class="modal-header">
+    <h2>{{ editMode ? 'Edit Post' : 'Create Post' }}</h2>
+</div>
+
+<form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+    <input 
+        type="text" 
+        class="form-input"
+        placeholder="Title"
+        [(ngModel)]="title"
+        name="title"
+        required
+    />
+    </div>
+
+    <div class="form-group">
+    <div class="select-wrapper">
+        <select 
+        class="form-select"
+        [(ngModel)]="category"
+        name="category"
+        required
+        [class.has-value]="category"
+        >
+        <option value="" disabled>Category</option>
+        @for (cat of categories; track cat) {
+            <option [value]="cat">{{ cat }}</option>
+        }
+        </select>
+        <svg class="select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+        <path d="M1 1L6 6L11 1" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+    </div>
+
+    <div class="form-group">
+    <textarea 
+        class="form-textarea"
+        placeholder="Description"
+        [(ngModel)]="content"
+        name="content"
+        rows="8"
+        required
+    ></textarea>
+    </div>
+
+    <div class="modal-actions">
+    <button type="button" 
+            class="btn-cancel" 
+            (click)="closeModal()">Cancel</button>
+    <button type="submit" 
+            class="btn-save" 
+            [disabled]="!isValid()">Save</button>
+    </div>
+</form>
+</div>
+</div>

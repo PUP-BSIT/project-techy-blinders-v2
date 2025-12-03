@@ -1,44 +1,97 @@
-@if (post) {
-  <div class="post-card">
+ <div class="post-card" (click)="onCardClick()">
     <div class="post-header">
-      <div class="user-avatar">
-        <img 
-          src="assets/19-193486_kid-studying-sing-learn-phonics-volume-1-removebg-preview.png" 
-          alt="User avatar" 
-          class="avatar-img"
-        />
+      <div class="user-info">
+        <div class="user-avatar">{{ getInitial(post.username) }}</div>
+        <div class="user-details">
+          <span class="username">{{ post.username }}</span>
+          <span class="timestamp">
+            Posted {{ getTimeAgo(post.created_at) }}
+          </span>
+        </div>
       </div>
-      <span class="user-name">{{ post.userName }}</span>
-    </div>
-    
-    <h3 class="post-title">{{ post.title }}</h3>
-    
-    @if (post.content) {
-      <p class="post-content">{{ post.content }}</p>
-    }
-    
-    @if (post.quizTitle) {
-      <div class="quiz-card">
-        <h4 class="quiz-title">{{ post.quizTitle }}</h4>
-        <p class="flashcard-count">{{ post.flashcardCount }} Flashcards</p>
-        <button class="answer-btn" (click)="onQuizClick()">
-          <span class="play-icon">▶</span>
-          Answer
+      
+      <div class="post-menu">
+        <button class="menu-btn" (click)="toggleMenu($event)">
+          <svg width="4" height="16" viewBox="0 0 4 16" fill="currentColor">
+            <circle cx="2" cy="2" r="2"/>
+            <circle cx="2" cy="8" r="2"/>
+            <circle cx="2" cy="14" r="2"/>
+          </svg>
         </button>
+        
+        @if (showMenu) {
+          <div class="menu-dropdown">
+            <button class="menu-item" (click)="onEdit($event)">
+              <svg width="14" 
+                   height="14" 
+                   viewBox="0 0 14 14" 
+                   fill="none" 
+                   stroke="currentColor">
+                <path d="M10 1.5L12.5 4L4.5 12H2V9.5L10 1.5Z" 
+                      stroke-width="1.5" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round"/>
+              </svg>
+              Edit
+            </button>
+            <button class="menu-item delete" 
+                    (click)="onDelete($event)">
+              <svg width="14" 
+                   height="14" 
+                   viewBox="0 0 14 14" 
+                   fill="none" 
+                   stroke="currentColor">
+                <path d="M1.5 3.5H12.5M11 3.5V12C11 12.5 10.5 13 10 13H4C3.5 13 3 12.5 3 12V3.5M4.5 3.5V2C4.5 1.5 5 1 5.5 1H8.5C9 1 9.5 1.5 9.5 2V3.5" 
+                      stroke-width="1.5" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round"/>
+              </svg>
+              Delete
+            </button>
+
+            @if (showDeleteConfirm) {
+              <div class="confirm-box">
+                <div class="confirm-text">Delete this post?</div>
+                <div class="confirm-actions">
+                  <button class="btn-cancel" 
+                          (click)="cancelDelete($event)">Cancel</button>
+                  <button class="btn-delete" 
+                          (click)="confirmDelete($event)">Delete</button>
+                </div>
+              </div>
+            }
+          </div>
+        }
       </div>
-    }
-    
+    </div>
+
+    <div class="post-content">
+      <h3 class="post-title">{{ post.title }}</h3>
+      <p class="post-text">{{ post.content }}</p>
+    </div>
+
     <div class="post-actions">
-      <button class="comment-btn" (click)="onToggleComments()">
-       <img src="assets/comment_icon.png" 
-                    alt="Comments" 
-                    class="action-icon">
-        {{ post.commentCount }} comment{{ post.commentCount !== 1 ? 's' : '' }}
+      <button 
+        class="action-btn"
+        [class.active]="post.userLiked"
+        (click)="onLike($event)"
+      >
+        <img src="assets/arrow-up.png" alt="like" class="action-icon">
+        <span>{{ post.likes }}</span>
+      </button>
+      
+      <button 
+        class="action-btn"
+        [class.active]="post.userDisliked"
+        (click)="onDislike($event)"
+      >
+        <img src="assets/arrow-down.png" alt="dislike" class="action-icon">
+        <span>{{ post.dislikes }}</span>
+      </button>
+      
+      <button class="action-btn" (click)="onCommentClick($event)">
+        <img src="assets/comment-circle.png" alt="comment" class="action-icon">
+        <span>{{ post.commentcount }}</span>
       </button>
     </div>
-    
-    @if (post.showComments) {
-      <app-comment-section [postId]="post.id!"></app-comment-section>
-    }
-  </div>
-}
+</div>

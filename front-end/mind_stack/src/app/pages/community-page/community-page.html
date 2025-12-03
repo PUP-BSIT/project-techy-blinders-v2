@@ -1,26 +1,51 @@
-<div class="community-wrapper">
-  <div class="community-container">
-    <div class="community-header">
-      <input 
-        type="text" 
-        class="question-input" 
-        placeholder="Ask a question..."
-        readonly
-        (click)="communityService.openModal()"
-      />
-      <button class="ask-btn" (click)="communityService.openModal()">
-        Ask a Question
-      </button>
-    </div>
+<div class="community-container" 
+      [class.sidebar-collapsed]="isSidebarCollapsed">
+  <div class="community-content">
+    <app-search (searchChange)="onSearchChange($event)" />
     
-    <div class="posts-container">
-      @for (post of communityService.posts; track post.id) {
-        <app-post-card></app-post-card>
+    <button class="create-post-btn" (click)="openCreateModal()">
+      Create Post
+    </button>
+
+    <div class="posts-list">
+      @for (post of filteredPosts; track post.post_id) {
+        <app-post-card
+          [post]="post"
+          [currentUserInitial]="currentUserInitial"
+          (openModal)="openPostModal($event)"
+          (likePost)="onLikePost($event)"
+          (dislikePost)="onDislikePost($event)"
+          (deletePost)="onDeletePost($event)"
+          (editPost)="onEditPost($event)"
+        />
+      } @empty {
+        <div class="no-posts">
+          <p>No posts found. Be the first to create one!</p>
+        </div>
       }
     </div>
   </div>
-  
-  @if (communityService.showQuestionModal) {
-    <app-question-modal></app-question-modal>
+
+  @if (showCreateModal) {
+    <app-create-post
+      [editPost]="editingPost"
+      (closeModalEvent)="closeCreateModal()"
+      (createPost)="onCreatePost($event)"
+      (updatePost)="onUpdatePost($event)"
+    />
+  }
+
+  @if (showPostModal && selectedPost) {
+    <app-post-modal
+      [post]="selectedPost"
+      [comments]="getCommentsForPost(selectedPost.post_id)"
+      [currentUserInitial]="currentUserInitial"
+      (closeModalEvent)="closePostModal()"
+      (likePost)="onLikePostInModal()"
+      (dislikePost)="onDislikePostInModal()"
+      (addComment)="onAddComment($event)"
+      (likeComment)="onLikeComment($event)"
+      (dislikeComment)="onDislikeComment($event)"
+    />
   }
 </div>
