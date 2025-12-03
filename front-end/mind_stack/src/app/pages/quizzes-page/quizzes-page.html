@@ -1,66 +1,228 @@
 <div class="container">
-    <div class="top box">
-        <div class="top-left">
-            <p>My Quizzes</p>
-            <button (click)="openModal()" class="add">
-                <img src="assets/plus_icon.png" alt="Add Button">
-                Create New Quiz
-            </button>
-        </div>
-        <div class="continue-quiz-card" [hidden]="!lastQuiz" [attr.aria-hidden]="!lastQuiz">
-            <div class="continue-quiz-content">
-                <p class="continue-text">Continue your last quiz</p>
-                <h3 class="continue-title">{{ lastQuiz?.title }}</h3>
-                    <p class="continue-count">{{ lastQuiz?.questionCount }} Questions</p>
-                    <button (click)="resumeQuiz(lastQuiz?.quiz_id)" class="resume-btn">
-                    <span class="icon-small" aria-hidden="true">&#9658;</span>
-                    Resume
+    <div class="dropdown-backdrop" 
+         [class.show]="activeDropdown !== null" 
+         (click)="closeDropdown()"></div>
+    
+    <div class="content-wrapper">
+        <button (click)="openModal()" class="add">
+            Create New Quiz
+        </button>
+
+        <div class="study-sets-wrapper" [class.hidden]="quizzes.length === 0">
+            <div class="study-sets-list">
+                <div class="study-set-card" *ngFor="let quiz of paginatedQuizzes; let i = index">
+                    <div class="card-left">
+                        <div class="ellipsis-wrapper">
+                            <button class="ellipsis-menu" (click)="toggleDropdown(i)">
+                                •••
+                            </button>
+                            <div class="dropdown-menu" [class.show]="activeDropdown === i">
+                                <button class="dropdown-item share">
+                                    <img src="assets/globe-icon.png" alt="Share" class="icon-img">
+                                    Share
+                                </button>
+                                <button class="dropdown-item private" 
+                                            (click)="togglePrivacy(quiz.quiz_id)">
+                                    <img src="assets/lock.png" alt="Private" class="icon-img">
+                                    Private
+                                </button>
+                            </div>
+                        </div>
+                        <button class="play-btn" (click)="playQuiz(quiz.quiz_id)">
+                            ▶
+                        </button>
+                    </div>
+                    <div class="study-set-info">
+                        <h3 class="study-set-title">{{ quiz.title }}</h3>
+                        <p class="study-set-description">
+                            {{ quiz.description || 'About the Quiz' }} • 
+                            {{ getQuestionCount(quiz) }} {{ getQuestionCount(quiz) === 1 ? 'Question' : 'Questions' }} • 
+                            {{ getQuestionTypeLabel(quiz.questionType) }}
+                        </p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="edit-btn" (click)="editQuiz(quiz.quiz_id)">
+                            Edit
+                        </button>
+                        <button class="delete-btn" (click)="deleteQuiz(quiz.quiz_id)">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="study-sets-pagination" [class.show]="quizzesTotalPages > 1">
+                <button class="pagination-btn prev" 
+                            (click)="goToQuizzesPage(0)" 
+                            [disabled]="quizzesCurrentPage === 0">
+                    ‹‹
+                </button>
+                <button class="pagination-btn prev" 
+                            (click)="previousQuizzesPage()" 
+                            [disabled]="quizzesCurrentPage === 0">
+                    ‹
+                </button>
+                <div class="pagination-dots">
+                    <span *ngFor="let page of quizzesPages" 
+                          [class]="page === '...' ? 'pagination-ellipsis' : 'pagination-dot'"
+                          [class.active]="isPageNumber(page) && quizzesCurrentPage === page"
+                          (click)="isPageNumber(page) && goToQuizzesPage(getPageNumber(page))">
+                        {{ getPageDisplay(page) }}
+                    </span>
+                </div>
+                <button class="pagination-btn next" 
+                            (click)="nextQuizzesPage()" 
+                            [disabled]="quizzesCurrentPage === quizzesTotalPages - 1">
+                    ›
+                </button>
+                <button class="pagination-btn next" 
+                            (click)="goToQuizzesPage(quizzesTotalPages - 1)" 
+                            [disabled]="quizzesCurrentPage === quizzesTotalPages - 1">
+                    ››
                 </button>
             </div>
         </div>
     </div>
 
-    <div class="bottom box">
-        <div class="quizzes-container">
-            <div class="empty-state" 
-                    [hidden]="quizzes.length !== 0 || lastQuiz" 
-                    [attr.aria-hidden]="quizzes.length !== 0 || lastQuiz">
-                <p class="empty-message">
-                    create your first quiz to get started
-                </p>
+    <div class="modal-overlay" 
+            [class.open]="isModalOpen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="header-inputs">
+                    <input type="text" 
+                            class="title-input" 
+                            placeholder="Add Title"
+                            [(ngModel)]="quizTitle"/>
+                    <input type="text" 
+                            class="description-input" 
+                            placeholder="Description"
+                            [(ngModel)]="quizDescription"/>
+                    <select class="question-type-select" 
+                            [(ngModel)]="selectedQuestionType"
+                            (ngModelChange)="onQuestionTypeChange()">
+                        <option [value]="QuestionType.MULTIPLE_CHOICE">Multiple Choice</option>
+                        <option [value]="QuestionType.IDENTIFICATION">Identification</option>
+                    </select>
+                </div>
+                <div class="header-buttons">
+                    <button class="btn-cancel" (click)="openConfirmModal()">Cancel</button>
+                    <button class="btn-save" (click)="saveQuiz()">Save</button>
+                </div>
             </div>
 
-            <div class="quizzes-grid" 
-                    [hidden]="quizzes.length === 0 && !lastQuiz" 
-                    [attr.aria-hidden]="quizzes.length === 0 && !lastQuiz">
-                <ng-container #quizzesContainer></ng-container>
+            <div class="flashcard-controls">
+                <button class="add-flashcard-btn" (click)="addQuestion()">
+                    Add Question
+                </button>
+                <span class="flashcard-count">
+                    {{ questions.length }} Question<span [class.hidden]="questions.length === 1">s</span>
+                </span>
+            </div>
 
-                <ng-template #quizTpl let-quiz="quiz" let-i="index">
-                    <div class="quiz-card" (click)="openQuiz(quiz.quiz_id)">
-                        <div class="card-header">
-                            <h3 class="card-title">{{ quiz.title }}</h3>
-                        </div>
-                        <p class="card-flashcard-count">{{ quiz.questionCount }} 
-                                {{ quiz.questionCount === 1 ? 'Flashcard' : 'Flashcards' }}
-                        </p>
-                        <div class="card-footer">
-                            <button class="edit-btn" (click)="editQuiz(quiz.quiz_id, $event)" title="Edit quiz">
-                                <img src="assets/plus_icon.png" alt="Edit" class="icon-small">
-                                Edit
-                            </button>
-                            <button class="share-btn" (click)="shareQuiz(quiz.quiz_id, $event)" title="Share quiz">
-                                <span class="icon-small" aria-hidden="true">&#128279;</span>
-                                Share
-                            </button>
+            <div class="carousel-wrapper" [class.has-flashcards]="questions.length > 0">
+                <div class="flashcards-container">
+                    <!-- Multiple Choice Questions (under construction hahahaahhaha)-->
+                    <div class="flashcard-item" 
+                         *ngFor="let question of paginatedQuestions; let i = index"
+                         [class.hidden]="!isMultipleChoice()">
+                        <div class="flashcard-header">
+                            <div class="flashcard-left">
+                                <input type="text" 
+                                        class="flashcard-term" 
+                                        placeholder="Question"
+                                        [(ngModel)]="question.question"/>
+                                <input type="text" 
+                                        class="flashcard-definition" 
+                                        placeholder="Option A"
+                                        [(ngModel)]="question.optionA"/>
+                                <input type="text" 
+                                        class="flashcard-definition" 
+                                        placeholder="Option B"
+                                        [(ngModel)]="question.optionB"/>
+                                <input type="text" 
+                                        class="flashcard-definition" 
+                                        placeholder="Option C"
+                                        [(ngModel)]="question.optionC"/>
+                                <input type="text" 
+                                        class="flashcard-definition" 
+                                        placeholder="Option D"
+                                        [(ngModel)]="question.optionD"/>
+                                <input type="text" 
+                                        class="flashcard-definition" 
+                                        placeholder="Correct Answer (A, B, C, or D)"
+                                        [(ngModel)]="question.correctAnswer"/>
+                            </div>
+                            <div class="flashcard-actions">
+                                <button class="btn-delete" 
+                                            (click)="deleteQuestion(getActualIndex(i))">
+                                        Delete
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </ng-template>
+
+                    <!-- Identification Questions -->
+                    <div class="flashcard-item" 
+                         *ngFor="let question of paginatedQuestions; let i = index"
+                         [class.hidden]="!isIdentification()">
+                        <div class="flashcard-header">
+                            <div class="flashcard-left">
+                                <input type="text" 
+                                        class="flashcard-term" 
+                                        placeholder="Question"
+                                        [(ngModel)]="question.question"/>
+                                <input type="text" 
+                                        class="flashcard-definition" 
+                                        placeholder="Answer"
+                                        [(ngModel)]="question.answer"/>
+                            </div>
+                            <div class="flashcard-actions">
+                                <button class="btn-delete" 
+                                            (click)="deleteQuestion(getActualIndex(i))">
+                                        Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pagination" [class.show]="totalPages > 1">
+                    <button class="pagination-btn prev" 
+                                (click)="previousPage()" 
+                                [disabled]="currentPage === 0">
+                        ‹
+                    </button>
+                    <div class="pagination-dots">
+                        <span *ngFor="let page of pages" 
+                                class="pagination-dot" 
+                                [class.active]="currentPage === page"
+                                (click)="goToPage(page)">
+                            {{ page + 1 }}
+                        </span>
+                    </div>
+                    <button class="pagination-btn next" 
+                                (click)="nextPage()" 
+                                [disabled]="currentPage === totalPages - 1">
+                        ›
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="confirm-overlay" 
+            [class.open]="isConfirmModalOpen" (click)="closeConfirmModal()">
+        <div class="confirm-modal" (click)="$event.stopPropagation()">
+            <h3 class="confirm-title">Are you sure?</h3>
+            <p class="confirm-message">
+                Do you really want to cancel? All unsaved changes 
+                will be lost.
+            </p>
+            <div class="confirm-actions">
+                <button class="btn-confirm-no" (click)="closeConfirmModal()">No</button>
+                <button class="btn-confirm-yes" (click)="confirmCancel()">Yes</button>
             </div>
         </div>
     </div>
 </div>
-
-<app-add-quiz [isOpen]="isModalOpen"
-                    (closeModal)="closeModal()"
-                    (quizCreated)="saveQuiz($event)">
-</app-add-quiz>
