@@ -41,6 +41,7 @@ app-root {
 
 html, body { 
     height: 100%;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     font-family: Roboto, "Helvetica Neue", sans-serif; 
 }
