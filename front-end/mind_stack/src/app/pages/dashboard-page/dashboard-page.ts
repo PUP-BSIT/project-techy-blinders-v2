@@ -58,7 +58,7 @@ export class DashboardPage {
 
   createFlashcards() {
     console.log('Navigate to create flashcards');
-    this.router.navigate(['/study-sets']);
+    this.router.navigate(['/app/study-sets'], { queryParams: { create: 'true' } });
   }
 
   createQuiz() {

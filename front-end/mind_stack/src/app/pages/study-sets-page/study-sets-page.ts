@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { StudySetsService, StudySet } from '../../services/study-sets.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { StudySetsService, StudySet } from '../../services/study-sets.service';
   templateUrl: './study-sets-page.html',
   styleUrls: ['./study-sets-page.scss']
 })
-export class StudySetsPage {
+export class StudySetsPage implements OnInit {
   isModalOpen: boolean = false;
   isConfirmModalOpen: boolean = false;
   studySetTitle: string = '';
@@ -26,8 +26,22 @@ export class StudySetsPage {
 
   constructor(
     private studySetsService: StudySetsService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['create'] === 'true') {
+        this.openModal();
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: {},
+          queryParamsHandling: 'merge'
+        });
+      }
+    });
+  }
 
   get studySets(): StudySet[] {
     return this.studySetsService.getStudySets();
