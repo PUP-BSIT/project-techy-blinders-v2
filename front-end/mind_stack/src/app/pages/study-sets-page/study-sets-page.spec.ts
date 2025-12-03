@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 
 import { StudySetsPage } from './study-sets-page';
 
@@ -8,7 +10,15 @@ describe('StudySetsPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StudySetsPage]
+      imports: [StudySetsPage],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            queryParams: of({})
+          }
+        }
+      ]
     })
     .compileComponents();
 
