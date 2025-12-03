@@ -5,9 +5,9 @@ $color-primary-light: #95D5B2;
 $color-primary-lighter: #a7d5ae;
 $color-background: #D8F3DC;
 $color-card: #52B788;
-$color-accent: #16DC81;
+$color-delete: #16DC81;
 $color-accent-dark: #15965a;
-$color-delete: #287C55;
+$color-accent: #287C55;
 $color-delete-dark: #226646;
 $color-danger: #B7094C;
 $color-danger-dark: #8A0738;
@@ -344,7 +344,7 @@ $transition-normal: 0.3s ease;
 }
 
 .edit-btn {
-    background: #16DC81;
+    background: $color-accent;
     color: $color-text-white;
     border: none;
     border-radius: 8px;
@@ -363,7 +363,7 @@ $transition-normal: 0.3s ease;
 }
 
 .delete-btn {
-    background: #287C55;
+    background: $color-delete;
     color: $color-text-white;
     border: none;
     border-radius: 8px;
@@ -375,7 +375,7 @@ $transition-normal: 0.3s ease;
     flex-shrink: 0;
 
     &:hover {
-        background: #216746;
+        background: #27ca7e;
         transform: translateY(-2px);
         box-shadow: $shadow-hover;
     }
@@ -759,7 +759,7 @@ $transition-normal: 0.3s ease;
 }
 
 .btn-save {
-    background: $color-accent;
+    background: $color-delete;
     color: $color-text-white;
 
     &:hover {
