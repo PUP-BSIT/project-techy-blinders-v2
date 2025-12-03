@@ -1,4 +1,4 @@
-package com.mindstack.mind_stack_id.Models.dto;
+package com.mindstack.mind_stack_id.models.dto;
 
 public class UserDTO {
     private String username;

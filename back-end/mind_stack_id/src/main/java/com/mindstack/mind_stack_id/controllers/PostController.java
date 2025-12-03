@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.mindstack.mind_stack_id.Models.PostCreation;
-import com.mindstack.mind_stack_id.Models.dto.PostDTO;
+import com.mindstack.mind_stack_id.models.PostCreation;
+import com.mindstack.mind_stack_id.models.dto.PostDTO;
 import com.mindstack.mind_stack_id.services.PostService;
 
 @CrossOrigin(origins = "*")

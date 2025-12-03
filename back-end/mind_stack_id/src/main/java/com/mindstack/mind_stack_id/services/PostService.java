@@ -2,8 +2,8 @@ package com.mindstack.mind_stack_id.services;
 
 import java.util.List;
 
-import com.mindstack.mind_stack_id.Models.PostCreation;
-import com.mindstack.mind_stack_id.Models.dto.PostDTO;
+import com.mindstack.mind_stack_id.models.PostCreation;
+import com.mindstack.mind_stack_id.models.dto.PostDTO;
 
 public interface PostService {
     

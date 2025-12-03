@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.mindstack.mind_stack_id.Models.dto.UserDTO;
-import com.mindstack.mind_stack_id.Models.User;
+import com.mindstack.mind_stack_id.models.dto.UserDTO;
+import com.mindstack.mind_stack_id.models.User;
 import com.mindstack.mind_stack_id.repositories.UserRepository;
 import com.mindstack.mind_stack_id.services.UserService;
 
@@ -44,30 +44,10 @@ public class UserImplementation implements UserService {
         user.setDate(LocalDateTime.now());
         user.setUpdateAt(LocalDateTime.now());
         
-        System.out.println("Created user with ID: " + user.getUserId());
-        System.out.println("Hashed password: " + hash);
+        // System.out.println("Created user with ID: " + user.getUserId());
+        // System.out.println("Hashed password: " + hash);
         
         return repo.save(user);
-    }
-
-    @Override
-    public boolean authenticateUser(Long userId, String password) {
-        User user = repo.findByUserId(userId);
-
-        if (user == null) {
-            System.out.println("User not found: " + userId);
-            return false;
-        }
-
-        System.out.println("User found: " + user.getUserId());
-        System.out.println("Password: " + password);
-        
-        String plainPassword = password.trim();
-        boolean matches = passwordEncoder.matches(plainPassword, user.getPassword());
-        
-        System.out.println("Password matches: " + matches);
-        
-        return matches;
     }
 
     @Override

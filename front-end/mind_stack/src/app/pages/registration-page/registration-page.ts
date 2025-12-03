@@ -1,134 +1,99 @@
-import { Component, inject } from '@angular/core';
-import { NavBar } from "../../shared/components/nav-bar/nav-bar";
+import { Component, inject, signal } from '@angular/core';
+import { NavBar } from '../../shared/components/nav-bar/nav-bar';
 import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
 import { RegisterRequest, RegisterResponse } from '../../models/user.model';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../../../service/user-service';
+import { AuthService } from '../../../service/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-registration-page',
-  imports: [NavBar, ReactiveFormsModule, CommonModule],
   templateUrl: './registration-page.html',
-  styleUrl: './registration-page.scss'
+  styleUrls: ['./registration-page.scss'],
+  standalone: true,
+  imports: [NavBar, ReactiveFormsModule, CommonModule]
 })
-
 export class RegistrationPage {
 
-  formBuilder = inject(FormBuilder);
-  userService = inject(UserService);
-  router = inject(Router);
-  
-  registrationFrom: FormGroup;
-  isLoading = false;
-  successMessage = '';
-  isSuccessModalOpen = false;
-  registeredUserId: number | null = null;
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  registrationForm: FormGroup;
+
+  // Signals
+  isLoading = signal(false);
+  successMessage = signal('');
+  errorMessage = signal('');
+  registeredUserId = signal<number | null>(null);
 
   constructor() {
-    this.registrationFrom = this.formBuilder.group ({
-      email: ['', {
-        validators: [Validators.required, Validators.email, Validators.maxLength(20)],
-        updateOn: 'change'
-      }],
-
-      username: ['', {
-        validators: [Validators.required, Validators.maxLength(20)],
-        updateOn: 'change'
-      }],
-
-      password: ['', {
-        validators: [Validators.required, Validators.minLength(6)],
-        updateOn: 'change'
-      }],
-
-      confirmPassword: ['', {
-        validators: [Validators.required],
-        updateOn: 'change'
-      }],
-    }); 
+    this.registrationForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
+      username: ['', [Validators.required, Validators.maxLength(20)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]]
+    });
   }
 
+  get emailControl() { return this.registrationForm.get('email'); }
+  get usernameControl() { return this.registrationForm.get('username'); }
+  get passwordControl() { return this.registrationForm.get('password'); }
+  get confirmPasswordControl() { return this.registrationForm.get('confirmPassword'); }
+
   isFormValid(): boolean {
-    return this.registrationFrom.valid && 
+    return this.registrationForm.valid &&
            this.passwordControl?.value === this.confirmPasswordControl?.value;
   }
 
-  registrationValidation() {
-    this.successMessage = '';
-    this.isSuccessModalOpen = false;
-    this.registeredUserId = null;
+  register() {
+    this.successMessage.set('');
+    this.errorMessage.set('');
+    this.registeredUserId.set(null);
 
     if (!this.isFormValid()) {
+      this.errorMessage.set('Please fix form errors and make sure passwords match');
       return;
     }
 
-    this.isLoading = true;
+    this.isLoading.set(true);
 
     const userData: RegisterRequest = {
       email: this.emailControl?.value,
       username: this.usernameControl?.value,
       password: this.passwordControl?.value
-    }
+    };
 
-    this.userService.registerUser(userData).subscribe({
+    this.authService.register(userData).subscribe({
       next: (response: RegisterResponse) => {
-        this.isLoading = false;
-      
-        this.registeredUserId = response.user_id;
-        this.successMessage = "Registration is Successful";
-        this.isSuccessModalOpen = true;
-        
-        console.log('User registered successfully');
-        console.log('Generated User ID:', this.registeredUserId);
-        
-        this.registrationFrom.reset();
-      },
+        this.isLoading.set(false);
+        if (response.account_successfully_created) {
+          this.registeredUserId.set(response.user_id);
+          this.successMessage.set('Registration successful!');
 
-      error: (error: HttpErrorResponse) => {
-        this.isLoading = false;
-        console.error('Registration error:', error);
-        console.error('Error details:', error.error);
+          // Auto login
+          this.authService.login({
+            email: this.emailControl?.value,
+            password: this.passwordControl?.value
+          }).subscribe({
+            next: () => this.router.navigate(['/app/dashboard']),
+            error: (loginError: HttpErrorResponse) => {
+              this.errorMessage.set('Registration succeeded, but login failed. Please login manually.');
+            }
+          });
+        } else {
+          this.errorMessage.set('Registration failed. Try again.');
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        this.isLoading.set(false);
+        this.errorMessage.set(err.error?.message || 'Registration failed. Try again.');
       }
     });
   }
 
-  isCopied = false;
-
-  copyUserIdToClipboard() {
-    if (this.registeredUserId !== null) {
-      navigator.clipboard.writeText(this.registeredUserId.toString()).then(() => {
-        console.log('User ID copied to clipboard:', this.registeredUserId);
-        this.isCopied = true;
-        
-        setTimeout(() => {
-          this.isCopied = false;
-        }, 2000);
-      }).catch(err => {
-        console.error('Failed to copy user ID:', err);
-        alert('Failed to copy User ID. Please copy it manually.');
-      });
-    }
-  }
-
   goToLoginPage() {
     this.router.navigate(['/login']);
-  }
-
-  get emailControl () {
-    return this.registrationFrom.get('email');
-  }
-
-  get usernameControl () {
-    return this.registrationFrom.get('username');
-  }
-
-  get passwordControl () {
-    return this.registrationFrom.get('password');
-  }
-
-  get confirmPasswordControl () {
-    return this.registrationFrom.get ('confirmPassword');
   }
 }

@@ -1,9 +1,9 @@
 export interface User {
-    user_id: number;
+    userId: number;
     username: string;
     email: string;
-    created_at: Date;
-    updated_at: Date;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface RegisterRequest {
@@ -13,8 +13,8 @@ export interface RegisterRequest {
 }
 
 export interface RegisterResponse {
-    account_succesfully_created: boolean;
-    user_id: number;
+  account_successfully_created: boolean;
+  user_id: number;
 }
 
 export interface LoginRequest {
@@ -23,8 +23,10 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  login_successfull: boolean;
-  user_id: number;
+  token: string;
+  userId: number;
+  username: string;
+  email: string;
 }
 
 export interface AuthError {

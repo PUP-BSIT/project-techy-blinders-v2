@@ -8,9 +8,9 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mindstack.mind_stack_id.Models.PostCreation;
-import com.mindstack.mind_stack_id.Models.PostCreation.CategoryType;
-import com.mindstack.mind_stack_id.Models.dto.PostDTO;
+import com.mindstack.mind_stack_id.models.PostCreation;
+import com.mindstack.mind_stack_id.models.PostCreation.CategoryType;
+import com.mindstack.mind_stack_id.models.dto.PostDTO;
 import com.mindstack.mind_stack_id.repositories.PostRepository;
 import com.mindstack.mind_stack_id.services.PostService;
 

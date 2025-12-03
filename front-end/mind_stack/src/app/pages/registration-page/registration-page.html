@@ -16,7 +16,7 @@
     </div>
 
     <div class="registration-form">
-        <form [formGroup]="registrationFrom" (ngSubmit)="registrationValidation()">
+        <form [formGroup]="registrationForm" (ngSubmit)="register()">
             <div class="form-group">
                 <label>Email</label>
                 <input type="text" formControlName="email" placeholder="Email">
@@ -27,7 +27,7 @@
                         }@else if(emailControl?.errors?.['email']) {
                             <span>Invalid Email</span>
                         }@else if (emailControl?.errors?.['maxlength']) {
-                            <span>Email can only contain up to 20 characters</span>
+                            <span>Email can only contain up to 50 characters</span>
                         }
                     }
                 </div>
@@ -75,14 +75,20 @@
                 </div>
             </div>
 
-            @if (isLoading) {
+            @if (isLoading()) {
                 <div class="loading-message">
                     <span>Registering...</span>
                 </div>
             }
 
+            @if (errorMessage()) {
+                <div class="error-message">
+                    <span>{{ errorMessage() }}</span>
+                </div>
+            }
+
             <div class="submit-class">
-                <button type="submit" [disabled]="!isFormValid() || isLoading">Register</button>
+                <button type="submit" [disabled]="!isFormValid() || isLoading()">Register</button>
             </div>
             <div class="cancel-button">
                 <button type="reset">Cancel</button>
@@ -91,30 +97,21 @@
     </div>
 </div>
 
-@if (isSuccessModalOpen) {
+@if (successMessage() && registeredUserId() !== null) {
     <div class="modal-backdrop">
         <div class="modal-content">
             <h2>Registration Successful!</h2>
-            <p>Your account has been created successfully.</p>
+            <p>{{ successMessage() }}</p>
 
-            @if (registeredUserId !== null) {
-                <div class="user-id-section">
-                    <p class="user-id-instruction">Please save your User ID for login:</p>
-                    <div class="user-id-row">
-                        <span class="user-id-label">User ID:</span>
-                        <div class="user-id-pill">
-                            <span class="user-id-value">{{ registeredUserId }}</span>
-                            <button type="button" 
-                                    class="copy-user-id-button" 
-                                    [class.copied]="isCopied"
-                                    (click)="copyUserIdToClipboard()" 
-                                    title="Copy to clipboard">
-                                {{ isCopied ? 'Copied' : 'Copy' }}
-                            </button>
-                        </div>
+            <div class="user-id-section">
+                <p class="user-id-instruction">Please save your User ID for login:</p>
+                <div class="user-id-row">
+                    <span class="user-id-label">User ID:</span>
+                    <div class="user-id-pill">
+                        <span class="user-id-value">{{ registeredUserId() }}</span>
                     </div>
                 </div>
-            }
+            </div>
             
             <button type="button" class="login-redirect-button" (click)="goToLoginPage()">
                 Go to Login Page

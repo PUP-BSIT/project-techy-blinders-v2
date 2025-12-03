@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.mindstack.mind_stack_id.Models.Rating;
+import com.mindstack.mind_stack_id.models.Rating;
 import com.mindstack.mind_stack_id.repositories.RatingRepostory;
 import com.mindstack.mind_stack_id.repositories.CommentRepository;
 import com.mindstack.mind_stack_id.repositories.UserRepository;

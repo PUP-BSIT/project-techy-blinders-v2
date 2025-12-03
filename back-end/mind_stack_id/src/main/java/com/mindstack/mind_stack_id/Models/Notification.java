@@ -1,4 +1,4 @@
-package com.mindstack.mind_stack_id.Models;
+package com.mindstack.mind_stack_id.models;
 
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
