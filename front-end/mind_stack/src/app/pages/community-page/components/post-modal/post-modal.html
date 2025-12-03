@@ -1,0 +1,192 @@
+<div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+    
+    <div class="scrollable-content">
+        <div class="post-section">
+        <div class="post-header">
+            <div class="user-info">
+            <div class="user-avatar">{{ getInitial(post.username) }}</div>
+            <div class="user-details">
+                <span class="username">{{ post.username }}</span>
+                <span class="timestamp">
+                        Posted {{ getTimeAgo(post.created_at) }}
+                </span>
+            </div>
+            </div>
+            
+            <button class="close-btn" (click)="closeModal()">
+            <svg width="20" 
+                 height="20" 
+                 viewBox="0 0 20 20" 
+                 fill="currentColor">
+                <path d="M4 4L16 16M16 4L4 16" 
+                      stroke="currentColor" 
+                      stroke-width="2" 
+                      stroke-linecap="round"/>
+            </svg>
+            </button>
+        </div>
+
+        <div class="post-content">
+            <h3 class="post-title">{{ post.title }}</h3>
+            <p class="post-text">{{ post.content }}</p>
+        </div>
+
+        <div class="post-actions">
+            <button 
+            class="action-btn"
+            [class.active]="post.userLiked"
+            (click)="onLike()"
+            >
+            <img src="assets/arrow-up.png" alt="like" class="action-icon">
+            <span>{{ post.likes }}</span>
+            </button>
+            
+            <button 
+            class="action-btn"
+            [class.active]="post.userDisliked"
+            (click)="onDislike()"
+            >
+            <img src="assets/arrow-down.png" alt="dislike" class="action-icon">
+            <span>{{ post.dislikes }}</span>
+            </button>
+            
+            <button class="action-btn">
+            <img src="assets/comment-circle.png" 
+                 alt="comment" 
+                 class="action-icon">
+            <span>{{ post.commentcount }}</span>
+            </button>
+        </div>
+        </div>
+
+        <div class="comments-section">
+        @for (comment of comments; track comment.comment_id) {
+        <div class="comment-thread">
+            <div class="comment-item">
+            <div class="comment-header">
+                <div class="user-avatar-small">
+                    {{ getInitial(comment.username) }}
+                </div>
+                <div class="comment-info">
+                <span class="username">{{ comment.username }}</span>
+                <span class="timestamp">
+                     · {{ getTimeAgo(comment.created_at) }}
+                </span>
+                </div>
+            </div>
+            <p class="comment-content">{{ comment.content }}</p>
+            <div class="comment-actions">
+                <button 
+                class="action-btn-small"
+                [class.active]="comment.userLiked"
+                (click)="onLikeComment(comment, false)"
+                >
+                <img src="assets/arrow-up.png" 
+                     alt="like" 
+                     class="action-icon-small">
+                <span>{{ comment.likes }}</span>
+                </button>
+                
+                <button 
+                class="action-btn-small"
+                [class.active]="comment.userDisliked"
+                (click)="onDislikeComment(comment, false)"
+                >
+                <img src="assets/arrow-down.png" 
+                     alt="dislike" 
+                     class="action-icon-small">
+                <span>{{ comment.dislikes }}</span>
+                </button>
+                
+                <button class="action-btn-small" 
+                        (click)="onReply(comment, false)" 
+                        title="Reply">
+                <img src="assets/comment-circle.png" 
+                     alt="comment" 
+                     class="action-icon-small">
+                <span>{{ (comment.replies?.length || 0) }}</span>
+                </button>
+            </div>
+            </div>
+
+            @if (comment.replies && comment.replies.length > 0) {
+            <div class="replies-container">
+                @for (reply of comment.replies; track reply.comment_id) {
+                <div class="comment-item reply">
+                    <div class="comment-header">
+                    <div class="user-avatar-small">
+                        {{ getInitial(reply.username) }}
+                    </div>
+                    <div class="comment-info">
+                        <span class="username">{{ reply.username }}</span>
+                        <span class="timestamp">
+                             · {{ getTimeAgo(reply.created_at) }}
+                        </span>
+                    </div>
+                    </div>
+                    <p class="comment-content">{{ reply.content }}</p>
+                    <div class="comment-actions">
+                    <button 
+                        class="action-btn-small"
+                        [class.active]="reply.userLiked"
+                        (click)="onLikeComment(reply, true)"
+                    >
+                        <img src="assets/arrow-up.png" 
+                             alt="like" 
+                             class="action-icon-small">
+                        <span>{{ reply.likes }}</span>
+                    </button>
+                    
+                    <button 
+                        class="action-btn-small"
+                        [class.active]="reply.userDisliked"
+                        (click)="onDislikeComment(reply, true)"
+                    >
+                        <img src="assets/arrow-down.png" 
+                             alt="dislike" 
+                             class="action-icon-small">
+                        <span>{{ reply.dislikes }}</span>
+                    </button>
+                    
+                    <button class="action-btn-small" 
+                            (click)="onReply(reply, true)" 
+                            title="Reply">
+                        <img src="assets/comment-circle.png" 
+                             alt="comment" 
+                             class="action-icon-small">
+                        <span>{{ (reply.replies?.length || 0) }}</span>
+                    </button>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </div>
+        }
+
+    </div>
+    </div>
+
+    <div class="add-comment">
+        <div class="user-avatar-small">{{ currentUserInitial }}</div>
+        <input 
+        type="text"
+        class="comment-input"
+        placeholder="Add your Reply"
+        [(ngModel)]="newCommentText"
+        (keyup.enter)="onAddComment()"
+        #replyInput
+        />
+        <button 
+        class="send-btn"
+        [disabled]="!newCommentText.trim()"
+        (click)="onAddComment()"
+        >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M15 1L7 9M15 1L10 15L7 9M15 1L1 6L7 9"/>
+        </svg>
+        </button>
+    </div>
+    </div>
+</div>

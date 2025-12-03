@@ -1,8 +1,7 @@
-import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CommunityService } from '../../../../../services/community.service';
-import { Comment } from '../../../../../models/comment.model';
+import { Comment } from '../../../../../models/post.model';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-comment-section',
@@ -12,34 +11,41 @@ import { Comment } from '../../../../../models/comment.model';
   styleUrl: './comment-section.scss'
 })
 export class CommentSection {
-  @Input() postId: string = ''; 
+  @Input() comments: Comment[] = [];
+  @Input() postId: string = '';
+  @Input() currentUserInitial: string = 'J';
+  
+  @Output() addComment = new EventEmitter<string>();
+  @Output() likeComment = new EventEmitter<Comment>();
+  @Output() dislikeComment = new EventEmitter<Comment>();
+
   newCommentText: string = '';
-  currentUserId: string = 'currentUser';
 
-  constructor(public communityService: CommunityService) {}
+  getInitial(username: string): string {
+    return username.charAt(0).toUpperCase();
+  }
 
-  onSubmitComment() {
-    if (this.newCommentText.trim() && this.postId) {
-      this.communityService.addComment(this.postId, this.newCommentText);
+  getTimeAgo(date: Date): string {
+    const now = new Date();
+    const diff = now.getTime() - new Date(date).getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    
+    if (hours < 1) return 'Just now';
+    return `${hours} hours ago`;
+  }
+
+  onAddComment() {
+    if (this.newCommentText.trim()) {
+      this.addComment.emit(this.newCommentText);
       this.newCommentText = '';
     }
   }
 
-  onRateComment(commentId: string, rating: number) {
-    if (this.postId) {
-      this.communityService.rateComment(commentId, this.currentUserId, rating);
-    }
+  onLikeComment(comment: Comment) {
+    this.likeComment.emit(comment);
   }
 
-  getStarArray(count: number): number[] {
-    return Array(count).fill(0);
-  }
-
-  getComments(): Comment[] {
-    return this.communityService.getComments(this.postId);
-  }
-
-  getCommentRating(commentId: string): number {
-    return this.communityService.getRating(commentId, this.currentUserId);
+  onDislikeComment(comment: Comment) {
+    this.dislikeComment.emit(comment);
   }
 }

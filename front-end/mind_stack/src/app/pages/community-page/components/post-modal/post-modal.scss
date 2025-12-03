@@ -1,0 +1,342 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: #B8E5C8;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 700px;
+    max-height: 85vh;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    /* Make internal layout allow sticky input while comments scroll */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* prevent inner scrollbars from peeking outside */
+}
+
+.scrollable-content {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.post-section {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 20px 12px 20px;
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #E5E7EB;
+    color: #6B7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.username {
+    font-weight: 600;
+    font-size: 15px;
+    color: #111827;
+}
+
+.timestamp {
+    font-size: 12px;
+    color: #6B7280;
+}
+
+.close-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #6B7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.close-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.post-content {
+    margin-bottom: 12px;
+}
+
+.post-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0 0 8px 0;
+}
+
+.post-text {
+    font-size: 14px;
+    color: #1F2937;
+    line-height: 1.5;
+    margin: 0;
+    max-height: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    -webkit-box-orient: vertical;
+}
+
+.post-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: none;
+    background: #D1FAE5;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #047857;
+    transition: all 0.2s;
+}
+
+.action-btn svg {
+    stroke: #047857;
+    fill: #047857;
+}
+
+.action-btn .action-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+.action-btn:hover {
+    background: #A7F3D0;
+}
+
+.action-btn.active {
+    background: #10b981;
+    color: white;
+}
+
+.action-btn.active svg {
+    stroke: white;
+    fill: white;
+}
+
+.action-btn.active .action-icon {
+    filter: brightness(0) invert(1);
+}
+
+.comments-section {
+    padding: 0 20px 16px 20px;
+}
+
+.comment-thread {
+    margin-bottom: 16px;
+}
+
+.comment-item {
+    padding: 14px 16px;
+    background: #D1FAE5;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.comment-item.reply {
+    background: rgba(209, 250, 229, 0.6);
+}
+
+.replies-container {
+    margin-left: 32px;
+    border-left: 2px solid #A7F3D0;
+    padding-left: 12px;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.user-avatar-small {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #6B7280;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.comment-info {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.comment-content {
+    margin: 8px 0 12px 0;
+    font-size: 13px;
+    color: #1F2937;
+    line-height: 1.5;
+}
+
+.comment-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.action-btn-small {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    border: none;
+    background: white;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 11px;
+    color: #047857;
+    transition: all 0.2s;
+    font-weight: 600;
+}
+
+.action-btn-small svg {
+    stroke: #047857;
+    fill: #047857;
+}
+
+.action-btn-small .action-icon-small {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+}
+
+.action-btn-small:hover {
+    background: #F3F4F6;
+}
+
+.action-btn-small.active {
+    background: #10b981;
+    color: white;
+}
+
+.action-btn-small.active svg {
+    stroke: white;
+    fill: white;
+}
+
+.action-btn-small.active .action-icon-small {
+    filter: brightness(0) invert(1);
+}
+
+.add-comment {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Stick the input to the bottom of the modal container */
+    position: sticky;
+    bottom: 0;
+    padding: 12px 20px;
+    background: #B8E5C8; /* match modal background */
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    z-index: 1; /* ensure above scroll content */
+}
+
+.comment-input {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    font-size: 13px;
+    background: white;
+    color: #374151;
+}
+
+.comment-input::placeholder {
+    color: #D1D5DB;
+}
+
+.comment-input:focus {
+    box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.1);
+}
+
+.send-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: #10b981;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.send-btn:hover:not(:disabled) {
+    background: #059669;
+}
+
+.send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
