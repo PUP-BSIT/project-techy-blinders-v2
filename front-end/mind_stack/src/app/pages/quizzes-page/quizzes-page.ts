@@ -1,159 +1,362 @@
-import { Component, OnInit, AfterViewInit, ViewChild, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AddQuiz } from './add-quiz/add-quiz';
-import { QuizzesService, Quiz } from '../../services/quizzes.service';
-import { QuizRequest, QuestionType as ModelQuestionType } from '../../models/quiz.model';
 
-interface QuizSet {
+export enum QuestionType {
+  MULTIPLE_CHOICE = 'multiple_choice',
+  IDENTIFICATION = 'identification'
+}
+
+export interface QuestionItem {
+  question: string;
+  // For multiple choice
+  optionA?: string;
+  optionB?: string;
+  optionC?: string;
+  optionD?: string;
+  correctAnswer?: string;
+  // For identification
+  answer?: string;
+}
+
+export interface Quiz {
   quiz_id: number;
   title: string;
-  questionCount: number;
+  description?: string;
+  questions: QuestionItem[];
+  questionType: QuestionType;
   created_at: Date;
+  is_public: boolean;
 }
 
 @Component({
   selector: 'app-quizzes-page',
   standalone: true,
-  imports: [AddQuiz, CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './quizzes-page.html',
   styleUrls: ['./quizzes-page.scss']
 })
-export class QuizzesPage implements OnInit, AfterViewInit {
+export class QuizzesPage {
   isModalOpen: boolean = false;
-  quizzes: QuizSet[] = [];
-  lastQuiz: QuizSet | null = null;
+  isConfirmModalOpen: boolean = false;
+  
+  quizTitle: string = '';
+  quizDescription: string = '';
+  selectedQuestionType: QuestionType = QuestionType.MULTIPLE_CHOICE;
+  questions: QuestionItem[] = [];
+  
+  currentPage: number = 0;
+  itemsPerPage: number = 2;
+  
+  quizzesCurrentPage: number = 0;
+  quizzesPerPage: number = 3;
+  
+  editingQuizId: number | null = null;
+  
+  activeDropdown: number | null = null;
 
-  @ViewChild('quizzesContainer', { read: ViewContainerRef }) private quizzesContainer!: ViewContainerRef;
-  @ViewChild('quizTpl') private quizTpl!: TemplateRef<any>;
+  QuestionType = QuestionType;
 
-  constructor(
-    private router: Router,
-    private quizzesService: QuizzesService
-  ) {}
+  private readonly STORAGE_KEY = 'quizzes';
 
-  ngOnInit() {
-    this.loadQuizzes();
+  constructor(private router: Router) {
+    this.initializeStorage();
+  }
+  
+  private initializeStorage(): void {
+    if (!localStorage.getItem(this.STORAGE_KEY)) {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify([]));
+    }
   }
 
-  ngAfterViewInit() {
-    setTimeout(() => this.renderQuizzes());
+  private getQuizzesFromStorage(): Quiz[] {
+    const data = localStorage.getItem(this.STORAGE_KEY);
+    if (!data) return [];
+    
+    const quizzes = JSON.parse(data);
+    return quizzes.map((quiz: any) => ({
+      ...quiz,
+      created_at: new Date(quiz.created_at)
+    }));
   }
 
+  private saveQuizzesToStorage(quizzes: Quiz[]): void {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(quizzes));
+  }
+
+  // quiz
+  
+  get quizzes(): Quiz[] {
+    return this.getQuizzesFromStorage();
+  }
+
+  get paginatedQuizzes(): Quiz[] {
+    const startIndex = this.quizzesCurrentPage * this.quizzesPerPage;
+    return this.quizzes.slice(startIndex, startIndex + this.quizzesPerPage);
+  }
+
+  get quizzesTotalPages(): number {
+    return Math.ceil(this.quizzes.length / this.quizzesPerPage);
+  }
+
+  get quizzesPages(): (number | string)[] {
+    const totalPages = this.quizzesTotalPages;
+    const pages: (number | string)[] = [];
+
+    if (totalPages <= 6) {
+      return Array.from({ length: totalPages }, (_, i) => i);
+    }
+
+    pages.push(0, 1, 2);
+
+    if (totalPages > 4) {
+      pages.push('...');
+    }
+
+    if (totalPages > 3) {
+      pages.push(totalPages - 1);
+    }
+
+    return pages;
+  }
+
+  goToQuizzesPage(page: number) {
+    this.quizzesCurrentPage = page;
+  }
+
+  nextQuizzesPage() {
+    if (this.quizzesCurrentPage < this.quizzesTotalPages - 1) {
+      this.quizzesCurrentPage++;
+    }
+  }
+
+  previousQuizzesPage() {
+    if (this.quizzesCurrentPage > 0) {
+      this.quizzesCurrentPage--;
+    }
+  }
+
+  isPageNumber(page: number | string): boolean {
+    return typeof page === 'number';
+  }
+
+  getPageNumber(page: number | string): number {
+    return page as number;
+  }
+
+  getPageDisplay(page: number | string): string {
+    return typeof page === 'number' ? String((page as number) + 1) : page as string;
+  }
+
+  // modals
+  
   openModal() {
     this.isModalOpen = true;
+    this.quizTitle = '';
+    this.quizDescription = '';
+    this.selectedQuestionType = QuestionType.MULTIPLE_CHOICE;
+    this.questions = [];
+    this.currentPage = 0;
+    this.editingQuizId = null;
   }
 
   closeModal() {
     this.isModalOpen = false;
-    this.loadQuizzes();
+    this.isConfirmModalOpen = false;
+    this.editingQuizId = null;
   }
 
-  loadQuizzes() {
-    const allQuizzes = this.quizzesService.getQuizzes();
-    const quizSets: QuizSet[] = allQuizzes.map(quiz => ({
-      quiz_id: quiz.quiz_id,
-      title: quiz.title,
-      questionCount: quiz.questions.length,
-      created_at: quiz.created_at
-    }));
-
-    const lastAccessedQuizId = localStorage.getItem('lastAccessedQuizId');
-    if (lastAccessedQuizId) {
-      const lastAccessedQuiz = quizSets.find(q => q.quiz_id === Number(lastAccessedQuizId));
-      if (lastAccessedQuiz) {
-        this.lastQuiz = lastAccessedQuiz;
-        this.quizzes = quizSets.filter(q => q.quiz_id !== this.lastQuiz!.quiz_id);
-        this.renderQuizzes();
-        return;
-      }
-    }
-
-    this.lastQuiz = null;
-    this.quizzes = quizSets;
-    this.renderQuizzes();
+  openConfirmModal() {
+    this.isConfirmModalOpen = true;
   }
 
-  private renderQuizzes() {
-    if (!this.quizzesContainer || !this.quizTpl) return;
-    this.quizzesContainer.clear();
-    for (let i = 0; i < this.quizzes.length; i++) {
-      const quiz = this.quizzes[i];
-      this.quizzesContainer.createEmbeddedView(this.quizTpl, { quiz, index: i });
-    }
+  closeConfirmModal() {
+    this.isConfirmModalOpen = false;
   }
 
-  saveQuiz(quizData: { title: string; description: string; questions: QuizRequest[]; questionType: any; isPublic: boolean }) {
-    console.log('saveQuiz called with data:', quizData);
+  confirmCancel() {
+    this.isConfirmModalOpen = false;
+    this.isModalOpen = false;
+  }
 
-    if (!quizData || !quizData.title || !quizData.questions || quizData.questions.length === 0) {
-      console.error('Invalid quiz data received:', quizData);
-      alert('Error: Invalid quiz data. Please check your quiz and try again.');
-      return;
-    }
-
-    // Map QuizRequest[] to the local service QuestionItem[] shape
-    const mappedQuestions = quizData.questions.map(q => {
-      if (q.question_type === ModelQuestionType.MULTIPLE_CHOICE) {
-        return {
-          question: q.question,
-          optionA: q.option_a,
-          optionB: q.option_b,
-          optionC: q.option_c,
-          optionD: q.option_d,
-          correctAnswer: q.correct_answer
-        };
-      }
-
-      // identification / other types
-      return {
-        question: q.question,
-        answer: q.identification_answer ?? q.correct_answer
-      };
-    });
-
-    const newQuiz: Quiz = {
-      quiz_id: Date.now(),
-      title: quizData.title,
-      description: quizData.description || '',
-      questions: mappedQuestions,
-      questionType: quizData.questionType,
-      created_at: new Date(),
-      is_public: quizData.isPublic || false
+  // questions
+  
+  addQuestion() {
+    const newQuestion: QuestionItem = {
+      question: ''
     };
 
-    console.log('Creating new quiz:', newQuiz);
-    this.quizzesService.addQuiz(newQuiz);
-    console.log('Quiz saved successfully');
-    this.loadQuizzes();
-    console.log('Quizzes reloaded, current count:', this.quizzes.length);
-  }
-
-  editQuiz(quizId: number, event: Event) {
-    event.stopPropagation();
-    this.router.navigate(['/app/quizzes', quizId]);
-  }
-
-  shareQuiz(quizId: number, event: Event) {
-    event.stopPropagation();
-    console.log('Share quiz:', quizId);
-  }
-
-  resumeQuiz(quizId?: number) {
-    if (quizId == null) {
-      console.warn('resumeQuiz called with undefined quizId');
-      return;
+    // Initialize based on question type
+    if (this.selectedQuestionType === QuestionType.MULTIPLE_CHOICE) {
+      newQuestion.optionA = '';
+      newQuestion.optionB = '';
+      newQuestion.optionC = '';
+      newQuestion.optionD = '';
+      newQuestion.correctAnswer = '';
+    } else if (this.selectedQuestionType === QuestionType.IDENTIFICATION) {
+      newQuestion.answer = '';
     }
-    localStorage.setItem('lastAccessedQuizId', quizId.toString());
-    this.router.navigate(['/app/quizzes', quizId]);
+
+    this.questions.push(newQuestion);
+    this.currentPage = Math.floor((this.questions.length - 1) / this.itemsPerPage);
   }
 
-  openQuiz(quizId?: number) {
-    if (quizId == null) {
-      console.warn('openQuiz called with undefined quizId');
-      return;
+  deleteQuestion(index: number) {
+    this.questions.splice(index, 1);
+    const maxPage = Math.max(0, Math.ceil(this.questions.length / this.itemsPerPage) - 1);
+    if (this.currentPage > maxPage) {
+      this.currentPage = maxPage;
     }
-    localStorage.setItem('lastAccessedQuizId', quizId.toString());
-    this.router.navigate(['/app/quizzes', quizId]);
+  }
+
+  onQuestionTypeChange() {
+    this.questions = [];
+    this.currentPage = 0;
+  }
+
+  // pagination
+  
+  get paginatedQuestions() {
+    const startIndex = this.currentPage * this.itemsPerPage;
+    return this.questions.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.questions.length / this.itemsPerPage);
+  }
+
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i);
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+    }
+  }
+
+  getActualIndex(localIndex: number): number {
+    return this.currentPage * this.itemsPerPage + localIndex;
+  }
+
+  // save quizx
+  
+  saveQuiz() {
+    if (this.quizTitle.trim() && this.questions.length > 0) {
+      const allQuizzes = this.getQuizzesFromStorage();
+      
+      if (this.editingQuizId !== null) {
+        // updat quiz
+        const index = allQuizzes.findIndex(q => q.quiz_id === this.editingQuizId);
+        if (index !== -1) {
+          allQuizzes[index] = {
+            quiz_id: this.editingQuizId,
+            title: this.quizTitle,
+            description: this.quizDescription,
+            questions: this.questions,
+            questionType: this.selectedQuestionType,
+            created_at: allQuizzes[index].created_at,
+            is_public: allQuizzes[index].is_public
+          };
+        }
+      } else {
+        // create new quiz
+        const newQuiz: Quiz = {
+          quiz_id: Date.now(),
+          title: this.quizTitle,
+          description: this.quizDescription,
+          questions: this.questions,
+          questionType: this.selectedQuestionType,
+          created_at: new Date(),
+          is_public: false
+        };
+        allQuizzes.push(newQuiz);
+      }
+      
+      this.saveQuizzesToStorage(allQuizzes);
+      this.closeModal();
+    }
+  }
+
+  editQuiz(id: number) {
+    const quiz = this.quizzes.find(q => q.quiz_id === id);
+    if (quiz) {
+      this.editingQuizId = id;
+      this.quizTitle = quiz.title;
+      this.quizDescription = quiz.description || '';
+      this.selectedQuestionType = quiz.questionType;
+      this.questions = JSON.parse(JSON.stringify(quiz.questions));
+      this.currentPage = 0;
+      this.isModalOpen = true;
+    }
+    this.closeDropdown();
+  }
+
+  deleteQuiz(id: number) {
+    const allQuizzes = this.getQuizzesFromStorage();
+    const filteredQuizzes = allQuizzes.filter(q => q.quiz_id !== id);
+    this.saveQuizzesToStorage(filteredQuizzes);
+    
+    const maxPage = Math.max(0, Math.ceil(filteredQuizzes.length / this.quizzesPerPage) - 1);
+    if (this.quizzesCurrentPage > maxPage) {
+      this.quizzesCurrentPage = maxPage;
+    }
+    this.closeDropdown();
+  }
+
+  playQuiz(id: number) {
+    this.router.navigate(['/app/quizzes', id]);
+  }
+  
+  toggleDropdown(index: number) {
+    this.activeDropdown = this.activeDropdown === index ? null : index;
+  }
+
+  closeDropdown() {
+    this.activeDropdown = null;
+  }
+
+  togglePrivacy(id: number) {
+    const allQuizzes = this.getQuizzesFromStorage();
+    const quiz = allQuizzes.find(q => q.quiz_id === id);
+    if (quiz) {
+      quiz.is_public = !quiz.is_public;
+      this.saveQuizzesToStorage(allQuizzes);
+    }
+    this.activeDropdown = null;
+  }
+  
+  getQuestionCount(quiz: Quiz): number {
+    return quiz.questions.length;
+  }
+
+  getQuestionTypeLabel(type: QuestionType): string {
+    switch (type) {
+      case QuestionType.MULTIPLE_CHOICE:
+        return 'Multiple Choice';
+      case QuestionType.IDENTIFICATION:
+        return 'Identification';
+      default:
+        return 'Unknown';
+    }
+  }
+
+  isMultipleChoice(): boolean {
+    return this.selectedQuestionType === QuestionType.MULTIPLE_CHOICE;
+  }
+
+  isIdentification(): boolean {
+    return this.selectedQuestionType === QuestionType.IDENTIFICATION;
   }
 }

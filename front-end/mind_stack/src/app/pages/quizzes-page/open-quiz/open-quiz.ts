@@ -1,156 +1,94 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { QuizzesService, Quiz, QuestionType } from '../../../services/quizzes.service';
+import { QuestionItem, Quiz } from '../quizzes-page';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-open-quiz',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './open-quiz.html',
-  styleUrl: './open-quiz.scss'
+  styleUrls: ['./open-quiz.scss']
 })
-export class OpenQuiz implements OnInit, OnDestroy {
-  quiz: Quiz | undefined;
-  currentQuestionIndex: number = 0;
-  selectedAnswer: string | null = null;
-  timeRemaining: number = 900;
-  totalTime: number = 900;
-  timerInterval: any;
-  answers: Map<number, string> = new Map();
+export class OpenQuiz implements OnInit {
+  quiz = signal<Quiz | null>(null);
+  currentIndex = signal(0);
+  isAnswerRevealed = signal(false);
+  selectedAnswer = signal<string>('');
 
-  QuestionType = QuestionType;
+  options: string[] = ['A', 'B', 'C', 'D']; // no working for now
+
+  private readonly STORAGE_KEY = 'quizzes';
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
-    private quizzesService: QuizzesService
+    private router: Router
   ) {}
 
   ngOnInit() {
-    const quizId = Number(this.route.snapshot.paramMap.get('id'));
-    this.quiz = this.quizzesService.getQuizById(quizId);
-    
-    if (!this.quiz) {
-      this.router.navigate(['/app/quizzes']);
-      return;
-    }
-
-    const savedProgress = localStorage.getItem(`quiz_progress_${quizId}`);
-    if (savedProgress) {
-      this.currentQuestionIndex = Number(savedProgress);
-    }
-
-    const savedTimer = localStorage.getItem(`quiz_timer_${quizId}`);
-    if (savedTimer) {
-      this.timeRemaining = Number(savedTimer);
-    }
-
-    const savedAnswers = localStorage.getItem(`quiz_answers_${quizId}`);
-    if (savedAnswers) {
-      this.answers = new Map(JSON.parse(savedAnswers));
-      this.loadAnswer();
-    }
-
-    this.startTimer();
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (id) this.loadQuiz(id);
   }
 
-  ngOnDestroy() {
-    if (this.timerInterval) {
-      clearInterval(this.timerInterval);
-    }
+  // load quuiz
+  private getQuizzesFromStorage(): Quiz[] {
+    const raw = localStorage.getItem(this.STORAGE_KEY);
+    if (!raw) return [];
+
+    const parsed = JSON.parse(raw);
+    return parsed.map((q: any) => ({
+      ...q,
+      created_at: new Date(q.created_at)
+    }));
   }
 
-  startTimer() {
-    this.timerInterval = setInterval(() => {
-      if (this.timeRemaining > 0) {
-        this.timeRemaining--;
-        this.saveProgress();
-      } else {
-        this.submitQuiz();
-      }
-    }, 1000);
+  loadQuiz(id: number) {
+    const quizzes = this.getQuizzesFromStorage();
+    const found = quizzes.find(q => q.quiz_id === id) || null;
+    this.quiz.set(found);
   }
 
-  get currentQuestion() {
-    return this.quiz?.questions[this.currentQuestionIndex];
-  }
+  currentQuestion = computed<QuestionItem | null>(() => {
+    const q = this.quiz();
+    if (!q || q.questions.length === 0) return null;
+    return q.questions[this.currentIndex()];
+  });
 
-  get progress() {
-    if (!this.quiz) return 0;
-    return ((this.currentQuestionIndex + 1) / this.quiz.questions.length) * 100;
-  }
-
-  selectAnswer(answer: string) {
-    this.selectedAnswer = answer;
-    this.answers.set(this.currentQuestionIndex, answer);
-    this.saveProgress();
-  }
-
-  submitAnswer() {
-    if (this.selectedAnswer !== null) {
-      this.answers.set(this.currentQuestionIndex, this.selectedAnswer);
-      this.nextQuestion();
-    }
-  }
-
-  skipQuestion() {
-    this.nextQuestion();
-  }
+  totalQuestions = computed(() => {
+    return this.quiz()?.questions.length || 0;
+  });
 
   nextQuestion() {
-    if (!this.quiz) return;
-    
-    if (this.currentQuestionIndex < this.quiz.questions.length - 1) {
-      this.currentQuestionIndex++;
-      this.loadAnswer();
-    } else {
-      this.submitQuiz();
+    const q = this.quiz();
+    if (!q) return;
+
+    if (this.currentIndex() < q.questions.length - 1) {
+      this.currentIndex.update(i => i + 1);
+      this.isAnswerRevealed.set(false);
+      this.selectedAnswer.set('');
     }
   }
 
   previousQuestion() {
-    if (this.currentQuestionIndex > 0) {
-      this.currentQuestionIndex--;
-      this.loadAnswer();
+    if (this.currentIndex() > 0) {
+      this.currentIndex.update(i => i - 1);
+      this.isAnswerRevealed.set(false);
+      this.selectedAnswer.set('');
     }
   }
 
-  loadAnswer() {
-    this.selectedAnswer = this.answers.get(this.currentQuestionIndex) || null;
-  }
-
-  saveProgress() {
-    if (this.quiz) {
-      localStorage.setItem(`quiz_answers_${this.quiz.quiz_id}`, JSON.stringify(Array.from(this.answers.entries())));
-      localStorage.setItem(`quiz_progress_${this.quiz.quiz_id}`, this.currentQuestionIndex.toString());
-      localStorage.setItem(`quiz_timer_${this.quiz.quiz_id}`, this.timeRemaining.toString());
+  selectAnswer(option: string) {
+    if (!this.isAnswerRevealed()) {
+      this.selectedAnswer.set(option);
     }
   }
 
-  submitQuiz() {
-    if (this.timerInterval) {
-      clearInterval(this.timerInterval);
-    }
-    if (this.quiz) {
-      localStorage.removeItem(`quiz_answers_${this.quiz.quiz_id}`);
-      localStorage.removeItem(`quiz_progress_${this.quiz.quiz_id}`);
-      localStorage.removeItem(`quiz_timer_${this.quiz.quiz_id}`);
-    }
-    this.router.navigate(['/app/quizzes']);
+  revealAnswer() {
+    this.isAnswerRevealed.set(true);
   }
 
   goBack() {
     this.router.navigate(['/app/quizzes']);
-  }
-
-  formatTime(seconds: number): string {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  }
-
-  getOptionLabel(index: number): string {
-    return String.fromCharCode(65 + index);
   }
 }
