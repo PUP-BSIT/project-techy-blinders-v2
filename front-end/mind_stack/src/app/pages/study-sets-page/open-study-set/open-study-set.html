@@ -3,33 +3,35 @@
         ‹ Back
     </button>
     
-    <div class="play-card" (click)="toggleDefinition()">
-        <div class="grad-cap-icon">
-            <img src="/assets/image-logo.png" alt="Logo">
-        </div>
-        
-        <div class="play-card-content">
-            <div class="question-section" [class.hidden]="isDefinitionRevealed">
-                <h2 class="question-text">{{ currentCard?.keyTerm }}</h2>
-                <h6>Click to reveal the definition</h6>
+    <div class="play-wrapper">
+        <div class="play-card" (click)="toggleDefinition()">
+            <div class="grad-cap-icon">
+                <img src="/assets/image-logo.png" alt="Logo">
             </div>
-            <div class="answer-section" [class.hidden]="!isDefinitionRevealed">
-                <h2 class="answer-text">{{ currentCard?.definition }}</h2>
-                <h6>Click to see the term</h6>
+            
+            <div class="play-card-content">
+                <div class="question-section" [class.hidden]="isDefinitionRevealed">
+                    <h2 class="question-text">{{ currentCard?.keyTerm }}</h2>
+                    <h6>Click to reveal the definition</h6>
+                </div>
+                <div class="answer-section" [class.hidden]="!isDefinitionRevealed">
+                    <h2 class="answer-text">{{ currentCard?.definition }}</h2>
+                    <h6>Click to see the term</h6>
+                </div>
             </div>
+            
+            <span class="page-indicator">Page {{ currentCardIndex + 1 }}</span>
         </div>
         
         <div class="play-navigation">
             <button class="nav-btn prev" 
-                    (click)="previousCard(); $event.stopPropagation()" 
+                    (click)="previousCard()" 
                     [disabled]="currentCardIndex === 0">
                 ‹
             </button>
             
-            <span class="page-indicator">Page {{ currentCardIndex + 1 }}</span>
-            
             <button class="nav-btn next" 
-                    (click)="nextCard(); $event.stopPropagation()" 
+                    (click)="nextCard()" 
                     [disabled]="currentCardIndex === totalCards - 1">
                 ›
             </button>

@@ -1,4 +1,8 @@
 <div class="container">
+    <div class="dropdown-backdrop" 
+         [class.show]="activeDropdown !== null" 
+         (click)="closeDropdown()"></div>
+    
     <div class="content-wrapper">
         <button (click)="openModal()" class="add">
             Create New Study Set
@@ -6,10 +10,28 @@
 
         <div class="study-sets-wrapper" [class.hidden]="studySets.length === 0">
             <div class="study-sets-list">
-                <div class="study-set-card" *ngFor="let studySet of paginatedStudySets">
-                    <button class="play-btn" (click)="playStudySet(studySet.flashcard_id)">
-                        ▶
-                    </button>
+                <div class="study-set-card" *ngFor="let studySet of paginatedStudySets; let i = index">
+                    <div class="card-left">
+                        <div class="ellipsis-wrapper">
+                            <button class="ellipsis-menu" (click)="toggleDropdown(i)">
+                                •••
+                            </button>
+                            <div class="dropdown-menu" [class.show]="activeDropdown === i">
+                                <button class="dropdown-item share">
+                                    <img src="assets/globe-icon.png" alt="Share" class="icon-img">
+                                    Share
+                                </button>
+                                <button class="dropdown-item private" 
+                                            (click)="togglePrivacy(studySet.flashcard_id)">
+                                    <img src="assets/lock.png" alt="Private" class="icon-img">
+                                    Private
+                                </button>
+                            </div>
+                        </div>
+                        <button class="play-btn" (click)="playStudySet(studySet.flashcard_id)">
+                            ▶
+                        </button>
+                    </div>
                     <div class="study-set-info">
                         <h3 class="study-set-title">{{ studySet.title }}</h3>
                         <p class="study-set-description">{{ studySet.description || 'About the Reviewer' }}</p>
@@ -27,16 +49,21 @@
 
             <div class="study-sets-pagination" [class.show]="studySetsTotalPages > 1">
                 <button class="pagination-btn prev" 
+                            (click)="goToStudySetsPage(0)" 
+                            [disabled]="studySetsCurrentPage === 0">
+                    ‹‹
+                </button>
+                <button class="pagination-btn prev" 
                             (click)="previousStudySetsPage()" 
                             [disabled]="studySetsCurrentPage === 0">
                     ‹
                 </button>
                 <div class="pagination-dots">
                     <span *ngFor="let page of studySetsPages" 
-                          class="pagination-dot" 
-                          [class.active]="studySetsCurrentPage === page"
-                          (click)="goToStudySetsPage(page)">
-                        {{ page + 1 }}
+                          [class]="page === '...' ? 'pagination-ellipsis' : 'pagination-dot'"
+                          [class.active]="isPageNumber(page) && studySetsCurrentPage === page"
+                          (click)="isPageNumber(page) && goToStudySetsPage(getPageNumber(page))">
+                        {{ getPageDisplay(page) }}
                     </span>
                 </div>
                 <button class="pagination-btn next" 
@@ -44,14 +71,18 @@
                             [disabled]="studySetsCurrentPage === studySetsTotalPages - 1">
                     ›
                 </button>
+                <button class="pagination-btn next" 
+                            (click)="goToStudySetsPage(studySetsTotalPages - 1)" 
+                            [disabled]="studySetsCurrentPage === studySetsTotalPages - 1">
+                    ››
+                </button>
             </div>
         </div>
     </div>
 
     <div class="modal-overlay" 
-            [class.open]="isModalOpen" 
-            (click)="closeModal()">
-        <div class="modal-content" (click)="$event.stopPropagation()">
+            [class.open]="isModalOpen">
+        <div class="modal-content">
             <div class="modal-header">
                 <div class="header-inputs">
                     <input type="text" 

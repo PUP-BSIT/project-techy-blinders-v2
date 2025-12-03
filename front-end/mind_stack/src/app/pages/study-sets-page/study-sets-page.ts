@@ -20,8 +20,9 @@ export class StudySetsPage {
   currentPage: number = 0;
   itemsPerPage: number = 2;
   studySetsCurrentPage: number = 0;
-  studySetsPerPage: number = 4;
+  studySetsPerPage: number = 3;
   editingStudySetId: number | null = null;
+  activeDropdown: number | null = null;
 
   constructor(
     private studySetsService: StudySetsService,
@@ -41,12 +42,42 @@ export class StudySetsPage {
     return Math.ceil(this.studySets.length / this.studySetsPerPage);
   }
 
-  get studySetsPages(): number[] {
-    return Array.from({ length: this.studySetsTotalPages }, (_, i) => i);
+  get studySetsPages(): (number | string)[] {
+    const totalPages = this.studySetsTotalPages;
+    const currentPage = this.studySetsCurrentPage;
+    const pages: (number | string)[] = [];
+
+    if (totalPages <= 6) {
+      return Array.from({ length: totalPages }, (_, i) => i);
+    }
+
+    pages.push(0, 1, 2);
+
+    if (totalPages > 4) {
+      pages.push('...');
+    }
+
+    if (totalPages > 3) {
+      pages.push(totalPages - 1);
+    }
+
+    return pages;
   }
 
   goToStudySetsPage(page: number) {
     this.studySetsCurrentPage = page;
+  }
+
+  isPageNumber(page: number | string): boolean {
+    return typeof page === 'number';
+  }
+
+  getPageNumber(page: number | string): number {
+    return page as number;
+  }
+
+  getPageDisplay(page: number | string): string {
+    return typeof page === 'number' ? String((page as number) + 1) : page as string;
   }
 
   nextStudySetsPage() {
@@ -197,5 +228,22 @@ export class StudySetsPage {
 
   playStudySet(id: number) {
     this.router.navigate(['/app/study-sets', id]);
+  }
+
+  toggleDropdown(index: number) {
+    this.activeDropdown = this.activeDropdown === index ? null : index;
+  }
+
+  closeDropdown() {
+    this.activeDropdown = null;
+  }
+
+  togglePrivacy(id: number) {
+    const studySet = this.studySets.find(s => s.flashcard_id === id);
+    if (studySet) {
+      studySet.is_public = !studySet.is_public;
+      this.studySetsService.updateStudySet(studySet);
+    }
+    this.activeDropdown = null;
   }
 }
