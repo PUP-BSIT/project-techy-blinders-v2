@@ -5,7 +5,7 @@ $sidebar-hover-underline: #ffffff;
 $sidebar-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 $sidebar-font-size: x-large;
 
-$sidebar-width: 270px;
+$sidebar-width: 280px;
 $sidebar-width-collapsed: 80px;
 $sidebar-padding: 20px;
 $sidebar-gap: 10px;
@@ -45,7 +45,8 @@ mat-sidenav-content {
         width: $sidebar-width-collapsed;
         padding: 20px 10px;
         padding-bottom: 65px;
-        overflow: hidden;
+        overflow-x: hidden !important;
+        overflow-y: hidden !important;
     }
     
     .text-content {
@@ -58,6 +59,7 @@ mat-sidenav-content {
     &.collapsed .text-content {
         opacity: 0;
         visibility: hidden;
+        display: none;
         transition: opacity 0.1s ease, visibility 0.1s ease;
     }
 }
@@ -70,12 +72,14 @@ mat-sidenav-content {
     padding: 8px;
     border-radius: 8px;
     font-size: 1.5rem;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, opacity 0.2s ease, visibility 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     width: 51px;
     margin-bottom: 2px;
+    opacity: 1;
+    visibility: visible;
 
     &:hover {
         background-color: rgba(255, 255, 255, 0.1);
