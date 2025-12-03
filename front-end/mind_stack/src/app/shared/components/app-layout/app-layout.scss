@@ -12,4 +12,9 @@
   &.sidebar-collapsed {
     margin-left: 80px;
   }
+
+  &.no-sidebar {
+    margin-left: 0;
+    overflow: hidden;
+  }
 }
