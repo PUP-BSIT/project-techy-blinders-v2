@@ -208,24 +208,11 @@ a.active {
     }
 }
 
-.user-profile-initial {
-    width: 35px;
-    height: 35px;
-    min-width: 35px;
-    border-radius: 50%;
-    background-color: #ffffff;
-    color: #000000;
-    border: 1px solid #000000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 0.9rem;
-    flex-shrink: 0;
-
-    &:hover {
-        cursor: pointer;
-    }
+.user-profile-initial img {
+    width: 59.17px;
+    height: 60px;
+    margin-left: -20%;
+    margin-top: -7%;
 }
 
 .user-info {
