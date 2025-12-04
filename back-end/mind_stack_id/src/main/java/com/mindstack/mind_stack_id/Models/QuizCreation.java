@@ -2,7 +2,6 @@ package com.mindstack.mind_stack_id.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,7 +16,6 @@ public class QuizCreation {
     public enum QuestionType {
         MULTIPLE_CHOICE("multiple choice"),
         IDENTIFICATION("identification");
-
         private final String value;
 
         QuestionType(String value) {
@@ -53,11 +51,11 @@ public class QuizCreation {
     }
 
     @Id
+    @Column (name = "quiz_set_id")
+    private long quizSetId;
+
     @Column(name = "quiz_id")
     private long quizId;
-
-    @Column(name = "flashcard_id")
-    private long flashcardId;
 
     @Column(name = "question")
     private String question;
@@ -78,26 +76,27 @@ public class QuizCreation {
     @Column(name = "option_d")
     private String optionD;
 
-    @Column(name = "identfication_answer")
+    @Column(name = "identifcation_answer")
     private Boolean isIdentificationAnswer;
 
     @Column(name = "correct_answer")
     private String correctAnswer;
 
+    @Column (name = "selected_answer")
+    private String selectedAnswer;
+
+    @Column (name = "slug")
+    private String slug;
+
+    @Column (name = "user_id")
+    private long userId;
+    
     public long getQuizId() {
         return quizId;
     }
 
     public void setQuizId(long quizId) {
         this.quizId = quizId;
-    }
-
-    public long getFlashcardId() {
-        return flashcardId;
-    }
-
-    public void setFlashcardId(long flashcardId) {
-        this.flashcardId = flashcardId;
     }
 
     public String getQuestion() {
@@ -148,12 +147,12 @@ public class QuizCreation {
         this.optionD = optionD;
     }
 
-    public Boolean getIdentifcationAnswer() {
+    public Boolean getIdentificationAnswer() { 
         return isIdentificationAnswer;
     }
 
-    public void setIdentifcationAnswer(Boolean isIdentifcationAnswer) {
-        this.isIdentificationAnswer = isIdentifcationAnswer;
+    public void setIdentificationAnswer(Boolean isIdentificationAnswer) { 
+        this.isIdentificationAnswer = isIdentificationAnswer;
     }
 
     public String getCorrectAnswer() {
@@ -162,5 +161,37 @@ public class QuizCreation {
 
     public void setCorrectAnswer(String correctAnswer){
         this.correctAnswer = correctAnswer;
+    }
+
+    public long getQuizSetId() {
+        return quizSetId;
+    }
+
+    public void setQuizSetId(long quizSetId) {
+        this.quizSetId = quizSetId;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public String getSelectedAnswer() {
+        return selectedAnswer;
+    }
+
+    public void setSelectedAnswer(String selectedAnswer) {
+        this.selectedAnswer = selectedAnswer;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }

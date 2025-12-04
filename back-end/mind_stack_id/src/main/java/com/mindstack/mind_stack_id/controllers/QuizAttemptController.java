@@ -13,7 +13,7 @@ import com.mindstack.mind_stack_id.models.QuizAttempt;
 import com.mindstack.mind_stack_id.models.QuizCreation;
 import com.mindstack.mind_stack_id.models.dto.QuizAttemptDTO;
 import com.mindstack.mind_stack_id.repositories.QuizAttemptRepository;
-import com.mindstack.mind_stack_id.repositories.Quiz;
+import com.mindstack.mind_stack_id.repositories.QuizRepository;
 @RestController
 @RequestMapping("/api/quiz_attempts")
 public class QuizAttemptController {
@@ -22,7 +22,7 @@ public class QuizAttemptController {
     private QuizAttemptRepository attemptRepo;
     
     @Autowired
-    private Quiz quizRepo;
+    private QuizRepository quizRepo;
 
     @GetMapping
     public List<QuizAttemptDTO> getAllQuizAttempts() {
