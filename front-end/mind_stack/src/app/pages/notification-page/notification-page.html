@@ -1,21 +1,43 @@
-<app-side-bar></app-side-bar>
+<div class="container">
+    <div class="content-wrapper">
+        <div class="main-content">
+            <div class="filter-buttons">
+                <button 
+                    type="button" 
+                    [class.active]="activeFilter === 'all'"
+                    (click)="setFilter('all')">
+                    All
+                </button>
+                <button 
+                    type="button" 
+                    [class.active]="activeFilter === 'latest'"
+                    (click)="setFilter('latest')">
+                    <img src="assets/bell-icon.png" alt="Bell" class="bell-icon">
+                    Latest
+                </button>
+            </div>
 
-<h1>Notification</h1>
+            <h2>Today</h2>
 
-<body>
-    <div id="main_div">
-        <div id="upper_nav">
-            <button type="button">All</button>
-            <button type="button">
-                <img src="./assets/notif_icon.png" alt="Notification" class="btn-icon">
-                New
-            </button>
-        </div>
-
-        <h2>Today</h2>
-
-        <div id="notification_div">
-            <h4>Notifications will appear here...</h4>
+            <div class="notifications-list">
+                <div 
+                    *ngFor="let notification of filteredNotifications" 
+                    class="notification-item">
+                    <div class="avatar">
+                        <img src="assets/Group.png" alt="User Avatar">
+                    </div>
+                    <div class="notification-content">
+                        <p class="notification-text">
+                            <span class="user-name">{{ notification.userName }}</span>
+                            {{ notification.message }}
+                        </p>
+                        <p class="timestamp">{{ notification.timestamp }}</p>
+                    </div>
+                    <span class="read-status">
+                        Read | Unread
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
-</body>
+</div>
