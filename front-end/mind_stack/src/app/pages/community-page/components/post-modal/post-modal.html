@@ -3,60 +3,63 @@
     
     <div class="scrollable-content">
         <div class="post-section">
-        <div class="post-header">
-            <div class="user-info">
+        <div class="user-header">
             <div class="user-avatar">{{ getInitial(post.username) }}</div>
-            <div class="user-details">
-                <span class="username">{{ post.username }}</span>
-                <span class="timestamp">
-                        Posted {{ getTimeAgo(post.created_at) }}
-                </span>
+            <div class="user-info">
+            <span class="username">{{ post.username }}</span>
+            <span class="timestamp">Posted {{ getTimeAgo(post.created_at) }}</span>
             </div>
-            </div>
-            
-            <button class="close-btn" (click)="closeModal()">
-            <svg width="20" 
-                 height="20" 
-                 viewBox="0 0 20 20" 
-                 fill="currentColor">
-                <path d="M4 4L16 16M16 4L4 16" 
-                      stroke="currentColor" 
-                      stroke-width="2" 
-                      stroke-linecap="round"/>
-            </svg>
-            </button>
         </div>
 
-        <div class="post-content">
-            <h3 class="post-title">{{ post.title }}</h3>
-            <p class="post-text">{{ post.content }}</p>
-        </div>
+        <div class="post-card-modal">
+            <div class="post-header-modal">
+            <span class="post-label">Title:</span>
+            <span class="post-category">{{ post.title }}</span>
+            <button class="menu-btn">
+                <svg width="4" height="16" viewBox="0 0 4 16" fill="currentColor">
+                <circle cx="2" cy="2" r="2"/>
+                <circle cx="2" cy="8" r="2"/>
+                <circle cx="2" cy="14" r="2"/>
+                </svg>
+            </button>
+            </div>
 
-        <div class="post-actions">
-            <button 
-            class="action-btn"
-            [class.active]="post.userLiked"
-            (click)="onLike()"
-            >
-            <img src="assets/arrow-up.png" alt="like" class="action-icon">
-            <span>{{ post.likes }}</span>
+            <div class="post-description-section">
+            <span class="description-label">Description:</span>
+            </div>
+
+            <div class="post-content-card">
+            <button class="play-btn">
+                ▶
             </button>
-            
-            <button 
-            class="action-btn"
-            [class.active]="post.userDisliked"
-            (click)="onDislike()"
-            >
-            <img src="assets/arrow-down.png" alt="dislike" class="action-icon">
-            <span>{{ post.dislikes }}</span>
+            <div class="post-info">
+                <h3 class="post-title">{{ post.title }}</h3>
+                <p class="post-subtitle">{{ post.content }}</p>
+            </div>
+            </div>
+
+            <div class="action-buttons">
+            <button class="action-btn" 
+                    [class.active]="post.userLiked" 
+                    (click)="onLike()">
+                <img src="assets/arrow-up.png" alt="like" class="action-icon">
+                <span>{{ post.likes }}</span>
             </button>
-            
+            <button class="action-btn" 
+                    [class.active]="post.userDisliked" 
+                    (click)="onDislike()">
+                <img src="assets/arrow-down.png" 
+                     alt="dislike" 
+                     class="action-icon">
+                <span>{{ post.dislikes }}</span>
+            </button>
             <button class="action-btn">
-            <img src="assets/comment-circle.png" 
-                 alt="comment" 
-                 class="action-icon">
-            <span>{{ post.commentcount }}</span>
+                <img src="assets/comment-circle.png" 
+                     alt="comment" 
+                     class="action-icon">
+                <span>{{ post.commentcount }}</span>
             </button>
+            </div>
         </div>
         </div>
 

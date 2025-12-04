@@ -2,10 +2,6 @@
       [class.sidebar-collapsed]="isSidebarCollapsed">
   <div class="community-content">
     <app-search (searchChange)="onSearchChange($event)" />
-    
-    <button class="create-post-btn" (click)="openCreateModal()">
-      Create Post
-    </button>
 
     <div class="posts-list">
       @for (post of filteredPosts; track post.post_id) {
