@@ -4,37 +4,166 @@
     </button>
 
     <div class="play-wrapper">
-        <div class="play-card" (click)="revealAnswer()">
+        <!-- clickable card   -->
+        <div class="play-card" (click)="isAnswerRevealed() ? $event.stopPropagation() : null">
             <div class="grad-cap-icon">
                 <img src="/assets/image-logo.png" alt="Logo">
             </div>
 
             <div class="play-card-content">
-                <!-- Question -->
-                <div class="question-section" [class.hidden]="isAnswerRevealed()">
-                    <h2 class="question-text">{{ currentQuestion()?.question }}</h2>
+
+                <div class="indicator">
+                    @if (!isAnswerRevealed()) {
+                        <span>QUESTION</span>
+                    } @else {
+                        <span>ANSWER</span>
+                    }
                 </div>
 
-                <!-- Answer -->
-                <div class="answer-section" [class.hidden]="!isAnswerRevealed()">
-                    <h2 class="answer-text">{{ currentQuestion()?.answer }}</h2>
-                </div>
+                @if (!isAnswerRevealed()) {
+                    <div class="question-section">
+                        <h2 class="question-text">{{ currentQuestion()?.question }}</h2>
+
+                        <!-- m.choice options -->
+                        @if (isMultipleChoice()) {
+                            <div class="choices">
+                                <div 
+                                    class="choice" 
+                                    [class.selected]="selectedAnswer() === 'A'"
+                                    (click)="selectAnswer('A')">
+                                    <b>A.</b> {{ currentQuestion()?.optionA }}
+                                </div>
+
+                                <div 
+                                    class="choice" 
+                                    [class.selected]="selectedAnswer() === 'B'"
+                                    (click)="selectAnswer('B')">
+                                    <b>B.</b> {{ currentQuestion()?.optionB }}
+                                </div>
+
+                                <div 
+                                    class="choice" 
+                                    [class.selected]="selectedAnswer() === 'C'"
+                                    (click)="selectAnswer('C')">
+                                    <b>C.</b> {{ currentQuestion()?.optionC }}
+                                </div>
+
+                                <div 
+                                    class="choice" 
+                                    [class.selected]="selectedAnswer() === 'D'"
+                                    (click)="selectAnswer('D')">
+                                    <b>D.</b> {{ currentQuestion()?.optionD }}
+                                </div>
+                            </div>
+                        }
+
+                        <!-- identification input -->
+                        @if (isIdentification()) {
+                            <div class="identification-input">
+                                <input 
+                                    type="text" 
+                                    [(ngModel)]="userTypedAnswer"
+                                    placeholder="Type your answer here..."
+                                    class="answer-input"
+                                    (click)="$event.stopPropagation()"
+                                    (keyup.enter)="revealAnswer()"
+                                />
+                            </div>
+                        }
+
+                        <button 
+                            class="reveal-btn" 
+                            (click)="revealAnswer()"
+                            [disabled]="(isMultipleChoice() && !selectedAnswer()) || (isIdentification() && !userTypedAnswer().trim())">
+                            Check Answer
+                        </button>
+                    </div>
+                }
+
+                <!-- answer -->
+                @if (isAnswerRevealed()) {
+                    <div class="answer-section">
+                        <div class="result-badge" [class.correct]="isCorrect()" [class.incorrect]="!isCorrect()">
+                            @if (isCorrect()) {
+                                <span>Correct!</span>
+                            } @else {
+                                <span>Incorrect!</span>
+                            }
+                        </div>
+
+                        <!-- m. choice -->
+                        @if (isMultipleChoice() && selectedAnswer()) {
+                            <p class="user-answer">
+                                <strong>Your answer: </strong> 
+                                <span [class.wrong]="!isCorrect()">{{ selectedAnswer() }}</span>
+                            </p>
+                        }
+
+                        <!-- ident -->
+                        @if (isIdentification() && userTypedAnswer()) {
+                            <p class="user-answer">
+                                <strong>Your answer: </strong> 
+                                <span [class.wrong]="!isCorrect()">{{ userTypedAnswer() }}</span>
+                            </p>
+                        }
+
+                        <!-- Show correct answer -->
+                        <h2 class="answer-text">
+                            Correct Answer:
+                            <span class="correct">
+                                @if (isMultipleChoice()) {
+                                    {{ currentQuestion()?.correctAnswer }}
+                                } @else {
+                                    {{ currentQuestion()?.answer }}
+                                }
+                            </span>
+                        </h2>
+
+                        <!-- answer for m. choice -->
+                        @if (isMultipleChoice()) {
+                            <p class="full-answer">
+                                @switch(currentQuestion()?.correctAnswer) {
+                                    @case('A') {
+                                        {{ currentQuestion()?.optionA }}
+                                    }
+                                    @case('B') {
+                                        {{ currentQuestion()?.optionB }}
+                                    }
+                                    @case('C') {
+                                        {{ currentQuestion()?.optionC }}
+                                    }
+                                    @case('D') {
+                                        {{ currentQuestion()?.optionD }}
+                                    }
+                                }
+                            </p>
+                        }
+
+                        <!-- optional for now -->
+                        @if (currentQuestion()?.explanation) {
+                            <p class="explanation">
+                                <strong>Explanation:</strong><br>
+                                {{ currentQuestion()?.explanation }}
+                            </p>
+                        }
+                    </div>
+                }
             </div>
 
             <span class="page-indicator">
-                Question {{ currentIndex() + 1 }}
+                Question {{ currentIndex() + 1 }} of {{ totalQuestions() }}
             </span>
         </div>
 
         <div class="play-navigation">
-            <button 
+            <button
                 class="nav-btn prev"
                 (click)="previousQuestion()"
                 [disabled]="currentIndex() === 0">
                 ‹
             </button>
 
-            <button 
+            <button
                 class="nav-btn next"
                 (click)="nextQuestion()"
                 [disabled]="currentIndex() === totalQuestions() - 1">
@@ -44,6 +173,7 @@
     </div>
 </div>
 
+<!-- optional for now if thee quiz is not found -->
 <div class="container error-container" [class.hidden]="quiz()">
     <div class="error-message">
         <h2>Quiz Not Found</h2>

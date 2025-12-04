@@ -18,6 +18,8 @@ export interface QuestionItem {
   correctAnswer?: string;
   // For identification
   answer?: string;
+  // For explanation
+  explanation?: string;
 }
 
 export interface Quiz {
