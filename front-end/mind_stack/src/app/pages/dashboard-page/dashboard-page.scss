@@ -259,6 +259,25 @@ $transition-normal: 0.3s ease;
   }
 }
 
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 18px;
+  color: $color-text-primary;
+  font-family: "Roboto";
+  font-weight: 600;
+}
+
+.empty-message {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+  font-family: "Roboto";
+  font-size: 16px;
+}
+
 @media (max-width: 768px) {
   .dashboard-wrapper {
     margin-left: 0;
