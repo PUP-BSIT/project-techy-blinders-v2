@@ -16,8 +16,7 @@ export class OpenQuiz implements OnInit {
   currentIndex = signal(0);
   isAnswerRevealed = signal(false);
   selectedAnswer = signal<string>('');
-
-  options: string[] = ['A', 'B', 'C', 'D']; // no working for now
+  userTypedAnswer = signal<string>('');
 
   private readonly STORAGE_KEY = 'quizzes';
 
@@ -31,7 +30,6 @@ export class OpenQuiz implements OnInit {
     if (id) this.loadQuiz(id);
   }
 
-  // load quuiz
   private getQuizzesFromStorage(): Quiz[] {
     const raw = localStorage.getItem(this.STORAGE_KEY);
     if (!raw) return [];
@@ -59,23 +57,51 @@ export class OpenQuiz implements OnInit {
     return this.quiz()?.questions.length || 0;
   });
 
+  // is current question is multiple choice?
+  isMultipleChoice = computed(() => {
+    const q = this.currentQuestion();
+    return !!(q?.optionA && q?.optionB && q?.optionC && q?.optionD);
+  });
+
+  // is current question is identification?
+  isIdentification = computed(() => {
+    const q = this.currentQuestion();
+    return !!q?.answer && !this.isMultipleChoice();
+  });
+
+  isCorrect = computed(() => {
+    const q = this.currentQuestion();
+    if (!q || !this.isAnswerRevealed()) return false;
+
+    if (this.isMultipleChoice()) {
+      return this.selectedAnswer().toUpperCase() === q.correctAnswer?.toUpperCase();
+    } else if (this.isIdentification()) {
+      return this.userTypedAnswer().trim().toLowerCase() === q.answer?.trim().toLowerCase();
+    }
+    return false;
+  });
+
   nextQuestion() {
     const q = this.quiz();
     if (!q) return;
 
     if (this.currentIndex() < q.questions.length - 1) {
       this.currentIndex.update(i => i + 1);
-      this.isAnswerRevealed.set(false);
-      this.selectedAnswer.set('');
+      this.resetQuestionState();
     }
   }
 
   previousQuestion() {
     if (this.currentIndex() > 0) {
       this.currentIndex.update(i => i - 1);
-      this.isAnswerRevealed.set(false);
-      this.selectedAnswer.set('');
+      this.resetQuestionState();
     }
+  }
+
+  private resetQuestionState() {
+    this.isAnswerRevealed.set(false);
+    this.selectedAnswer.set('');
+    this.userTypedAnswer.set('');
   }
 
   selectAnswer(option: string) {
@@ -85,6 +111,14 @@ export class OpenQuiz implements OnInit {
   }
 
   revealAnswer() {
+    // multiple choice=
+    if (this.isMultipleChoice() && !this.selectedAnswer()) {
+      return;
+    }
+    // identification 
+    if (this.isIdentification() && !this.userTypedAnswer().trim()) {
+      return;
+    }
     this.isAnswerRevealed.set(true);
   }
 
