@@ -24,7 +24,7 @@ public class FlashcardController {
         return ResponseEntity.ok(flashcards);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<FlashcardCreation> getFlashcardById(@PathVariable Long id) {
         try {
             FlashcardCreation flashcard = flashcardService.getFlashcardById(id);
@@ -32,6 +32,22 @@ public class FlashcardController {
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/slug/{slug}")
+    public ResponseEntity<FlashcardCreation> getFlashcardBySlug(@PathVariable String slug) {
+        try {
+            FlashcardCreation flashcard = flashcardService.getFlashcardBySlug(slug);
+            return ResponseEntity.ok(flashcard);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<FlashcardCreation>> getFlashcardsByUserId(@PathVariable Long userId) {
+        List<FlashcardCreation> flashcards = flashcardService.getFlashcardsByUserId(userId);
+        return ResponseEntity.ok(flashcards);
     }
 
     @PostMapping
@@ -60,11 +76,5 @@ public class FlashcardController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Flashcard not found");
         }
-    }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<FlashcardCreation>> getFlashcardsByUserId(@PathVariable Long userId) {
-        List<FlashcardCreation> flashcards = flashcardService.getFlashcardsByUserId(userId);
-        return ResponseEntity.ok(flashcards);
     }
 }

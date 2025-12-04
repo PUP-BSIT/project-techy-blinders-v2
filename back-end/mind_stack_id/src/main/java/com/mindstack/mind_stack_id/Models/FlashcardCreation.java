@@ -36,6 +36,9 @@ public class FlashcardCreation {
     @Column(name = "flashcard_id")
     private long flashcardId;
 
+    @Column(name = "slug")
+    private String slug;
+
     public long getStudySetId() {
         return studySetId;
     }
@@ -98,5 +101,13 @@ public class FlashcardCreation {
 
     public void setFlashcardId(long flashcardId) {
         this.flashcardId = flashcardId;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 }
