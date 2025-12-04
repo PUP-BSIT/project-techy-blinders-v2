@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideHttpClient } from '@angular/common/http';
 import { AppLayout } from './app-layout';
 import { provideRouter } from '@angular/router';
 
@@ -10,7 +10,7 @@ describe('AppLayout', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppLayout],
-      providers: [provideRouter([])]
+      providers: [provideRouter([]), provideHttpClient()]
     })
     .compileComponents();
 
