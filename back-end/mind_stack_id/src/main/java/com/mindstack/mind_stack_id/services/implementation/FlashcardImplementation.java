@@ -32,6 +32,13 @@ public class FlashcardImplementation implements FlashCardService {
             .collect(Collectors.toList());
     }
 
+
+    @Override
+    public FlashcardCreation getFlashcardBySlug(String slug) {
+        return flashcardRepository.findBySlug(slug)
+            .orElseThrow(() -> new RuntimeException("Flashcard not found with slug: " + slug));
+    }
+
     @Override
     public FlashcardCreation getFlashcardById(Long id) {
         return flashcardRepository.findById(id)
@@ -45,7 +52,10 @@ public class FlashcardImplementation implements FlashCardService {
         
         flashcard.setFlashcardId(randomFlashcardId);
         flashcard.setStudySetId(randomStudySetId);
-        
+
+        String slug = generateSlug(flashcard.getTitle(), randomFlashcardId);
+        flashcard.setSlug(slug);
+
         if (!flashcard.isPublic()) {
             flashcard.setPublic(false);
         }
@@ -69,6 +79,8 @@ public class FlashcardImplementation implements FlashCardService {
         
         if (flashcardDetails.getTitle() != null) {
             flashcard.setTitle(flashcardDetails.getTitle());
+            String newSlug = generateSlug(flashcardDetails.getTitle(), flashcard.getFlashcardId());
+            flashcard.setSlug(newSlug);
         }
         if (flashcardDetails.getDescription() != null) {
             flashcard.setDescirption(flashcardDetails.getDescription());
@@ -106,4 +118,23 @@ public class FlashcardImplementation implements FlashCardService {
     public List<FlashcardCreation> getFlashcardsByUserId(Long userId) {
         return flashcardRepository.findByUserId(userId);
     }
+
+    private String generateSlug(String title, Long flashcardId) {
+        if (title == null || title.trim().isEmpty()) {
+            return "flashcard-" + flashcardId;
+        }
+        
+        String baseSlug = title.toLowerCase()
+            .replaceAll("[^a-z0-9\\s-]", "")
+            .replaceAll("\\s+", "-")
+            .replaceAll("-+", "-")
+            .replaceAll("^-|-$", "");
+        
+        if (baseSlug.isEmpty()) {
+            baseSlug = "flashcard";
+        }
+        
+        return baseSlug + "-" + flashcardId;
+    }
+    
 }
