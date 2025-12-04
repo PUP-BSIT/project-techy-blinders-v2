@@ -5,17 +5,15 @@ import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tbl_flashcard")
 public class FlashcardCreation {
-    
+
     @Id
-    @Column(name = "flashcard_id")
-    private long flashcardId;
+    @Column(name = "study_set_id")
+    private long studySetId;
 
     @Column(name = "user_id")
     private long userId;
@@ -27,7 +25,7 @@ public class FlashcardCreation {
     private String description;
 
     @Column(name = "is_public")
-    private Boolean isPublic;
+    private boolean isPublic;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -35,23 +33,15 @@ public class FlashcardCreation {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @PrePersist
-    protected void onCreateFlashCard() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+    @Column(name = "flashcard_id")
+    private long flashcardId;
+
+    public long getStudySetId() {
+        return studySetId;
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    public long getFlashcardId() {
-        return flashcardId;
-    }
-
-    public void setFlashcardId(long flashcardId) {
-        this.flashcardId = flashcardId;
+    public void setStudySetId(long studySetId) {
+        this.studySetId = studySetId;
     }
 
     public long getUserId() {
@@ -74,15 +64,15 @@ public class FlashcardCreation {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescirption(String descirption) {
+        this.description = descirption;
     }
 
-    public Boolean getIsPublic() {
+    public boolean isPublic() {
         return isPublic;
     }
 
-    public void setIsPublic(Boolean isPublic) {
+    public void setPublic(boolean isPublic) {
         this.isPublic = isPublic;
     }
 
@@ -100,5 +90,13 @@ public class FlashcardCreation {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public long getFlashcardId() {
+        return flashcardId;
+    }
+
+    public void setFlashcardId(long flashcardId) {
+        this.flashcardId = flashcardId;
     }
 }
