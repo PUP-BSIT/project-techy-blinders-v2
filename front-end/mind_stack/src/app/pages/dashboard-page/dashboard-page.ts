@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../service/auth.service';
+import { DashboardService } from '../../services/dashboard.service';
 
 interface StudyItem {
   id: string;
@@ -23,33 +25,83 @@ interface Activity {
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.scss'
 })
-export class DashboardPage {
+export class DashboardPage implements OnInit {
+
+  private authService = inject(AuthService);
+  private dashboardService = inject(DashboardService);
 
   progressPercentage: number = 50;
   flashcardCount: number = 0;
   quizCount: number = 0;
   streakDays: number = 0;
-  userName: string = 'John Doe';
-  userId: string = '82739120';
+  userName: string = 'Loading...';
+  userId: string = '';
+  isLoading: boolean = true;
 
+  studyLibrary: StudyItem[] = [];
 
-  studyLibrary: StudyItem[] = [
-    { id: '1', name: 'Object Oriented Programming', type: 'flashcard', flashcardCount: 15 },
-    { id: '2', name: 'Advance Programming', type: 'flashcard', flashcardCount: 20 },
-    { id: '3', name: 'Web Development', type: 'flashcard', flashcardCount: 12 },
-    { id: '4', name: 'Project Management', type: 'flashcard', flashcardCount: 18 },
-    { id: '5', name: 'Application Development', type: 'flashcard', flashcardCount: 18 }
-  ];
-
-  recentActivities: Activity[] = [
-    { id: '1', type: 'flashcard', title: 'Advance Programming', timestamp: new Date() },
-    { id: '2', type: 'flashcard', title: 'Advance Programming', timestamp: new Date() },
-    { id: '3', type: 'flashcard', title: 'Advance Programming', timestamp: new Date() },
-    { id: '4', type: 'flashcard', title: 'Advance Programming', timestamp: new Date() },
-    { id: '5', type: 'flashcard', title: 'Advance Programming', timestamp: new Date() }
-  ];
+  recentActivities: Activity[] = [];
 
   constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.loadDashboardData();
+  }
+
+  private loadDashboardData() {
+    const currentUser = this.authService.getCurrentUser();
+    
+    if (!currentUser) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.dashboardService.getDashboardData(currentUser.userId).subscribe({
+      next: (data) => {
+        this.userName = data.userName;
+        this.userId = data.userId.toString();
+        this.flashcardCount = data.flashcardCount;
+        this.quizCount = data.quizCount;
+        
+        this.studyLibrary = [
+          ...data.recentFlashcards.map((fc: any) => ({
+            id: fc.flashcardId?.toString() || fc.id?.toString(),
+            name: fc.title || fc.flashcardTitle,
+            type: 'flashcard' as const,
+            flashcardCount: fc.flashcards?.length || 0
+          })),
+          ...data.recentQuizzes.map((quiz: any) => ({
+            id: quiz.quizId?.toString() || quiz.id?.toString(),
+            name: quiz.title || quiz.quizTitle,
+            type: 'quiz' as const
+          }))
+        ].slice(0, 5);
+
+        this.recentActivities = [
+          ...data.recentFlashcards.map((fc: any) => ({
+            id: fc.flashcardId?.toString() || fc.id?.toString(),
+            type: 'flashcard' as const,
+            title: fc.title || fc.flashcardTitle,
+            timestamp: new Date(fc.createdAt || Date.now())
+          })),
+          ...data.recentQuizzes.map((quiz: any) => ({
+            id: quiz.quizId?.toString() || quiz.id?.toString(),
+            type: 'quiz' as const,
+            title: quiz.title || quiz.quizTitle,
+            timestamp: new Date(quiz.createdAt || Date.now())
+          }))
+        ].slice(0, 5);
+
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading dashboard data:', error);
+        this.userName = currentUser.username;
+        this.userId = currentUser.userId.toString();
+        this.isLoading = false;
+      }
+    });
+  }
 
   getStrokeDashoffset(): number {
     const circumference = 2 * Math.PI * 54;

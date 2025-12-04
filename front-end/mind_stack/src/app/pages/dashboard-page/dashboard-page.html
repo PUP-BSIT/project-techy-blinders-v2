@@ -1,69 +1,81 @@
 <div class="dashboard-wrapper">
   <div class="dashboard-container">
 
-    <section class="user-header-section">
-      <div class="user-info">
-        <h1 class="user-name">{{ userName }}</h1>
-        <p class="user-id">User ID: {{ userId }}</p>
+    @if (isLoading) {
+      <div class="loading-container">
+        <p>Loading dashboard...</p>
       </div>
-      <div class="user-stats">
-        <div class="stat-badge">
-          <span class="stat-label">Quizzes</span>
-          <span class="stat-number">{{ quizCount }}</span>
+    } @else {
+      <section class="user-header-section">
+        <div class="user-info">
+          <h1 class="user-name">{{ userName }}</h1>
+          <p class="user-id">User ID: {{ userId }}</p>
         </div>
-        <div class="stat-badge">
-          <span class="stat-label">Flashcards</span>
-          <span class="stat-number">{{ flashcardCount }}</span>
+        <div class="user-stats">
+          <div class="stat-badge">
+            <span class="stat-label">Quizzes</span>
+            <span class="stat-number">{{ quizCount }}</span>
+          </div>
+          <div class="stat-badge">
+            <span class="stat-label">Flashcards</span>
+            <span class="stat-number">{{ flashcardCount }}</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="content-grid">
+        <div class="left-column">
+
+          <section class="quick-actions-section">
+            <div class="action-row">
+              <div class="action-label">
+                <img src="assets/plus_icon.png" alt="Create" class="action-icon">
+                <span>Create Flashcards</span>
+              </div>
+              <button class="create-btn" (click)="createFlashcards()">Create</button>
+            </div>
+            <div class="action-row">
+              <div class="action-label">
+                <img src="assets/plus_icon.png" alt="Create" class="action-icon">
+                <span>Create Quiz</span>
+              </div>
+              <button class="create-btn" (click)="createQuiz()">Create</button>
+            </div>
+          </section>
+
+          <section class="recent-activity-section">
+            <h2 class="section-title">Recent Activity</h2>
+            <div class="activity-list">
+              @if (recentActivities.length === 0) {
+                <p class="empty-message">No recent activities</p>
+              }
+              @for (activity of recentActivities; track activity.id) {
+                <div class="activity-item">
+                  <span>{{ activity.title }}</span>
+                </div>
+              }
+            </div>
+          </section>
+        </div>
+
+        <div class="right-column">
+
+          <section class="study-library-section">
+            <h2 class="section-title">Study Library</h2>
+            <div class="library-list">
+              @if (studyLibrary.length === 0) {
+                <p class="empty-message">No study materials yet</p>
+              }
+              @for (item of studyLibrary; track item.id) {
+                <div class="library-item">
+                  <span class="library-name">{{ item.name }}</span>
+                  <button class="view-btn" (click)="viewStudyItem(item)">View</button>
+                </div>
+              }
+            </div>
+          </section>
         </div>
       </div>
-    </section>
-
-    <div class="content-grid">
-      <div class="left-column">
-
-        <section class="quick-actions-section">
-          <div class="action-row">
-            <div class="action-label">
-              <img src="assets/plus_icon.png" alt="Create" class="action-icon">
-              <span>Create Flashcards</span>
-            </div>
-            <button class="create-btn" (click)="createFlashcards()">Create</button>
-          </div>
-          <div class="action-row">
-            <div class="action-label">
-              <img src="assets/plus_icon.png" alt="Create" class="action-icon">
-              <span>Create Quiz</span>
-            </div>
-            <button class="create-btn" (click)="createQuiz()">Create</button>
-          </div>
-        </section>
-
-        <section class="recent-activity-section">
-          <h2 class="section-title">Recent Activity</h2>
-          <div class="activity-list">
-            @for (activity of recentActivities; track activity.id) {
-              <div class="activity-item">
-                <span>{{ activity.title }}</span>
-              </div>
-            }
-          </div>
-        </section>
-      </div>
-
-      <div class="right-column">
-
-        <section class="study-library-section">
-          <h2 class="section-title">Study Library</h2>
-          <div class="library-list">
-            @for (item of studyLibrary; track item.id) {
-              <div class="library-item">
-                <span class="library-name">{{ item.name }}</span>
-                <button class="view-btn" (click)="viewStudyItem(item)">View</button>
-              </div>
-            }
-          </div>
-        </section>
-      </div>
-    </div>
+    }
   </div>
 </div>
