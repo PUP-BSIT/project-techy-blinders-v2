@@ -142,6 +142,24 @@
     margin-bottom: 12px;
 }
 
+.post-category-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.category-label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #1F2937;
+}
+
+.category-value {
+    font-size: 14px;
+    color: #6B7280;
+}
+
 .description-label {
     font-weight: 600;
     font-size: 14px;
