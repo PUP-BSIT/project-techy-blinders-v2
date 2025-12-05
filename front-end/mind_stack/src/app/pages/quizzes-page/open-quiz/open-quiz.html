@@ -153,6 +153,20 @@
                 }
             </div>
 
+            <div class="score-section">
+                @if (showScoreButton()) {
+                    <button class="score-btn" (click)="openScoreModal()">
+                        Show Score
+                    </button>
+                }
+
+                @if (scoreVisible()) {
+                    <div class="score-display">
+                        <h2>Your Score: {{ totalCorrect() }} / {{ totalQuestions() }}</h2>
+                    </div>
+                }
+            </div>
+
             <span class="page-indicator">
                 Question {{ currentIndex() + 1 }} of {{ totalQuestions() }}
             </span>
@@ -184,3 +198,18 @@
         <button class="btn btn-primary" (click)="goBack()">Go Back to Quizzes</button>
     </div>
 </div>
+
+@if (scoreModalOpen()) {
+  <div class="score-modal-backdrop"></div>
+}
+
+@if (scoreModalOpen()) {
+  <div class="score-modal">
+      <div class="modal-content">
+          <h2>Your Score</h2>
+          <p>{{ totalCorrect() }} / {{ totalQuestions() }}</p>
+
+          <button class="close-btn" (click)="closeScoreModal()">Close</button>
+      </div>
+  </div>
+}
