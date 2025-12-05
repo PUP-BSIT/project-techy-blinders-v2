@@ -8,6 +8,7 @@
         <app-post-card
           [post]="post"
           [currentUserInitial]="currentUserInitial"
+          [currentUserId]="currentUserId"
           (openModal)="openPostModal($event)"
           (likePost)="onLikePost($event)"
           (dislikePost)="onDislikePost($event)"
@@ -36,12 +37,17 @@
       [post]="selectedPost"
       [comments]="getCommentsForPost(selectedPost.post_id)"
       [currentUserInitial]="currentUserInitial"
+      [currentUserId]="currentUserId"
       (closeModalEvent)="closePostModal()"
       (likePost)="onLikePostInModal()"
       (dislikePost)="onDislikePostInModal()"
+      (editPost)="onEditPost(selectedPost)"
+      (deletePost)="onDeletePost(selectedPost)"
       (addComment)="onAddComment($event)"
       (likeComment)="onLikeComment($event)"
       (dislikeComment)="onDislikeComment($event)"
+      (editComment)="onEditComment($event)"
+      (deleteComment)="onDeleteComment($event)"
     />
   }
 </div>

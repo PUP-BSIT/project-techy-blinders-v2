@@ -13,7 +13,7 @@
 }
 
 .modal-content {
-    background: #B8E5C8;
+    background: #B4DDBA;
     border-radius: 16px;
     width: 100%;
     max-width: 900px;
@@ -232,8 +232,8 @@
 }
 
 .action-btn {
-    background: #D1FAE5;
-    color: #047857;
+    background: #53CC93;
+    color: white;
     border: none;
     border-radius: 20px;
     padding: 8px 14px;
@@ -247,11 +247,11 @@
     gap: 6px;
 
     &:hover {
-        background: #A7F3D0;
+        background: #44b47e;
     }
 
     &.active {
-        background: #10b981;
+        background: #3ca572;
         color: white;
         
         .action-icon {
@@ -289,7 +289,7 @@
 
 .comment-item {
     padding: 14px 16px;
-    background: #D1FAE5;
+    background: #cae7cf;
     border-radius: 8px;
     margin-bottom: 8px;
 }
@@ -309,13 +309,216 @@
     align-items: center;
     gap: 10px;
     margin-bottom: 8px;
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    z-index: 100;
+    min-width: 130px;
+    margin-top: 4px;
+}
+
+.dropdown-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border: none;
+    background: white;
+    cursor: pointer;
+    font-size: 13px;
+    color: #374151;
+    transition: background 0.2s;
+    text-align: left;
+
+    &:hover {
+        background: #F3F4F6;
+    }
+
+    &.delete {
+        color: #EF4444;
+
+        &:hover {
+            background: #FEE2E2;
+        }
+    }
+
+    svg {
+        stroke: currentColor;
+    }
+}
+
+.comment-menu-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #6B7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background 0.2s;
+    margin-left: auto;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+}
+
+.comment-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    z-index: 100;
+    min-width: 130px;
+    margin-top: 4px;
+
+    .dropdown-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border: none;
+        background: white;
+        cursor: pointer;
+        font-size: 13px;
+        color: #374151;
+        transition: background 0.2s;
+        text-align: left;
+
+        &:hover {
+            background: #F3F4F6;
+        }
+
+        &.delete {
+            color: #EF4444;
+
+            &:hover {
+                background: #FEE2E2;
+            }
+        }
+
+        svg {
+            stroke: currentColor;
+        }
+    }
+}
+
+.edit-comment-box {
+    margin: 8px 0;
+    width: 100%;
+}
+
+.edit-comment-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: inherit;
+    resize: vertical;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+
+    &:focus {
+        outline: none;
+        border-color: #10b981;
+    }
+}
+
+.edit-comment-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.btn-cancel {
+    padding: 6px 14px;
+    border: none;
+    background: #16dc81;
+    color: white;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        background: #14c674;
+    }
+}
+
+.btn-save {
+    padding: 6px 14px;
+    border: none;
+    background: #287c55;
+    color: white;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        background: #226646;
+    }
+}
+
+.btn-delete {
+    padding: 6px 14px;
+    border: none;
+    background: #EF4444;
+    color: white;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        background: #DC2626;
+    }
+}
+
+.confirm-box {
+    padding: 12px;
+    border-top: 1px solid #E5E7EB;
+    background: #F9FAFB;
+}
+
+.confirm-text {
+    font-size: 13px;
+    color: #374151;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.confirm-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
 }
 
 .user-avatar-small {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: #6B7280;
+    background: #2D6A4F;
     color: white;
     display: flex;
     align-items: center;
@@ -350,18 +553,18 @@
     gap: 4px;
     padding: 5px 10px;
     border: none;
-    background: white;
+    background: #53CC93;
     border-radius: 16px;
     cursor: pointer;
     font-size: 11px;
-    color: #047857;
+    color: white;
     transition: all 0.2s;
     font-weight: 600;
 }
 
 .action-btn-small svg {
-    stroke: #047857;
-    fill: #047857;
+    stroke: white;
+    fill: white;
 }
 
 .action-btn-small .action-icon-small {
@@ -371,11 +574,11 @@
 }
 
 .action-btn-small:hover {
-    background: #F3F4F6;
+    background: #44b47e;
 }
 
 .action-btn-small.active {
-    background: #10b981;
+    background: #3ca572;
     color: white;
 }
 
@@ -395,7 +598,7 @@
     position: sticky;
     bottom: 0;
     padding: 12px 20px;
-    background: #B8E5C8; 
+    background: #B4DDBA; 
     border-top: 1px solid rgba(0, 0, 0, 0.06);
     z-index: 1; 
 }
@@ -435,7 +638,7 @@
 }
 
 .send-btn:hover:not(:disabled) {
-    background: #059669;
+    background: #65c497;
 }
 
 .send-btn:disabled {

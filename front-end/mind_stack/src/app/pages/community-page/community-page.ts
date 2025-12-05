@@ -1,4 +1,4 @@
-import { Component, ViewChildren, QueryList, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChildren, QueryList, AfterViewInit, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommunityService } from '../../services/community.service';
@@ -8,6 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CreatePost } from './components/create-post/create-post';
 import { Search } from './components/search/search';
 import { PostModal } from './components/post-modal/post-modal';
+import { AuthService } from '../../../service/auth.service';
 
 @Component({
   selector: 'app-community-page',
@@ -22,6 +23,8 @@ import { PostModal } from './components/post-modal/post-modal';
   styleUrl: './community-page.scss'
 })
 export class CommunityPage implements OnInit, OnDestroy {
+  private authService = inject(AuthService);
+  
   posts: Post[] = [];
   allComments: Comment[] = [];
   filteredPosts: Post[] = [];
@@ -31,6 +34,7 @@ export class CommunityPage implements OnInit, OnDestroy {
   editingPost: Post | null = null;
   searchQuery = '';
   currentUserInitial = 'J';
+  currentUserId = '';
   isSidebarCollapsed = false;
 
   private destroy$ = new Subject<void>();
@@ -38,12 +42,21 @@ export class CommunityPage implements OnInit, OnDestroy {
   constructor(private communityService: CommunityService) {}
 
   ngOnInit() {
+    this.setCurrentUserInitial();
     this.subscribeToUpdates();
   }
 
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  setCurrentUserInitial() {
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser && currentUser.username) {
+      this.currentUserInitial = currentUser.username.charAt(0).toUpperCase();
+      this.currentUserId = currentUser.userId?.toString() || '';
+    }
   }
 
   subscribeToUpdates() {
@@ -156,6 +169,17 @@ export class CommunityPage implements OnInit, OnDestroy {
 
   onDislikeComment(event: {comment: Comment, isReply: boolean}) {
     this.communityService.toggleDislikeComment(event.comment.comment_id);
+  }
+
+  onEditComment(event: {comment: Comment, newContent: string}) {
+    this.communityService.updateComment(
+      event.comment.comment_id, 
+      event.newContent
+    );
+  }
+
+  onDeleteComment(comment: Comment) {
+    this.communityService.deleteComment(comment.comment_id);
   }
 
   getCommentsForPost(postId: string): Comment[] {

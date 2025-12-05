@@ -13,18 +13,30 @@ export class PostModal {
   @Input() post!: Post;
   @Input() comments: Comment[] = [];
   @Input() currentUserInitial: string = 'J';
+  @Input() currentUserId: string = '';
 
   @Output() closeModalEvent = new EventEmitter<void>();
   @Output() likePost = new EventEmitter<void>();
   @Output() dislikePost = new EventEmitter<void>();
+  @Output() editPost = new EventEmitter<Post>();
+  @Output() deletePost = new EventEmitter<Post>();
   @Output() addComment = new EventEmitter<string>();
   @Output() likeComment = 
     new EventEmitter<{comment: Comment, isReply: boolean}>();
   @Output() dislikeComment = 
     new EventEmitter<{comment: Comment, isReply: boolean}>();
+  @Output() editComment = 
+    new EventEmitter<{comment: Comment, newContent: string}>();
+  @Output() deleteComment = new EventEmitter<Comment>();
 
   newCommentText: string = '';
   replyingTo?: { comment: Comment, isReply: boolean };
+  editingComment?: Comment;
+  editCommentText: string = '';
+  showMenuForComment?: string;
+  showDeleteConfirmForComment?: string;
+  showPostMenu = false;
+  showDeleteConfirmForPost = false;
   @ViewChild('replyInput') replyInputRef?: ElementRef<HTMLInputElement>;
 
   getInitial(username: string): string {
@@ -52,6 +64,34 @@ export class PostModal {
     this.dislikePost.emit();
   }
 
+  togglePostMenu(event: Event) {
+    event.stopPropagation();
+    this.showPostMenu = !this.showPostMenu;
+  }
+
+  onEditPost(event: Event) {
+    event.stopPropagation();
+    this.editPost.emit(this.post);
+    this.showPostMenu = false;
+  }
+
+  onDeletePost(event: Event) {
+    event.stopPropagation();
+    this.showDeleteConfirmForPost = true;
+  }
+
+  confirmDeletePost(event: Event) {
+    event.stopPropagation();
+    this.deletePost.emit(this.post);
+    this.showDeleteConfirmForPost = false;
+    this.showPostMenu = false;
+  }
+
+  cancelDeletePost(event: Event) {
+    event.stopPropagation();
+    this.showDeleteConfirmForPost = false;
+  }
+
   onAddComment() {
     if (this.newCommentText.trim()) {
       this.addComment.emit(this.newCommentText);
@@ -74,5 +114,59 @@ export class PostModal {
       this.newCommentText = mention + this.newCommentText;
     }
     queueMicrotask(() => this.replyInputRef?.nativeElement?.focus());
+  }
+
+  isCommentOwner(comment: Comment): boolean {
+    return comment.user_id === this.currentUserId;
+  }
+
+  isPostOwner(): boolean {
+    return this.post.user_id === this.currentUserId;
+  }
+
+  toggleCommentMenu(event: Event, commentId: string) {
+    event.stopPropagation();
+    this.showMenuForComment = 
+      this.showMenuForComment === commentId ? undefined : commentId;
+  }
+
+  onEditComment(event: Event, comment: Comment) {
+    event.stopPropagation();
+    this.editingComment = comment;
+    this.editCommentText = comment.content;
+    this.showMenuForComment = undefined;
+  }
+
+  onSaveEdit(comment: Comment) {
+    if (this.editCommentText.trim()) {
+      this.editComment.emit({ 
+        comment, 
+        newContent: this.editCommentText 
+      });
+      this.editingComment = undefined;
+      this.editCommentText = '';
+    }
+  }
+
+  onCancelEdit() {
+    this.editingComment = undefined;
+    this.editCommentText = '';
+  }
+
+  onDeleteComment(event: Event, comment: Comment) {
+    event.stopPropagation();
+    this.showDeleteConfirmForComment = comment.comment_id;
+  }
+
+  confirmDeleteComment(event: Event, comment: Comment) {
+    event.stopPropagation();
+    this.deleteComment.emit(comment);
+    this.showDeleteConfirmForComment = undefined;
+    this.showMenuForComment = undefined;
+  }
+
+  cancelDeleteComment(event: Event) {
+    event.stopPropagation();
+    this.showDeleteConfirmForComment = undefined;
   }
 }
