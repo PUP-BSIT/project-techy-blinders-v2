@@ -17,7 +17,7 @@
                                 •••
                             </button>
                             <div class="dropdown-menu" [class.show]="activeDropdown === i">
-                                <button class="dropdown-item share">
+                                <button class="dropdown-item share" (click)="openShareModal(studySet.flashcard_id)">
                                     <img src="assets/globe-icon.png" alt="Share" class="icon-img">
                                     Share
                                 </button>
@@ -173,6 +173,60 @@
             <div class="confirm-actions">
                 <button class="btn-confirm-no" (click)="closeConfirmModal()">No</button>
                 <button class="btn-confirm-yes" (click)="confirmCancel()">Yes</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="share-overlay" 
+            [class.open]="isShareModalOpen" (click)="closeShareModal()">
+        <div class="share-modal" (click)="$event.stopPropagation()">
+            <h2 class="share-title">Share Study Set</h2>
+            
+            <div class="share-form">
+                <div class="form-group">
+                    <label class="form-label">Study Sets</label>
+                    <select class="form-select" [(ngModel)]="selectedStudySetId">
+                        <option value="" disabled selected>Select a study set</option>
+                        <option *ngFor="let set of studySets" [value]="set.flashcard_id">
+                            {{ set.title }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" 
+                            class="form-input" 
+                            placeholder="Enter title"
+                            [(ngModel)]="shareTitle"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" [(ngModel)]="shareCategory">
+                        <option value="" disabled selected>Select category</option>
+                        <option value="Study Tips">Study Tips</option>
+                        <option value="Product Updates">Product Updates</option>
+                        <option value="Learning Strategies">Learning Strategies</option>
+                        <option value="User Stories">User Stories</option>
+                        <option value="Tutorials">Tutorials</option>
+                        <option value="Announcements">Announcements</option>
+                        <option value="Educational Resources">Educational Resources</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" 
+                              placeholder="Enter description"
+                              [(ngModel)]="shareDescription"
+                              rows="4"></textarea>
+                </div>
+            </div>
+
+            <div class="share-actions">
+                <button class="btn-share-save" (click)="saveShare()">Save</button>
+                <button class="btn-share-cancel" (click)="closeShareModal()">Cancel</button>
             </div>
         </div>
     </div>
