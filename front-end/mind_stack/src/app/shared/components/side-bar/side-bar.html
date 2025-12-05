@@ -73,3 +73,15 @@
         <ng-content></ng-content>
     </mat-sidenav-content>
 </mat-sidenav-container>
+
+@if (logoutModalOpen()) {
+    <div class="modal-backdrop"></div>
+
+    <div class="logout-modal">
+        <div class="modal-content">
+            <div class="spinner"></div>
+            <h2>Logging Out...</h2>
+            <p>Please wait</p>
+        </div>
+    </div>
+}
