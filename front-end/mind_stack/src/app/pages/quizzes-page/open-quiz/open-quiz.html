@@ -200,16 +200,34 @@
 </div>
 
 @if (scoreModalOpen()) {
-  <div class="score-modal-backdrop"></div>
-}
+<div class="score-modal-backdrop"></div>
 
-@if (scoreModalOpen()) {
-  <div class="score-modal">
-      <div class="modal-content">
-          <h2>Your Score</h2>
-          <p>{{ totalCorrect() }} / {{ totalQuestions() }}</p>
+<div class="score-modal">
+    <div class="modal-content">
+        <h2 id="score_text">Score:</h2>
 
-          <button class="close-btn" (click)="closeScoreModal()">Close</button>
-      </div>
-  </div>
+        <div class="score-circle">
+            <div class="score-value">
+                {{ totalCorrect() }}
+                <span class="small">/ {{ totalQuestions() }}</span>
+            </div>
+        </div>
+
+        <h3 class="feedback-text">
+            {{
+                totalCorrect() / totalQuestions() >= 0.8 ? 'Excellent!' :
+                totalCorrect() / totalQuestions() >= 0.5 ? 'Good Job!' :
+                'Keep Practicing!'
+            }}
+        </h3>
+
+        <div class="modal-actions">
+            <button class="primary-btn" (click)="retakeQuiz()">Retake Quiz</button>
+            <button class="secondary-btn" (click)="goBack()">Back to Quizzes</button>
+        </div>
+
+        <button class="close-btnn" (click)="closeScoreModal()">Close</button>
+
+    </div>
+</div>
 }

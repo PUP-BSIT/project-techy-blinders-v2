@@ -128,7 +128,6 @@ export class OpenQuiz implements OnInit {
 
     this.isAnswerRevealed.set(true);
 
-    // --- store correctness for this question ---
     const isCorrect = this.isCorrect();
     const index = this.currentIndex();
     const updated = [...this.answersCorrectness()];
@@ -136,7 +135,7 @@ export class OpenQuiz implements OnInit {
     updated[index] = isCorrect;
     this.answersCorrectness.set(updated);
 
-    // --- if last question, show the "Show Score" button ---
+    // show scorebutton will appear
     if (index === this.totalQuestions() - 1) {
       this.showScoreButton.set(true);
     }
@@ -158,6 +157,20 @@ export class OpenQuiz implements OnInit {
     this.scoreModalOpen.set(false);
   }
  
+retakeQuiz() {
+  this.currentIndex.set(0);
+
+  const total = this.totalQuestions();
+  this.answersCorrectness.set(new Array(total).fill(false));
+
+  this.isAnswerRevealed.set(false);
+  this.selectedAnswer.set('');
+  this.userTypedAnswer.set('');
+
+  this.showScoreButton.set(false);
+  this.scoreModalOpen.set(false);
+}
+  
   goBack() {
     this.router.navigate(['/app/quizzes']);
   }
