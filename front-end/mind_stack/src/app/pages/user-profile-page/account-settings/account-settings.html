@@ -7,17 +7,16 @@
         <div class="form-group">
             <div class="current-password-class">
                 <div class="current-password-label">
-                    <label>Current password</label>
+                    <label>Current Password</label>
                 </div>
                 <input type="password" formControlName="current_password" placeholder="Current Password">
-
-                @if(passwordControl?.touched) {
-                    @if (passwordControl?.errors?.['required']) {
-                        <div>
-                           <span>Input Password</span> 
-                        </div>
+                <div class="error-message">
+                    @if(passwordControl?.touched) {
+                        @if (passwordControl?.errors?.['required']) {
+                            <span>Input Password</span>
+                        }
                     }
-                }
+                </div>
             </div>
 
             <div class="new-password-class">
@@ -25,35 +24,34 @@
                     <label>New Password</label>
                 </div>
                 <input type="password" formControlName="new_password" placeholder="New Password">
-                @if (newPasswordControl?.touched) {
-                    @if(newPasswordControl?.errors?.['required']) {
-                        <div>
+                <div class="error-message">
+                    @if (newPasswordControl?.touched) {
+                        @if(newPasswordControl?.errors?.['required']) {
                             <span>Input New Password</span>
-                        </div>
+                        }
                     }
-                }
+                </div>
             </div>
 
             <div class="confirm-password-class">
                 <div class="confirm-password-label">
-                    <label>Confirm Passowrd</label>
+                    <label>Confirm Password</label>
                 </div>
                 <input type="password" formControlName="confirm_password" placeholder="Confirm Passowrd">
-                @if (confirmPasswordControl?.touched) {
-                    @if(confirmPasswordControl?.errors?.['required']) {
-                        <div>
+                <div class="error-message">
+                    @if (confirmPasswordControl?.touched) {
+                        @if(confirmPasswordControl?.errors?.['required']) {
                             <span>Input Confirm Password</span>
-                        </div>
+                        }
                     }
-                }
+                </div>
             </div>
 
-            @if(newPasswordControl?.value !== confirmPasswordControl?.value) {
-                <div>
-                   <span>Password is not match</span> 
-                </div>
-                
-            }
+            <div class="error-message password-match-error">
+                @if(newPasswordControl?.value !== confirmPasswordControl?.value) {
+                    <span>Password is not match</span>
+                }
+            </div>
         </div>
 
        <div class="button-class">
