@@ -158,9 +158,9 @@ $transition-normal: 0.3s ease;
     padding: 0.5rem 1.5rem;
     border-radius: 20px;
     font-weight: 500;
-    margin: auto auto 2rem auto;
-    height: 35px;
-    width: 110px;
+    margin: auto auto 3rem auto;
+    height: 50px;
+    width: 150px;
     opacity: 0;
 
     &.show {
@@ -179,7 +179,7 @@ $transition-normal: 0.3s ease;
   }
 
   .user-answer {
-    font-size: 1.25rem;
+    font-size: 1.8rem;
     margin: 1rem 0;
     color: #666;
     font-weight: 400;
@@ -195,7 +195,7 @@ $transition-normal: 0.3s ease;
   }
 
   .answer-text {
-    font-size: 1.25rem;
+    font-size: 1.8rem;
     margin: 1rem 0;
     font-weight: 500;
 
