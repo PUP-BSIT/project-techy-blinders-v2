@@ -60,6 +60,12 @@ export class QuizzesPage implements OnInit {
 
   QuestionType = QuestionType;
 
+  isShareModalOpen: boolean = false;
+  selectedQuizId: number | null = null;
+  shareTitle: string = '';
+  shareDescription: string = '';
+  shareCategory: string = '';
+
   private readonly STORAGE_KEY = 'quizzes';
 
   constructor(
@@ -348,6 +354,62 @@ export class QuizzesPage implements OnInit {
       this.saveQuizzesToStorage(allQuizzes);
     }
     this.activeDropdown = null;
+  }
+
+  openShareModal(quizId?: number) {
+    this.isShareModalOpen = true;
+
+    if (quizId) {
+      this.selectedQuizId = quizId;
+
+      const quiz = this.quizzes.find(q => q.quiz_id === quizId);
+      if (quiz) {
+        this.shareTitle = quiz.title;
+        this.shareDescription = quiz.description || '';
+        this.shareCategory = ''; 
+      }
+    } else {
+      this.selectedQuizId = null;
+      this.shareTitle = '';
+      this.shareCategory = '';
+      this.shareDescription = '';
+    }
+
+    this.closeDropdown();
+  }
+
+  closeShareModal() {
+    this.isShareModalOpen = false;
+    this.selectedQuizId = null;
+    this.shareTitle = '';
+    this.shareCategory = '';
+    this.shareDescription = '';
+  }
+
+  saveShare() {
+    if (
+      this.selectedQuizId &&
+      this.shareTitle.trim() &&
+      this.shareDescription.trim() &&
+      this.shareCategory.trim()
+    ) {
+      const allQuizzes = this.getQuizzesFromStorage();
+      const quiz = allQuizzes.find(q => q.quiz_id === this.selectedQuizId);
+
+      if (quiz) {
+        quiz.is_public = true;
+        this.saveQuizzesToStorage(allQuizzes);
+
+        console.log('Sharing quiz:', {
+          id: this.selectedQuizId,
+          title: this.shareTitle,
+          category: this.shareCategory,
+          description: this.shareDescription
+        });
+      }
+
+      this.closeShareModal();
+    }
   }
   
   getQuestionCount(quiz: Quiz): number {
