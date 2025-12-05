@@ -451,3 +451,247 @@ $transition-normal: 0.3s ease;
     }
   }
 }
+
+.score-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.score-btn {
+  padding: 10px 18px;
+  background: #007bff;
+  color: white;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  width: 200px;
+  height: 50px;
+  margin-bottom: 50px;
+}
+
+.score-display {
+  margin-top: 12px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.score-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 999;
+}
+
+.score-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #D8F3DC;
+  padding: 25px 35px;
+  border-radius: 12px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+  width: 90%;
+  max-width: 350px;
+}
+
+.score-modal .modal-content {
+  text-align: center;
+}
+
+.score-modal h2 {
+  margin-bottom: 10px;
+  font-size: 22px;
+}
+
+.score-modal p {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.close-btn {
+  padding: 10px 16px;
+  background: #007bff;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.score-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 900;
+}
+
+.score-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 901;
+  width: 90%;
+  max-width: 430px;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px 25px;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.emoji {
+  font-size: 55px;
+  margin-bottom: 15px;
+  animation: pop 0.4s ease;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.2); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.score-title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.score-circle {
+  margin: 20px auto;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle at top, #4CAF50 0%, #2E7D32 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 42px;
+  font-weight: bold;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  animation: bounce 0.6s ease-out;
+}
+
+.score-circle small {
+  font-size: 20px;
+  opacity: 0.9;
+  display: block;
+}
+
+@keyframes bounce {
+  0%  { transform: scale(0.6); }
+  60% { transform: scale(1.2); }
+  100%{ transform: scale(1); }
+}
+
+.performance-badge {
+  margin-top: 10px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  display: inline-block;
+  font-size: 18px;
+}
+
+.performance-badge.excellent {
+  background: #d0f8ce;
+  color: #2e7d32;
+}
+
+.performance-badge.good {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.performance-badge.bad {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.modal-actions {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.primary-btn {
+  padding: 12px;
+  width: 100%;
+  border: none;
+  font-size: 16px;
+  border-radius: 10px;
+  background: #4CAF50;
+  color: white;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.primary-btn.review {
+  background: #1976D2;
+}
+
+.primary-btn:hover {
+  opacity: 0.9;
+}
+
+.secondary-btn {
+  padding: 10px;
+  width: 100%;
+  border: 2px solid #555;
+  background: transparent;
+  color: #222;
+  font-size: 16px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.close-btnn {
+  margin-top: 20px;
+  font-size: 15px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.feedback-text {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 12px;
+  color: #333;
+}
+
+#score_text {
+  font-size: 36px;
+}

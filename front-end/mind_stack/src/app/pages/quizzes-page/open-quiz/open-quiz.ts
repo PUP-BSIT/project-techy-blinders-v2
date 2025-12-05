@@ -18,6 +18,12 @@ export class OpenQuiz implements OnInit {
   selectedAnswer = signal<string>('');
   userTypedAnswer = signal<string>('');
 
+  scoreVisible = signal(false);
+  answersCorrectness = signal<boolean[]>([]);
+  showScoreButton = signal(false);
+
+  scoreModalOpen = signal(false);
+
   private readonly STORAGE_KEY = 'quizzes';
 
   constructor(
@@ -45,6 +51,12 @@ export class OpenQuiz implements OnInit {
     const quizzes = this.getQuizzesFromStorage();
     const found = quizzes.find(q => q.quiz_id === id) || null;
     this.quiz.set(found);
+
+    if (found) {
+      this.answersCorrectness.set(new Array(found.questions.length).fill(false));
+      this.showScoreButton.set(false);
+      this.scoreVisible.set(false);
+    }
   }
 
   currentQuestion = computed<QuestionItem | null>(() => {
@@ -111,17 +123,54 @@ export class OpenQuiz implements OnInit {
   }
 
   revealAnswer() {
-    // multiple choice=
-    if (this.isMultipleChoice() && !this.selectedAnswer()) {
-      return;
-    }
-    // identification 
-    if (this.isIdentification() && !this.userTypedAnswer().trim()) {
-      return;
-    }
+    if (this.isMultipleChoice() && !this.selectedAnswer()) return;
+    if (this.isIdentification() && !this.userTypedAnswer().trim()) return;
+
     this.isAnswerRevealed.set(true);
+
+    const isCorrect = this.isCorrect();
+    const index = this.currentIndex();
+    const updated = [...this.answersCorrectness()];
+
+    updated[index] = isCorrect;
+    this.answersCorrectness.set(updated);
+
+    // show scorebutton will appear
+    if (index === this.totalQuestions() - 1) {
+      this.showScoreButton.set(true);
+    }
   }
 
+  totalCorrect = computed(() => {
+    return this.answersCorrectness().filter(x => x === true).length;
+  });
+
+  toggleScore() {
+    this.scoreVisible.update(v => !v);
+  }
+
+  openScoreModal() {
+    this.scoreModalOpen.set(true);
+  }
+
+  closeScoreModal() {
+    this.scoreModalOpen.set(false);
+  }
+ 
+retakeQuiz() {
+  this.currentIndex.set(0);
+
+  const total = this.totalQuestions();
+  this.answersCorrectness.set(new Array(total).fill(false));
+
+  this.isAnswerRevealed.set(false);
+  this.selectedAnswer.set('');
+  this.userTypedAnswer.set('');
+
+  this.showScoreButton.set(false);
+  this.scoreModalOpen.set(false);
+}
+  
   goBack() {
     this.router.navigate(['/app/quizzes']);
   }
