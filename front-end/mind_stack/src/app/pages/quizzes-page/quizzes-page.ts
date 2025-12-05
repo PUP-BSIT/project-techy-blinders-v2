@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 export enum QuestionType {
   MULTIPLE_CHOICE = 'multiple_choice',
@@ -39,7 +39,7 @@ export interface Quiz {
   templateUrl: './quizzes-page.html',
   styleUrls: ['./quizzes-page.scss']
 })
-export class QuizzesPage {
+export class QuizzesPage implements OnInit {
   isModalOpen: boolean = false;
   isConfirmModalOpen: boolean = false;
   
@@ -62,8 +62,19 @@ export class QuizzesPage {
 
   private readonly STORAGE_KEY = 'quizzes';
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.initializeStorage();
+  }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['create'] === 'true') {
+        this.openModal();
+      }
+    });
   }
   
   private initializeStorage(): void {

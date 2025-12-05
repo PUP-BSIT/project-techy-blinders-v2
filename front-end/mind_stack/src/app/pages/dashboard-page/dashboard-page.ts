@@ -115,7 +115,7 @@ export class DashboardPage implements OnInit {
 
   createQuiz() {
     console.log('Navigate to create quiz');
-    this.router.navigate(['/quizzes']);
+    this.router.navigate(['/app/quizzes'], { queryParams: { create: 'true' } });
   }
 
   viewStudyItem(item: StudyItem) {
