@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SideBar } from '../../shared/components/side-bar/side-bar';
 
 interface Notification {
   id: number;
@@ -13,7 +12,7 @@ interface Notification {
 @Component({
   selector: 'app-notification-page',
   standalone: true,
-  imports: [SideBar, CommonModule],
+  imports: [CommonModule],
   templateUrl: './notification-page.html',
   styleUrl: './notification-page.scss'
 })

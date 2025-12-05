@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, OnInit, inject } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { AuthService } from '../../../../service/auth.service';
@@ -21,6 +21,8 @@ export class SideBar implements OnInit {
   userEmail: string = '';
   userInitial: string = 'U';
   
+  logoutModalOpen = signal(false);
+
   private authService = inject(AuthService);
   private router = inject(Router);
 
@@ -45,8 +47,12 @@ export class SideBar implements OnInit {
   }
 
   onLogout() {
-    this.authService.logout();
-    this.router.navigate(['/']);
-    console.log('User logged out successfully');
+    this.logoutModalOpen.set(true);
+
+    setTimeout(() => {
+      this.authService.logout();
+      this.logoutModalOpen.set(false);
+      this.router.navigate(['/']);
+    }, 1500);
   }
 }

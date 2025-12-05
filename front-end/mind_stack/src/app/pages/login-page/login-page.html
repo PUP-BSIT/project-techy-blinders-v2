@@ -41,16 +41,6 @@
                 }
             </div>
 
-            <!-- Loading -->
-            @if (isLoading) {
-                <div class="loading-message"><span>Logging in...</span></div>
-            }
-
-            <!-- Success -->
-            @if (successMessage) {
-                <div class="success-message"><span>{{ successMessage }}</span></div>
-            }
-
             <!-- Error -->
             @if (errorMessage) {
                 <div class="error-message"><span>{{ errorMessage }}</span></div>
@@ -72,4 +62,17 @@
             </div>
         </form>
     </div>
+
+    @if (successModalOpen()) {
+        <div class="modal-backdrop"></div>
+
+        <div class="success-modal">
+            <div class="modal-content">
+                <!-- Spinner -->
+                <div class="spinner"></div>
+                <h2>Logging In...</h2>
+                <p>Please wait</p>
+            </div>
+        </div>
+    }
 </div>
