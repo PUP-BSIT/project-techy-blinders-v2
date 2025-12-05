@@ -91,14 +91,6 @@
                             </p>
                         }
 
-                        <div class="result-badge" [class.correct]="isCorrect()" [class.incorrect]="!isCorrect()">
-                            @if (isCorrect()) {
-                                <span id="correct">Correct!</span>
-                            } @else {
-                                <span id="incorrect">Incorrect!</span>
-                            }
-                        </div>
-
                         <!-- ident -->
                         @if (isIdentification() && userTypedAnswer()) {
                             <p class="user-answer">
@@ -107,16 +99,20 @@
                             </p>
                         }
 
+                        <div 
+                            class="result-badge show" 
+                            [class.correct]="isCorrect()" 
+                            [class.incorrect]="!isCorrect()">
+                            @if (isCorrect()) {
+                                <span id="correct">Correct!</span>
+                            } @else {
+                                <span id="incorrect">Incorrect!</span>
+                            }
+                        </div>
+
                         <!-- Show correct answer -->
                         <h2 class="answer-text">
                             Correct Answer:
-                            <span class="correct">
-                                @if (isMultipleChoice()) {
-                                    {{ currentQuestion()?.correctAnswer }}
-                                } @else {
-                                    {{ currentQuestion()?.answer }}
-                                }
-                            </span>
                         </h2>
 
                         <!-- answer for multiple choice -->
@@ -137,6 +133,13 @@
                             }
                             }
                         </p>
+                        }
+
+                        <!-- answer for identification -->
+                        @if (isIdentification()) {
+                            <p class="full-answer">
+                                {{ currentQuestion()?.answer }}
+                            </p>
                         }
 
                         <!-- optional for now -->
