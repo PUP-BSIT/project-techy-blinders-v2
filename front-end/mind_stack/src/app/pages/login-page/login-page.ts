@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginRequest } from '../../models/user.model';
@@ -23,13 +23,15 @@ export class LoginPage {
   successMessage = '';
   errorMessage = '';
 
+  successModalOpen = signal(false);
+  errorModalOpen = signal(false);
+
   constructor(private route: ActivatedRoute) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     });
     
-    // Show expired session message
     this.route.queryParams.subscribe(params => {
       if (params['expired']) {
         this.errorMessage = 'Your session has expired. Please log in again.';
@@ -56,8 +58,12 @@ export class LoginPage {
         this.successMessage = 'Login successful!';
         this.loginForm.reset();
 
-        // AuthService already stores token and current user
-        this.router.navigate(['/app/dashboard']);
+        this.successModalOpen.set(true);
+
+        setTimeout(() => {
+          this.successModalOpen.set(false);
+          this.router.navigate(['/app/dashboard']);
+        }, 1500);
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
@@ -66,6 +72,10 @@ export class LoginPage {
         else this.errorMessage = 'Login failed. Try again.';
       }
     });
+  }
+
+  closeSuccessModal() {
+    this.successModalOpen.set(false);
   }
 
   get emailControl() {
