@@ -2,7 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { StudySetsService, StudySet } from '../../services/study-sets.service';
+
+export interface StudySet {
+  flashcard_id: number;
+  title: string;
+  description: string;
+  flashcards: { keyTerm: string; definition: string }[];
+  created_at: Date;
+  is_public: boolean;
+}
 
 @Component({
   selector: 'app-study-sets-page',
@@ -24,11 +32,14 @@ export class StudySetsPage implements OnInit {
   editingStudySetId: number | null = null;
   activeDropdown: number | null = null;
 
+  private readonly STORAGE_KEY = 'studySets';
+
   constructor(
-    private studySetsService: StudySetsService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) {
+    this.initializeStorage();
+  }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -43,8 +54,29 @@ export class StudySetsPage implements OnInit {
     });
   }
 
+  private initializeStorage(): void {
+    if (!localStorage.getItem(this.STORAGE_KEY)) {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify([]));
+    }
+  }
+
+  private getStudySetsFromStorage(): StudySet[] {
+    const data = localStorage.getItem(this.STORAGE_KEY);
+    if (!data) return [];
+    
+    const studySets = JSON.parse(data);
+    return studySets.map((studySet: any) => ({
+      ...studySet,
+      created_at: new Date(studySet.created_at)
+    }));
+  }
+
+  private saveStudySetsToStorage(studySets: StudySet[]): void {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(studySets));
+  }
+
   get studySets(): StudySet[] {
-    return this.studySetsService.getStudySets();
+    return this.getStudySetsFromStorage();
   }
 
   get paginatedStudySets(): StudySet[] {
@@ -186,20 +218,26 @@ export class StudySetsPage implements OnInit {
 
   saveStudySet() {
     if (this.studySetTitle.trim()) {
+      const allStudySets = this.getStudySetsFromStorage();
+      
       if (this.editingStudySetId !== null) {
-        const updatedStudySet: StudySet = {
-          flashcard_id: this.editingStudySetId,
-          title: this.studySetTitle,
-          description: this.studySetDescription,
-          flashcards: this.flashcards.map(f => ({ 
-            keyTerm: f.term, 
-            definition: f.definition 
-          })),
-          created_at: new Date(),
-          is_public: false
-        };
-        this.studySetsService.updateStudySet(updatedStudySet);
+        // Update existing study set
+        const index = allStudySets.findIndex(s => s.flashcard_id === this.editingStudySetId);
+        if (index !== -1) {
+          allStudySets[index] = {
+            flashcard_id: this.editingStudySetId,
+            title: this.studySetTitle,
+            description: this.studySetDescription,
+            flashcards: this.flashcards.map(f => ({ 
+              keyTerm: f.term, 
+              definition: f.definition 
+            })),
+            created_at: allStudySets[index].created_at,
+            is_public: allStudySets[index].is_public
+          };
+        }
       } else {
+        // Create new study set
         const newStudySet: StudySet = {
           flashcard_id: Date.now(),
           title: this.studySetTitle,
@@ -211,8 +249,10 @@ export class StudySetsPage implements OnInit {
           created_at: new Date(),
           is_public: false
         };
-        this.studySetsService.addStudySet(newStudySet);
+        allStudySets.push(newStudySet);
       }
+      
+      this.saveStudySetsToStorage(allStudySets);
       this.closeModal();
     }
   }
@@ -230,14 +270,19 @@ export class StudySetsPage implements OnInit {
       this.currentPage = 0;
       this.isModalOpen = true;
     }
+    this.closeDropdown();
   }
 
   deleteStudySet(id: number) {
-    this.studySetsService.deleteStudySet(id);
-    const maxPage = Math.max(0, Math.ceil(this.studySets.length / this.studySetsPerPage) - 1);
+    const allStudySets = this.getStudySetsFromStorage();
+    const filteredStudySets = allStudySets.filter(s => s.flashcard_id !== id);
+    this.saveStudySetsToStorage(filteredStudySets);
+    
+    const maxPage = Math.max(0, Math.ceil(filteredStudySets.length / this.studySetsPerPage) - 1);
     if (this.studySetsCurrentPage > maxPage) {
       this.studySetsCurrentPage = maxPage;
     }
+    this.closeDropdown();
   }
 
   playStudySet(id: number) {
@@ -253,10 +298,11 @@ export class StudySetsPage implements OnInit {
   }
 
   togglePrivacy(id: number) {
-    const studySet = this.studySets.find(s => s.flashcard_id === id);
+    const allStudySets = this.getStudySetsFromStorage();
+    const studySet = allStudySets.find(s => s.flashcard_id === id);
     if (studySet) {
       studySet.is_public = !studySet.is_public;
-      this.studySetsService.updateStudySet(studySet);
+      this.saveStudySetsToStorage(allStudySets);
     }
     this.activeDropdown = null;
   }

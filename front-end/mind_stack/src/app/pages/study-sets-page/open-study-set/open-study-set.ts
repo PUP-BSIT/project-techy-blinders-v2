@@ -1,7 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StudySetsService, StudySet } from '../../../services/study-sets.service';
+
+export interface StudySet {
+  flashcard_id: number;
+  title: string;
+  description: string;
+  flashcards: { keyTerm: string; definition: string }[];
+  created_at: Date;
+  is_public: boolean;
+}
 
 @Component({
   selector: 'app-open-study-set',
@@ -15,10 +23,11 @@ export class OpenStudySet implements OnInit {
   currentCardIndex: number = 0;
   isDefinitionRevealed: boolean = false;
 
+  private readonly STORAGE_KEY = 'studySets';
+
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
-    private studySetsService: StudySetsService
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -28,9 +37,21 @@ export class OpenStudySet implements OnInit {
     }
   }
 
+  private getStudySetsFromStorage(): StudySet[] {
+    const data = localStorage.getItem(this.STORAGE_KEY);
+    if (!data) return [];
+    
+    const studySets = JSON.parse(data);
+    return studySets.map((studySet: any) => ({
+      ...studySet,
+      created_at: new Date(studySet.created_at)
+    }));
+  }
+
   loadStudySet(id: number) {
-    const foundSet = this.studySetsService.getStudySetById(id);
-    this.studySet = foundSet || null;
+    const studySets = this.getStudySetsFromStorage();
+    const foundSet = studySets.find(s => s.flashcard_id === id) || null;
+    this.studySet = foundSet;
   }
 
   get currentCard() {
