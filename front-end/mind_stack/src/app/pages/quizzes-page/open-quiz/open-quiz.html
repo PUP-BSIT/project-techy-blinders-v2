@@ -83,14 +83,6 @@
                 <!-- answer -->
                 @if (isAnswerRevealed()) {
                     <div class="answer-section">
-                        <div class="result-badge" [class.correct]="isCorrect()" [class.incorrect]="!isCorrect()">
-                            @if (isCorrect()) {
-                                <span>Correct!</span>
-                            } @else {
-                                <span>Incorrect!</span>
-                            }
-                        </div>
-
                         <!-- m. choice -->
                         @if (isMultipleChoice() && selectedAnswer()) {
                             <p class="user-answer">
@@ -107,35 +99,46 @@
                             </p>
                         }
 
+                        <div 
+                            class="result-badge show" 
+                            [class.correct]="isCorrect()" 
+                            [class.incorrect]="!isCorrect()">
+                            @if (isCorrect()) {
+                                <span id="correct">Correct!</span>
+                            } @else {
+                                <span id="incorrect">Incorrect!</span>
+                            }
+                        </div>
+
                         <!-- Show correct answer -->
                         <h2 class="answer-text">
                             Correct Answer:
-                            <span class="correct">
-                                @if (isMultipleChoice()) {
-                                    {{ currentQuestion()?.correctAnswer }}
-                                } @else {
-                                    {{ currentQuestion()?.answer }}
-                                }
-                            </span>
                         </h2>
 
-                        <!-- answer for m. choice -->
+                        <!-- answer for multiple choice -->
                         @if (isMultipleChoice()) {
+                        <p class="full-answer">
+                            @switch(currentQuestion()?.correctAnswer) {
+                            @case('A') {
+                                A. {{ currentQuestion()?.optionA }}
+                            }
+                            @case('B') {
+                                B. {{ currentQuestion()?.optionB }}
+                            }
+                            @case('C') {
+                                C. {{ currentQuestion()?.optionC }}
+                            }
+                            @case('D') {
+                                D. {{ currentQuestion()?.optionD }}
+                            }
+                            }
+                        </p>
+                        }
+
+                        <!-- answer for identification -->
+                        @if (isIdentification()) {
                             <p class="full-answer">
-                                @switch(currentQuestion()?.correctAnswer) {
-                                    @case('A') {
-                                        {{ currentQuestion()?.optionA }}
-                                    }
-                                    @case('B') {
-                                        {{ currentQuestion()?.optionB }}
-                                    }
-                                    @case('C') {
-                                        {{ currentQuestion()?.optionC }}
-                                    }
-                                    @case('D') {
-                                        {{ currentQuestion()?.optionD }}
-                                    }
-                                }
+                                {{ currentQuestion()?.answer }}
                             </p>
                         }
 
