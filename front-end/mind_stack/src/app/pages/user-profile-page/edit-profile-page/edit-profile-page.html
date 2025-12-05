@@ -9,14 +9,13 @@
                     <label>Username</label>
                 </div>
                 <input type="text" formControlName="username" placeholder="John Doe">   
-                @if(usernameControl?.touched)  {
-                    @if(usernameControl?.errors?.['required']) {
-                        <div>
-                           <span>Input your Username</span> 
-                        </div>
-                        
+                <div class="error-message">
+                    @if(usernameControl?.touched)  {
+                        @if(usernameControl?.errors?.['required']) {
+                            <span>Input your Username</span>
+                        }
                     }
-                }
+                </div>
             </div>
  
             <div class="email-class">
@@ -25,20 +24,15 @@
                 </div>
                 
                 <input type="text" formControlName="email" placeholder="johndoe@gmail.com">
-                @if(emailControl?.touched) {
-                    @if(emailControl?.errors?.['required']) {
-                        <div>
+                <div class="error-message">
+                    @if(emailControl?.touched) {
+                        @if(emailControl?.errors?.['required']) {
                             <span>Input Email</span>
-                        </div>
+                        } @else if(emailControl?.errors?.['email']) {
+                            <span>Invalid Email Format</span>
+                        }
                     }
-
-                    @if(emailControl?.errors?.['email']) {
-                        <div>
-                           <span>Invalid Email Format</span> 
-                        </div>
-                        
-                    }
-                }
+                </div>
             </div>  
         </div>
 
