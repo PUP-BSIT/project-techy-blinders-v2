@@ -80,9 +80,14 @@ mat-sidenav-content {
     margin-bottom: 2px;
     opacity: 1;
     visibility: visible;
+    outline: none;
 
     &:hover {
         background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &:focus {
+        outline: none;
     }
 
     .toggle-icon {
@@ -208,11 +213,22 @@ a.active {
     }
 }
 
-.user-profile-initial img {
-    width: 59.17px;
-    height: 60px;
-    margin-left: -20%;
-    margin-top: -7%;
+.user-profile-initial {
+    a {
+        padding: 0;
+        
+        &:hover {
+            background-color: transparent !important;
+            cursor: pointer;
+        }
+    }
+
+    img {
+        width: 59.17px;
+        height: 60px;
+        margin-left: 0;
+        margin-top: -7%;
+    }
 }
 
 .user-info {

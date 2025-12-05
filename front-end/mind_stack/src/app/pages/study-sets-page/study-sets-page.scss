@@ -748,7 +748,7 @@ $transition-normal: 0.3s ease;
 }
 
 .btn-cancel {
-    background: $color-primary-dark;
+    background: $color-delete;
     color: $color-text-white;
 
     &:hover {
@@ -759,7 +759,7 @@ $transition-normal: 0.3s ease;
 }
 
 .btn-save {
-    background: $color-delete;
+    background: $color-primary-dark;
     color: $color-text-white;
 
     &:hover {
