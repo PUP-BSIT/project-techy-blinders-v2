@@ -75,7 +75,7 @@
                             class="reveal-btn" 
                             (click)="revealAnswer()"
                             [disabled]="(isMultipleChoice() && !selectedAnswer()) || (isIdentification() && !userTypedAnswer().trim())">
-                            Check Answer
+                            Submit Answer
                         </button>
                     </div>
                 }
@@ -111,55 +111,44 @@
                         </div>
 
                         <!-- Show correct answer -->
-                        <h2 class="answer-text">
-                            Correct Answer:
-                        </h2>
+                        <h2 class="answer-text">Correct Answer:</h2>
 
-                        <!-- answer for multiple choice -->
+                        <!-- multiple choice answer -->
                         @if (isMultipleChoice()) {
-                        <p class="full-answer">
-                            @switch(currentQuestion()?.correctAnswer) {
-                            @case('A') {
-                                A. {{ currentQuestion()?.optionA }}
-                            }
-                            @case('B') {
-                                B. {{ currentQuestion()?.optionB }}
-                            }
-                            @case('C') {
-                                C. {{ currentQuestion()?.optionC }}
-                            }
-                            @case('D') {
-                                D. {{ currentQuestion()?.optionD }}
-                            }
-                            }
-                        </p>
-                        }
-
-                        <!-- answer for identification -->
-                        @if (isIdentification()) {
                             <p class="full-answer">
-                                {{ currentQuestion()?.answer }}
+                                @switch(currentQuestion()?.correctAnswer) {
+                                    @case('A') { A. {{ currentQuestion()?.optionA }} }
+                                    @case('B') { B. {{ currentQuestion()?.optionB }} }
+                                    @case('C') { C. {{ currentQuestion()?.optionC }} }
+                                    @case('D') { D. {{ currentQuestion()?.optionD }} }
+                                }
                             </p>
                         }
 
-                        <!-- optional for now -->
-                        @if (currentQuestion()?.explanation) {
-                            <p class="explanation">
-                                <strong>Explanation:</strong><br>
-                                {{ currentQuestion()?.explanation }}
-                            </p>
+                        <!-- ident answer -->
+                        @if (isIdentification()) {
+                            <p class="full-answer">{{ currentQuestion()?.answer }}</p>
+                        }
+
+                        <!-- next quiz item -->
+                        @if (currentIndex() < totalQuestions() - 1) {
+                            <button
+                                class="next_item_btn"
+                                (click)="nextQuestion()">
+                                Next >
+                            </button>
+                        } @else {
+                            <div class="score-section">
+                                <button class="score-btn" (click)="openScoreModal()">
+                                    Show Score
+                                </button>
+                            </div>
                         }
                     </div>
                 }
             </div>
 
             <div class="score-section">
-                @if (showScoreButton()) {
-                    <button class="score-btn" (click)="openScoreModal()">
-                        Show Score
-                    </button>
-                }
-
                 @if (scoreVisible()) {
                     <div class="score-display">
                         <h2>Your Score: {{ totalCorrect() }} / {{ totalQuestions() }}</h2>
@@ -172,7 +161,8 @@
             </span>
         </div>
 
-        <div class="play-navigation">
+        <!-- removed temporarily -->
+        <!-- <div class="play-navigation">
             <button
                 class="nav-btn prev"
                 (click)="previousQuestion()"
@@ -186,7 +176,7 @@
                 [disabled]="currentIndex() === totalQuestions() - 1">
                 ›
             </button>
-        </div>
+        </div> -->
     </div>
 </div>
 

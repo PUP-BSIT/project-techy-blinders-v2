@@ -457,17 +457,18 @@ $transition-normal: 0.3s ease;
   text-align: center;
 }
 
-.score-btn {
-  padding: 10px 18px;
-  background: #007bff;
-  color: white;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
+.score-btn, .next_item_btn {
   width: 200px;
-  height: 50px;
-  margin-bottom: 50px;
+  margin: 1.5rem auto 0 auto;
+  padding: 1rem;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .score-display {
