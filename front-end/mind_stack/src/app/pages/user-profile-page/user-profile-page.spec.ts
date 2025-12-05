@@ -12,6 +12,9 @@ describe('UserProfilePage', () => {
       imports: [
         UserProfilePage,        
         RouterTestingModule,
+      ],
+      providers: [
+        provideHttpClient()
       ]
     }).compileComponents();
 
