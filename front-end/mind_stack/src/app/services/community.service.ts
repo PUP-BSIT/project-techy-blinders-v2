@@ -72,7 +72,7 @@ export class CommunityService {
         content: 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.',
         created_at: new Date(Date.now() - 2 * 60 * 60 * 1000),
         likes: 10,
-        dislikes: 1,
+        dislikes: 3,
         userLiked: false,
         userDisliked: false
       },
@@ -83,7 +83,7 @@ export class CommunityService {
         username: 'Jane Dee',
         content: 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration',
         created_at: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        likes: 10,
+        likes: 7,
         dislikes: 1,
         userLiked: false,
         userDisliked: false
@@ -198,21 +198,55 @@ export class CommunityService {
     const userId = currentUser?.userId?.toString() || 'guest';
     const username = currentUser?.username || 'Guest User';
     
+    const mentionMatch = content.match(/^@([^@\n]+?)\s+(.+)/);
+    let parentCommentId: string | null = null;
+    let cleanContent = content;
+
+    if (mentionMatch) {
+      const mentionedUsername = mentionMatch[1].trim();
+      const comments = this.commentsSubject.value;
+      
+      const parentComment = comments.find(
+        c => c.username.toLowerCase() === mentionedUsername.toLowerCase() && c.post_id === postId && !c.parent_comment_id
+      );
+      
+      if (parentComment) {
+        parentCommentId = parentComment.comment_id;
+        // Extract the actual message content after the mention
+        cleanContent = mentionMatch[2].trim();
+      }
+    }
+    
     const newComment: Comment = {
       comment_id: Date.now().toString(),
       post_id: postId,
       user_id: userId,
       username: username,
-      content: content,
+      content: cleanContent,
       created_at: new Date(),
       likes: 0,
       dislikes: 0,
       userLiked: false,
-      userDisliked: false
+      userDisliked: false,
+      parent_comment_id: parentCommentId || undefined,
+      replies: []
     };
 
     const comments = this.commentsSubject.value;
-    this.commentsSubject.next([...comments, newComment]);
+    
+    if (parentCommentId) {
+      const parentIndex = comments.findIndex(c => c.comment_id === parentCommentId);
+      if (parentIndex !== -1) {
+        if (!comments[parentIndex].replies) {
+          comments[parentIndex].replies = [];
+        }
+        comments[parentIndex].replies?.push(newComment);
+      }
+    } else {
+      comments.push(newComment);
+    }
+    
+    this.commentsSubject.next([...comments]);
 
     const posts = this.postsSubject.value;
     const postIndex = posts.findIndex(p => p.post_id === postId);
@@ -282,7 +316,6 @@ export class CommunityService {
     const filteredComments = comments.filter(c => c.comment_id !== commentId);
     this.commentsSubject.next(filteredComments);
 
-    // Update comment count for the post
     const comment = comments.find(c => c.comment_id === commentId);
     if (comment) {
       const posts = this.postsSubject.value;
