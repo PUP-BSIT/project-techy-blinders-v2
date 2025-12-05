@@ -280,8 +280,8 @@
 }
 
 .action-btn {
-  background: #D1FAE5;
-  color: #047857;
+  background: #53CC93;
+  color: white;
   border: none;
   border-radius: 20px;
   padding: 8px 14px;
@@ -295,11 +295,11 @@
   gap: 6px;
 
   &:hover {
-    background: #A7F3D0;
+    background: #44b47e;
   }
 
   &.active {
-    background: #10b981;
+    background: #3ca572;
     color: white;
     
     .action-icon {

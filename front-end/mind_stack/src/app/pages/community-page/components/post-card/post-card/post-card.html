@@ -11,6 +11,7 @@
     <div class="post-header">
       <span class="post-label">Title:</span>
       <span class="post-category">{{ post.title }}</span>
+      @if (isPostOwner()) {
       <button class="menu-btn" (click)="toggleMenu($event)">
         <svg width="4" height="16" viewBox="0 0 4 16" fill="currentColor">
           <circle cx="2" cy="2" r="2"/>
@@ -56,6 +57,7 @@
             </div>
           }
         </div>
+      }
       }
     </div>
 

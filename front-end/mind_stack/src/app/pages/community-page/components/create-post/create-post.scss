@@ -13,7 +13,7 @@
     }
 
     .modal-content {
-      background: #B8E5C8;
+      background: #B4DDBA;
       border-radius: 12px;
       padding: 32px;
       width: 100%;
@@ -105,21 +105,21 @@
     }
 
     .btn-cancel {
-      background: #047857;
+      background: #16dc81;
       color: white;
     }
 
     .btn-cancel:hover {
-      background: #065f46;
+      background: #14c674;
     }
 
     .btn-save {
-      background: #10b981;
+      background: #287c55;
       color: white;
     }
 
     .btn-save:hover:not(:disabled) {
-      background: #059669;
+      background: #226646;
     }
 
     .btn-save:disabled {

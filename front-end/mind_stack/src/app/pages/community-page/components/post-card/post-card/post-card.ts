@@ -12,6 +12,7 @@ import { Post } from '../../../../../models/post.model';
 export class PostCard {
    @Input() post!: Post;
   @Input() currentUserInitial: string = 'J';
+  @Input() currentUserId: string = '';
   
   @Output() openModal = new EventEmitter<Post>();
   @Output() likePost = new EventEmitter<Post>();
@@ -25,6 +26,10 @@ export class PostCard {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     this.showMenu = false;
+  }
+
+  isPostOwner(): boolean {
+    return this.post.user_id === this.currentUserId;
   }
 
   getInitial(username: string): string {
