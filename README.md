@@ -23,6 +23,11 @@ It allows students to:
 
 Visit our live application: [https://techymindstack.site](https://techymindstack.site)
 
+## 👨🏻‍💻 Sample User
+
+email: kirbytest@gmail.com
+password: kirbytest
+
 ## 🌱 Git Workflow
 
 We follow a **branching strategy** based on GitHub Flow
