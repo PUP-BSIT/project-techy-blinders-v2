@@ -84,6 +84,18 @@ public class PostCreation {
     @Column (name = "is_published")
     private Boolean isPublished;
 
+    @Column (name = "commentcount")
+    private Integer commentCount;
+
+    @Column (name = "showcomment")
+    private Boolean showComment;
+
+    @Column (name = "num_like")
+    private Integer numLike;
+
+    @Column (name = "num_dislike")
+    private Integer numDislike;
+
     @Column (name = "created_at")
     private LocalDateTime createdAt;
 
@@ -144,6 +156,38 @@ public class PostCreation {
 
     public Boolean getPublish() {
         return isPublished;
+    }
+
+    public Integer getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Integer commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public Boolean getShowComment() {
+        return showComment;
+    }
+
+    public void setShowComment(Boolean showComment) {
+        this.showComment = showComment;
+    }
+
+    public Integer getNumLike() {
+        return numLike;
+    }
+
+    public void setNumLike(Integer numLike) {
+        this.numLike = numLike;
+    }
+
+    public Integer getNumDislike() {
+        return numDislike;
+    }
+
+    public void setNumDislike(Integer numDislike) {
+        this.numDislike = numDislike;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
