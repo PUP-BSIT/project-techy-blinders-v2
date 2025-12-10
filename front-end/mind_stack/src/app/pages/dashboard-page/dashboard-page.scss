@@ -90,6 +90,17 @@ $transition-normal: 0.3s ease;
   align-items: center;
   gap: 20px;
   min-width: 200px;
+  transition: all $transition-normal;
+
+  &.clickable {
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(40, 124, 85, 1);
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+  }
 
   .stat-label {
     font-size: 18px;

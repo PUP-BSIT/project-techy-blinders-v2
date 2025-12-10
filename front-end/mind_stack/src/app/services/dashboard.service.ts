@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 export interface DashboardData {
   userName: string;
   userId: number;
+  userEmail: string;
   flashcardCount: number;
   quizCount: number;
   recentFlashcards: any[];

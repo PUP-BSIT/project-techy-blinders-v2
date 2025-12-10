@@ -12,12 +12,12 @@
           <p class="user-id">User ID: {{ userId }}</p>
         </div>
         <div class="user-stats">
-          <div class="stat-badge">
+          <div class="stat-badge clickable" (click)="navigateToQuizzes()">
             <span class="stat-label">Quizzes</span>
             <span class="stat-number">{{ quizCount }}</span>
           </div>
-          <div class="stat-badge">
-            <span class="stat-label">Flashcards</span>
+          <div class="stat-badge clickable" (click)="navigateToFlashcards()">
+            <span class="stat-label">Flashcard Sets</span>
             <span class="stat-number">{{ flashcardCount }}</span>
           </div>
         </div>
