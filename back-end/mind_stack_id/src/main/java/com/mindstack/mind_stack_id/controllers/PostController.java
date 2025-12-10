@@ -107,4 +107,26 @@ public class PostController {
         
         return ResponseEntity.ok(unpublishedPost);
     }
+
+    @PutMapping("/{id}/like")
+    public ResponseEntity<PostCreation> likePost(@PathVariable("id") long id) {
+        PostCreation likedPost = postService.likePost(id);
+        
+        if (likedPost == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        
+        return ResponseEntity.ok(likedPost);
+    }
+
+    @PutMapping("/{id}/dislike")
+    public ResponseEntity<PostCreation> dislikePost(@PathVariable("id") long id) {
+        PostCreation dislikedPost = postService.dislikePost(id);
+        
+        if (dislikedPost == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        
+        return ResponseEntity.ok(dislikedPost);
+    }
 }
