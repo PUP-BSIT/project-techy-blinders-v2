@@ -58,7 +58,9 @@ export class CommunityService {
     this.http.get<any[]>(`${this.apiUrl}/comments`).subscribe({
       next: comments => {
         console.log('✓ Comments fetched successfully:', comments);
-        this.commentsSubject.next(comments.map(c => this.mapCommentFromApi(c)));
+        const mapped = comments.map(c => this.mapCommentFromApi(c));
+        this.commentsSubject.next(mapped);
+        this.recomputeCommentCounts(mapped);
       },
       error: err => {
         console.error('✗ Failed to load comments:', err);
@@ -285,7 +287,8 @@ export class CommunityService {
     const mapped: Post = {
       post_id: String(post.postId ?? post.post_id ?? post.id ?? ''),
       user_id: String(post.userId ?? post.user_id ?? post.userId ?? ''),
-      username: post.username ?? post.userName ?? '',
+      // Username is missing in the current API payload; fall back to userId so something meaningful shows up.
+      username: post.username ?? post.userName ?? String(post.userId ?? post.user_id ?? ''),
       title: post.title ?? '',
       content: post.content ?? post.description ?? '',
       slug: post.slug ?? post.slug ?? '',
@@ -323,6 +326,21 @@ export class CommunityService {
       parent_comment_id: comment.parentCommentId ? String(comment.parentCommentId) : comment.parent_comment_id ?? null,
       replies: comment.replies ?? []
     };
+  }
+
+  private recomputeCommentCounts(comments: Comment[]): void {
+    const counts = comments.reduce<Record<string, number>>((acc, comment) => {
+      const key = comment.post_id;
+      acc[key] = (acc[key] ?? 0) + 1;
+      return acc;
+    }, {});
+
+    const updatedPosts = this.postsSubject.value.map(post => ({
+      ...post,
+      commentcount: counts[post.post_id] ?? 0
+    }));
+
+    this.postsSubject.next(updatedPosts);
   }
 
   private slugify(value: string): string {
