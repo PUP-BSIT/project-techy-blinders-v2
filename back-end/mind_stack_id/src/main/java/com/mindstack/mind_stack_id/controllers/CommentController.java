@@ -10,11 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.mindstack.mind_stack_id.models.Comment;
-import com.mindstack.mind_stack_id.models.FlashcardCreation;
+import com.mindstack.mind_stack_id.models.FlashcardSet;
 import com.mindstack.mind_stack_id.models.User;
 import com.mindstack.mind_stack_id.models.dto.CommentDTO;
 import com.mindstack.mind_stack_id.repositories.CommentRepository;
-import com.mindstack.mind_stack_id.repositories.Flashcard;
+import com.mindstack.mind_stack_id.repositories.FlashcardSetRepository;
 import com.mindstack.mind_stack_id.repositories.UserRepository;
 @RestController
 @RequestMapping("/api/comments")
@@ -24,7 +24,7 @@ public class CommentController {
     private CommentRepository commentRepo;
     
     @Autowired
-    private Flashcard flashcardRepo;
+    private FlashcardSetRepository flashcardRepo;
     
     @Autowired
     private UserRepository userRepo;
@@ -55,7 +55,7 @@ public class CommentController {
 
     @GetMapping("/flashcard/{flashcardId}")
     public ResponseEntity<?> getCommentsByFlashcardId(@PathVariable Long flashcardId) {
-        Optional<FlashcardCreation> flashcard = flashcardRepo.findById(flashcardId);
+        Optional<FlashcardSet> flashcard = flashcardRepo.findById(flashcardId);
         
         if (flashcard.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -81,7 +81,7 @@ public class CommentController {
 
     @GetMapping("/flashcard/{flashcardId}/user/{userId}")
     public ResponseEntity<?> getCommentsByFlashcardAndUser(@PathVariable Long flashcardId, @PathVariable Long userId) {
-        Optional<FlashcardCreation> flashcard = flashcardRepo.findById(flashcardId);
+        Optional<FlashcardSet> flashcard = flashcardRepo.findById(flashcardId);
         
         if (flashcard.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -118,7 +118,7 @@ public class CommentController {
                 .body("User with ID " + comment.getUserId() + " not found");
         }
 
-        Optional<FlashcardCreation> flashcard = flashcardRepo.findById(comment.getFlashcardId());
+        Optional<FlashcardSet> flashcard = flashcardRepo.findById(comment.getFlashcardId());
         
         if (flashcard.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -187,7 +187,7 @@ public class CommentController {
 
     @GetMapping("/flashcard/{flashcardId}/count")
     public ResponseEntity<?> getCommentCountByFlashcard(@PathVariable Long flashcardId) {
-        Optional<FlashcardCreation> flashcard = flashcardRepo.findById(flashcardId);
+        Optional<FlashcardSet> flashcard = flashcardRepo.findById(flashcardId);
         
         if (flashcard.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

@@ -3,10 +3,9 @@ package com.mindstack.mind_stack_id.services.implementation;
 import com.mindstack.mind_stack_id.services.QuizCreationService;
 import com.mindstack.mind_stack_id.repositories.QuizRepository;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom; // ADDED ThreadLocalRandom import
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.mindstack.mind_stack_id.models.QuizCreation;
 import com.mindstack.mind_stack_id.models.dto.QuizCreationDTO;
