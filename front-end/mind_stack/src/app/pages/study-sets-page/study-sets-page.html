@@ -1,40 +1,26 @@
 <div class="container">
-    <div class="dropdown-backdrop" 
-         [class.show]="activeDropdown !== null" 
-         (click)="closeDropdown()"></div>
-    
     <div class="content-wrapper">
         <button (click)="openModal()" class="add">
-            Create New Study Set
+            Create New Flashcard Set
         </button>
 
         <div class="study-sets-wrapper" [class.hidden]="studySets.length === 0">
             <div class="study-sets-list">
                 <div class="study-set-card" *ngFor="let studySet of paginatedStudySets; let i = index">
                     <div class="card-left">
-                        <div class="ellipsis-wrapper">
-                            <button class="ellipsis-menu" (click)="toggleDropdown(i)">
-                                •••
-                            </button>
-                            <div class="dropdown-menu" [class.show]="activeDropdown === i">
-                                <button class="dropdown-item share" (click)="openShareModal(studySet.flashcard_id)">
-                                    <img src="assets/globe-icon.png" alt="Share" class="icon-img">
-                                    Share
-                                </button>
-                                <button class="dropdown-item private" 
-                                            (click)="togglePrivacy(studySet.flashcard_id)">
-                                    <img src="assets/lock.png" alt="Private" class="icon-img">
-                                    Private
-                                </button>
-                            </div>
-                        </div>
                         <button class="play-btn" (click)="playStudySet(studySet.flashcard_id)">
                             ▶
                         </button>
                     </div>
                     <div class="study-set-info">
                         <h3 class="study-set-title">{{ studySet.title }}</h3>
-                        <p class="study-set-description">{{ studySet.description || 'About the Reviewer' }}</p>
+                        <p class="study-set-description">{{ studySet.description || 'Short Description About the Reviewer' }}</p>
+                        <button class="privacy-badge" (click)="openPrivacyModal(studySet.flashcard_id)">
+                            <img *ngIf="studySet.is_public" src="assets/globe-icon.png" alt="Public" class="privacy-icon">
+                            <img *ngIf="!studySet.is_public" src="assets/lock.png" alt="Private" class="privacy-icon">
+                            <span class="privacy-text">{{ studySet.is_public ? 'Public' : 'Private' }}</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
                     </div>
                     <div class="action-buttons">
                         <button class="edit-btn" (click)="editStudySet(studySet.flashcard_id)">
@@ -80,62 +66,81 @@
         </div>
     </div>
 
+    <!-- Study Set Creation Modal -->
     <div class="modal-overlay" 
             [class.open]="isModalOpen">
-        <div class="modal-content">
+        <div class="modal-content study-set-modal">
             <div class="modal-header">
-                <div class="header-inputs">
+                <h2 class="modal-title">Add Title</h2>
+                <button class="btn-close" (click)="openConfirmModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
                     <input type="text" 
                             class="title-input" 
                             placeholder="Add Title"
                             [(ngModel)]="studySetTitle"/>
+                </div>
+                <div class="form-group">
                     <input type="text" 
                             class="description-input" 
                             placeholder="Description"
                             [(ngModel)]="studySetDescription"/>
                 </div>
-                <div class="header-buttons">
-                    <button class="btn-save" (click)="saveStudySet()">Save</button>
-                    <button class="btn-cancel" (click)="openConfirmModal()">Cancel</button>
-                </div>
             </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" (click)="openConfirmModal()">Cancel</button>
+                <button class="btn-continue" (click)="saveStudySet()">Continue</button>
+            </div>
+        </div>
+    </div>
 
+    <div class="modal-overlay" 
+            [class.open]="isFlashcardModalOpen">
+        <div class="modal-content flashcard-modal">
             <div class="flashcard-controls">
-                <button class="add-flashcard-btn" (click)="addFlashcard()">
-                    Add Flashcard
-                </button>
                 <span class="flashcard-count">
-                    {{ flashcards.length }} Flashcard
-                    <span [class.hidden]="flashcards.length === 1"></span>
+                    {{ flashcards.length }} Flashcard<span *ngIf="flashcards.length !== 1">s</span>
                 </span>
             </div>
 
             <div class="carousel-wrapper" [class.has-flashcards]="flashcards.length > 0">
-                <div class="flashcards-container">
+                <div class="flashcards-container" *ngIf="flashcards.length > 0">
                     <div class="flashcard-item" *ngFor="let flashcard of paginatedFlashcards; let i = index">
                         <div class="flashcard-header">
+                            <span class="flashcard-number">{{ getActualIndex(i) + 1 }}</span>
+                            <button class="btn-delete-icon" 
+                                        (click)="deleteFlashcard(getActualIndex(i))">
+                                    ×
+                            </button>
+                        </div>
+                        <div class="flashcard-content">
                             <div class="flashcard-left">
+                                <label class="flashcard-label">Key Term</label>
                                 <input type="text" 
                                         class="flashcard-term" 
-                                        placeholder="Term"
+                                        placeholder="Enter term"
                                         [(ngModel)]="flashcard.term"/>
+                            </div>
+                            <div class="flashcard-right">
+                                <label class="flashcard-label">Description</label>
                                 <input type="text" 
                                         class="flashcard-definition" 
-                                        placeholder="Definition"
+                                        placeholder="Enter definition"
                                         [(ngModel)]="flashcard.definition"/>
-                            </div>
-                            <div class="flashcard-actions">
-                                <button class="btn-edit" 
-                                            (click)="editFlashcard(getActualIndex(i))">
-                                        Edit
-                                </button>
-                                <button class="btn-delete" 
-                                            (click)="deleteFlashcard(getActualIndex(i))">
-                                        Delete
-                                </button>
                             </div>
                         </div>
                     </div>
+                    <button class="add-flashcard-btn" (click)="addFlashcard()">
+                        + Add Flashcard
+                    </button>
+                </div>
+
+                <div class="empty-state" *ngIf="flashcards.length === 0">
+                    <p class="empty-message">Create your first flashcard</p>
+                    <button class="add-flashcard-btn" (click)="addFlashcard()">
+                        + Add Flashcard
+                    </button>
                 </div>
 
                 <div class="pagination" [class.show]="totalPages > 1">
@@ -159,6 +164,11 @@
                     </button>
                 </div>
             </div>
+            
+            <div class="modal-footer">
+                <button class="btn-cancel" (click)="closeFlashcardModal()">Cancel</button>
+                <button class="btn-save" (click)="saveFlashcards()">Save</button>
+            </div>
         </div>
     </div>
 
@@ -173,6 +183,29 @@
             <div class="confirm-actions">
                 <button class="btn-confirm-no" (click)="closeConfirmModal()">No</button>
                 <button class="btn-confirm-yes" (click)="confirmCancel()">Yes</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="privacy-settings-overlay" 
+            [class.open]="isPrivacyModalOpen" (click)="closePrivacyModal()">
+        <div class="privacy-settings-modal" (click)="$event.stopPropagation()">
+            <h3 class="privacy-settings-title">PRIVACY SETTINGS</h3>
+            <div class="privacy-options">
+                <button class="privacy-option share" (click)="selectShareOption()">
+                    <img src="assets/globe-icon.png" alt="Share" class="option-icon">
+                    <div class="option-content">
+                        <span>Share</span>
+                        <span class="option-description">Anyone can view and study this set</span>
+                    </div>
+                </button>
+                <button class="privacy-option private" (click)="selectPrivateOption()">
+                    <img src="assets/lock.png" alt="Private" class="option-icon">
+                    <div class="option-content">
+                        <span>Private</span>
+                        <span class="option-description">Only you can access this study set</span>
+                    </div>
+                </button>
             </div>
         </div>
     </div>
