@@ -9,7 +9,7 @@
       <section class="user-header-section">
         <div class="user-info">
           <h1 class="user-name">{{ userName }}</h1>
-          <p class="user-id">User ID: {{ userId }}</p>
+          <p class="user-email">{{ userEmail }}</p>
         </div>
         <div class="user-stats">
           <div class="stat-badge clickable" (click)="navigateToQuizzes()">
@@ -28,30 +28,34 @@
 
           <section class="quick-actions-section">
             <div class="action-row">
-              <div class="action-label">
-                <img src="assets/plus_icon.png" alt="Create" class="action-icon">
-                <span>Create Flashcards</span>
-              </div>
+              <h2 class="action-title">Create Flashcard Set</h2>
               <button class="create-btn" (click)="createFlashcards()">Create</button>
             </div>
+            
+            <div class="divider"></div>
+            
             <div class="action-row">
-              <div class="action-label">
-                <img src="assets/plus_icon.png" alt="Create" class="action-icon">
-                <span>Create Quiz</span>
-              </div>
+              <h2 class="action-title">Create Quiz</h2>
               <button class="create-btn" (click)="createQuiz()">Create</button>
             </div>
           </section>
 
           <section class="recent-activity-section">
-            <h2 class="section-title">Recent Activity</h2>
+            <div class="section-header">
+              <h2 class="section-title">Recent Activities</h2>
+              <span class="count-badge">{{ recentActivities.length }}</span>
+            </div>
             <div class="activity-list">
               @if (recentActivities.length === 0) {
                 <p class="empty-message">No recent activities</p>
               }
               @for (activity of recentActivities; track activity.id) {
                 <div class="activity-item">
-                  <span>{{ activity.title }}</span>
+                  <div class="activity-icon">▶</div>
+                  <div class="activity-content">
+                    <span class="activity-title">{{ activity.title }}</span>
+                    <span class="activity-subtitle">Short Description About the Reviews</span>
+                  </div>
                 </div>
               }
             </div>
@@ -60,16 +64,22 @@
 
         <div class="right-column">
 
-          <section class="study-library-section">
-            <h2 class="section-title">Study Library</h2>
-            <div class="library-list">
+          <section class="bookmarks-section">
+            <div class="section-header">
+              <h2 class="section-title">Bookmarks</h2>
+              <span class="count-badge">{{ studyLibrary.length }}</span>
+            </div>
+            <div class="bookmarks-list">
               @if (studyLibrary.length === 0) {
-                <p class="empty-message">No study materials yet</p>
+                <p class="empty-message">No bookmarks yet</p>
               }
               @for (item of studyLibrary; track item.id) {
-                <div class="library-item">
-                  <span class="library-name">{{ item.name }}</span>
-                  <button class="view-btn" (click)="viewStudyItem(item)">View</button>
+                <div class="bookmark-item" (click)="viewStudyItem(item)">
+                  <div class="activity-icon">▶</div>
+                  <div class="activity-content">
+                    <span class="activity-title">{{ item.name }}</span>
+                    <span class="activity-subtitle">Short Description About the Reviews</span>
+                  </div>
                 </div>
               }
             </div>
