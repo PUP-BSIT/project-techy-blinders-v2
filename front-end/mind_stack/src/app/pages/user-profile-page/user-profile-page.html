@@ -1,38 +1,33 @@
 <div class="header-class">
-    <div class="username-class">
-        <h1>{{ currentUser?.username || 'Guest' }}</h1>
-    </div>
-
-    <div class="user-id-class">
-        <h4>User ID: {{ currentUser?.userId || 'N/A' }}</h4>
+    <div class="user-info">
+        <h1 class="username">{{ currentUser?.username }}</h1>
+        <p class="email">{{ currentUser?.email }}</p>
     </div>
 
     <div class="button-class">
-        <div class="edit-profile-class">
-            <button type="button" (click)="editProfile()">Edit Profile</button>
-        </div>
-
-        <div class="settings-profile-class">
-            <button type="button" (click)="accountSetting()">Settings</button>
-        </div>  
+        <button type="button" class="edit-profile-btn" (click)="editProfile()">Edit Profile</button>
+        <button type="button" class="change-password-btn" (click)="accountSetting()">Change Password</button>
     </div>
 </div>
 
-<div class="milestone-class">
-    <div class="milestones-header">
-        <h1>Milestones: </h1>
-    </div>
+<div class="milestone-section">
+    <h1 class="milestones-header">Milestones</h1>
 
-    <div class="quiz-class">
-        <p>Quizzes: </p>
-    </div>
+    <div class="milestone-cards">
+        <div class="milestone-card">
+            <span class="milestone-label">Quizzes Created</span>
+            <span class="milestone-count">{{ quizzesCreated }}</span>
+        </div>
 
-    <div class="study-sets-class">
-        <p>Study Sets (Flashcards): </p>
-    </div>
+        <div class="milestone-card">
+            <span class="milestone-label">Flashcard Sets Created</span>
+            <span class="milestone-count">{{ flashcardSetsCreated }}</span>
+        </div>
 
-    <div class="total-like-class">
-        <p>Total Likes: </p>
+        <div class="milestone-card">
+            <span class="milestone-label">Total Likes</span>
+            <span class="milestone-count">{{ totalLikes }}</span>
+        </div>
     </div>
 </div>
 

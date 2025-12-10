@@ -22,6 +22,10 @@ export class UserProfilePage implements OnInit {
   activeTab: 'overview' | 'account-settings' = 'overview';
   currentUser: LoginResponse | null = null;
 
+  quizzesCreated = 3;
+  flashcardSetsCreated = 4;
+  totalLikes = 10;
+
   constructor(private route: Router, private authService: AuthService) {}
 
   ngOnInit() {

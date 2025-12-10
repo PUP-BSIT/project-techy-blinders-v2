@@ -100,6 +100,7 @@ export class DashboardPage implements OnInit {
         console.error('Error loading dashboard data:', error);
         this.userName = currentUser.username;
         this.userId = currentUser.userId.toString();
+        this.userEmail = currentUser.email;
         this.isLoading = false;
       }
     });
