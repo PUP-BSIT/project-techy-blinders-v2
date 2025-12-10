@@ -24,6 +24,7 @@ export interface Comment {
   username: string;
   content: string;
   created_at: Date;
+  updated_at: Date;
   likes: number;
   dislikes: number;
   userLiked?: boolean;
