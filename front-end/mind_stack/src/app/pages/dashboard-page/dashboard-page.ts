@@ -61,6 +61,7 @@ export class DashboardPage implements OnInit {
       next: (data) => {
         this.userName = data.userName;
         this.userId = data.userId.toString();
+        this.userEmail = data.userEmail;
         this.flashcardCount = data.flashcardCount;
         this.quizCount = data.quizCount;
         

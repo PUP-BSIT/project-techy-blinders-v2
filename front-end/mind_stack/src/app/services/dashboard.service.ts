@@ -29,6 +29,7 @@ export class DashboardService {
       map(({ user, flashcards, quizzes }) => ({
         userName: user.username,
         userId: user.userId,
+        userEmail: user.email,
         flashcardCount: flashcards.length,
         quizCount: quizzes.length,
         recentFlashcards: flashcards.slice(0, 5),
