@@ -31,6 +31,20 @@ public class PostImplementation implements PostService {
         if (post.getPublish() == null) {
             post.setPublish(false);
         }
+
+        // Initialize nullable counters/toggles to sane defaults if missing
+        if (post.getCommentCount() == null) {
+            post.setCommentCount(0);
+        }
+        if (post.getShowComment() == null) {
+            post.setShowComment(true);
+        }
+        if (post.getNumLike() == null) {
+            post.setNumLike(0);
+        }
+        if (post.getNumDislike() == null) {
+            post.setNumDislike(0);
+        }
         
         System.out.println("Created post with ID: " + post.getPostId());
         
@@ -40,15 +54,9 @@ public class PostImplementation implements PostService {
     @Override
     public List<PostDTO> getAllPosts() {
         return postRepository.findAll()
-                .stream()
-                .map(f -> new PostDTO(
-                        f.getPostId(),
-                        f.getUserId(),
-                        f.getTitle(),
-                        f.getCreatedAt(),
-                        f.getUpdatedAt()
-                ))
-                .toList();
+            .stream()
+            .map(this::mapToDto)
+            .toList();
     }
 
     @Override
@@ -61,13 +69,7 @@ public class PostImplementation implements PostService {
     public List<PostDTO> getPostsByUserId(long userId) {
         return postRepository.findByUserId(userId)
                 .stream()
-                .map(f -> new PostDTO(
-                        f.getPostId(),
-                        f.getUserId(),
-                        f.getTitle(),
-                        f.getCreatedAt(),
-                        f.getUpdatedAt()
-                ))
+            .map(this::mapToDto)
                 .toList();
     }
 
@@ -76,13 +78,7 @@ public class PostImplementation implements PostService {
         CategoryType categoryType = CategoryType.fromValue(category);
         return postRepository.findByCategory(categoryType)
                 .stream()
-                .map(f -> new PostDTO(
-                        f.getPostId(),
-                        f.getUserId(),
-                        f.getTitle(),
-                        f.getCreatedAt(),
-                        f.getUpdatedAt()
-                ))
+            .map(this::mapToDto)
                 .toList();
     }
 
@@ -90,13 +86,7 @@ public class PostImplementation implements PostService {
     public List<PostDTO> getPublishedPosts() {
         return postRepository.findByIsPublished(true)
                 .stream()
-                .map(f -> new PostDTO(
-                        f.getPostId(),
-                        f.getUserId(),
-                        f.getTitle(),
-                        f.getCreatedAt(),
-                        f.getUpdatedAt()
-                ))
+            .map(this::mapToDto)
                 .toList();
     }
 
@@ -109,7 +99,12 @@ public class PostImplementation implements PostService {
             updatedPost.setContent(post.getContent());
             updatedPost.setSlug(post.getSlug());
             updatedPost.setCategory(post.getCategory());
+            updatedPost.setUsername(post.getUsername());
             updatedPost.setPublish(post.getPublish());
+            updatedPost.setShowComment(post.getShowComment());
+            updatedPost.setCommentCount(post.getCommentCount());
+            updatedPost.setNumLike(post.getNumLike());
+            updatedPost.setNumDislike(post.getNumDislike());
             updatedPost.setUpdatedAt(LocalDateTime.now());
             
             System.out.println("Updated post with ID: " + updatedPost.getPostId());
@@ -166,5 +161,24 @@ public class PostImplementation implements PostService {
         
         System.out.println("Post not found: " + id);
         return null;
+    }
+
+    private PostDTO mapToDto(PostCreation post) {
+        return new PostDTO(
+                post.getPostId(),
+                post.getUserId(),
+                post.getTitle(),
+                post.getUsername(),
+                post.getContent(),
+                post.getSlug(),
+                post.getCategory() != null ? post.getCategory().getValue() : null,
+                post.getPublish(),
+                post.getCreatedAt(),
+                post.getUpdatedAt(),
+                post.getCommentCount(),
+                post.getShowComment(),
+                post.getNumLike(),
+                post.getNumDislike()
+        );
     }
 }

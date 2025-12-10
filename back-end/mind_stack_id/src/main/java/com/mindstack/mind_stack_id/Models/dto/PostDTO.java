@@ -6,17 +6,37 @@ public class PostDTO {
     private long postId;
     private long userId;
     private String title;
+    private String username;
+    private String content;
+    private String slug;
+    private String category;
+    private Boolean isPublished;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Integer commentCount;
+    private Boolean showComment;
+    private Integer numLike;
+    private Integer numDislike;
 
     public PostDTO(){}
 
-    public PostDTO(long postId, long userId, String title, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public PostDTO(long postId, long userId, String title, String username, String content, String slug, String category,
+                   Boolean isPublished, LocalDateTime createdAt, LocalDateTime updatedAt,
+                   Integer commentCount, Boolean showComment, Integer numLike, Integer numDislike) {
         this.postId = postId;
         this.userId = userId;
         this.title = title;
+        this.username = username;
+        this.content = content;
+        this.slug = slug;
+        this.category = category;
+        this.isPublished = isPublished;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.commentCount = commentCount;
+        this.showComment = showComment;
+        this.numLike = numLike;
+        this.numDislike = numDislike;
     }
 
     public long getPostId() {
@@ -43,6 +63,46 @@ public class PostDTO {
         this.title = title;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public Boolean getIsPublished() {
+        return isPublished;
+    }
+
+    public void setIsPublished(Boolean isPublished) {
+        this.isPublished = isPublished;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -57,5 +117,37 @@ public class PostDTO {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Integer getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Integer commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public Boolean getShowComment() {
+        return showComment;
+    }
+
+    public void setShowComment(Boolean showComment) {
+        this.showComment = showComment;
+    }
+
+    public Integer getNumLike() {
+        return numLike;
+    }
+
+    public void setNumLike(Integer numLike) {
+        this.numLike = numLike;
+    }
+
+    public Integer getNumDislike() {
+        return numDislike;
+    }
+
+    public void setNumDislike(Integer numDislike) {
+        this.numDislike = numDislike;
     }
 }
