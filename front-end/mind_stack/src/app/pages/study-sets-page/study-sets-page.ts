@@ -1,16 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-
-export interface StudySet {
-  flashcard_id: number;
-  title: string;
-  description: string;
-  flashcards: { keyTerm: string; definition: string }[];
-  created_at: Date;
-  is_public: boolean;
-}
+import { StudySetsService, StudySet } from '../../services/study-sets.service';
+import { AuthService } from '../../../service/auth.service';
 
 @Component({
   selector: 'app-study-sets-page',
@@ -39,17 +32,19 @@ export class StudySetsPage implements OnInit {
   shareTitle: string = '';
   shareCategory: string = '';
   shareDescription: string = '';
+  isLoading: boolean = false;
+  studySets: StudySet[] = [];
 
-  private readonly STORAGE_KEY = 'studySets';
+  private studySetsService = inject(StudySetsService);
+  private authService = inject(AuthService);
 
   constructor(
     private router: Router,
     private route: ActivatedRoute
-  ) {
-    this.initializeStorage();
-  }
+  ) {}
 
   ngOnInit() {
+    this.loadStudySets();
     this.route.queryParams.subscribe(params => {
       if (params['create'] === 'true') {
         this.openModal();
@@ -62,29 +57,32 @@ export class StudySetsPage implements OnInit {
     });
   }
 
-  private initializeStorage(): void {
-    if (!localStorage.getItem(this.STORAGE_KEY)) {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify([]));
+  private loadStudySets(): void {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      console.error('User not logged in');
+      return;
     }
-  }
 
-  private getStudySetsFromStorage(): StudySet[] {
-    const data = localStorage.getItem(this.STORAGE_KEY);
-    if (!data) return [];
-    
-    const studySets = JSON.parse(data);
-    return studySets.map((studySet: any) => ({
-      ...studySet,
-      created_at: new Date(studySet.created_at)
-    }));
-  }
-
-  private saveStudySetsToStorage(studySets: StudySet[]): void {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(studySets));
-  }
-
-  get studySets(): StudySet[] {
-    return this.getStudySetsFromStorage();
+    this.isLoading = true;
+    this.studySetsService.getStudySetsByUserId(currentUser.userId).subscribe({
+      next: (studySets) => {
+        this.studySets = studySets;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading study sets:', error);
+        console.error('Error details:', {
+          status: error?.status,
+          statusText: error?.statusText,
+          message: error?.message,
+          error: error?.error
+        });
+        this.isLoading = false;
+        // Optionally show user-friendly error message
+        alert('Failed to load study sets. Please check the console for details.');
+      }
+    });
   }
 
   get paginatedStudySets(): StudySet[] {
@@ -174,24 +172,40 @@ export class StudySetsPage implements OnInit {
 
   saveStudySet() {
     if (this.studySetTitle.trim()) {
-      const allStudySets = this.getStudySetsFromStorage();
-      
-      const newStudySet: StudySet = {
-        flashcard_id: Date.now(),
-        title: this.studySetTitle,
-        description: this.studySetDescription,
-        flashcards: [],
-        created_at: new Date(),
-        is_public: false
-      };
-      allStudySets.push(newStudySet);
-      this.saveStudySetsToStorage(allStudySets);
-      
-      this.currentStudySetId = newStudySet.flashcard_id;
-      this.flashcards = [];
-      this.currentPage = 0;
-      this.closeModal();
-      this.openFlashcardModal();
+      const currentUser = this.authService.getCurrentUser();
+      if (!currentUser) {
+        console.error('User not logged in');
+        return;
+      }
+
+      this.isLoading = true;
+      this.studySetsService.createStudySet(
+        currentUser.userId,
+        this.studySetTitle,
+        this.studySetDescription,
+        false,
+        []
+      ).subscribe({
+        next: (newStudySet) => {
+          this.currentStudySetId = newStudySet.flashcard_id;
+          this.flashcards = [];
+          this.currentPage = 0;
+          this.isLoading = false;
+          this.closeModal();
+          this.openFlashcardModal();
+        },
+        error: (error) => {
+          console.error('Error creating study set:', error);
+          console.error('Error details:', {
+            status: error?.status,
+            statusText: error?.statusText,
+            message: error?.message,
+            error: error?.error
+          });
+          this.isLoading = false;
+          alert('Failed to create study set. Please check the console for details.');
+        }
+      });
     }
   }
 
@@ -208,18 +222,51 @@ export class StudySetsPage implements OnInit {
 
   saveFlashcards() {
     if (this.currentStudySetId !== null) {
-      const allStudySets = this.getStudySetsFromStorage();
-      const studySet = allStudySets.find(s => s.flashcard_id === this.currentStudySetId);
-      
-      if (studySet) {
-        studySet.flashcards = this.flashcards.map(f => ({ 
-          keyTerm: f.term, 
-          definition: f.definition 
-        }));
-        this.saveStudySetsToStorage(allStudySets);
+      const currentUser = this.authService.getCurrentUser();
+      if (!currentUser) {
+        console.error('User not logged in');
+        return;
       }
+
+      const studySet = this.studySets.find(s => s.flashcard_id === this.currentStudySetId);
+      if (!studySet) {
+        console.error('Study set not found');
+        this.closeFlashcardModal();
+        return;
+      }
+
+      this.isLoading = true;
+      const flashcards = this.flashcards.map(f => ({ 
+        keyTerm: f.term, 
+        definition: f.definition 
+      }));
+
+      this.studySetsService.updateStudySet(
+        this.currentStudySetId,
+        currentUser.userId,
+        studySet.title,
+        studySet.description,
+        studySet.is_public,
+        flashcards
+      ).subscribe({
+        next: (updatedStudySet) => {
+          const index = this.studySets.findIndex(s => s.flashcard_id === updatedStudySet.flashcard_id);
+          if (index !== -1) {
+            this.studySets[index] = updatedStudySet;
+          } else {
+            this.studySets.push(updatedStudySet);
+          }
+          this.isLoading = false;
+          this.closeFlashcardModal();
+        },
+        error: (error) => {
+          console.error('Error saving flashcards:', error);
+          this.isLoading = false;
+        }
+      });
+    } else {
+      this.closeFlashcardModal();
     }
-    this.closeFlashcardModal();
   }
 
   addFlashcard() {
@@ -273,33 +320,48 @@ export class StudySetsPage implements OnInit {
   }
 
   editStudySet(id: number) {
-    const studySet = this.studySets.find(s => s.flashcard_id === id);
-    if (studySet) {
-      this.currentStudySetId = id;
-      this.flashcards = studySet.flashcards.map(f => ({
-        term: f.keyTerm,
-        definition: f.definition
-      }));
-      this.currentPage = 0;
-      this.openFlashcardModal();
-    }
+    this.isLoading = true;
+    this.studySetsService.getStudySetById(id).subscribe({
+      next: (studySet) => {
+        this.currentStudySetId = id;
+        this.flashcards = studySet.flashcards.map(f => ({
+          term: f.keyTerm,
+          definition: f.definition
+        }));
+        this.currentPage = 0;
+        this.isLoading = false;
+        this.openFlashcardModal();
+      },
+      error: (error) => {
+        console.error('Error loading study set:', error);
+        this.isLoading = false;
+      }
+    });
     this.closeDropdown();
   }
 
   deleteStudySet(id: number) {
-    const allStudySets = this.getStudySetsFromStorage();
-    const filteredStudySets = allStudySets.filter(s => s.flashcard_id !== id);
-    this.saveStudySetsToStorage(filteredStudySets);
-    
-    const maxPage = Math.max(0, Math.ceil(filteredStudySets.length / this.studySetsPerPage) - 1);
-    if (this.studySetsCurrentPage > maxPage) {
-      this.studySetsCurrentPage = maxPage;
-    }
+    this.isLoading = true;
+    this.studySetsService.deleteStudySet(id).subscribe({
+      next: () => {
+        this.studySets = this.studySets.filter(s => s.flashcard_id !== id);
+        const maxPage = Math.max(0, Math.ceil(this.studySets.length / this.studySetsPerPage) - 1);
+        if (this.studySetsCurrentPage > maxPage) {
+          this.studySetsCurrentPage = maxPage;
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error deleting study set:', error);
+        this.isLoading = false;
+      }
+    });
     this.closeDropdown();
   }
 
   playStudySet(id: number) {
     this.router.navigate(['/app/study-sets', id]);
+    this.closeDropdown(); // Close any open dropdown
   }
 
   toggleDropdown(index: number) {
@@ -311,12 +373,41 @@ export class StudySetsPage implements OnInit {
   }
 
   togglePrivacy(id: number) {
-    const allStudySets = this.getStudySetsFromStorage();
-    const studySet = allStudySets.find(s => s.flashcard_id === id);
-    if (studySet) {
-      studySet.is_public = !studySet.is_public;
-      this.saveStudySetsToStorage(allStudySets);
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      console.error('User not logged in');
+      return;
     }
+
+    const studySet = this.studySets.find(s => s.flashcard_id === id);
+    if (!studySet) {
+      console.error('Study set not found');
+      return;
+    }
+
+    this.isLoading = true;
+    const newPrivacyStatus = !studySet.is_public;
+    
+    this.studySetsService.updateStudySet(
+      id,
+      currentUser.userId,
+      studySet.title,
+      studySet.description,
+      newPrivacyStatus,
+      studySet.flashcards
+    ).subscribe({
+      next: (updatedStudySet) => {
+        const index = this.studySets.findIndex(s => s.flashcard_id === updatedStudySet.flashcard_id);
+        if (index !== -1) {
+          this.studySets[index] = updatedStudySet;
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error updating privacy:', error);
+        this.isLoading = false;
+      }
+    });
     this.activeDropdown = null;
   }
 
@@ -372,20 +463,48 @@ export class StudySetsPage implements OnInit {
 
   saveShare() {
     if (this.selectedStudySetId && this.shareTitle && this.shareCategory && this.shareDescription) {
-      const allStudySets = this.getStudySetsFromStorage();
-      const studySet = allStudySets.find(s => s.flashcard_id === this.selectedStudySetId);
-      if (studySet) {
-        studySet.is_public = true;
-        this.saveStudySetsToStorage(allStudySets);
-        
-        console.log('Sharing study set:', {
-          id: this.selectedStudySetId,
-          title: this.shareTitle,
-          category: this.shareCategory,
-          description: this.shareDescription
-        });
+      const currentUser = this.authService.getCurrentUser();
+      if (!currentUser) {
+        console.error('User not logged in');
+        return;
       }
-      this.closeShareModal();
+
+      const studySet = this.studySets.find(s => s.flashcard_id === this.selectedStudySetId);
+      if (!studySet) {
+        console.error('Study set not found');
+        return;
+      }
+
+      this.isLoading = true;
+      // Update the study set to be public and update title/description if changed
+      this.studySetsService.updateStudySet(
+        this.selectedStudySetId,
+        currentUser.userId,
+        this.shareTitle,
+        this.shareDescription,
+        true, // Set to public
+        studySet.flashcards
+      ).subscribe({
+        next: (updatedStudySet) => {
+          const index = this.studySets.findIndex(s => s.flashcard_id === updatedStudySet.flashcard_id);
+          if (index !== -1) {
+            this.studySets[index] = updatedStudySet;
+          }
+          this.isLoading = false;
+          
+          console.log('Sharing study set:', {
+            id: this.selectedStudySetId,
+            title: this.shareTitle,
+            category: this.shareCategory,
+            description: this.shareDescription
+          });
+          this.closeShareModal();
+        },
+        error: (error) => {
+          console.error('Error sharing study set:', error);
+          this.isLoading = false;
+        }
+      });
     }
   }
 }

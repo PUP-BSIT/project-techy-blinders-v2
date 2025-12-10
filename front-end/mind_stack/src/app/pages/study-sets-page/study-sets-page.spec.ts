@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 
 import { StudySetsPage } from './study-sets-page';
@@ -12,6 +13,7 @@ describe('StudySetsPage', () => {
     await TestBed.configureTestingModule({
       imports: [StudySetsPage],
       providers: [
+        provideHttpClient(),
         {
           provide: ActivatedRoute,
           useValue: {
@@ -19,8 +21,7 @@ describe('StudySetsPage', () => {
           }
         }
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(StudySetsPage);
     component = fixture.componentInstance;
