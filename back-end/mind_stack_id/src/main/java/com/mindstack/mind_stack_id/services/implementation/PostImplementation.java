@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.mindstack.mind_stack_id.models.PostCreation;
 import com.mindstack.mind_stack_id.models.PostCreation.CategoryType;
 import com.mindstack.mind_stack_id.models.dto.PostDTO;
+import com.mindstack.mind_stack_id.models.User;
 import com.mindstack.mind_stack_id.repositories.PostRepository;
+import com.mindstack.mind_stack_id.repositories.UserRepository;
 import com.mindstack.mind_stack_id.services.PostService;
 
 @Service
@@ -19,6 +21,9 @@ public class PostImplementation implements PostService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public PostCreation createPost(PostCreation post) {
@@ -164,11 +169,22 @@ public class PostImplementation implements PostService {
     }
 
     private PostDTO mapToDto(PostCreation post) {
+        String username = post.getUsername();
+        if (username == null || username.isBlank()) {
+            User user = userRepository.findByUserId(post.getUserId());
+            if (user != null && user.getUsername() != null && !user.getUsername().isBlank()) {
+                username = user.getUsername();
+            }
+        }
+        if (username == null || username.isBlank()) {
+            username = "User " + post.getUserId();
+        }
+
         return new PostDTO(
                 post.getPostId(),
                 post.getUserId(),
                 post.getTitle(),
-                post.getUsername() != null ? post.getUsername() : "",
+                username,
                 post.getContent() != null ? post.getContent() : "",
                 post.getSlug() != null ? post.getSlug() : "",
                 post.getCategory() != null ? post.getCategory().getValue() : "",
