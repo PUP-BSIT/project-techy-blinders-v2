@@ -43,6 +43,7 @@ export class CommunityPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setCurrentUserInitial();
+    this.communityService.loadInitialData();
     this.subscribeToUpdates();
   }
 

@@ -168,17 +168,17 @@ public class PostImplementation implements PostService {
                 post.getPostId(),
                 post.getUserId(),
                 post.getTitle(),
-                post.getUsername(),
-                post.getContent(),
-                post.getSlug(),
-                post.getCategory() != null ? post.getCategory().getValue() : null,
-                post.getPublish(),
+                post.getUsername() != null ? post.getUsername() : "",
+                post.getContent() != null ? post.getContent() : "",
+                post.getSlug() != null ? post.getSlug() : "",
+                post.getCategory() != null ? post.getCategory().getValue() : "",
+                post.getPublish() != null ? post.getPublish() : false,
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
-                post.getCommentCount(),
-                post.getShowComment(),
-                post.getNumLike(),
-                post.getNumDislike()
+                post.getCommentCount() != null ? post.getCommentCount() : 0,
+                post.getShowComment() != null ? post.getShowComment() : true,
+                post.getNumLike() != null ? post.getNumLike() : 0,
+                post.getNumDislike() != null ? post.getNumDislike() : 0
         );
     }
 }
