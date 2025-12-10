@@ -59,6 +59,7 @@ public class QuizServiceImpl implements QuizService {
                 quiz.setOptionD(quizDTO.getOptionD());
                 quiz.setCorrectAnswer(quizDTO.getCorrectAnswer());
                 quiz.setIdentificationAnswer(quizDTO.getIdentificationAnswer());
+                quiz.setPoints(quizDTO.getPoints()); // ADD THIS - Set points from DTO
                 
                 quizSet.addQuiz(quiz);
             }
@@ -160,6 +161,7 @@ public class QuizServiceImpl implements QuizService {
         quiz.setOptionD(quizRequest.getOptionD());
         quiz.setCorrectAnswer(quizRequest.getCorrectAnswer());
         quiz.setIdentificationAnswer(quizRequest.getIdentificationAnswer());
+        quiz.setPoints(quizRequest.getPoints()); // ADD THIS - Set points from request
         
         quizSet.addQuiz(quiz);
         
@@ -189,6 +191,20 @@ public class QuizServiceImpl implements QuizService {
         quizSetRepository.save(quizSet);
         
         System.out.println("Deleted quiz with ID: " + quizId);
+    }
+
+    public int calculateTotalScore(QuizSet quizSet) {
+        return quizSet.getQuizzes().stream()
+            .filter(q -> Boolean.TRUE.equals(q.getIsCorrect()))
+            .mapToInt(Quiz::getPoints)
+            .sum();
+    }
+    
+    // Helper method to get max possible score
+    public int getMaxScore(QuizSet quizSet) {
+        return quizSet.getQuizzes().stream()
+            .mapToInt(Quiz::getPoints)
+            .sum();
     }
 
     private String generateSlug(String title, Long quizSetId) {

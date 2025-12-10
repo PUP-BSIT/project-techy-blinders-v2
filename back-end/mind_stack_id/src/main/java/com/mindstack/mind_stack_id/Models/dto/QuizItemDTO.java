@@ -11,6 +11,7 @@ public class QuizItemDTO {
     private String optionD;
     private String correctAnswer;
     private String identificationAnswer;
+    private Integer points;
     
     public QuizItemDTO() {}
     
@@ -76,5 +77,13 @@ public class QuizItemDTO {
     
     public void setIdentificationAnswer(String identificationAnswer) {
         this.identificationAnswer = identificationAnswer;
+    }
+
+    public Integer getPoints() {
+        return points != null ? points : 1; 
+    }
+    
+    public void setPoints(Integer points) {
+        this.points = points;
     }
 }
