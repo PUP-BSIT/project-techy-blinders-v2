@@ -21,16 +21,19 @@ export interface StudySet {
 })
 export class StudySetsPage implements OnInit {
   isModalOpen: boolean = false;
+  isFlashcardModalOpen: boolean = false;
   isConfirmModalOpen: boolean = false;
   studySetTitle: string = '';
   studySetDescription: string = '';
   flashcards: { term: string; definition: string }[] = [];
   currentPage: number = 0;
-  itemsPerPage: number = 2;
+  itemsPerPage: number = 3;
   studySetsCurrentPage: number = 0;
   studySetsPerPage: number = 3;
   editingStudySetId: number | null = null;
+  currentStudySetId: number | null = null;
   activeDropdown: number | null = null;
+  isPrivacyModalOpen: boolean = false;
   isShareModalOpen: boolean = false;
   selectedStudySetId: number | null = null;
   shareTitle: string = '';
@@ -147,8 +150,6 @@ export class StudySetsPage implements OnInit {
     this.isModalOpen = true;
     this.studySetTitle = '';
     this.studySetDescription = '';
-    this.flashcards = [];
-    this.currentPage = 0;
     this.editingStudySetId = null;
   }
 
@@ -169,6 +170,56 @@ export class StudySetsPage implements OnInit {
   confirmCancel() {
     this.isConfirmModalOpen = false;
     this.isModalOpen = false;
+  }
+
+  saveStudySet() {
+    if (this.studySetTitle.trim()) {
+      const allStudySets = this.getStudySetsFromStorage();
+      
+      const newStudySet: StudySet = {
+        flashcard_id: Date.now(),
+        title: this.studySetTitle,
+        description: this.studySetDescription,
+        flashcards: [],
+        created_at: new Date(),
+        is_public: false
+      };
+      allStudySets.push(newStudySet);
+      this.saveStudySetsToStorage(allStudySets);
+      
+      this.currentStudySetId = newStudySet.flashcard_id;
+      this.flashcards = [];
+      this.currentPage = 0;
+      this.closeModal();
+      this.openFlashcardModal();
+    }
+  }
+
+  openFlashcardModal() {
+    this.isFlashcardModalOpen = true;
+  }
+
+  closeFlashcardModal() {
+    this.isFlashcardModalOpen = false;
+    this.flashcards = [];
+    this.currentPage = 0;
+    this.currentStudySetId = null;
+  }
+
+  saveFlashcards() {
+    if (this.currentStudySetId !== null) {
+      const allStudySets = this.getStudySetsFromStorage();
+      const studySet = allStudySets.find(s => s.flashcard_id === this.currentStudySetId);
+      
+      if (studySet) {
+        studySet.flashcards = this.flashcards.map(f => ({ 
+          keyTerm: f.term, 
+          definition: f.definition 
+        }));
+        this.saveStudySetsToStorage(allStudySets);
+      }
+    }
+    this.closeFlashcardModal();
   }
 
   addFlashcard() {
@@ -221,59 +272,16 @@ export class StudySetsPage implements OnInit {
     return this.currentPage * this.itemsPerPage + localIndex;
   }
 
-  saveStudySet() {
-    if (this.studySetTitle.trim()) {
-      const allStudySets = this.getStudySetsFromStorage();
-      
-      if (this.editingStudySetId !== null) {
-        // Update existing study set
-        const index = allStudySets.findIndex(s => s.flashcard_id === this.editingStudySetId);
-        if (index !== -1) {
-          allStudySets[index] = {
-            flashcard_id: this.editingStudySetId,
-            title: this.studySetTitle,
-            description: this.studySetDescription,
-            flashcards: this.flashcards.map(f => ({ 
-              keyTerm: f.term, 
-              definition: f.definition 
-            })),
-            created_at: allStudySets[index].created_at,
-            is_public: allStudySets[index].is_public
-          };
-        }
-      } else {
-        // Create new study set
-        const newStudySet: StudySet = {
-          flashcard_id: Date.now(),
-          title: this.studySetTitle,
-          description: this.studySetDescription,
-          flashcards: this.flashcards.map(f => ({ 
-            keyTerm: f.term, 
-            definition: f.definition 
-          })),
-          created_at: new Date(),
-          is_public: false
-        };
-        allStudySets.push(newStudySet);
-      }
-      
-      this.saveStudySetsToStorage(allStudySets);
-      this.closeModal();
-    }
-  }
-
   editStudySet(id: number) {
     const studySet = this.studySets.find(s => s.flashcard_id === id);
     if (studySet) {
-      this.editingStudySetId = id;
-      this.studySetTitle = studySet.title;
-      this.studySetDescription = studySet.description || '';
+      this.currentStudySetId = id;
       this.flashcards = studySet.flashcards.map(f => ({
         term: f.keyTerm,
         definition: f.definition
       }));
       this.currentPage = 0;
-      this.isModalOpen = true;
+      this.openFlashcardModal();
     }
     this.closeDropdown();
   }
@@ -310,6 +318,30 @@ export class StudySetsPage implements OnInit {
       this.saveStudySetsToStorage(allStudySets);
     }
     this.activeDropdown = null;
+  }
+
+  openPrivacyModal(studySetId: number) {
+    this.selectedStudySetId = studySetId;
+    this.isPrivacyModalOpen = true;
+  }
+
+  closePrivacyModal() {
+    this.isPrivacyModalOpen = false;
+    this.selectedStudySetId = null;
+  }
+
+  selectShareOption() {
+    if (this.selectedStudySetId !== null) {
+      this.closePrivacyModal();
+      this.openShareModal(this.selectedStudySetId);
+    }
+  }
+
+  selectPrivateOption() {
+    if (this.selectedStudySetId !== null) {
+      this.togglePrivacy(this.selectedStudySetId);
+      this.closePrivacyModal();
+    }
   }
 
   openShareModal(studySetId?: number) {
