@@ -168,17 +168,58 @@ public class PostImplementation implements PostService {
         return null;
     }
 
+    @Override
+    public PostCreation likePost(long id) {
+        Optional<PostCreation> post = postRepository.findById(id);
+        if (post.isPresent()) {
+            PostCreation likedPost = post.get();
+            likedPost.setNumLike(likedPost.getNumLike() != null ? likedPost.getNumLike() + 1 : 1);
+            likedPost.setUpdatedAt(LocalDateTime.now());
+            
+            System.out.println("Liked post with ID: " + likedPost.getPostId());
+            
+            return postRepository.save(likedPost);
+        }
+        
+        System.out.println("Post not found: " + id);
+        return null;
+    }
+
+    @Override
+    public PostCreation dislikePost(long id) {
+        Optional<PostCreation> post = postRepository.findById(id);
+        if (post.isPresent()) {
+            PostCreation dislikedPost = post.get();
+            dislikedPost.setNumDislike(dislikedPost.getNumDislike() != null ? dislikedPost.getNumDislike() + 1 : 1);
+            dislikedPost.setUpdatedAt(LocalDateTime.now());
+            
+            System.out.println("Disliked post with ID: " + dislikedPost.getPostId());
+            
+            return postRepository.save(dislikedPost);
+        }
+        
+        System.out.println("Post not found: " + id);
+        return null;
+    }
+
     private PostDTO mapToDto(PostCreation post) {
         String username = post.getUsername();
+        System.out.println("Post ID: " + post.getPostId() + ", User ID: " + post.getUserId() + ", Original username: " + username);
+        
         if (username == null || username.isBlank()) {
             User user = userRepository.findByUserId(post.getUserId());
-            if (user != null && user.getUsername() != null && !user.getUsername().isBlank()) {
-                username = user.getUsername();
+            System.out.println("Looking up user by ID: " + post.getUserId() + ", Found: " + (user != null));
+            if (user != null) {
+                System.out.println("User found - username: " + user.getUsername());
+                if (user.getUsername() != null && !user.getUsername().isBlank()) {
+                    username = user.getUsername();
+                }
             }
         }
         if (username == null || username.isBlank()) {
             username = "User " + post.getUserId();
         }
+        System.out.println("Final username: " + username);
 
         return new PostDTO(
                 post.getPostId(),

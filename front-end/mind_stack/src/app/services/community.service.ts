@@ -138,6 +138,7 @@ export class CommunityService {
       return;
     }
 
+    // Optimistic update
     const updated: Post = { ...post };
     if (updated.userLiked) {
       updated.likes = Math.max(0, updated.likes - 1);
@@ -151,7 +152,24 @@ export class CommunityService {
       updated.userLiked = true;
     }
 
-    this.updatePost(postId, updated);
+    // Update UI immediately
+    this.replacePost(updated);
+
+    // Call backend
+    this.http.put<any>(`${this.apiUrl}/posts/${postId}/like`, {}).subscribe({
+      next: result => {
+        // Backend incremented, sync the actual count
+        const mapped = this.mapPostFromApi(result);
+        mapped.userLiked = updated.userLiked;
+        mapped.userDisliked = updated.userDisliked;
+        this.replacePost(mapped);
+      },
+      error: err => {
+        console.error('Failed to like post', err);
+        // Revert on error
+        this.replacePost(post);
+      }
+    });
   }
 
   toggleDislikePost(postId: string): void {
@@ -160,6 +178,7 @@ export class CommunityService {
       return;
     }
 
+    // Optimistic update
     const updated: Post = { ...post };
     if (updated.userDisliked) {
       updated.dislikes = Math.max(0, updated.dislikes - 1);
@@ -173,7 +192,24 @@ export class CommunityService {
       updated.userDisliked = true;
     }
 
-    this.updatePost(postId, updated);
+    // Update UI immediately
+    this.replacePost(updated);
+
+    // Call backend
+    this.http.put<any>(`${this.apiUrl}/posts/${postId}/dislike`, {}).subscribe({
+      next: result => {
+        // Backend incremented, sync the actual count
+        const mapped = this.mapPostFromApi(result);
+        mapped.userLiked = updated.userLiked;
+        mapped.userDisliked = updated.userDisliked;
+        this.replacePost(mapped);
+      },
+      error: err => {
+        console.error('Failed to dislike post', err);
+        // Revert on error
+        this.replacePost(post);
+      }
+    });
   }
 
   toggleShowComments(postId: string): void {

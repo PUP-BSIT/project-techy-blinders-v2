@@ -26,4 +26,8 @@ public interface PostService {
     PostCreation publishPost(long id);
     
     PostCreation unpublishPost(long id);
+    
+    PostCreation likePost(long id);
+    
+    PostCreation dislikePost(long id);
 }
