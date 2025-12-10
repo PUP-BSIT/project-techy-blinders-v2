@@ -18,33 +18,35 @@ public class Quiz {
     @Column(name = "quiz_type")
     private QuizType quizType;
     
-    @Column(name = "question", length = 50, nullable = false)
+    @Column(name = "question")
     private String question;
     
-    // Multiple choice options
-    @Column(name = "option_a", length = 5)
+    @Column(name = "option_a")
     private String optionA;
     
-    @Column(name = "option_b", length = 5)
+    @Column(name = "option_b")
     private String optionB;
     
-    @Column(name = "option_c", length = 5)
+    @Column(name = "option_c")
     private String optionC;
     
-    @Column(name = "option_d", length = 5)
+    @Column(name = "option_d")
     private String optionD;
     
-    @Column(name = "correct_answer", length = 5)
+    @Column(name = "correct_answer")
     private String correctAnswer;
     
-    @Column(name = "identification_answer", length = 50)
+    @Column(name = "identification_answer")
     private String identificationAnswer;
     
-    @Column(name = "selected_answer", length = 5)
+    @Column(name = "selected_answer")
     private String selectedAnswer;
     
     @Column(name = "is_correct")
     private Boolean isCorrect;
+
+    @Column(name = "points")
+    private Integer points;
     
     public Quiz() {}
     
@@ -146,5 +148,13 @@ public class Quiz {
     
     public void setIsCorrect(Boolean isCorrect) {
         this.isCorrect = isCorrect;
+    }
+
+    public Integer getPoints() {
+        return points != null ? points : 1;
+    }
+    
+    public void setPoints(Integer points) {
+        this.points = points;
     }
 }

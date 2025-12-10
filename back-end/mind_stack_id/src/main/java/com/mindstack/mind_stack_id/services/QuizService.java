@@ -2,6 +2,7 @@ package com.mindstack.mind_stack_id.services;
 
 import java.util.List;
 import com.mindstack.mind_stack_id.models.Quiz;
+import com.mindstack.mind_stack_id.models.QuizSet;
 import com.mindstack.mind_stack_id.models.dto.CreateQuizSetRequest;
 import com.mindstack.mind_stack_id.models.dto.QuizItemRequest;
 import com.mindstack.mind_stack_id.models.dto.QuizSetResponse;
@@ -18,4 +19,7 @@ public interface QuizService {
     
     Quiz addQuizToSet(Long quizSetId, QuizItemRequest quizRequest);
     void deleteQuiz(Long quizId);
+    
+    int calculateTotalScore(QuizSet quizSet);
+    int getMaxScore(QuizSet quizSet);
 }

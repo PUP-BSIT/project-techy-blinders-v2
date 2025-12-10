@@ -11,7 +11,8 @@ public class QuizItemRequest {
     private String optionD;
     private String correctAnswer;
     private String identificationAnswer;
-    
+    private Integer points;
+
     public QuizItemRequest() {}
     
     public QuizType getQuizType() {
@@ -76,5 +77,13 @@ public class QuizItemRequest {
     
     public void setIdentificationAnswer(String identificationAnswer) {
         this.identificationAnswer = identificationAnswer;
+    }
+
+        public Integer getPoints() {
+        return points != null ? points : 1; 
+    }
+    
+    public void setPoints(Integer points) {
+        this.points = points;
     }
 }
