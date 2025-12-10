@@ -8,7 +8,17 @@ import { Router, RouterLink } from "@angular/router";
   imports: [RouterLink]
 })
 export class NavBar {
+  isMenuOpen = false;
+
   constructor(private router: Router) {}
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu() {
+    this.isMenuOpen = false;
+  }
 
   scrollToSection(sectionId: string) {
     // Check if we're already on the landing page

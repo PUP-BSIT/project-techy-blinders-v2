@@ -4,26 +4,45 @@
 
 :host {
     display: block;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #ebebeb;
 }
 
+.container {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.content-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+    padding: 40px 20px;
+}
+
 .image-class {
-    position: absolute;
-    display: block;
+    flex: 0 0 30%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .image-class img {
-    margin-top: 2%;
-    margin-left: 5%;
-    width: 80%;
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+}
+
+.text-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .header-class {
-    position: absolute;
     display: block;
-    margin-top: 7%;
-    margin-left: 35%;
 }
 
 .header-class h1 {
@@ -31,14 +50,11 @@
     font-family: "Poppins", sans-serif;
     font-weight: bold;
     font-size: 48px;
+    margin: 0;
 }
 
 .paragraph-class {
-    position: absolute;
     display: block;
-    width: 50%;
-    margin-top: 12%;
-    margin-left: 35%;
 }
 
 .paragraph-class p {
@@ -46,4 +62,67 @@
     font-family: "Poppins", sans-serif;
     font-weight: 300;
     font-size: 24px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+// Tablet
+@media (max-width: 1024px) {
+    .content-wrapper {
+        gap: 30px;
+        padding: 30px 15px;
+    }
+
+    .image-class {
+        flex: 0 0 35%;
+    }
+
+    .header-class h1 {
+        font-size: 40px;
+    }
+
+    .paragraph-class p {
+        font-size: 20px;
+    }
+}
+
+// Mobile
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .content-wrapper {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px 10px;
+    }
+
+    .image-class {
+        flex: none;
+        width: 100%;
+        order: 1;
+    }
+
+    .image-class img {
+        max-width: 400px;
+    }
+
+    .text-content {
+        order: 2;
+        gap: 15px;
+    }
+
+    .header-class {
+        text-align: center;
+    }
+
+    .header-class h1 {
+        font-size: 32px;
+    }
+
+    .paragraph-class p {
+        font-size: 18px;
+        text-align: center;
+    }
 }

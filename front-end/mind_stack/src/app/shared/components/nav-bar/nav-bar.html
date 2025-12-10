@@ -1,10 +1,17 @@
 <div class="navigation-bar-class">
-    <h2>Mindstack</h2>
-    <ul>
-        <li><img src="assets/image-logo.png" alt="Mind Stack Logo" routerLink=" "></li>
-        <li><a routerLink="/login">Login</a></li>
-        <li><a routerLink="/contact"> Contact us</a></li>
-        <li><a (click)="scrollToSection('about')">About us</a></li>
-        <li><a routerLink=" ">Home</a></li>
+    <div class="nav-header">
+        <img src="assets/image-logo.png" alt="Mind Stack Logo" routerLink=" " class="logo">
+        <h2>Mindstack</h2>
+        <button class="hamburger" (click)="toggleMenu()" [class.active]="isMenuOpen">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+    <ul [class.active]="isMenuOpen">
+        <li><a routerLink=" " (click)="closeMenu()">Home</a></li>
+        <li><a (click)="scrollToSection('about'); closeMenu()">About us</a></li>
+        <li><a routerLink="/contact" (click)="closeMenu()">Contact us</a></li>
+        <li><a routerLink="/login" (click)="closeMenu()">Login</a></li>
     </ul>  
 </div>

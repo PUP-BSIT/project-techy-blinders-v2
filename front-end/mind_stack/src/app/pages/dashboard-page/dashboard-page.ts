@@ -36,6 +36,7 @@ export class DashboardPage implements OnInit {
   streakDays: number = 0;
   userName: string = 'Loading...';
   userId: string = '';
+  userEmail: string = '';
   isLoading: boolean = true;
 
   studyLibrary: StudyItem[] = [];
@@ -60,6 +61,7 @@ export class DashboardPage implements OnInit {
       next: (data) => {
         this.userName = data.userName;
         this.userId = data.userId.toString();
+        this.userEmail = data.userEmail;
         this.flashcardCount = data.flashcardCount;
         this.quizCount = data.quizCount;
         
@@ -129,5 +131,13 @@ export class DashboardPage implements OnInit {
 
   getActivityIcon(type: string): string {
     return type === 'quiz' ? 'assets/Clipboard.png' : 'assets/book.png';
+  }
+
+  navigateToQuizzes() {
+    this.router.navigate(['/app/quizzes']);
+  }
+
+  navigateToFlashcards() {
+    this.router.navigate(['/app/study-sets']);
   }
 }
