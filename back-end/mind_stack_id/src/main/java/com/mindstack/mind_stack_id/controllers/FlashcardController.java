@@ -157,6 +157,28 @@ public class FlashcardController {
     }
 
     /**
+     * Update a single flashcard
+     * PUT /api/flashcards/flashcard/{flashcardId}
+     * 
+     * Request body example:
+     * {
+     *   "title": "What is polymorphism?",
+     *   "description": "The ability of objects to take many forms"
+     * }
+     */
+    @PutMapping("/flashcard/{flashcardId}")
+    public ResponseEntity<FlashCardItem> updateFlashcard(
+            @PathVariable Long flashcardId,
+            @RequestBody FlashcardItemRequest request) {
+        try {
+            FlashCardItem flashcard = flashcardService.updateFlashcard(flashcardId, request);
+            return ResponseEntity.ok(flashcard);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    /**
      * Delete a single flashcard
      * DELETE /api/flashcards/flashcard/{flashcardId}
      */

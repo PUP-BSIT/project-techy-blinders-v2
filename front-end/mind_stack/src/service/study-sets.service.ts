@@ -7,7 +7,7 @@ export interface StudySet {
   flashcard_id: number;
   title: string;
   description: string;
-  flashcards: { keyTerm: string; definition: string }[];
+  flashcards: { flashcardId?: number; keyTerm: string; definition: string }[];
   created_at: Date;
   is_public: boolean;
 }
@@ -18,7 +18,7 @@ interface CreateFlashcardSetRequest {
   title: string;
   description: string;
   isPublic: boolean;
-  flashcards: { title: string; description: string }[];
+  flashcards: { flashcardId?: number; title: string; description: string }[];
 }
 
 interface FlashcardSetResponse {
@@ -26,7 +26,7 @@ interface FlashcardSetResponse {
   userId: number;
   title: string;
   description: string;
-  public: boolean; // Backend returns "public" (lowercase), not "isPublic"
+  public: boolean;
   slug: string;
   flashcards: {
     flashcardId: number;
@@ -41,22 +41,20 @@ interface FlashcardSetResponse {
 })
 export class StudySetsService {
   private http = inject(HttpClient);
-  // Use relative URL to work with proxy when running locally with ng serve
-  // The proxy.conf.json will forward /api/* to https://techymindstack.site
-  // This avoids CORS issues when testing locally
   private apiUrl = '/api/flashcards';
 
   /**
    * Create a new flashcard set
    * POST /api/flashcards
    */
-  createStudySet(userId: number, title: string, description: string, isPublic: boolean, flashcards: { keyTerm: string; definition: string }[]): Observable<StudySet> {
+  createStudySet(userId: number, title: string, description: string, isPublic: boolean, flashcards: { keyTerm: string; definition: string; flashcardId?: number }[]): Observable<StudySet> {
     const request: CreateFlashcardSetRequest = {
       userId,
       title,
       description,
       isPublic,
       flashcards: flashcards.map(f => ({
+        flashcardId: f.flashcardId,
         title: f.keyTerm,
         description: f.definition
       }))
@@ -97,13 +95,14 @@ export class StudySetsService {
    * Update a flashcard set
    * PUT /api/flashcards/{id}
    */
-  updateStudySet(id: number, userId: number, title: string, description: string, isPublic: boolean, flashcards: { keyTerm: string; definition: string }[]): Observable<StudySet> {
+  updateStudySet(id: number, userId: number, title: string, description: string, isPublic: boolean, flashcards: { keyTerm: string; definition: string; flashcardId?: number }[]): Observable<StudySet> {
     const request: CreateFlashcardSetRequest = {
       userId,
       title,
       description,
       isPublic,
       flashcards: flashcards.map(f => ({
+        flashcardId: f.flashcardId,
         title: f.keyTerm,
         description: f.definition
       }))
@@ -136,8 +135,19 @@ export class StudySetsService {
    * Add a single flashcard to an existing set
    * POST /api/flashcards/{studySetId}/flashcard
    */
-  addFlashcardToSet(studySetId: number, keyTerm: string, definition: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${studySetId}/flashcard`, {
+  addFlashcardToSet(studySetId: number, keyTerm: string, definition: string): Observable<{ flashcardId: number; studySetId: number; title: string; description: string }> {
+    return this.http.post<{ flashcardId: number; studySetId: number; title: string; description: string }>(`${this.apiUrl}/${studySetId}/flashcard`, {
+      title: keyTerm,
+      description: definition
+    });
+  }
+
+  /**
+   * Update a single flashcard
+   * PUT /api/flashcards/flashcard/{flashcardId}
+   */
+  updateFlashcard(flashcardId: number, keyTerm: string, definition: string): Observable<{ flashcardId: number; studySetId: number; title: string; description: string }> {
+    return this.http.put<{ flashcardId: number; studySetId: number; title: string; description: string }>(`${this.apiUrl}/flashcard/${flashcardId}`, {
       title: keyTerm,
       description: definition
     });
@@ -148,7 +158,7 @@ export class StudySetsService {
    * DELETE /api/flashcards/flashcard/{flashcardId}
    */
   deleteFlashcard(flashcardId: number): Observable<string> {
-    return this.http.delete<string>(`${this.apiUrl}/flashcard/${flashcardId}`, { responseType: 'text' as 'json' });
+    return this.http.delete(`${this.apiUrl}/flashcard/${flashcardId}`, { responseType: 'text' }) as Observable<string>;
   }
 
   /**
@@ -164,11 +174,12 @@ export class StudySetsService {
       title: response.title || '',
       description: response.description || '',
       flashcards: (response.flashcards || []).map(f => ({
+        flashcardId: f.flashcardId,
         keyTerm: f.title || '',
         definition: f.description || ''
       })),
-      created_at: new Date(), // Backend doesn't return createdAt in response, using current date
-      is_public: response.public !== undefined ? response.public : false // Map "public" field to "is_public"
+      created_at: new Date(),
+      is_public: response.public !== undefined ? response.public : false
     };
   }
 }
