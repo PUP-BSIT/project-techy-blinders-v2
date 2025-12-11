@@ -26,8 +26,8 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostDTO>> getAllPosts() {
-        List<PostDTO> posts = postService.getAllPosts();
+    public ResponseEntity<List<PostDTO>> getAllPosts(@RequestParam(value = "userId", required = false) Long userId) {
+        List<PostDTO> posts = postService.getAllPosts(userId);
         return ResponseEntity.ok(posts);
     }
     
@@ -65,14 +65,32 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostCreation> updatePost(@PathVariable("id") long id, @RequestBody PostCreation post) {
+    public ResponseEntity<PostDTO> updatePost(@PathVariable("id") long id, @RequestBody PostCreation post) {
         PostCreation updatedPost = postService.updatePost(id, post);
         
         if (updatedPost == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         
-        return ResponseEntity.ok(updatedPost);
+        PostDTO dto = new PostDTO(
+            updatedPost.getPostId(),
+            updatedPost.getUserId(),
+            updatedPost.getTitle(),
+            updatedPost.getUsername() != null ? updatedPost.getUsername() : "Unknown",
+            updatedPost.getContent(),
+            updatedPost.getSlug(),
+            updatedPost.getCategory() != null ? updatedPost.getCategory().getValue() : "",
+            updatedPost.getPublish(),
+            updatedPost.getCreatedAt(),
+            updatedPost.getUpdatedAt(),
+            updatedPost.getCommentCount(),
+            updatedPost.getShowComment(),
+            updatedPost.getNumLike(),
+            updatedPost.getNumDislike(),
+            false,
+            false
+        );
+        return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping("/{id}")
@@ -109,8 +127,9 @@ public class PostController {
     }
 
     @PutMapping("/{id}/like")
-    public ResponseEntity<PostCreation> likePost(@PathVariable("id") long id) {
-        PostCreation likedPost = postService.likePost(id);
+    public ResponseEntity<PostDTO> likePost(@PathVariable("id") long id,
+                                            @RequestParam(value = "userId", required = false) Long userId) {
+        PostDTO likedPost = postService.likePost(id, userId);
         
         if (likedPost == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -120,8 +139,9 @@ public class PostController {
     }
 
     @PutMapping("/{id}/dislike")
-    public ResponseEntity<PostCreation> dislikePost(@PathVariable("id") long id) {
-        PostCreation dislikedPost = postService.dislikePost(id);
+    public ResponseEntity<PostDTO> dislikePost(@PathVariable("id") long id,
+                                               @RequestParam(value = "userId", required = false) Long userId) {
+        PostDTO dislikedPost = postService.dislikePost(id, userId);
         
         if (dislikedPost == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

@@ -6,7 +6,7 @@ import com.mindstack.mind_stack_id.models.Comment;
 import com.mindstack.mind_stack_id.models.dto.CommentDTO;
 
 public interface CommentService {
-    List<CommentDTO> getAllComments();
+    List<CommentDTO> getAllComments(Long userId);
 
     Comment getCommentById(long id);
 
@@ -24,9 +24,9 @@ public interface CommentService {
 
     Comment updateContent(long id, String content);
 
-    Comment like(long id);
+    CommentDTO like(long id, Long userId);
 
-    Comment dislike(long id);
+    CommentDTO dislike(long id, Long userId);
 
     void delete(long id);
 

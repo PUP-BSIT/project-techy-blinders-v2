@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.mindstack.mind_stack_id.models.Comment;
+import com.mindstack.mind_stack_id.models.CommentReaction;
+import com.mindstack.mind_stack_id.models.CommentReaction.ReactionType;
 import com.mindstack.mind_stack_id.models.PostCreation;
 import com.mindstack.mind_stack_id.models.User;
 import com.mindstack.mind_stack_id.models.dto.CommentDTO;
+import com.mindstack.mind_stack_id.repositories.CommentReactionRepository;
 import com.mindstack.mind_stack_id.repositories.CommentRepository;
 import com.mindstack.mind_stack_id.repositories.PostRepository;
 import com.mindstack.mind_stack_id.repositories.UserRepository;
@@ -22,18 +25,21 @@ public class CommentImplementation implements CommentService {
     private final CommentRepository commentRepo;
     private final PostRepository postRepo;
     private final UserRepository userRepo;
+    private final CommentReactionRepository commentReactionRepository;
 
-    public CommentImplementation(CommentRepository commentRepo, PostRepository postRepo, UserRepository userRepo) {
+    public CommentImplementation(CommentRepository commentRepo, PostRepository postRepo, UserRepository userRepo,
+            CommentReactionRepository commentReactionRepository) {
         this.commentRepo = commentRepo;
         this.postRepo = postRepo;
         this.userRepo = userRepo;
+        this.commentReactionRepository = commentReactionRepository;
     }
 
     @Override
-    public List<CommentDTO> getAllComments() {
+    public List<CommentDTO> getAllComments(Long userId) {
         return commentRepo.findAll()
                 .stream()
-                .map(this::mapToDto)
+                .map(comment -> mapToDto(comment, userId))
                 .toList();
     }
 
@@ -111,17 +117,77 @@ public class CommentImplementation implements CommentService {
     }
 
     @Override
-    public Comment like(long id) {
+    public CommentDTO like(long id, Long userId) {
         Comment existing = getCommentById(id);
-        existing.setNumLike(existing.getNumLike() + 1);
-        return commentRepo.save(existing);
+
+        if (userId == null) {
+            existing.setNumLike(existing.getNumLike() + 1);
+            Comment saved = commentRepo.save(existing);
+            return mapToDto(saved, null);
+        }
+
+        ReactionType newReaction = ReactionType.LIKE;
+        var existingReaction = commentReactionRepository.findByCommentIdAndUserId(id, userId);
+
+        if (existingReaction.isPresent()) {
+            CommentReaction reaction = existingReaction.get();
+            if (reaction.getReaction() == ReactionType.LIKE) {
+                existing.setNumLike(Math.max(0, existing.getNumLike() - 1));
+                commentReactionRepository.delete(reaction);
+            } else {
+                existing.setNumDislike(Math.max(0, existing.getNumDislike() - 1));
+                existing.setNumLike(existing.getNumLike() + 1);
+                reaction.setReaction(newReaction);
+                commentReactionRepository.save(reaction);
+            }
+        } else {
+            existing.setNumLike(existing.getNumLike() + 1);
+            CommentReaction reaction = new CommentReaction();
+            reaction.setCommentId(id);
+            reaction.setUserId(userId);
+            reaction.setReaction(newReaction);
+            commentReactionRepository.save(reaction);
+        }
+
+        Comment saved = commentRepo.save(existing);
+        return mapToDto(saved, userId);
     }
 
     @Override
-    public Comment dislike(long id) {
+    public CommentDTO dislike(long id, Long userId) {
         Comment existing = getCommentById(id);
-        existing.setNumDislike(existing.getNumDislike() + 1);
-        return commentRepo.save(existing);
+
+        if (userId == null) {
+            existing.setNumDislike(existing.getNumDislike() + 1);
+            Comment saved = commentRepo.save(existing);
+            return mapToDto(saved, null);
+        }
+
+        ReactionType newReaction = ReactionType.DISLIKE;
+        var existingReaction = commentReactionRepository.findByCommentIdAndUserId(id, userId);
+
+        if (existingReaction.isPresent()) {
+            CommentReaction reaction = existingReaction.get();
+            if (reaction.getReaction() == ReactionType.DISLIKE) {
+                existing.setNumDislike(Math.max(0, existing.getNumDislike() - 1));
+                commentReactionRepository.delete(reaction);
+            } else {
+                existing.setNumLike(Math.max(0, existing.getNumLike() - 1));
+                existing.setNumDislike(existing.getNumDislike() + 1);
+                reaction.setReaction(newReaction);
+                commentReactionRepository.save(reaction);
+            }
+        } else {
+            existing.setNumDislike(existing.getNumDislike() + 1);
+            CommentReaction reaction = new CommentReaction();
+            reaction.setCommentId(id);
+            reaction.setUserId(userId);
+            reaction.setReaction(newReaction);
+            commentReactionRepository.save(reaction);
+        }
+
+        Comment saved = commentRepo.save(existing);
+        return mapToDto(saved, userId);
     }
 
     @Override
@@ -148,7 +214,24 @@ public class CommentImplementation implements CommentService {
         return commentRepo.countByParentCommentId(parentCommentId);
     }
 
-    private CommentDTO mapToDto(Comment comment) {
+    private CommentDTO mapToDto(Comment comment, Long userId) {
+        // Count replies to this comment (only if it's not a reply itself)
+        int replyCount = 0;
+        if (comment.getParentCommentId() == null) {
+            replyCount = (int) commentRepo.countByParentCommentId(comment.getCommentId());
+        }
+
+        boolean userLiked = false;
+        boolean userDisliked = false;
+        if (userId != null) {
+            var reactionOpt = commentReactionRepository.findByCommentIdAndUserId(comment.getCommentId(), userId);
+            if (reactionOpt.isPresent()) {
+                ReactionType reaction = reactionOpt.get().getReaction();
+                userLiked = reaction == ReactionType.LIKE;
+                userDisliked = reaction == ReactionType.DISLIKE;
+            }
+        }
+        
         return new CommentDTO(
                 comment.getCommentId(),
                 comment.getUserId(),
@@ -159,7 +242,10 @@ public class CommentImplementation implements CommentService {
                 comment.getUpdatedAt(),
                 comment.getNumLike(),
                 comment.getNumDislike(),
-                comment.getParentCommentId());
+                comment.getParentCommentId(),
+                replyCount,
+                userLiked,
+                userDisliked);
     }
 
     private User ensureUserExists(long userId) {

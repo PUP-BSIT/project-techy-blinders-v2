@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mindstack.mind_stack_id.models.Comment;
@@ -28,8 +29,8 @@ public class CommentController {
     }
 
     @GetMapping
-    public List<CommentDTO> getAllComments() {
-        return commentService.getAllComments();
+    public List<CommentDTO> getAllComments(@RequestParam(value = "userId", required = false) Long userId) {
+        return commentService.getAllComments(userId);
     }
 
     @GetMapping("/{id}")
@@ -76,13 +77,15 @@ public class CommentController {
     }
 
     @PutMapping("/{id}/like")
-    public ResponseEntity<Comment> likeComment(@PathVariable Long id) {
-        return ResponseEntity.ok(commentService.like(id));
+    public ResponseEntity<CommentDTO> likeComment(@PathVariable Long id,
+            @RequestParam(value = "userId", required = false) Long userId) {
+        return ResponseEntity.ok(commentService.like(id, userId));
     }
 
     @PutMapping("/{id}/dislike")
-    public ResponseEntity<Comment> dislikeComment(@PathVariable Long id) {
-        return ResponseEntity.ok(commentService.dislike(id));
+    public ResponseEntity<CommentDTO> dislikeComment(@PathVariable Long id,
+            @RequestParam(value = "userId", required = false) Long userId) {
+        return ResponseEntity.ok(commentService.dislike(id, userId));
     }
 
     @DeleteMapping("/{id}")
