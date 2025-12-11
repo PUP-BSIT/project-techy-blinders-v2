@@ -80,4 +80,81 @@ public class UserController {
         User user = repo.findByEmail(email);
         return ResponseEntity.ok(user);
     }
+
+    @PutMapping("/update-password")
+    public ResponseEntity<?> updatePassword(
+            @RequestBody PasswordUpdateRequest request,
+            Authentication auth) {
+        try {
+            String email = auth.getName();
+            User user = repo.findByEmail(email);
+            
+            if (user == null) {
+                return ResponseEntity.status(404).body("User not found");
+            }
+            
+            userService.updatePassword(
+                user.getUserId(), 
+                request.getCurrentPassword(), 
+                request.getNewPassword()
+            );
+            
+            return ResponseEntity.ok(new HashMap<>() {{
+                put("success", true);
+                put("message", "Password updated successfully");
+            }});
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(new HashMap<>() {{
+                put("success", false);
+                put("message", e.getMessage());
+            }});
+        }
+    }
+    
+    @PutMapping("/update-email")
+    public ResponseEntity<?> updateEmail(
+            @RequestBody EmailUpdateRequest request,
+            Authentication auth) {
+        try {
+            String currentEmail = auth.getName();
+            User user = repo.findByEmail(currentEmail);
+            
+            if (user == null) {
+                return ResponseEntity.status(404).body("User not found");
+            }
+            
+            User updatedUser = userService.updateEmail(user.getUserId(), request.getNewEmail());
+            
+            String newToken = jwtUtil.generateToken(updatedUser.getEmail());
+            
+            return ResponseEntity.ok(new HashMap<>() {{
+                put("success", true);
+                put("message", "Email updated successfully");
+                put("token", newToken);
+                put("email", updatedUser.getEmail());
+            }});
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(new HashMap<>() {{
+                put("success", false);
+                put("message", e.getMessage());
+            }});
+        }
+    }
+    
+    public static class PasswordUpdateRequest {
+        private String currentPassword;
+        private String newPassword;
+        
+        public String getCurrentPassword() { return currentPassword; }
+        public void setCurrentPassword(String currentPassword) { this.currentPassword = currentPassword; }
+        public String getNewPassword() { return newPassword; }
+        public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
+    }
+    
+    public static class EmailUpdateRequest {
+        private String newEmail;
+        
+        public String getNewEmail() { return newEmail; }
+        public void setNewEmail(String newEmail) { this.newEmail = newEmail; }
+    }
 }

@@ -44,14 +44,62 @@ public class UserImplementation implements UserService {
         user.setDate(LocalDateTime.now());
         user.setUpdateAt(LocalDateTime.now());
         
-        // System.out.println("Created user with ID: " + user.getUserId());
-        // System.out.println("Hashed password: " + hash);
-        
         return repo.save(user);
     }
 
     @Override
     public User findUserById(Long userId) {
         return repo.findByUserId(userId);
+    }
+
+    @Override
+    public User updatePassword(Long userId, String currentPassword, String newPassword) {
+        User user = repo.findByUserId(userId);
+        
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        
+        if (!passwordEncoder.matches(currentPassword.trim(), user.getPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+        
+        if (newPassword == null || newPassword.trim().length() < 6) {
+            throw new RuntimeException("New password must be at least 6 characters long");
+        }
+        
+        String hashedPassword = passwordEncoder.encode(newPassword.trim());
+        user.setPassword(hashedPassword);
+        user.setUpdateAt(LocalDateTime.now());
+        
+        return repo.save(user);
+    }
+
+    @Override
+    public User updateEmail(Long userId, String newEmail) {
+        User user = repo.findByUserId(userId);
+        
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        
+        if (newEmail == null || !isValidEmail(newEmail)) {
+            throw new RuntimeException("Invalid email format");
+        }
+        
+        User existingUser = repo.findByEmail(newEmail);
+        if (existingUser != null && existingUser.getUserId() != userId) {
+            throw new RuntimeException("Email already in use");
+        }
+        
+        user.setEmail(newEmail);
+        user.setUpdateAt(LocalDateTime.now());
+        
+        return repo.save(user);
+    }
+    
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+        return email.matches(emailRegex);
     }
 }
