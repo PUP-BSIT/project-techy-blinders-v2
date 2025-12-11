@@ -41,22 +41,22 @@ export interface Quiz {
 })
 export class QuizzesPage implements OnInit {
   isModalOpen: boolean = false;
+  isQuestionModalOpen: boolean = false;
   isConfirmModalOpen: boolean = false;
+  isPrivacyModalOpen: boolean = false;
   
   quizTitle: string = '';
   quizDescription: string = '';
-  selectedQuestionType: QuestionType = QuestionType.MULTIPLE_CHOICE;
+  selectedQuestionType: QuestionType | '' = '';
   questions: QuestionItem[] = [];
   
   currentPage: number = 0;
-  itemsPerPage: number = 2;
   
   quizzesCurrentPage: number = 0;
   quizzesPerPage: number = 3;
   
   editingQuizId: number | null = null;
-  
-  activeDropdown: number | null = null;
+  selectedQuizIdForPrivacy: number | null = null;
 
   QuestionType = QuestionType;
 
@@ -174,7 +174,7 @@ export class QuizzesPage implements OnInit {
     this.isModalOpen = true;
     this.quizTitle = '';
     this.quizDescription = '';
-    this.selectedQuestionType = QuestionType.MULTIPLE_CHOICE;
+    this.selectedQuestionType = '';
     this.questions = [];
     this.currentPage = 0;
     this.editingQuizId = null;
@@ -182,6 +182,7 @@ export class QuizzesPage implements OnInit {
 
   closeModal() {
     this.isModalOpen = false;
+    this.isQuestionModalOpen = false;
     this.isConfirmModalOpen = false;
     this.editingQuizId = null;
   }
@@ -197,6 +198,7 @@ export class QuizzesPage implements OnInit {
   confirmCancel() {
     this.isConfirmModalOpen = false;
     this.isModalOpen = false;
+    this.isQuestionModalOpen = false;
   }
 
   // questions
@@ -234,7 +236,15 @@ export class QuizzesPage implements OnInit {
     this.currentPage = 0;
   }
 
+  setCorrectAnswer(question: QuestionItem, answer: string) {
+    question.correctAnswer = answer;
+  }
+
   // pagination
+  
+  get itemsPerPage(): number {
+    return this.selectedQuestionType === QuestionType.IDENTIFICATION ? 3 : 2;
+  }
   
   get paginatedQuestions() {
     const startIndex = this.currentPage * this.itemsPerPage;
@@ -272,11 +282,39 @@ export class QuizzesPage implements OnInit {
   // save quizx
   
   saveQuiz() {
-    if (this.quizTitle.trim() && this.questions.length > 0) {
+    if (this.quizTitle.trim() && this.selectedQuestionType !== '') {
+      // Create the quiz immediately
+      const allQuizzes = this.getQuizzesFromStorage();
+      const newQuizId = Date.now();
+      
+      const newQuiz: Quiz = {
+        quiz_id: newQuizId,
+        title: this.quizTitle,
+        description: this.quizDescription,
+        questions: [],
+        questionType: this.selectedQuestionType as QuestionType,
+        created_at: new Date(),
+        is_public: false
+      };
+      
+      allQuizzes.push(newQuiz);
+      this.saveQuizzesToStorage(allQuizzes);
+      
+      // Set editing mode to this new quiz
+      this.editingQuizId = newQuizId;
+      
+      // Close the initial modal and open the question editor
+      this.isModalOpen = false;
+      this.isQuestionModalOpen = true;
+    }
+  }
+
+  saveQuizFromQuestionModal() {
+    if (this.quizTitle.trim()) {
       const allQuizzes = this.getQuizzesFromStorage();
       
       if (this.editingQuizId !== null) {
-        // updat quiz
+        // update quiz with questions
         const index = allQuizzes.findIndex(q => q.quiz_id === this.editingQuizId);
         if (index !== -1) {
           allQuizzes[index] = {
@@ -284,26 +322,15 @@ export class QuizzesPage implements OnInit {
             title: this.quizTitle,
             description: this.quizDescription,
             questions: this.questions,
-            questionType: this.selectedQuestionType,
+            questionType: this.selectedQuestionType as QuestionType,
             created_at: allQuizzes[index].created_at,
             is_public: allQuizzes[index].is_public
           };
+          
+          this.saveQuizzesToStorage(allQuizzes);
         }
-      } else {
-        // create new quiz
-        const newQuiz: Quiz = {
-          quiz_id: Date.now(),
-          title: this.quizTitle,
-          description: this.quizDescription,
-          questions: this.questions,
-          questionType: this.selectedQuestionType,
-          created_at: new Date(),
-          is_public: false
-        };
-        allQuizzes.push(newQuiz);
       }
       
-      this.saveQuizzesToStorage(allQuizzes);
       this.closeModal();
     }
   }
@@ -317,9 +344,8 @@ export class QuizzesPage implements OnInit {
       this.selectedQuestionType = quiz.questionType;
       this.questions = JSON.parse(JSON.stringify(quiz.questions));
       this.currentPage = 0;
-      this.isModalOpen = true;
+      this.isQuestionModalOpen = true;
     }
-    this.closeDropdown();
   }
 
   deleteQuiz(id: number) {
@@ -331,19 +357,34 @@ export class QuizzesPage implements OnInit {
     if (this.quizzesCurrentPage > maxPage) {
       this.quizzesCurrentPage = maxPage;
     }
-    this.closeDropdown();
   }
 
   playQuiz(id: number) {
     this.router.navigate(['/app/quizzes', id]);
   }
   
-  toggleDropdown(index: number) {
-    this.activeDropdown = this.activeDropdown === index ? null : index;
+  openPrivacyModal(quizId: number) {
+    this.selectedQuizIdForPrivacy = quizId;
+    this.isPrivacyModalOpen = true;
   }
 
-  closeDropdown() {
-    this.activeDropdown = null;
+  closePrivacyModal() {
+    this.isPrivacyModalOpen = false;
+    this.selectedQuizIdForPrivacy = null;
+  }
+
+  selectShareOption() {
+    if (this.selectedQuizIdForPrivacy !== null) {
+      this.closePrivacyModal();
+      this.openShareModal(this.selectedQuizIdForPrivacy);
+    }
+  }
+
+  selectPrivateOption() {
+    if (this.selectedQuizIdForPrivacy !== null) {
+      this.togglePrivacy(this.selectedQuizIdForPrivacy);
+    }
+    this.closePrivacyModal();
   }
 
   togglePrivacy(id: number) {
@@ -353,7 +394,6 @@ export class QuizzesPage implements OnInit {
       quiz.is_public = !quiz.is_public;
       this.saveQuizzesToStorage(allQuizzes);
     }
-    this.activeDropdown = null;
   }
 
   openShareModal(quizId?: number) {
@@ -374,8 +414,6 @@ export class QuizzesPage implements OnInit {
       this.shareCategory = '';
       this.shareDescription = '';
     }
-
-    this.closeDropdown();
   }
 
   closeShareModal() {
