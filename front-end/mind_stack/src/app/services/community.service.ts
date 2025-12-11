@@ -40,7 +40,10 @@ export class CommunityService {
 
   private refreshPosts(): void {
     console.log('Fetching posts from:', `${this.apiUrl}/posts`);
-    this.http.get<any[]>(`${this.apiUrl}/posts`).subscribe({
+    const currentUser = this.authService.getCurrentUser();
+    const userId = currentUser?.userId;
+
+    this.http.get<any[]>(`${this.apiUrl}/posts`, { params: userId ? { userId: String(userId) } : {} }).subscribe({
       next: posts => {
         console.log('✓ Raw API Response:', posts);
         console.log('First post sample:', posts[0]);
@@ -56,7 +59,10 @@ export class CommunityService {
 
   private refreshComments(): void {
     console.log('Fetching comments from:', `${this.apiUrl}/comments`);
-    this.http.get<any[]>(`${this.apiUrl}/comments`).subscribe({
+    const currentUser = this.authService.getCurrentUser();
+    const userId = currentUser?.userId;
+
+    this.http.get<any[]>(`${this.apiUrl}/comments`, { params: userId ? { userId: String(userId) } : {} }).subscribe({
       next: comments => {
         console.log('✓ Comments fetched successfully:', comments);
         const mapped = comments.map(c => this.mapCommentFromApi(c));
@@ -157,12 +163,15 @@ export class CommunityService {
     this.replacePost(updated);
 
     // Call backend
-    this.http.put<any>(`${this.apiUrl}/posts/${postId}/like`, {}).subscribe({
+    const currentUser = this.authService.getCurrentUser();
+    const userId = currentUser?.userId;
+
+    this.http.put<any>(`${this.apiUrl}/posts/${postId}/like`, {}, { params: userId ? { userId: String(userId) } : {} }).subscribe({
       next: result => {
         // Backend incremented, sync the actual count
         const mapped = this.mapPostFromApi(result);
-        mapped.userLiked = updated.userLiked;
-        mapped.userDisliked = updated.userDisliked;
+        mapped.userLiked = result.userLiked ?? mapped.userLiked ?? updated.userLiked;
+        mapped.userDisliked = result.userDisliked ?? mapped.userDisliked ?? updated.userDisliked;
         this.replacePost(mapped);
       },
       error: err => {
@@ -196,13 +205,16 @@ export class CommunityService {
     // Update UI immediately
     this.replacePost(updated);
 
+    const currentUser = this.authService.getCurrentUser();
+    const userId = currentUser?.userId;
+
     // Call backend
-    this.http.put<any>(`${this.apiUrl}/posts/${postId}/dislike`, {}).subscribe({
+    this.http.put<any>(`${this.apiUrl}/posts/${postId}/dislike`, {}, { params: userId ? { userId: String(userId) } : {} }).subscribe({
       next: result => {
         // Backend incremented, sync the actual count
         const mapped = this.mapPostFromApi(result);
-        mapped.userLiked = updated.userLiked;
-        mapped.userDisliked = updated.userDisliked;
+        mapped.userLiked = result.userLiked ?? mapped.userLiked ?? updated.userLiked;
+        mapped.userDisliked = result.userDisliked ?? mapped.userDisliked ?? updated.userDisliked;
         this.replacePost(mapped);
       },
       error: err => {
@@ -266,16 +278,78 @@ export class CommunityService {
   }
 
   toggleLikeComment(commentId: string): void {
-    this.http.put<any>(`${this.apiUrl}/comments/${commentId}/like`, {}).subscribe({
-      next: updated => this.updateCommentInState(this.mapCommentFromApi(updated)),
-      error: err => console.error('Failed to like comment', err)
+    const comment = this.commentsSubject.value.find(c => c.comment_id === commentId);
+    if (!comment) {
+      return;
+    }
+
+    const updated: Comment = { ...comment };
+    if (updated.userLiked) {
+      updated.likes = Math.max(0, updated.likes - 1);
+      updated.userLiked = false;
+    } else {
+      if (updated.userDisliked) {
+        updated.dislikes = Math.max(0, updated.dislikes - 1);
+        updated.userDisliked = false;
+      }
+      updated.likes += 1;
+      updated.userLiked = true;
+    }
+
+    this.updateCommentInState(updated);
+
+    const currentUser = this.authService.getCurrentUser();
+    const userId = currentUser?.userId;
+
+    this.http.put<any>(`${this.apiUrl}/comments/${commentId}/like`, {}, { params: userId ? { userId: String(userId) } : {} }).subscribe({
+      next: result => {
+        const mapped = this.mapCommentFromApi(result);
+        mapped.userLiked = result.userLiked ?? mapped.userLiked ?? updated.userLiked;
+        mapped.userDisliked = result.userDisliked ?? mapped.userDisliked ?? updated.userDisliked;
+        this.updateCommentInState(mapped);
+      },
+      error: err => {
+        console.error('Failed to like comment', err);
+        this.updateCommentInState(comment);
+      }
     });
   }
 
   toggleDislikeComment(commentId: string): void {
-    this.http.put<any>(`${this.apiUrl}/comments/${commentId}/dislike`, {}).subscribe({
-      next: updated => this.updateCommentInState(this.mapCommentFromApi(updated)),
-      error: err => console.error('Failed to dislike comment', err)
+    const comment = this.commentsSubject.value.find(c => c.comment_id === commentId);
+    if (!comment) {
+      return;
+    }
+
+    const updated: Comment = { ...comment };
+    if (updated.userDisliked) {
+      updated.dislikes = Math.max(0, updated.dislikes - 1);
+      updated.userDisliked = false;
+    } else {
+      if (updated.userLiked) {
+        updated.likes = Math.max(0, updated.likes - 1);
+        updated.userLiked = false;
+      }
+      updated.dislikes += 1;
+      updated.userDisliked = true;
+    }
+
+    this.updateCommentInState(updated);
+
+    const currentUser = this.authService.getCurrentUser();
+    const userId = currentUser?.userId;
+
+    this.http.put<any>(`${this.apiUrl}/comments/${commentId}/dislike`, {}, { params: userId ? { userId: String(userId) } : {} }).subscribe({
+      next: result => {
+        const mapped = this.mapCommentFromApi(result);
+        mapped.userLiked = result.userLiked ?? mapped.userLiked ?? updated.userLiked;
+        mapped.userDisliked = result.userDisliked ?? mapped.userDisliked ?? updated.userDisliked;
+        this.updateCommentInState(mapped);
+      },
+      error: err => {
+        console.error('Failed to dislike comment', err);
+        this.updateCommentInState(comment);
+      }
     });
   }
 
@@ -342,8 +416,8 @@ export class CommunityService {
       // Handle likes/dislikes variations
       likes: post.numLike ?? post.likes ?? post.num_like ?? post.likeCount ?? 0,
       dislikes: post.numDislike ?? post.dislikes ?? post.num_dislike ?? post.dislikeCount ?? 0,
-      userLiked: false,
-      userDisliked: false
+      userLiked: Boolean(post.userLiked ?? post.user_liked ?? false),
+      userDisliked: Boolean(post.userDisliked ?? post.user_disliked ?? false)
     };
     console.log('Mapped post:', mapped);
     return mapped;
@@ -361,10 +435,11 @@ export class CommunityService {
       updated_at: comment.updatedAt ? new Date(comment.updatedAt) : comment.updated_at ? new Date(comment.updated_at) : new Date(),
       likes: comment.numLike ?? comment.likes ?? 0,
       dislikes: comment.numDislike ?? comment.dislikes ?? 0,
-      userLiked: false,
-      userDisliked: false,
+      userLiked: Boolean(comment.userLiked ?? comment.user_liked ?? false),
+      userDisliked: Boolean(comment.userDisliked ?? comment.user_disliked ?? false),
       parent_comment_id: comment.parentCommentId ? String(comment.parentCommentId) : comment.parent_comment_id ?? null,
-      replies: comment.replies ?? []
+      replies: comment.replies ?? [],
+      replyCount: comment.replyCount ?? comment.reply_count ?? 0
     };
   }
 
@@ -377,7 +452,8 @@ export class CommunityService {
 
     const updatedPosts = this.postsSubject.value.map(post => ({
       ...post,
-      commentcount: counts[post.post_id] ?? 0
+      // Use the actual comment count from the API if available, otherwise keep the stored commentcount
+      commentcount: (counts[post.post_id] ?? null) !== null ? counts[post.post_id] : post.commentcount
     }));
 
     this.postsSubject.next(updatedPosts);

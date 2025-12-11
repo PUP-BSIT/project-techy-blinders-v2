@@ -13,7 +13,7 @@
 
         <div class="post-card-modal">
             <div class="post-header-modal">
-            <span class="post-label">Title:</span>
+            <span class="post-label">Caption:</span>
             <span class="post-category">{{ post.title }}</span>
             @if (isPostOwner()) {
             <button class="menu-btn" (click)="togglePostMenu($event)">
@@ -71,10 +71,6 @@
             <div class="post-category-section">
             <span class="category-label">Category:</span>
             <span class="category-value">{{ post.category }}</span>
-            </div>
-
-            <div class="post-description-section">
-            <span class="description-label">Description:</span>
             </div>
 
             <div class="post-content-card">
@@ -225,7 +221,7 @@
                 <img src="assets/comment-circle.png" 
                      alt="comment" 
                      class="action-icon-small">
-                <span>{{ (comment.replies?.length || 0) }}</span>
+                <span>{{ (comment.replyCount || 0) }}</span>
                 </button>
             </div>
             </div>

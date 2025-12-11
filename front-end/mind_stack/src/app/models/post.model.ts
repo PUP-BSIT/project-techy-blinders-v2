@@ -30,7 +30,8 @@ export interface Comment {
   userLiked?: boolean;
   userDisliked?: boolean;
   parent_comment_id?: string | null; 
-  replies?: Comment[]; 
+  replies?: Comment[];
+  replyCount?: number;
 }
 
 export const CATEGORY_OPTIONS = [

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CATEGORY_OPTIONS } from '../../../../models/post.model';
 
 @Component({
   selector: 'app-search',
@@ -10,9 +11,11 @@ import { FormsModule } from '@angular/forms';
 })
 export class Search {
   searchQuery: string = '';
+  categories = ['All Categories', ...CATEGORY_OPTIONS];
   @Output() searchChange = new EventEmitter<string>();
 
   onSearchChange() {
-    this.searchChange.emit(this.searchQuery);
+    const query = this.searchQuery === 'All Categories' ? '' : this.searchQuery;
+    this.searchChange.emit(query);
   }
 }

@@ -9,7 +9,7 @@
 
   <div class="post-card" (click)="onCardClick()">
     <div class="post-header">
-      <span class="post-label">Title:</span>
+      <span class="post-label">Caption:</span>
       <span class="post-category">{{ post.title }}</span>
       @if (isPostOwner()) {
       <button class="menu-btn" (click)="toggleMenu($event)">
@@ -64,10 +64,6 @@
     <div class="post-category-section">
       <span class="category-label">Category:</span>
       <span class="category-value">{{ post.category }}</span>
-    </div>
-
-    <div class="post-description-section">
-      <span class="description-label">Description:</span>
     </div>
 
     <div class="post-content-card">

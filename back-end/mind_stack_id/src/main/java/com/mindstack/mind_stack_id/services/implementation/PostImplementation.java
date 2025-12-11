@@ -12,8 +12,11 @@ import com.mindstack.mind_stack_id.models.PostCreation;
 import com.mindstack.mind_stack_id.models.PostCreation.CategoryType;
 import com.mindstack.mind_stack_id.models.dto.PostDTO;
 import com.mindstack.mind_stack_id.models.User;
+import com.mindstack.mind_stack_id.models.PostReaction;
+import com.mindstack.mind_stack_id.models.PostReaction.ReactionType;
 import com.mindstack.mind_stack_id.repositories.PostRepository;
 import com.mindstack.mind_stack_id.repositories.UserRepository;
+import com.mindstack.mind_stack_id.repositories.PostReactionRepository;
 import com.mindstack.mind_stack_id.services.PostService;
 
 @Service
@@ -24,6 +27,9 @@ public class PostImplementation implements PostService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PostReactionRepository postReactionRepository;
 
     @Override
     public PostCreation createPost(PostCreation post) {
@@ -59,10 +65,10 @@ public class PostImplementation implements PostService {
     }
 
     @Override
-    public List<PostDTO> getAllPosts() {
+    public List<PostDTO> getAllPosts(Long userId) {
         return postRepository.findAll()
             .stream()
-            .map(this::mapToDto)
+            .map(p -> mapToDto(p, userId))
             .toList();
     }
 
@@ -76,7 +82,7 @@ public class PostImplementation implements PostService {
     public List<PostDTO> getPostsByUserId(long userId) {
         return postRepository.findByUserId(userId)
                 .stream()
-            .map(this::mapToDto)
+            .map(p -> mapToDto(p, null))
                 .toList();
     }
 
@@ -85,7 +91,7 @@ public class PostImplementation implements PostService {
         CategoryType categoryType = CategoryType.fromValue(category);
         return postRepository.findByCategory(categoryType)
                 .stream()
-            .map(this::mapToDto)
+            .map(p -> mapToDto(p, null))
                 .toList();
     }
 
@@ -93,7 +99,7 @@ public class PostImplementation implements PostService {
     public List<PostDTO> getPublishedPosts() {
         return postRepository.findByIsPublished(true)
                 .stream()
-            .map(this::mapToDto)
+            .map(p -> mapToDto(p, null))
                 .toList();
     }
 
@@ -174,17 +180,47 @@ public class PostImplementation implements PostService {
     }
 
     @Override
-    public PostCreation likePost(long id) {
+    public PostDTO likePost(long id, Long userId) {
         Optional<PostCreation> post = postRepository.findById(id);
         if (post.isPresent()) {
             PostCreation likedPost = post.get();
-            likedPost.setNumLike(likedPost.getNumLike() != null ? likedPost.getNumLike() + 1 : 1);
             likedPost.setUpdatedAt(LocalDateTime.now());
             ensureUsername(likedPost);
-            
-            System.out.println("Liked post with ID: " + likedPost.getPostId());
-            
-            return postRepository.save(likedPost);
+
+            if (userId == null) {
+                likedPost.setNumLike(likedPost.getNumLike() != null ? likedPost.getNumLike() + 1 : 1);
+                PostCreation saved = postRepository.save(likedPost);
+                return mapToDto(saved, null);
+            }
+
+            ReactionType newReaction = ReactionType.LIKE;
+            Optional<PostReaction> existing = postReactionRepository.findByPostIdAndUserId(id, userId);
+
+            if (existing.isPresent()) {
+                PostReaction reaction = existing.get();
+                if (reaction.getReaction() == ReactionType.LIKE) {
+                    // Undo like
+                    likedPost.setNumLike(Math.max(0, likedPost.getNumLike() != null ? likedPost.getNumLike() - 1 : 0));
+                    postReactionRepository.delete(reaction);
+                } else {
+                    // Switch from dislike to like
+                    likedPost.setNumDislike(Math.max(0, likedPost.getNumDislike() != null ? likedPost.getNumDislike() - 1 : 0));
+                    likedPost.setNumLike(likedPost.getNumLike() != null ? likedPost.getNumLike() + 1 : 1);
+                    reaction.setReaction(newReaction);
+                    postReactionRepository.save(reaction);
+                }
+            } else {
+                // New like
+                likedPost.setNumLike(likedPost.getNumLike() != null ? likedPost.getNumLike() + 1 : 1);
+                PostReaction reaction = new PostReaction();
+                reaction.setPostId(id);
+                reaction.setUserId(userId);
+                reaction.setReaction(newReaction);
+                postReactionRepository.save(reaction);
+            }
+
+            PostCreation saved = postRepository.save(likedPost);
+            return mapToDto(saved, userId);
         }
         
         System.out.println("Post not found: " + id);
@@ -192,24 +228,54 @@ public class PostImplementation implements PostService {
     }
 
     @Override
-    public PostCreation dislikePost(long id) {
+    public PostDTO dislikePost(long id, Long userId) {
         Optional<PostCreation> post = postRepository.findById(id);
         if (post.isPresent()) {
             PostCreation dislikedPost = post.get();
-            dislikedPost.setNumDislike(dislikedPost.getNumDislike() != null ? dislikedPost.getNumDislike() + 1 : 1);
             dislikedPost.setUpdatedAt(LocalDateTime.now());
             ensureUsername(dislikedPost);
-            
-            System.out.println("Disliked post with ID: " + dislikedPost.getPostId());
-            
-            return postRepository.save(dislikedPost);
+
+            if (userId == null) {
+                dislikedPost.setNumDislike(dislikedPost.getNumDislike() != null ? dislikedPost.getNumDislike() + 1 : 1);
+                PostCreation saved = postRepository.save(dislikedPost);
+                return mapToDto(saved, null);
+            }
+
+            ReactionType newReaction = ReactionType.DISLIKE;
+            Optional<PostReaction> existing = postReactionRepository.findByPostIdAndUserId(id, userId);
+
+            if (existing.isPresent()) {
+                PostReaction reaction = existing.get();
+                if (reaction.getReaction() == ReactionType.DISLIKE) {
+                    // Undo dislike
+                    dislikedPost.setNumDislike(Math.max(0, dislikedPost.getNumDislike() != null ? dislikedPost.getNumDislike() - 1 : 0));
+                    postReactionRepository.delete(reaction);
+                } else {
+                    // Switch from like to dislike
+                    dislikedPost.setNumLike(Math.max(0, dislikedPost.getNumLike() != null ? dislikedPost.getNumLike() - 1 : 0));
+                    dislikedPost.setNumDislike(dislikedPost.getNumDislike() != null ? dislikedPost.getNumDislike() + 1 : 1);
+                    reaction.setReaction(newReaction);
+                    postReactionRepository.save(reaction);
+                }
+            } else {
+                // New dislike
+                dislikedPost.setNumDislike(dislikedPost.getNumDislike() != null ? dislikedPost.getNumDislike() + 1 : 1);
+                PostReaction reaction = new PostReaction();
+                reaction.setPostId(id);
+                reaction.setUserId(userId);
+                reaction.setReaction(newReaction);
+                postReactionRepository.save(reaction);
+            }
+
+            PostCreation saved = postRepository.save(dislikedPost);
+            return mapToDto(saved, userId);
         }
         
         System.out.println("Post not found: " + id);
         return null;
     }
 
-    private PostDTO mapToDto(PostCreation post) {
+    private PostDTO mapToDto(PostCreation post, Long userId) {
         String username = post.getUsername();
         System.out.println("Post ID: " + post.getPostId() + ", User ID: " + post.getUserId() + ", Original username: " + username);
         
@@ -228,6 +294,17 @@ public class PostImplementation implements PostService {
         }
         System.out.println("Final username: " + username);
 
+        boolean userLiked = false;
+        boolean userDisliked = false;
+        if (userId != null) {
+            var reactionOpt = postReactionRepository.findByPostIdAndUserId(post.getPostId(), userId);
+            if (reactionOpt.isPresent()) {
+                ReactionType reaction = reactionOpt.get().getReaction();
+                userLiked = reaction == ReactionType.LIKE;
+                userDisliked = reaction == ReactionType.DISLIKE;
+            }
+        }
+
         return new PostDTO(
                 post.getPostId(),
                 post.getUserId(),
@@ -242,7 +319,9 @@ public class PostImplementation implements PostService {
                 post.getCommentCount() != null ? post.getCommentCount() : 0,
                 post.getShowComment() != null ? post.getShowComment() : true,
                 post.getNumLike() != null ? post.getNumLike() : 0,
-                post.getNumDislike() != null ? post.getNumDislike() : 0
+                post.getNumDislike() != null ? post.getNumDislike() : 0,
+                userLiked,
+                userDisliked
         );
     }
 

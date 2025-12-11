@@ -13,12 +13,16 @@ public class CommentDTO {
     private int numLike;
     private int numDislike;
     private Long parentCommentId;
+    private int replyCount;
+    private boolean userLiked;
+    private boolean userDisliked;
 
     public CommentDTO() {
     }
 
-    public CommentDTO(long commentId, long userId, long postId, String username, String content,
-            LocalDateTime createdAt, LocalDateTime updatedAt, int numLike, int numDislike, Long parentCommentId) {
+        public CommentDTO(long commentId, long userId, long postId, String username, String content,
+            LocalDateTime createdAt, LocalDateTime updatedAt, int numLike, int numDislike,
+            Long parentCommentId, int replyCount, boolean userLiked, boolean userDisliked) {
         this.commentId = commentId;
         this.userId = userId;
         this.postId = postId;
@@ -29,6 +33,9 @@ public class CommentDTO {
         this.numLike = numLike;
         this.numDislike = numDislike;
         this.parentCommentId = parentCommentId;
+        this.replyCount = replyCount;
+        this.userLiked = userLiked;
+        this.userDisliked = userDisliked;
     }
 
     public long getCommentId() {
@@ -109,5 +116,29 @@ public class CommentDTO {
 
     public void setParentCommentId(Long parentCommentId) {
         this.parentCommentId = parentCommentId;
+    }
+
+    public int getReplyCount() {
+        return replyCount;
+    }
+
+    public void setReplyCount(int replyCount) {
+        this.replyCount = replyCount;
+    }
+
+    public boolean isUserLiked() {
+        return userLiked;
+    }
+
+    public void setUserLiked(boolean userLiked) {
+        this.userLiked = userLiked;
+    }
+
+    public boolean isUserDisliked() {
+        return userDisliked;
+    }
+
+    public void setUserDisliked(boolean userDisliked) {
+        this.userDisliked = userDisliked;
     }
 }

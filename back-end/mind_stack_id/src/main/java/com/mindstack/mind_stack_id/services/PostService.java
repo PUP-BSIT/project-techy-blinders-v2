@@ -9,7 +9,7 @@ public interface PostService {
     
     PostCreation createPost(PostCreation post);
     
-    List<PostDTO> getAllPosts();
+    List<PostDTO> getAllPosts(Long userId);
     
     PostCreation getPostById(long id);
     
@@ -27,7 +27,7 @@ public interface PostService {
     
     PostCreation unpublishPost(long id);
     
-    PostCreation likePost(long id);
+    PostDTO likePost(long id, Long userId);
     
-    PostCreation dislikePost(long id);
+    PostDTO dislikePost(long id, Long userId);
 }
