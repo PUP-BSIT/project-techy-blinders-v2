@@ -8,4 +8,6 @@ public interface UserService {
     List<UserDTO> getAllUsers();
     User createUser(User user);
     User findUserById(Long userId);
+    User updatePassword(Long userId, String currentPassword, String newPassword);
+    User updateEmail(Long userId, String newEmail);
 }
