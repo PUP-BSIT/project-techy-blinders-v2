@@ -1,25 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-
-export enum QuestionType {
-  MULTIPLE_CHOICE = 'multiple_choice',
-  IDENTIFICATION = 'identification'
-}
+import { QuizzesService, QuizType, QuizItem, QuestionType } from '../../../service/quizzes.service';
+import { AuthService } from '../../../service/auth.service';
 
 export interface QuestionItem {
   question: string;
-  // For multiple choice
   optionA?: string;
   optionB?: string;
   optionC?: string;
   optionD?: string;
   correctAnswer?: string;
-  // For identification
   answer?: string;
-  // For explanation
-  explanation?: string;
 }
 
 export interface Quiz {
@@ -44,6 +37,11 @@ export class QuizzesPage implements OnInit {
   isQuestionModalOpen: boolean = false;
   isConfirmModalOpen: boolean = false;
   isPrivacyModalOpen: boolean = false;
+  isDeleteModalOpen: boolean = false;
+  isNotificationModalOpen: boolean = false;
+  notificationTitle: string = '';
+  notificationMessage: string = '';
+  notificationType: 'success' | 'error' | 'warning' = 'success';
   
   quizTitle: string = '';
   quizDescription: string = '';
@@ -57,6 +55,7 @@ export class QuizzesPage implements OnInit {
   
   editingQuizId: number | null = null;
   selectedQuizIdForPrivacy: number | null = null;
+  quizIdToDelete: number | null = null;
 
   QuestionType = QuestionType;
 
@@ -66,48 +65,67 @@ export class QuizzesPage implements OnInit {
   shareDescription: string = '';
   shareCategory: string = '';
 
-  private readonly STORAGE_KEY = 'quizzes';
+  private quizzesService = inject(QuizzesService);
+  private authService = inject(AuthService);
+  isLoading: boolean = false;
+  quizzesList: Quiz[] = [];
 
   constructor(
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.initializeStorage();
   }
 
   ngOnInit() {
+    this.loadQuizSetsFromBackend();
+    
     this.route.queryParams.subscribe(params => {
       if (params['create'] === 'true') {
         this.openModal();
       }
     });
   }
-  
-  private initializeStorage(): void {
-    if (!localStorage.getItem(this.STORAGE_KEY)) {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify([]));
+
+  private loadQuizSetsFromBackend() {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || !currentUser.userId) {
+      return;
     }
+
+    this.isLoading = true;
+    this.quizzesService.getQuizSetsByUserId(currentUser.userId).subscribe({
+      next: (quizSets) => {
+        const localQuizzes: Quiz[] = quizSets.map(qs => ({
+          quiz_id: qs.quiz_set_id || Date.now(),
+          title: qs.title,
+          description: qs.description,
+          questions: qs.quizzes.map(q => ({
+            question: q.question,
+            optionA: q.optionA,
+            optionB: q.optionB,
+            optionC: q.optionC,
+            optionD: q.optionD,
+            correctAnswer: q.correctAnswer,
+            answer: q.identificationAnswer
+          })),
+          questionType: qs.quiz_type === QuizType.MULTIPLE_CHOICE 
+            ? QuestionType.MULTIPLE_CHOICE 
+            : QuestionType.IDENTIFICATION,
+          created_at: qs.created_at || new Date(),
+          is_public: qs.is_public
+        }));
+
+        this.quizzesList = localQuizzes;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.isLoading = false;
+      }
+    });
   }
 
-  private getQuizzesFromStorage(): Quiz[] {
-    const data = localStorage.getItem(this.STORAGE_KEY);
-    if (!data) return [];
-    
-    const quizzes = JSON.parse(data);
-    return quizzes.map((quiz: any) => ({
-      ...quiz,
-      created_at: new Date(quiz.created_at)
-    }));
-  }
-
-  private saveQuizzesToStorage(quizzes: Quiz[]): void {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(quizzes));
-  }
-
-  // quiz
-  
   get quizzes(): Quiz[] {
-    return this.getQuizzesFromStorage();
+    return this.quizzesList;
   }
 
   get paginatedQuizzes(): Quiz[] {
@@ -168,8 +186,6 @@ export class QuizzesPage implements OnInit {
     return typeof page === 'number' ? String((page as number) + 1) : page as string;
   }
 
-  // modals
-  
   openModal() {
     this.isModalOpen = true;
     this.quizTitle = '';
@@ -184,6 +200,11 @@ export class QuizzesPage implements OnInit {
     this.isModalOpen = false;
     this.isQuestionModalOpen = false;
     this.isConfirmModalOpen = false;
+    this.quizTitle = '';
+    this.quizDescription = '';
+    this.selectedQuestionType = '';
+    this.questions = [];
+    this.currentPage = 0;
     this.editingQuizId = null;
   }
 
@@ -201,14 +222,11 @@ export class QuizzesPage implements OnInit {
     this.isQuestionModalOpen = false;
   }
 
-  // questions
-  
   addQuestion() {
     const newQuestion: QuestionItem = {
       question: ''
     };
 
-    // Initialize based on question type
     if (this.selectedQuestionType === QuestionType.MULTIPLE_CHOICE) {
       newQuestion.optionA = '';
       newQuestion.optionB = '';
@@ -240,8 +258,6 @@ export class QuizzesPage implements OnInit {
     question.correctAnswer = answer;
   }
 
-  // pagination
-  
   get itemsPerPage(): number {
     return this.selectedQuestionType === QuestionType.IDENTIFICATION ? 3 : 2;
   }
@@ -279,31 +295,8 @@ export class QuizzesPage implements OnInit {
     return this.currentPage * this.itemsPerPage + localIndex;
   }
 
-  // save quizx
-  
   saveQuiz() {
     if (this.quizTitle.trim() && this.selectedQuestionType !== '') {
-      // Create the quiz immediately
-      const allQuizzes = this.getQuizzesFromStorage();
-      const newQuizId = Date.now();
-      
-      const newQuiz: Quiz = {
-        quiz_id: newQuizId,
-        title: this.quizTitle,
-        description: this.quizDescription,
-        questions: [],
-        questionType: this.selectedQuestionType as QuestionType,
-        created_at: new Date(),
-        is_public: false
-      };
-      
-      allQuizzes.push(newQuiz);
-      this.saveQuizzesToStorage(allQuizzes);
-      
-      // Set editing mode to this new quiz
-      this.editingQuizId = newQuizId;
-      
-      // Close the initial modal and open the question editor
       this.isModalOpen = false;
       this.isQuestionModalOpen = true;
     }
@@ -311,28 +304,139 @@ export class QuizzesPage implements OnInit {
 
   saveQuizFromQuestionModal() {
     if (this.quizTitle.trim()) {
-      const allQuizzes = this.getQuizzesFromStorage();
-      
-      if (this.editingQuizId !== null) {
-        // update quiz with questions
-        const index = allQuizzes.findIndex(q => q.quiz_id === this.editingQuizId);
-        if (index !== -1) {
-          allQuizzes[index] = {
-            quiz_id: this.editingQuizId,
-            title: this.quizTitle,
-            description: this.quizDescription,
-            questions: this.questions,
-            questionType: this.selectedQuestionType as QuestionType,
-            created_at: allQuizzes[index].created_at,
-            is_public: allQuizzes[index].is_public
-          };
-          
-          this.saveQuizzesToStorage(allQuizzes);
-        }
+      const currentUser = this.authService.getCurrentUser();
+      if (!currentUser || !currentUser.userId) {
+        this.showNotification('Login Required', 'Please log in to save your quiz sets.', 'warning');
+        return;
       }
-      
-      this.closeModal();
+
+      if (this.questions.length === 0) {
+        this.showNotification('Add Questions', 'Please add at least one question to your quiz set.', 'warning');
+        return;
+      }
+
+      const incompleteQuestion = this.questions.find(q => {
+        if (!q.question.trim()) return true;
+        if (this.selectedQuestionType === QuestionType.MULTIPLE_CHOICE) {
+          return !q.optionA?.trim() || !q.optionB?.trim() || 
+                 !q.optionC?.trim() || !q.optionD?.trim() || !q.correctAnswer;
+        } else {
+          return !q.answer?.trim();
+        }
+      });
+
+      if (incompleteQuestion) {
+        this.showNotification('Complete Questions', 'Please fill in all question fields before saving.', 'warning');
+        return;
+      }
+
+      this.isLoading = true;
+
+      const quizType = this.selectedQuestionType === QuestionType.MULTIPLE_CHOICE 
+        ? QuizType.MULTIPLE_CHOICE 
+        : QuizType.IDENTIFICATION_ANSWER;
+
+      const quizItems: QuizItem[] = this.questions.map(q => ({
+        quizType: quizType,
+        question: q.question,
+        optionA: q.optionA,
+        optionB: q.optionB,
+        optionC: q.optionC,
+        optionD: q.optionD,
+        correctAnswer: q.correctAnswer,
+        identificationAnswer: q.answer,
+        points: 1
+      }));
+
+      if (this.editingQuizId !== null) {
+        this.quizzesService.getQuizSetById(this.editingQuizId).subscribe({
+          next: (existingQuizSet) => {
+            const deleteObservables = existingQuizSet.quizzes.map((quiz: any) => 
+              this.quizzesService.deleteQuiz(quiz.quizId)
+            );
+
+            if (deleteObservables.length > 0) {
+              import('rxjs').then(rxjs => {
+                rxjs.forkJoin(deleteObservables).subscribe({
+                  next: () => {
+                    this.updateQuizSetAndAddQuizzes(currentUser.userId, quizType, quizItems);
+                  },
+                  error: (error) => {
+                    this.isLoading = false;
+                  }
+                });
+              });
+            } else {
+              this.updateQuizSetAndAddQuizzes(currentUser.userId, quizType, quizItems);
+            }
+          },
+          error: (error) => {
+            this.isLoading = false;
+          }
+        });
+      } else {
+        this.quizzesService.createQuizSet(
+          currentUser.userId,
+          this.quizTitle,
+          this.quizDescription || '',
+          false,
+          quizType,
+          quizItems
+        ).subscribe({
+          next: (response) => {
+            this.loadQuizSetsFromBackend();
+            this.closeModal();
+          },
+          error: (error) => {
+            this.isLoading = false;
+            this.showNotification('Save Failed', 'Unable to save your quiz set. Please try again.', 'error');
+          }
+        });
+      }
     }
+  }
+
+
+
+  private updateQuizSetAndAddQuizzes(userId: number, quizType: QuizType, quizItems: QuizItem[]) {
+    this.quizzesService.updateQuizSet(
+      this.editingQuizId!,
+      userId,
+      this.quizTitle,
+      this.quizDescription || '',
+      false,
+      quizType,
+      []
+    ).subscribe({
+      next: () => {
+        const addObservables = quizItems.map(item => 
+          this.quizzesService.addQuizToSet(this.editingQuizId!, item)
+        );
+
+        if (addObservables.length > 0) {
+          import('rxjs').then(rxjs => {
+            rxjs.forkJoin(addObservables).subscribe({
+              next: () => {
+                this.loadQuizSetsFromBackend();
+                this.editingQuizId = null;
+                this.closeModal();
+              },
+              error: (error) => {
+                this.isLoading = false;
+              }
+            });
+          });
+        } else {
+          this.loadQuizSetsFromBackend();
+          this.editingQuizId = null;
+          this.closeModal();
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.showNotification('Update Failed', 'Unable to update your quiz set. Please try again.', 'error');
+      }
+    });
   }
 
   editQuiz(id: number) {
@@ -349,14 +453,51 @@ export class QuizzesPage implements OnInit {
   }
 
   deleteQuiz(id: number) {
-    const allQuizzes = this.getQuizzesFromStorage();
-    const filteredQuizzes = allQuizzes.filter(q => q.quiz_id !== id);
-    this.saveQuizzesToStorage(filteredQuizzes);
-    
-    const maxPage = Math.max(0, Math.ceil(filteredQuizzes.length / this.quizzesPerPage) - 1);
-    if (this.quizzesCurrentPage > maxPage) {
-      this.quizzesCurrentPage = maxPage;
+    this.quizIdToDelete = id;
+    this.isDeleteModalOpen = true;
+  }
+
+  closeDeleteModal() {
+    this.isDeleteModalOpen = false;
+    this.quizIdToDelete = null;
+  }
+
+  showNotification(title: string, message: string, type: 'success' | 'error' | 'warning' = 'success') {
+    this.notificationTitle = title;
+    this.notificationMessage = message;
+    this.notificationType = type;
+    this.isNotificationModalOpen = true;
+  }
+
+  closeNotificationModal() {
+    this.isNotificationModalOpen = false;
+  }
+
+  confirmDelete() {
+    if (this.quizIdToDelete === null) {
+      return;
     }
+
+    this.isLoading = true;
+    this.isDeleteModalOpen = false;
+
+    this.quizzesService.deleteQuizSet(this.quizIdToDelete).subscribe({
+      next: () => {
+        this.loadQuizSetsFromBackend();
+        
+        const maxPage = Math.max(0, Math.ceil(this.quizzesList.length / this.quizzesPerPage) - 1);
+        if (this.quizzesCurrentPage > maxPage) {
+          this.quizzesCurrentPage = maxPage;
+        }
+
+        this.quizIdToDelete = null;
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.quizIdToDelete = null;
+        this.showNotification('Delete Failed', 'Unable to delete your quiz set. Please try again.', 'error');
+      }
+    });
   }
 
   playQuiz(id: number) {
@@ -388,11 +529,10 @@ export class QuizzesPage implements OnInit {
   }
 
   togglePrivacy(id: number) {
-    const allQuizzes = this.getQuizzesFromStorage();
-    const quiz = allQuizzes.find(q => q.quiz_id === id);
+    const quiz = this.quizzesList.find(q => q.quiz_id === id);
     if (quiz) {
       quiz.is_public = !quiz.is_public;
-      this.saveQuizzesToStorage(allQuizzes);
+      this.quizzesList = [...this.quizzesList];
     }
   }
 
@@ -431,19 +571,11 @@ export class QuizzesPage implements OnInit {
       this.shareDescription.trim() &&
       this.shareCategory.trim()
     ) {
-      const allQuizzes = this.getQuizzesFromStorage();
-      const quiz = allQuizzes.find(q => q.quiz_id === this.selectedQuizId);
+      const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizId);
 
       if (quiz) {
         quiz.is_public = true;
-        this.saveQuizzesToStorage(allQuizzes);
-
-        console.log('Sharing quiz:', {
-          id: this.selectedQuizId,
-          title: this.shareTitle,
-          category: this.shareCategory,
-          description: this.shareDescription
-        });
+        this.quizzesList = [...this.quizzesList];
       }
 
       this.closeShareModal();

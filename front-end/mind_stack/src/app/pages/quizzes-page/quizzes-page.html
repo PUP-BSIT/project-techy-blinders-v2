@@ -1,10 +1,14 @@
 <div class="container">
     <div class="content-wrapper">
-        <button (click)="openModal()" class="add">
+        <button (click)="openModal()" class="add" [disabled]="isLoading">
             Create New Quiz
         </button>
 
-        <div class="study-sets-wrapper" [class.hidden]="quizzes.length === 0">
+        <div *ngIf="isLoading" class="loading-indicator" style="text-align: center; padding: 20px;">
+            Loading quiz sets...
+        </div>
+
+        <div class="study-sets-wrapper" [class.hidden]="quizzes.length === 0 || isLoading">
             <div class="study-sets-list">
                 <div class="study-set-card" *ngFor="let quiz of paginatedQuizzes; let i = index">
                     <div class="card-left">
@@ -97,8 +101,10 @@
                 </select>
             </div>
             <div class="modal-footer">
-                <button class="btn-cancel" (click)="openConfirmModal()">Cancel</button>
-                <button class="btn-continue" (click)="saveQuiz()">Continue</button>
+                <button class="btn-cancel" (click)="openConfirmModal()" [disabled]="isLoading">Cancel</button>
+                <button class="btn-continue" (click)="saveQuiz()" [disabled]="isLoading || !quizTitle.trim() || !selectedQuestionType">
+                    {{ isLoading ? 'Loading...' : 'Continue' }}
+                </button>
             </div>
         </div>
     </div>
@@ -247,8 +253,10 @@
             </div>
 
             <div class="question-modal-footer">
-                <button class="btn-modal-cancel" (click)="openConfirmModal()">Cancel</button>
-                <button class="btn-modal-save" (click)="saveQuizFromQuestionModal()">Save</button>
+                <button class="btn-modal-cancel" (click)="openConfirmModal()" [disabled]="isLoading">Cancel</button>
+                <button class="btn-modal-save" (click)="saveQuizFromQuestionModal()" [disabled]="isLoading">
+                    {{ isLoading ? 'Saving...' : 'Save' }}
+                </button>
             </div>
         </div>
     </div>
@@ -264,6 +272,36 @@
             <div class="confirm-actions">
                 <button class="btn-confirm-no" (click)="closeConfirmModal()">No</button>
                 <button class="btn-confirm-yes" (click)="confirmCancel()">Yes</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="confirm-overlay" 
+            [class.open]="isDeleteModalOpen" (click)="closeDeleteModal()">
+        <div class="confirm-modal" (click)="$event.stopPropagation()">
+            <h3 class="confirm-title">Delete Quiz Set?</h3>
+            <p class="confirm-message">
+                Are you sure you want to delete this quiz set? 
+                This action cannot be undone.
+            </p>
+            <div class="confirm-actions">
+                <button class="btn-confirm-no" (click)="closeDeleteModal()">Cancel</button>
+                <button class="btn-confirm-yes" (click)="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="confirm-overlay" 
+            [class.open]="isNotificationModalOpen" (click)="closeNotificationModal()">
+        <div class="confirm-modal notification-modal" 
+             [class.success]="notificationType === 'success'"
+             [class.error]="notificationType === 'error'"
+             [class.warning]="notificationType === 'warning'"
+             (click)="$event.stopPropagation()">
+            <h3 class="confirm-title">{{ notificationTitle }}</h3>
+            <p class="confirm-message">{{ notificationMessage }}</p>
+            <div class="confirm-actions">
+                <button class="btn-confirm-yes" (click)="closeNotificationModal()">OK</button>
             </div>
         </div>
     </div>
