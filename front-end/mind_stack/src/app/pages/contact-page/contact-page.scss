@@ -42,6 +42,12 @@
     margin-left: 3%;
 }
 
+.contact-form input:focus {
+    outline: none;
+    border-color: #3e7b69;
+    box-shadow: 0 0 0 3px rgba(62, 123, 105, 0.2);
+}
+
 .contact-form span {
     display: flex;
     font-family: "Roboto", sans-serif;
@@ -60,6 +66,12 @@
     border: solid 0px;
 }
 
+.contact-form text:focus {
+    outline: none;
+    border-color: #3e7b69;
+    box-shadow: 0 0 0 3px rgba(62, 123, 105, 0.2);
+}
+
 .submit-class {
     margin-top: 10%;
     width: 100%;
@@ -70,7 +82,7 @@
     padding: 10px;
     width: 240%;
     border-radius: 10px;
-    background-color: #3e7b69;
+    background-color: #287c55;
     font-family: "Roboto", sans-serif;
     font-weight: bold;
     color: white;

@@ -15,7 +15,7 @@ export class LandingPage {
   }
 
   onStartNow () {
-    this.router.navigate(['registration']);
+    this.router.navigate(['register']);
   }
 
   onLogin() {

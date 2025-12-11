@@ -28,6 +28,8 @@
     padding: 40px 30px;
     background-color: #478f79;
     border-radius: 20px 0 0 20px;
+    box-shadow: -5px 0px 12px rgba(36, 105, 73, 0.3);
+
 }
 
 .header-class {
@@ -68,6 +70,7 @@
     background-color: #6cdbb9;
     border-radius: 0 20px 20px 0;
     overflow: hidden;
+    box-shadow: 5px 0px 12px rgba(36, 105, 73, 0.3);
 }
 
 .registration-form form {
@@ -124,7 +127,7 @@
     font-family: "Roboto", sans-serif;
     font-size: 11px;
     font-weight: 500;
-    color: #ff0000;
+    color: #034626;
     line-height: 1.2;
 }
 
@@ -137,7 +140,7 @@
         padding: 11px;
         border: none;
         border-radius: 8px;
-        background-color: #3e7b69;
+        background-color: #287c55;
         font-family: "Roboto", sans-serif;
         font-weight: 600;
         color: white;
@@ -146,7 +149,7 @@
         transition: all 0.3s ease;
         
         &:hover:not(:disabled) {
-            background: #2e5d4f;
+            background: #1c563b;
             transform: translateY(-1px);
         }
         
@@ -171,7 +174,7 @@
         padding: 11px;
         border: none;
         border-radius: 8px;
-        background-color: #172e27;
+        background-color: #16dc81;
         font-family: "Roboto", sans-serif;
         font-weight: 600;
         color: white;
@@ -180,7 +183,7 @@
         transition: all 0.3s ease;
         
         &:hover {
-            background: #0f1d1a;
+            background: #109959;
             transform: translateY(-1px);
         }
         

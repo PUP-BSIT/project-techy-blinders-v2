@@ -16,6 +16,7 @@ import { UserProfilePage } from './pages/user-profile-page/user-profile-page';
 import { AccountSettings } from './pages/user-profile-page/account-settings/account-settings';
 import { EditProfilePage } from './pages/user-profile-page/edit-profile-page/edit-profile-page';
 import { AuthGuard } from '../guards/auth.guard';
+import { ForgotPassword } from './pages/forgot-password/forgot-password';
 
 declare module '@angular/router' {
     interface Route {
@@ -27,7 +28,8 @@ export const routes: Routes = [
     {path: '', component: LandingPage },  
     {path: 'contact', component: ContactPage },
     {path: 'login', component: LoginPage},
-    {path: 'registration', component: RegistrationPage},
+    {path: 'register', component: RegistrationPage},
+    {path: 'forgot-password', component: ForgotPassword},
 
     { 
         path: 'app',

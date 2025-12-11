@@ -38,6 +38,7 @@
             color: #fff;
             a {
                 color: #02542d;
+                cursor: pointer;
             }
         }
     }
@@ -59,6 +60,13 @@
     border-radius: 5px;
 }
 
+.email-class input:focus, 
+.password-class input:focus{
+    outline: none;
+    border-color: #3e7b69;
+    box-shadow: 0 0 0 3px rgba(62, 123, 105, 0.2);
+}
+
 .email-class {
     position: absolute;
     margin-top: 17px;
@@ -75,7 +83,7 @@
     font-family: "Roboto", sans-serif;
     font-size: 14px;
     font-weight: bolder;
-    color: red;
+    color: #034626;
 }
 
 .forgot-password {
