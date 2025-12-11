@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../service/auth.service';
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardService } from '../../../service/dashboard.service';
 
 interface StudyItem {
   id: string;

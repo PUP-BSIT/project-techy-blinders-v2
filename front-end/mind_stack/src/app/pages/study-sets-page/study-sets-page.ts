@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { StudySetsService, StudySet } from '../../services/study-sets.service';
+import { StudySetsService, StudySet } from '../../../service/study-sets.service';
 import { AuthService } from '../../../service/auth.service';
 
 @Component({
