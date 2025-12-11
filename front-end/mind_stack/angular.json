@@ -24,6 +24,12 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+              {
+                "glob": "image-logo.png",
+                "input": "src/assets",
+                "output": "/"
+              },
+              
               "src/assets",
               {
                 "glob": "**/*",

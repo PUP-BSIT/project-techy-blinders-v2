@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LoginRequest } from '../../models/user.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../../service/auth.service';
@@ -11,7 +11,7 @@ import { NavBar } from "../../shared/components/nav-bar/nav-bar";
   templateUrl: './login-page.html',
   styleUrls: ['./login-page.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, NavBar]
+  imports: [ReactiveFormsModule, NavBar, RouterLink]
 })
 export class LoginPage {
   private fb = inject(FormBuilder);
