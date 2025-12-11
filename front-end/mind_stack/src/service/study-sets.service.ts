@@ -135,22 +135,22 @@ export class StudySetsService {
    * Add a single flashcard to an existing set
    * POST /api/flashcards/{studySetId}/flashcard
    */
-  addFlashcardToSet(studySetId: number, keyTerm: string, definition: string): Observable<{ flashcardId: number; studySetId: number; title: string; description: string }> {
-    return this.http.post<{ flashcardId: number; studySetId: number; title: string; description: string }>(`${this.apiUrl}/${studySetId}/flashcard`, {
+  addFlashcardToSet(studySetId: number, keyTerm: string, definition: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${studySetId}/flashcard`, {
       title: keyTerm,
       description: definition
-    });
+    }, { responseType: 'text' as 'json' });
   }
 
   /**
    * Update a single flashcard
    * PUT /api/flashcards/flashcard/{flashcardId}
    */
-  updateFlashcard(flashcardId: number, keyTerm: string, definition: string): Observable<{ flashcardId: number; studySetId: number; title: string; description: string }> {
-    return this.http.put<{ flashcardId: number; studySetId: number; title: string; description: string }>(`${this.apiUrl}/flashcard/${flashcardId}`, {
+  updateFlashcard(flashcardId: number, keyTerm: string, definition: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/flashcard/${flashcardId}`, {
       title: keyTerm,
       description: definition
-    });
+    }, { responseType: 'text' as 'json' });
   }
 
   /**

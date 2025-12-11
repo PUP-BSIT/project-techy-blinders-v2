@@ -26,7 +26,7 @@
                         <button class="edit-btn" (click)="editStudySet(studySet.flashcard_id)">
                             Edit
                         </button>
-                        <button class="delete-btn" (click)="deleteStudySet(studySet.flashcard_id)">
+                        <button class="delete-btn" (click)="openDeleteConfirm(studySet.flashcard_id)">
                             Delete
                         </button>
                     </div>
@@ -176,13 +176,19 @@
             [class.open]="isConfirmModalOpen" (click)="closeConfirmModal()">
         <div class="confirm-modal" (click)="$event.stopPropagation()">
             <h3 class="confirm-title">Are you sure?</h3>
-            <p class="confirm-message">
+            <p class="confirm-message" *ngIf="pendingDeleteStudySetId === null">
                 Do you really want to cancel? All unsaved changes 
                 will be lost.
             </p>
+            <p class="confirm-message" *ngIf="pendingDeleteStudySetId !== null">
+                Do you really want to delete this study set? This action cannot be undone.
+            </p>
             <div class="confirm-actions">
-                <button class="btn-confirm-no" (click)="closeConfirmModal()">No</button>
-                <button class="btn-confirm-yes" (click)="confirmCancel()">Yes</button>
+                <button class="btn-confirm-no" *ngIf="pendingDeleteStudySetId === null" (click)="closeConfirmModal()">No</button>
+                <button class="btn-confirm-yes" *ngIf="pendingDeleteStudySetId === null" (click)="confirmCancel()">Yes</button>
+
+                <button class="btn-confirm-no" *ngIf="pendingDeleteStudySetId !== null" (click)="cancelDelete()">No</button>
+                <button class="btn-confirm-yes" *ngIf="pendingDeleteStudySetId !== null" (click)="confirmDelete()">Yes, Delete</button>
             </div>
         </div>
     </div>
