@@ -1,7 +1,7 @@
 import { Component, ViewChildren, QueryList, AfterViewInit, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CommunityService } from '../../services/community.service';
+import { CommunityService } from '../../../service/community.service';
 import { PostCard } from './components/post-card/post-card/post-card';
 import { Post, Comment } from '../../models/post.model';
 import { Subject, takeUntil } from 'rxjs';

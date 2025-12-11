@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StudySet, StudySetsService } from '../../../services/study-sets.service';
+import { StudySet, StudySetsService } from '../../../../service/study-sets.service';
 
 @Component({
   selector: 'app-open-study-set',

@@ -3,7 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { OpenStudySet } from './open-study-set';
-import { StudySetsService } from '../../../services/study-sets.service';
+import { StudySetsService } from '../../../../service/study-sets.service';
 
 describe('OpenStudySet', () => {
   let component: OpenStudySet;

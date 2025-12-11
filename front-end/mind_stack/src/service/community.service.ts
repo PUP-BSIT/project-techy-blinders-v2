@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
-import { Post, Comment } from '../models/post.model';
-import { AuthService } from '../../service/auth.service';
+import { Post, Comment } from '../app/models/post.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'

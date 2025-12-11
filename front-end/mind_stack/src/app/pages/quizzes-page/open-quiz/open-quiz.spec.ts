@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { OpenQuiz } from './open-quiz';
-import { QuizzesService, QuestionType } from '../../../services/quizzes.service';
+import { QuizzesService, QuestionType } from '../../../../service/quizzes.service';
 
 describe('OpenQuiz', () => {
   let component: OpenQuiz;
