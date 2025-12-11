@@ -1,6 +1,7 @@
 package com.mindstack.mind_stack_id.models.dto;
 
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class CommentDTO {
     private long commentId;
@@ -8,7 +9,9 @@ public class CommentDTO {
     private long postId;
     private String username;
     private String content;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private LocalDateTime createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private LocalDateTime updatedAt;
     private int numLike;
     private int numDislike;
@@ -20,7 +23,7 @@ public class CommentDTO {
     public CommentDTO() {
     }
 
-        public CommentDTO(long commentId, long userId, long postId, String username, String content,
+    public CommentDTO(long commentId, long userId, long postId, String username, String content,
             LocalDateTime createdAt, LocalDateTime updatedAt, int numLike, int numDislike,
             Long parentCommentId, int replyCount, boolean userLiked, boolean userDisliked) {
         this.commentId = commentId;

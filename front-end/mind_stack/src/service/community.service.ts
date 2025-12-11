@@ -47,7 +47,8 @@ export class CommunityService {
       next: posts => {
         console.log('✓ Raw API Response:', posts);
         console.log('First post sample:', posts[0]);
-        this.postsSubject.next(posts.map(p => this.mapPostFromApi(p)));
+        const mapped = posts.map(p => this.mapPostFromApi(p));
+        this.postsSubject.next(this.sortPostsByNewest(mapped));
       },
       error: err => {
         console.error('✗ Failed to load posts:', err);
@@ -77,6 +78,23 @@ export class CommunityService {
     });
   }
 
+  // Robust parser for backend date strings without timezone info
+  private parseBackendDate(value: any): Date {
+    if (!value) return new Date();
+    if (value instanceof Date) return value;
+    let s = String(value).trim();
+    // Format: yyyy-MM-dd HH:mm:ss (DB typical) -> treat as UTC
+    if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(s)) {
+      s = s.replace(' ', 'T') + 'Z';
+    }
+    // Format: yyyy-MM-ddTHH:mm:ss(.fraction) without Z -> treat as UTC
+    else if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?$/.test(s)) {
+      s = s + 'Z';
+    }
+    // Otherwise, let Date parse it as-is
+    return new Date(s);
+  }
+
   createPost(post: Partial<Post>): void {
     const currentUser = this.authService.getCurrentUser();
     const payload = {
@@ -97,7 +115,7 @@ export class CommunityService {
       next: created => {
         const mapped = this.mapPostFromApi(created);
         const currentPosts = this.postsSubject.value;
-        this.postsSubject.next([mapped, ...currentPosts]);
+        this.postsSubject.next(this.sortPostsByNewest([mapped, ...currentPosts]));
       },
       error: err => console.error('Failed to create post', err)
     });
@@ -264,7 +282,10 @@ export class CommunityService {
 
     this.http.post<any>(`${this.apiUrl}/comments`, payload).subscribe({
       next: created => {
+        console.log('Created comment from API:', created);
         const mapped = this.mapCommentFromApi(created);
+        console.log('Mapped comment:', mapped);
+        console.log('Created_at type:', typeof mapped.created_at, 'Value:', mapped.created_at);
         const comments = [...this.commentsSubject.value, mapped];
         this.commentsSubject.next(comments);
 
@@ -408,8 +429,8 @@ export class CommunityService {
       slug: post.slug ?? post.slug ?? '',
       category: typeof post.category === 'object' ? post.category.value ?? post.category : post.category ?? '',
       is_published: Boolean(post.isPublished ?? post.is_published ?? post.publish ?? false),
-      created_at: post.createdAt ? new Date(post.createdAt) : post.created_at ? new Date(post.created_at) : new Date(),
-      updated_at: post.updatedAt ? new Date(post.updatedAt) : post.updated_at ? new Date(post.updated_at) : new Date(),
+      created_at: post.createdAt ? this.parseBackendDate(post.createdAt) : post.created_at ? this.parseBackendDate(post.created_at) : new Date(),
+      updated_at: post.updatedAt ? this.parseBackendDate(post.updatedAt) : post.updated_at ? this.parseBackendDate(post.updated_at) : new Date(),
       // Handle comment count variations
       commentcount: post.commentCount ?? post.commentcount ?? post.comments?.length ?? post.num_comments ?? 0,
       showcomment: Boolean(post.showComment ?? post.showcomment ?? true),
@@ -431,8 +452,8 @@ export class CommunityService {
       user_id: String(comment.userId ?? comment.user_id ?? ''),
       username: comment.username ?? '',
       content: comment.content ?? '',
-      created_at: comment.createdAt ? new Date(comment.createdAt) : comment.created_at ? new Date(comment.created_at) : new Date(),
-      updated_at: comment.updatedAt ? new Date(comment.updatedAt) : comment.updated_at ? new Date(comment.updated_at) : new Date(),
+      created_at: comment.createdAt ? this.parseBackendDate(comment.createdAt) : comment.created_at ? this.parseBackendDate(comment.created_at) : new Date(),
+      updated_at: comment.updatedAt ? this.parseBackendDate(comment.updatedAt) : comment.updated_at ? this.parseBackendDate(comment.updated_at) : new Date(),
       likes: comment.numLike ?? comment.likes ?? 0,
       dislikes: comment.numDislike ?? comment.dislikes ?? 0,
       userLiked: Boolean(comment.userLiked ?? comment.user_liked ?? false),
@@ -483,6 +504,14 @@ export class CommunityService {
       numLike: post.likes,
       numDislike: post.dislikes
     };
+  }
+
+  private sortPostsByNewest(posts: Post[]): Post[] {
+    return [...posts].sort((a, b) => {
+      const aTime = a.created_at ? new Date(a.created_at).getTime() : 0;
+      const bTime = b.created_at ? new Date(b.created_at).getTime() : 0;
+      return bTime - aTime;
+    });
   }
 
   private replacePost(updated: Post): void {

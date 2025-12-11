@@ -36,6 +36,8 @@ export class CommunityPage implements OnInit, OnDestroy {
   currentUserInitial = 'J';
   currentUserId = '';
   isSidebarCollapsed = false;
+  now: Date = new Date();
+  private timeInterval: any;
 
   private destroy$ = new Subject<void>();
 
@@ -45,11 +47,18 @@ export class CommunityPage implements OnInit, OnDestroy {
     this.setCurrentUserInitial();
     this.communityService.loadInitialData();
     this.subscribeToUpdates();
+    // Global clock: update frequently to refresh time labels in sync with child components
+    this.timeInterval = setInterval(() => {
+      this.now = new Date();
+    }, 15000);
   }
 
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+    if (this.timeInterval) {
+      clearInterval(this.timeInterval);
+    }
   }
 
   setCurrentUserInitial() {

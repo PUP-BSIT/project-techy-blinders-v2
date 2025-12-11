@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Post } from '../../../../../models/post.model';
 
@@ -9,10 +9,14 @@ import { Post } from '../../../../../models/post.model';
   templateUrl: './post-card.html',
   styleUrl: './post-card.scss'
 })
-export class PostCard {
+export class PostCard implements OnInit, OnDestroy, OnChanges {
    @Input() post!: Post;
   @Input() currentUserInitial: string = 'J';
   @Input() currentUserId: string = '';
+  @Input() now?: Date;
+  
+  private updateInterval: any;
+  currentTime = new Date();
   
   @Output() openModal = new EventEmitter<Post>();
   @Output() likePost = new EventEmitter<Post>();
@@ -22,6 +26,26 @@ export class PostCard {
 
   showMenu = false;
   showDeleteConfirm = false;
+
+  ngOnInit() {
+    this.currentTime = this.now ?? new Date();
+    // Update time display frequently to avoid stale minutes
+    this.updateInterval = setInterval(() => {
+      this.currentTime = this.now ?? new Date();
+    }, 15000);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['now'] && this.now) {
+      this.currentTime = this.now;
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
+  }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
@@ -37,12 +61,17 @@ export class PostCard {
   }
 
   getTimeAgo(date: Date): string {
-    const now = new Date();
-    const diff = now.getTime() - new Date(date).getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const diffMs = Math.max(0, this.currentTime.getTime() - new Date(date).getTime());
+    const seconds = Math.floor(diffMs / 1000);
+    const minutes = Math.floor(diffMs / (1000 * 60));
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     
-    if (hours < 1) return 'Just now';
-    return `${hours} hours ago`;
+    if (seconds < 60) return 'Just now';
+    if (minutes < 60) return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+    if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+    if (days === 1) return '1 day ago';
+    return `${days} days ago`;
   }
 
   onCardClick() {
