@@ -10,6 +10,7 @@ import { AuthService } from '../../service/auth.service';
 export class CommunityService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
+  // Relative URL so Angular proxy handles forwarding like other services (e.g., StudySetsService)
   private readonly apiUrl = '/api';
   
   private postsSubject = new BehaviorSubject<Post[]>([]);
@@ -320,11 +321,14 @@ export class CommunityService {
   private mapPostFromApi(post: any): Post {
     console.log('Mapping post:', post);
     // Handle different possible field names from API response
+    const resolvedUserId = String(post.userId ?? post.user_id ?? '0');
+    const resolvedUsername = (post.username ?? post.userName ?? '').toString().trim();
+
     const mapped: Post = {
       post_id: String(post.postId ?? post.post_id ?? post.id ?? ''),
-      user_id: String(post.userId ?? post.user_id ?? post.userId ?? ''),
-      // Username is missing in the current API payload; fall back to userId so something meaningful shows up.
-      username: post.username ?? post.userName ?? String(post.userId ?? post.user_id ?? ''),
+      user_id: resolvedUserId,
+      // Default to a readable username so UI never shows a blank label
+      username: resolvedUsername.length > 0 ? resolvedUsername : `User ${resolvedUserId || '0'}`,
       title: post.title ?? '',
       content: post.content ?? post.description ?? '',
       slug: post.slug ?? post.slug ?? '',

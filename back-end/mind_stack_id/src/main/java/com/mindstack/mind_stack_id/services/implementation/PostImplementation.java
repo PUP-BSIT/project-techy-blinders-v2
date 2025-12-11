@@ -50,6 +50,8 @@ public class PostImplementation implements PostService {
         if (post.getNumDislike() == null) {
             post.setNumDislike(0);
         }
+
+        ensureUsername(post);
         
         System.out.println("Created post with ID: " + post.getPostId());
         
@@ -111,6 +113,7 @@ public class PostImplementation implements PostService {
             updatedPost.setNumLike(post.getNumLike());
             updatedPost.setNumDislike(post.getNumDislike());
             updatedPost.setUpdatedAt(LocalDateTime.now());
+            ensureUsername(updatedPost);
             
             System.out.println("Updated post with ID: " + updatedPost.getPostId());
             
@@ -141,6 +144,7 @@ public class PostImplementation implements PostService {
             PostCreation publishedPost = post.get();
             publishedPost.setPublish(true);
             publishedPost.setUpdatedAt(LocalDateTime.now());
+            ensureUsername(publishedPost);
             
             System.out.println("Published post with ID: " + publishedPost.getPostId());
             
@@ -158,6 +162,7 @@ public class PostImplementation implements PostService {
             PostCreation unpublishedPost = post.get();
             unpublishedPost.setPublish(false);
             unpublishedPost.setUpdatedAt(LocalDateTime.now());
+            ensureUsername(unpublishedPost);
             
             System.out.println("Unpublished post with ID: " + unpublishedPost.getPostId());
             
@@ -175,6 +180,7 @@ public class PostImplementation implements PostService {
             PostCreation likedPost = post.get();
             likedPost.setNumLike(likedPost.getNumLike() != null ? likedPost.getNumLike() + 1 : 1);
             likedPost.setUpdatedAt(LocalDateTime.now());
+            ensureUsername(likedPost);
             
             System.out.println("Liked post with ID: " + likedPost.getPostId());
             
@@ -192,6 +198,7 @@ public class PostImplementation implements PostService {
             PostCreation dislikedPost = post.get();
             dislikedPost.setNumDislike(dislikedPost.getNumDislike() != null ? dislikedPost.getNumDislike() + 1 : 1);
             dislikedPost.setUpdatedAt(LocalDateTime.now());
+            ensureUsername(dislikedPost);
             
             System.out.println("Disliked post with ID: " + dislikedPost.getPostId());
             
@@ -237,5 +244,24 @@ public class PostImplementation implements PostService {
                 post.getNumLike() != null ? post.getNumLike() : 0,
                 post.getNumDislike() != null ? post.getNumDislike() : 0
         );
+    }
+
+    private void ensureUsername(PostCreation post) {
+        if (post == null) {
+            return;
+        }
+
+        String username = post.getUsername();
+        if (username != null && !username.isBlank()) {
+            return;
+        }
+
+        User user = userRepository.findByUserId(post.getUserId());
+        if (user != null && user.getUsername() != null && !user.getUsername().isBlank()) {
+            post.setUsername(user.getUsername());
+            return;
+        }
+
+        post.setUsername("User " + post.getUserId());
     }
 }
