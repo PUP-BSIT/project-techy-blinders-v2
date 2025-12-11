@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+import jakarta.persistence.EntityManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,9 @@ public class FlashcardSetServiceImpl implements FlashCardService {
 
     @Autowired
     private FlashcardSetRepository flashcardSetRepository;
+    
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     @Transactional
@@ -40,26 +45,28 @@ public class FlashcardSetServiceImpl implements FlashCardService {
         String slug = generateSlug(request.getTitle(), studySetId);
         flashcardSet.setSlug(slug);
         
-        LocalDateTime now = LocalDateTime.now();
-        flashcardSet.setCreatedAt(now);
-        flashcardSet.setUpdatedAt(now);
-        
         // Create flashcards if provided
         if (request.getFlashcards() != null && !request.getFlashcards().isEmpty()) {
+            LocalDateTime now = LocalDateTime.now();
             for (FlashcardItemDTO flashcardDTO : request.getFlashcards()) {
-                long flashcardId = ThreadLocalRandom.current().nextLong(1000000000L, 10000000000L);
-                
+                long flashcardId = flashcardDTO.getFlashcardId() != null
+                    ? flashcardDTO.getFlashcardId()
+                    : ThreadLocalRandom.current().nextLong(1000000000L, 10000000000L);
+
                 FlashCardItem flashcard = new FlashCardItem();
                 flashcard.setFlashcardId(flashcardId);
                 flashcard.setTitle(flashcardDTO.getTitle());
                 flashcard.setDescription(flashcardDTO.getDescription());
                 flashcard.setCreatedAt(now);
                 flashcard.setUpdatedAt(now);
-                
+
                 // Add flashcard to the set (sets bidirectional relationship)
                 flashcardSet.addFlashcard(flashcard);
             }
         }
+        LocalDateTime now = LocalDateTime.now();
+        flashcardSet.setCreatedAt(now);
+        flashcardSet.setUpdatedAt(now);
         
         // Save the flashcard set (this will cascade save the flashcards)
         FlashcardSet savedSet = flashcardSetRepository.save(flashcardSet);
@@ -110,7 +117,7 @@ public class FlashcardSetServiceImpl implements FlashCardService {
     public FlashcardSetResponse updateFlashcardSet(Long studySetId, CreateFlashcardSetRequest request) {
         FlashcardSet flashcardSet = flashcardSetRepository.findById(studySetId)
             .orElseThrow(() -> new RuntimeException("Flashcard set not found with id: " + studySetId));
-        
+
         // Update basic fields
         if (request.getTitle() != null) {
             flashcardSet.setTitle(request.getTitle());
@@ -122,10 +129,50 @@ public class FlashcardSetServiceImpl implements FlashCardService {
         }
         flashcardSet.setPublic(request.isPublic());
         flashcardSet.setUpdatedAt(LocalDateTime.now());
+
+        // Log incoming flashcards for debugging
+        if (request.getFlashcards() != null) {
+            System.out.println("Incoming flashcards payload for update:");
+            request.getFlashcards().forEach(dto -> System.out.println("  dto.title='" + dto.getTitle() + "', dto.description='" + dto.getDescription() + "', dto.id='" + dto.getFlashcardId() + "'"));
+            
+            System.out.println("Current flashcards in set BEFORE update:");
+            flashcardSet.getFlashcards().forEach(f -> System.out.println("  existing: id=" + f.getFlashcardId() + ", title='" + f.getTitle() + "', description='" + f.getDescription() + "'"));
+
+            LocalDateTime now = LocalDateTime.now();
+
+            flashcardSet.getFlashcards().clear();
+            entityManager.flush();
+            
+            System.out.println("Cleared all flashcards, now adding from request...");
+
+            for (FlashcardItemDTO dto : request.getFlashcards()) {
+                long flashcardId = dto.getFlashcardId() != null 
+                    ? dto.getFlashcardId() 
+                    : ThreadLocalRandom.current().nextLong(1000000000L, 10000000000L);
+
+                FlashCardItem flashcard = new FlashCardItem();
+                flashcard.setFlashcardId(flashcardId);
+                flashcard.setTitle(dto.getTitle());
+                flashcard.setDescription(dto.getDescription());
+                flashcard.setCreatedAt(now);
+                flashcard.setUpdatedAt(now);
+                
+                flashcardSet.addFlashcard(flashcard);
+                System.out.println("Added flashcard id=" + flashcardId + " title='" + dto.getTitle() + "' description='" + dto.getDescription() + "'");
+            }
+
+            System.out.println("Updated flashcards. Count: " + flashcardSet.getFlashcards().size());
+        }
+
+        FlashcardSet saved = flashcardSetRepository.save(flashcardSet);
+        entityManager.flush();
+        entityManager.refresh(saved);
         
-        FlashcardSet updatedSet = flashcardSetRepository.save(flashcardSet);
+        System.out.println("Saved flashcard set id=" + saved.getStudySetId() + " with " + saved.getFlashcards().size() + " flashcards");
+        System.out.println("Final flashcards after save:");
+        saved.getFlashcards().forEach(f -> System.out.println("  saved: id=" + f.getFlashcardId() + ", title='" + f.getTitle() + "', description='" + f.getDescription() + "'"));
         
-        return convertToResponse(updatedSet);
+        return convertToResponse(saved);
     }
 
     @Override
@@ -134,7 +181,6 @@ public class FlashcardSetServiceImpl implements FlashCardService {
         FlashcardSet flashcardSet = flashcardSetRepository.findById(studySetId)
             .orElseThrow(() -> new RuntimeException("Flashcard set not found with id: " + studySetId));
         
-        // Delete the set (cascade will delete all flashcards due to orphanRemoval=true)
         flashcardSetRepository.delete(flashcardSet);
         
         System.out.println("Deleted flashcard set with ID: " + studySetId);
@@ -164,6 +210,34 @@ public class FlashcardSetServiceImpl implements FlashCardService {
         flashcardSetRepository.save(flashcardSet);
         
         System.out.println("Added flashcard with ID: " + flashcardId + " to set: " + studySetId);
+        
+        return flashcard;
+    }
+
+    @Override
+    @Transactional
+    public FlashCardItem updateFlashcard(Long flashcardId, FlashcardItemRequest flashcardRequest) {
+        // Find the flashcard set that contains this flashcard
+        FlashcardSet flashcardSet = flashcardSetRepository.findAll().stream()
+            .filter(set -> set.getFlashcards().stream()
+                .anyMatch(f -> f.getFlashcardId().equals(flashcardId)))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Flashcard not found with id: " + flashcardId));
+        
+        // Find and update the flashcard
+        FlashCardItem flashcard = flashcardSet.getFlashcards().stream()
+            .filter(f -> f.getFlashcardId().equals(flashcardId))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Flashcard not found with id: " + flashcardId));
+        
+        flashcard.setTitle(flashcardRequest.getTitle());
+        flashcard.setDescription(flashcardRequest.getDescription());
+        flashcard.setUpdatedAt(LocalDateTime.now());
+        
+        // Save the set (will cascade save the updated flashcard)
+        flashcardSetRepository.save(flashcardSet);
+        
+        System.out.println("Updated flashcard with ID: " + flashcardId);
         
         return flashcard;
     }

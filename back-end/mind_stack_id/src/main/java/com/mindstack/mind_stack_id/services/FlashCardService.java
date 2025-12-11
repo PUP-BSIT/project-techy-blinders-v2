@@ -18,5 +18,6 @@ public interface FlashCardService {
     void deleteFlashcardSet(Long studySetId);
     
     FlashCardItem addFlashcardToSet(Long studySetId, FlashcardItemRequest flashcardRequest);
+    FlashCardItem updateFlashcard(Long flashcardId, FlashcardItemRequest flashcardRequest);
     void deleteFlashcard(Long flashcardId);
 }
