@@ -4,7 +4,6 @@
     </button>
 
     <div class="play-wrapper">
-        <!-- clickable card   -->
         <div class="play-card" (click)="isAnswerRevealed() ? $event.stopPropagation() : null">
             <div class="grad-cap-icon">
                 <img src="/assets/image-logo.png" alt="Logo">
@@ -24,7 +23,6 @@
                     <div class="question-section">
                         <h2 class="question-text">{{ currentQuestion()?.question }}</h2>
 
-                        <!-- m.choice options -->
                         @if (isMultipleChoice()) {
                             <div class="choices">
                                 <div 
@@ -57,7 +55,6 @@
                             </div>
                         }
 
-                        <!-- identification input -->
                         @if (isIdentification()) {
                             <div class="identification-input">
                                 <input 
@@ -80,10 +77,8 @@
                     </div>
                 }
 
-                <!-- answer -->
                 @if (isAnswerRevealed()) {
                     <div class="answer-section">
-                        <!-- m. choice -->
                         @if (isMultipleChoice() && selectedAnswer()) {
                             <p class="user-answer">
                                 <strong>Your answer: </strong> 
@@ -91,7 +86,6 @@
                             </p>
                         }
 
-                        <!-- ident -->
                         @if (isIdentification() && userTypedAnswer()) {
                             <p class="user-answer">
                                 <strong>Your answer: </strong> 
@@ -110,10 +104,8 @@
                             }
                         </div>
 
-                        <!-- Show correct answer -->
                         <h2 class="answer-text">Correct Answer:</h2>
 
-                        <!-- multiple choice answer -->
                         @if (isMultipleChoice()) {
                             <p class="full-answer">
                                 @switch(currentQuestion()?.correctAnswer) {
@@ -125,12 +117,10 @@
                             </p>
                         }
 
-                        <!-- ident answer -->
                         @if (isIdentification()) {
                             <p class="full-answer">{{ currentQuestion()?.answer }}</p>
                         }
 
-                        <!-- next quiz item -->
                         @if (currentIndex() < totalQuestions() - 1) {
                             <button
                                 class="next_item_btn"
@@ -180,14 +170,15 @@
     </div>
 </div>
 
-<!-- optional for now if thee quiz is not found -->
-<div class="container error-container" [class.hidden]="quiz()">
+@if (!isLoading() && !quiz()) {
+<div class="container error-container">
     <div class="error-message">
         <h2>Quiz Not Found</h2>
         <p>The quiz you're looking for doesn't exist.</p>
         <button class="btn btn-primary" (click)="goBack()">Go Back to Quizzes</button>
     </div>
 </div>
+}
 
 @if (scoreModalOpen()) {
 <div class="score-modal-backdrop"></div>
