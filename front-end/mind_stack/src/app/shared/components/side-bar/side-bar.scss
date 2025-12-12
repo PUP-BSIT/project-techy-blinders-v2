@@ -201,8 +201,7 @@ a.active {
     overflow: hidden;
     
     .collapsed & {
-        justify-content: center;
-        padding: 15px 10px;
+        display: none;
     }
 }
 
@@ -283,9 +282,35 @@ a.active {
     text-decoration: underline;
 }
 
+.logout-btn-collapsed {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: transparent;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    width: 51px;
+    height: 51px;
+    
+    .collapsed & {
+        display: flex;
+    }
+    
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+}
+
 .icon-btn {
-    width: 45px;
-    height: 45px;
+    width: 35px;
+    height: 35px;
     object-fit: contain;
 }
 
