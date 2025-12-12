@@ -1,22 +1,34 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
+import { of } from 'rxjs';
 
 import { OpenQuiz } from './open-quiz';
-import { QuizzesService, QuestionType } from '../../../../service/quizzes.service';
+import { QuizzesService, QuestionType, QuizType } from '../../../../service/quizzes.service';
 
 describe('OpenQuiz', () => {
   let component: OpenQuiz;
   let fixture: ComponentFixture<OpenQuiz>;
 
   const mockQuizzesService = {
-    getQuizById: (id: number) => ({
-      quiz_id: 1,
+    getQuizSetById: (id: number) => of({
+      quiz_set_id: 1,
       title: 'Test Quiz',
       description: 'A sample quiz',
-      questions: [{ question: 'Sample question' }],
-      questionType: QuestionType.MULTIPLE_CHOICE,
+      quizzes: [{
+        quizId: 1,
+        question: 'Sample question',
+        optionA: 'A',
+        optionB: 'B',
+        optionC: 'C',
+        optionD: 'D',
+        correctAnswer: 'A',
+        identificationAnswer: '',
+        points: 1
+      }],
+      quiz_type: QuizType.MULTIPLE_CHOICE,
       created_at: new Date(),
-      is_public: false
+      is_public: false,
+      user_id: 1
     })
   } as Partial<QuizzesService>;
 

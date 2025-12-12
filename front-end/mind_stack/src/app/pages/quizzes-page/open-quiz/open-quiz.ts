@@ -1,8 +1,9 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QuestionItem, Quiz } from '../quizzes-page';
 import { FormsModule } from '@angular/forms';
+import { QuizzesService, QuizType, QuestionType } from '../../../../service/quizzes.service';
 
 @Component({
   selector: 'app-open-quiz',
@@ -23,8 +24,9 @@ export class OpenQuiz implements OnInit {
   showScoreButton = signal(false);
 
   scoreModalOpen = signal(false);
+  isLoading = signal(false);
 
-  private readonly STORAGE_KEY = 'quizzes';
+  private quizzesService = inject(QuizzesService);
 
   constructor(
     private route: ActivatedRoute,
@@ -36,27 +38,44 @@ export class OpenQuiz implements OnInit {
     if (id) this.loadQuiz(id);
   }
 
-  private getQuizzesFromStorage(): Quiz[] {
-    const raw = localStorage.getItem(this.STORAGE_KEY);
-    if (!raw) return [];
-
-    const parsed = JSON.parse(raw);
-    return parsed.map((q: any) => ({
-      ...q,
-      created_at: new Date(q.created_at)
-    }));
-  }
-
   loadQuiz(id: number) {
-    const quizzes = this.getQuizzesFromStorage();
-    const found = quizzes.find(q => q.quiz_id === id) || null;
-    this.quiz.set(found);
+    this.isLoading.set(true);
+    this.quizzesService.getQuizSetById(id).subscribe({
+      next: (quizSet) => {
+        const quiz: Quiz = {
+          quiz_id: quizSet.quiz_set_id || id,
+          title: quizSet.title,
+          description: quizSet.description,
+          questions: quizSet.quizzes.map(q => ({
+            question: q.question,
+            optionA: q.optionA,
+            optionB: q.optionB,
+            optionC: q.optionC,
+            optionD: q.optionD,
+            correctAnswer: q.correctAnswer,
+            answer: q.identificationAnswer
+          })),
+          questionType: quizSet.quiz_type === QuizType.MULTIPLE_CHOICE 
+            ? QuestionType.MULTIPLE_CHOICE 
+            : QuestionType.IDENTIFICATION,
+          created_at: quizSet.created_at || new Date(),
+          is_public: quizSet.is_public
+        };
 
-    if (found) {
-      this.answersCorrectness.set(new Array(found.questions.length).fill(false));
-      this.showScoreButton.set(false);
-      this.scoreVisible.set(false);
-    }
+        this.quiz.set(quiz);
+        this.isLoading.set(false);
+
+        if (quiz) {
+          this.answersCorrectness.set(new Array(quiz.questions.length).fill(false));
+          this.showScoreButton.set(false);
+          this.scoreVisible.set(false);
+        }
+      },
+      error: (error) => {
+        this.isLoading.set(false);
+        this.quiz.set(null);
+      }
+    });
   }
 
   currentQuestion = computed<QuestionItem | null>(() => {
@@ -69,13 +88,11 @@ export class OpenQuiz implements OnInit {
     return this.quiz()?.questions.length || 0;
   });
 
-  // is current question is multiple choice?
   isMultipleChoice = computed(() => {
     const q = this.currentQuestion();
     return !!(q?.optionA && q?.optionB && q?.optionC && q?.optionD);
   });
 
-  // is current question is identification?
   isIdentification = computed(() => {
     const q = this.currentQuestion();
     return !!q?.answer && !this.isMultipleChoice();
@@ -135,7 +152,6 @@ export class OpenQuiz implements OnInit {
     updated[index] = isCorrect;
     this.answersCorrectness.set(updated);
 
-    // show scorebutton will appear
     if (index === this.totalQuestions() - 1) {
       this.showScoreButton.set(true);
     }
