@@ -17,46 +17,52 @@
 
     <div class="contact-form">
         <form [formGroup]="contactForm" (ngSubmit)="contactValidation()">
-            <div>
-                <label>Name </label>
-            </div>
-            <input type="text" formControlName="name" placeholder="Name">
-                @if (nameControl?.touched) {
-                    @if(nameControl?.errors?.['required']) {
-                        <div>
-                           <span>Input your name</span> 
-                        </div>
+            <div class="field">
+                <div>
+                    <label>Name </label>
+                </div>
+                <input type="text" formControlName="name" placeholder="Enter name...">
+                    @if (nameControl?.touched) {
+                        @if(nameControl?.errors?.['required']) {
+                            <div>
+                               <p class="validators-message">Input name</p> 
+                            </div>
+                        }
                     }
-                }
-            <div>
-                <label>Email </label>
             </div>
-            <input type="text" formControlName="email" placeholder="Email">
-                @if (emailControl?.touched) {
-                    @if(emailControl?.errors?.['required']) {
-                        <div>
-                            <span>Input email</span> 
-                        </div>
-                        
-                    }@else if (emailControl?.errors?.['email']) {
-                        <div>
-                            <span>Invalid Email Format</span>
-                        </div>
-                        
+            <div class="field">
+                <div>
+                    <label>Email </label>
+                </div>
+                <input type="text" formControlName="email" placeholder="Enter email...">
+                    @if (emailControl?.touched) {
+                        @if(emailControl?.errors?.['required']) {
+                            <div>
+                                <p class="validators-message">Input email</p> 
+                            </div>
+                            
+                        }@else if (emailControl?.errors?.['email']) {
+                            <div>
+                                <span>Invalid Email Format</span>
+                            </div>
+                            
+                        }
                     }
-                }
-            <div>
-                <label>Message </label>
             </div>
-            <textarea rows="4" formControlName="message" placeholder="message"></textarea>
-                @if (messageControl?.touched) {
-                    @if (messageControl?.errors?.['required']) {
-                        <div>
-                            <span>Input Message</span>
-                        </div>
-                        
+            <div class="field">
+                <div>
+                    <label>Message </label>
+                </div>
+                <textarea rows="4" formControlName="message" placeholder="Enter message..."></textarea>
+                    @if (messageControl?.touched) {
+                        @if (messageControl?.errors?.['required']) {
+                            <div>
+                                <p class="validators-message">Add message</p>
+                            </div>
+                            
+                        }
                     }
-                }
+            </div>
             <div class="submit-class">
                 <button type="submit">Submit</button>
             </div>
