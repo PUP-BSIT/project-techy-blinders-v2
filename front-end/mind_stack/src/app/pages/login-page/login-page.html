@@ -18,13 +18,13 @@
             <!-- Email -->
             <div class="email-class">
                 <div><label>Email</label></div>
-                <input formControlName="email" type="text" placeholder="Email">
+                <input formControlName="email" type="text" placeholder="Enter email...">
 
                 @if (emailControl?.touched) {
                     @if(emailControl?.errors?.['required']) {
-                        <div><span>Enter your email</span></div>
+                        <p class="validators-message">Enter your email</p>
                     } @else if (emailControl?.errors?.['email']) {
-                        <div><span>Invalid email format</span></div>
+                        <p class="validators-message">Invalid email format</p>
                     }
                 }
             </div>
@@ -32,11 +32,11 @@
             <!-- Password -->
             <div class="password-class">
                 <div><label>Password</label></div>
-                <input formControlName="password" type="password" placeholder="Password">
+                <input formControlName="password" type="password" placeholder="Enter password...">
 
                 @if (passwordControl?.touched) {
                     @if(passwordControl?.errors?.['required']) {
-                        <div><span>Input a password</span></div>
+                        <p class="validators-message">Input a password</p>
                     }
                 }
             </div>
@@ -48,7 +48,7 @@
 
             <!-- Forgot password -->
             <div class="forgot-password">
-                <a routerLink="/forgot-password">Forgot Password</a>
+                <a routerLink="/forgot-password">Forgot Password?</a>
             </div>
 
             <!-- Login button -->
@@ -56,9 +56,7 @@
                 <button type="submit" [disabled]="!loginForm.valid || isLoading">Login</button>
             </div>
 
-            <div class="register-class">
-                <p>Don't have an account? <a routerLink="/register">Register</a></p>
-            </div>
+            <p class="register-class">Don't have an account? <a routerLink="/register"> Register</a></p>
         </form>
     </div>
 
