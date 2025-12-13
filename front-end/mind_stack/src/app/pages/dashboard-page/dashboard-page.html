@@ -13,7 +13,7 @@
         </div>
         <div class="user-stats">
           <div class="stat-badge clickable" (click)="navigateToQuizzes()">
-            <span class="stat-label">Quizzes</span>
+            <span class="stat-label">Quiz Sets</span>
             <span class="stat-number">{{ quizCount }}</span>
           </div>
           <div class="stat-badge clickable" (click)="navigateToFlashcards()">
@@ -28,14 +28,14 @@
 
           <section class="quick-actions-section">
             <div class="action-row">
-              <h2 class="action-title">Create Flashcard Set</h2>
+              <h2 class="action-title">Create a Flashcard Set</h2>
               <button class="create-btn" (click)="createFlashcards()">Create</button>
             </div>
             
             <div class="divider"></div>
             
             <div class="action-row">
-              <h2 class="action-title">Create Quiz</h2>
+              <h2 class="action-title">Create a Quiz Set</h2>
               <button class="create-btn" (click)="createQuiz()">Create</button>
             </div>
           </section>

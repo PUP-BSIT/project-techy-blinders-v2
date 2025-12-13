@@ -20,7 +20,7 @@
     justify-content: center;
     border: solid 0px;
     width: 30%;
-    margin-left: 45%;
+    margin-left: 42%;
     margin-top: 7%;
     padding: 40px;
     height: 320px;
@@ -32,16 +32,15 @@
     .forgot-password {
         margin-top: 190px;
     }
+}
 
-    .register-class {
-        p {
-            color: #fff;
-            a {
-                color: #02542d;
-                cursor: pointer;
-            }
-        }
-    }
+.register-class {
+    padding-left: 10%;
+    color: #02542d;
+}
+
+.register-button {
+    color: blue;
 }
 
 .login-form label {
@@ -50,14 +49,15 @@
     font-size: 15px;
     font-weight: bolder;
     color: #02542d;
-    margin-top: 5%;
 }
 
 .email-class input, .password-class input{
     border: solid 0px;
-    width: 130%;
+    width: 150%;
     padding: 10px;
     border-radius: 5px;
+    margin-left: 10px;
+    margin-top: 10px;
 }
 
 .email-class input:focus, 
@@ -86,17 +86,27 @@
     color: #034626;
 }
 
+.validators-message {
+    position: absolute;
+    left:5%;
+    bottom: -20px;
+    color: red;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 0;
+    line-height: 16px;
+}
+
 .forgot-password {
-    width: 100%;
+    width: 200%;
 }
 
 .forgot-password a {
-    display: flex;
-    margin-left: 35%;
+    margin-left: 27%;
     text-decoration: none;
-    color: #02542d;
+    color: blue;
     font-weight: 500;
-    font-size: 15px;
+    font-size: 13px;
     font-family: "Roboto", sans-serif;
 }
 
@@ -122,7 +132,7 @@
 .login-button {
     margin-top: 10%;
     width: 100%;
-    margin-left: 20%;
+    margin-left: 30%;
 }
 
 .login-button button {
