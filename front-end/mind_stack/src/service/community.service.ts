@@ -375,7 +375,16 @@ export class CommunityService {
   }
 
   getCommentsForPost(postId: string): Comment[] {
-    return this.commentsSubject.value.filter(c => c.post_id === postId);
+    const allComments = this.commentsSubject.value;
+    
+    // Get only top-level comments for this post (no parent_comment_id)
+    const topLevelComments = allComments.filter(c => c.post_id === postId && !c.parent_comment_id);
+    
+    // For each top-level comment, attach its replies
+    return topLevelComments.map(comment => ({
+      ...comment,
+      replies: allComments.filter(c => c.parent_comment_id === comment.comment_id)
+    }));
   }
 
   updateComment(commentId: string, newContent: string): void {
