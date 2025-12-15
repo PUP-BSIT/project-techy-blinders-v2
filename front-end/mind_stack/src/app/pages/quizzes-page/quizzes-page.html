@@ -70,7 +70,6 @@
         </div>
     </div>
 
-    <!-- Quiz Creation Modal -->
     <div class="modal-overlay" 
             [class.open]="isModalOpen">
         <div class="modal-content quiz-modal">
@@ -109,7 +108,6 @@
         </div>
     </div>
 
-    <!-- Question Editor Modal -->
     <div class="modal-overlay" 
             [class.open]="isQuestionModalOpen">
         <div class="modal-content question-editor-modal">
@@ -200,7 +198,6 @@
                         </div>
                     </div>
 
-                    <!-- Identification Questions -->
                     <div class="flashcard-item identification-item" 
                          *ngFor="let question of paginatedQuestions; let i = index"
                          [class.hidden]="!isIdentification()">
@@ -337,16 +334,6 @@
             
             <div class="share-form">
                 <div class="form-group">
-                    <label class="form-label">Select Quiz</label>
-                    <select class="form-select" [(ngModel)]="selectedQuizId">
-                        <option value="" disabled selected>Select a quiz</option>
-                        <option *ngFor="let quiz of quizzes" [value]="quiz.quiz_id">
-                            {{ quiz.title }}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="form-group">
                     <label class="form-label">Title</label>
                     <input type="text" 
                         class="form-input" 
@@ -366,14 +353,6 @@
                         <option value="Announcements">Announcements</option>
                         <option value="Educational Resources">Educational Resources</option>
                     </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-textarea" 
-                            placeholder="Enter description"
-                            [(ngModel)]="shareDescription"
-                            rows="4"></textarea>
                 </div>
             </div>
 

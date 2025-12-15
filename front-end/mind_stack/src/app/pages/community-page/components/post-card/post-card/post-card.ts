@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter, HostListener, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener, OnInit, OnDestroy, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Post } from '../../../../../models/post.model';
 
 @Component({
@@ -15,6 +16,7 @@ export class PostCard implements OnInit, OnDestroy, OnChanges {
   @Input() currentUserId: string = '';
   @Input() now?: Date;
   
+  private router = inject(Router);
   private updateInterval: any;
   currentTime = new Date();
   
@@ -29,7 +31,6 @@ export class PostCard implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit() {
     this.currentTime = this.now ?? new Date();
-    // Update time display frequently to avoid stale minutes
     this.updateInterval = setInterval(() => {
       this.currentTime = this.now ?? new Date();
     }, 15000);
@@ -118,6 +119,38 @@ export class PostCard implements OnInit, OnDestroy, OnChanges {
 
   onCommentClick(event: Event) {
     event.stopPropagation();
-    this.openModal.emit(this.post);
+    if (this.isQuizPost()) {
+      this.playQuiz(event);
+    } else if (this.isFlashcardPost()) {
+      this.playFlashcard(event);
+    } else {
+      this.openModal.emit(this.post);
+    }
+  }
+
+  isQuizPost(): boolean {
+    return this.post.slug?.startsWith('quiz-') || false;
+  }
+
+  isFlashcardPost(): boolean {
+    return this.post.slug?.startsWith('flashcard-') || false;
+  }
+
+  playQuiz(event: Event) {
+    event.stopPropagation();
+    const match = this.post.slug?.match(/^quiz-(\d+)-/);
+    if (match && match[1]) {
+      const quizId = parseInt(match[1], 10);
+      this.router.navigate(['/app/quizzes', quizId]);
+    }
+  }
+
+  playFlashcard(event: Event) {
+    event.stopPropagation();
+    const match = this.post.slug?.match(/^flashcard-(\d+)-/);
+    if (match && match[1]) {
+      const flashcardId = parseInt(match[1], 10);
+      this.router.navigate(['/app/study-sets', flashcardId]);
+    }
   }
 }

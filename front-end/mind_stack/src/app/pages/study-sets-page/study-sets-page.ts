@@ -5,6 +5,7 @@ import { forkJoin, of } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../service/auth.service';
 import { StudySet, StudySetsService } from '../../../service/study-sets.service';
+import { CommunityService } from '../../../service/community.service';
 
 @Component({
   selector: 'app-study-sets-page',
@@ -38,6 +39,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
   private studySetsService = inject(StudySetsService);
   private authService = inject(AuthService);
+  private communityService = inject(CommunityService);
 
   constructor(
     private router: Router,
@@ -80,7 +82,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
         this.studySets = (studySets || []).slice().sort((a, b) => {
           const aId = a.flashcard_id || 0;
           const bId = b.flashcard_id || 0;
-          return aId - bId; // ascending
+          return aId - bId;
         });
         this.isLoading = false;
       },
@@ -93,7 +95,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
           error: error?.error
         });
         this.isLoading = false;
-        // Optionally show user-friendly error message
         alert('Failed to load study sets. Please check the console for details.');
       }
     });
@@ -230,7 +231,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
           this.closeModal();
           this.openFlashcardModal();
 
-          // sorrt oldest -> newest
           this.studySets.push(newStudySet);
           this.studySets.sort((a, b) => (a.flashcard_id || 0) - (b.flashcard_id || 0));
 
@@ -277,7 +277,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
       let studySet = this.studySets.find(s => s.flashcard_id === this.currentStudySetId);
       
       if (!studySet) {
-        console.log('Study set not found in local array, fetching from backend...');
         this.isLoading = true;
         this.studySetsService.getStudySetById(this.currentStudySetId).subscribe({
           next: (fetchedSet) => {
@@ -306,7 +305,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
     this.isLoading = true;
 
-    // Prepare flashcards: trim and filter out incomplete ones
     const prepared = this.flashcards
       .map(f => ({ keyTerm: f.term.trim(), definition: f.definition.trim(), flashcardId: f.flashcardId, isNew: f.isNew }))
       .filter(f => f.keyTerm && f.definition);
@@ -315,7 +313,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
     const studySetIdToRefresh = this.currentStudySetId as number;
 
-    // Split into new flashcards and existing ones to call dedicated endpoints
     const toCreate = prepared.filter(f => !f.flashcardId);
     const toUpdate = prepared.filter(f => !!f.flashcardId);
 
@@ -377,8 +374,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
   }
 
   editFlashcard(index: number) {
-    // The editing is done inline in the template via [(ngModel)]
-    // Just ensure the flashcard is not marked as new if it has an ID
     const flashcard = this.flashcards[index];
     if (flashcard && flashcard.flashcardId) {
       flashcard.isNew = false;
@@ -612,8 +607,9 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
   selectShareOption() {
     if (this.selectedStudySetId !== null) {
+      const studySetId = this.selectedStudySetId;
       this.closePrivacyModal();
-      this.openShareModal(this.selectedStudySetId);
+      this.openShareModal(studySetId);
     }
   }
 
@@ -651,7 +647,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
   }
 
   saveShare() {
-    if (this.selectedStudySetId && this.shareTitle && this.shareCategory && this.shareDescription) {
+    if (this.selectedStudySetId && this.shareTitle.trim() && this.shareCategory.trim()) {
       const currentUser = this.authService.getCurrentUser();
       if (!currentUser) {
         console.error('User not logged in');
@@ -664,14 +660,31 @@ export class StudySetsPage implements OnInit, OnDestroy {
         return;
       }
 
+      const flashcardContent = `${studySet.description || 'A flashcard set to help you study!'} • Flashcards`;
+
+      const flashcardSlug = `flashcard-${studySet.flashcard_id}-${this.slugify(this.shareTitle)}`;
+      
+      this.communityService.createPost({
+        user_id: String(currentUser.userId),
+        username: currentUser.username,
+        title: this.shareTitle,
+        content: flashcardContent,
+        slug: flashcardSlug,
+        category: this.shareCategory,
+        is_published: true,
+        commentcount: 0,
+        showcomment: true,
+        likes: 0,
+        dislikes: 0
+      });
+
       this.isLoading = true;
-      // Update the study set to be public and update title/description if changed
       this.studySetsService.updateStudySet(
         this.selectedStudySetId,
         currentUser.userId,
-        this.shareTitle,
-        this.shareDescription,
-        true, // Set to public
+        studySet.title,
+        studySet.description || '',
+        true,
         studySet.flashcards
       ).subscribe({
         next: (updatedStudySet) => {
@@ -680,20 +693,36 @@ export class StudySetsPage implements OnInit, OnDestroy {
             this.studySets[index] = updatedStudySet;
           }
           this.isLoading = false;
-          
-          console.log('Sharing study set:', {
-            id: this.selectedStudySetId,
-            title: this.shareTitle,
-            category: this.shareCategory,
-            description: this.shareDescription
-          });
+          alert('Flashcard set shared to community successfully!');
           this.closeShareModal();
         },
         error: (error) => {
-          console.error('Error sharing study set:', error);
+          console.error('Error updating flashcard visibility:', error);
           this.isLoading = false;
+          alert('Flashcard was shared but visibility update failed.');
+          this.closeShareModal();
         }
       });
+    } else {
+      let errorMessage = 'Please ';
+      const missing = [];
+      
+      if (!this.selectedStudySetId) missing.push('select a flashcard set');
+      if (!this.shareTitle.trim()) missing.push('enter a title');
+      if (!this.shareCategory.trim()) missing.push('select a category');
+      
+      errorMessage += missing.join(', ') + ' before sharing.';
+      alert(errorMessage);
     }
+  }
+
+  private slugify(text: string): string {
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w\-]+/g, '')
+      .replace(/\-\-+/g, '-');
   }
 }
