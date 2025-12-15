@@ -11,7 +11,7 @@
 .container {
     display: flex;
     margin-top: -1%;
-    margin-left: -1.5%;
+    margin-left: -4.2%;
 }
 
 .login-form {
@@ -20,12 +20,12 @@
     justify-content: center;
     border: solid 0px;
     width: 30%;
-    margin-left: 45%;
+    margin-left: 50%;
     margin-top: 7%;
     padding: 40px;
     height: 320px;
-    border-radius: 30px;
-    z-index: 1;
+    border-radius: 0px;
+    z-index: 5;
     background-color: #6cdbb9;
     box-shadow: 5px 0px 12px rgba(36, 105, 73, 0.3);
 
@@ -50,14 +50,18 @@
     font-size: 15px;
     font-weight: bolder;
     color: #02542d;
-    margin-top: 5%;
+    margin-top: 6%;
+    margin-left: -40%;
+
 }
 
 .email-class input, .password-class input{
     border: solid 0px;
-    width: 130%;
+    width: 200%;
     padding: 10px;
     border-radius: 5px;
+    margin-left: -40%;
+    margin-top: 2%;
 }
 
 .email-class input:focus, 
@@ -135,6 +139,7 @@
     font-weight: bold;
     color: white;
     font-size: 16px;
+    margin-left: -5%;
     cursor: pointer;
     transition: all 0.3s ease;
 
@@ -156,7 +161,7 @@
 
 .seperator-class {
     position: absolute;
-    z-index: 2;
+    z-index: 3;
     border: solid 0px;
     width: 10%;
     height: 400px;
@@ -169,7 +174,7 @@
 
 .logo-class {
     position: absolute;
-    z-index: 3;
+    z-index: 4;
     border: solid 0px;
     width: 20%;
     height: 400px;
@@ -256,7 +261,7 @@
   inset: 0;
   background: rgba(0,0,0,0.5);
   backdrop-filter: blur(2px);
-  z-index: 999;
+  z-index: 1000;
 }
 
 .success-modal {
@@ -264,7 +269,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 1000;
+  z-index: 1001;
   width: 90%;
   max-width: 360px;
 }
@@ -304,16 +309,29 @@
 }
 
 .success-modal .spinner {
-  margin: 0 auto 15px auto;
-  width: 40px;
-  height: 40px;
-  border: 4px solid #c8e6c9;
-  border-top: 4px solid #4CAF50;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+    margin: 0 auto 15px auto;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #c8e6c9;
+    border-top: 4px solid #4CAF50;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }

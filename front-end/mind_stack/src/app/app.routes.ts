@@ -30,7 +30,7 @@ export const routes: Routes = [
     {path: 'login', component: LoginPage},
     {path: 'register', component: RegistrationPage},
     {path: 'forgot-password', component: ForgotPassword},
-
+    
     { 
         path: 'app',
         component: AppLayout,

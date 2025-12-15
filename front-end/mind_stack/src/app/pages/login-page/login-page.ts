@@ -5,18 +5,20 @@ import { LoginRequest } from '../../models/user.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../../service/auth.service';
 import { NavBar } from "../../shared/components/nav-bar/nav-bar";
+import { ForgotPassword } from '../forgot-password/forgot-password';
 
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.html',
   styleUrls: ['./login-page.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, NavBar, RouterLink]
+  imports: [ReactiveFormsModule, NavBar, RouterLink, ForgotPassword]
 })
 export class LoginPage {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private authService = inject(AuthService);
+  showForgotPasswordModal = false;
 
   loginForm: FormGroup;
   isLoading = false;
@@ -84,5 +86,13 @@ export class LoginPage {
 
   get passwordControl() {
     return this.loginForm.get('password');
+  }
+
+  forgotPasswordModal() {
+    this.showForgotPasswordModal = true;
+  }
+
+  closeModal() {
+    this.showForgotPasswordModal = false;
   }
 }
