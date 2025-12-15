@@ -273,35 +273,42 @@
 
 .comment-thread {
     margin-bottom: 16px;
-}
-
-.action-btn.active .action-icon {
-    filter: brightness(0) invert(1);
-}
-
-.comments-section {
-    padding: 0 20px 16px 20px;
-}
-
-.comment-thread {
-    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
 }
 
 .comment-item {
     padding: 14px 16px;
     background: #cae7cf;
     border-radius: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 0;
 }
 
 .comment-item.reply {
     background: rgba(209, 250, 229, 0.6);
+    margin-left: 0;
+    margin-top: 8px;
+    border-radius: 6px;
 }
 
 .replies-container {
-    margin-left: 32px;
-    border-left: 2px solid #A7F3D0;
-    padding-left: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-left: 24px;
+    margin-top: 12px;
+    padding-left: 16px;
+    border-left: 3px solid rgba(5, 150, 105, 0.3);
+}
+
+.replies-container .comment-item.reply {
+    background: rgba(209, 250, 229, 0.5);
+    padding: 12px 14px;
+    margin-bottom: 0;
+}
+
+.replies-container .comment-item.reply:last-child {
+    margin-bottom: 0;
 }
 
 .comment-header {
@@ -593,14 +600,57 @@
 
 .add-comment {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    gap: 0;
     position: sticky;
     bottom: 0;
-    padding: 12px 20px;
     background: #B4DDBA; 
     border-top: 1px solid rgba(0, 0, 0, 0.06);
-    z-index: 1; 
+    z-index: 1;
+}
+
+.replying-to-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 20px;
+    background: rgba(5, 150, 105, 0.1);
+    border-bottom: 1px solid rgba(5, 150, 105, 0.2);
+    font-size: 12px;
+    color: #059669;
+}
+
+.replying-to-indicator span {
+    flex: 1;
+}
+
+.replying-to-indicator strong {
+    color: #047857;
+    font-weight: 600;
+}
+
+.cancel-reply-btn {
+    background: none;
+    border: none;
+    color: #059669;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.cancel-reply-btn:hover {
+    color: #047857;
+}
+
+.comment-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
 }
 
 .comment-input {
