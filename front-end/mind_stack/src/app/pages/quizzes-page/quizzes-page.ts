@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { QuizzesService, QuizType, QuizItem, QuestionType } from '../../../service/quizzes.service';
 import { AuthService } from '../../../service/auth.service';
+import { CommunityService } from '../../../service/community.service';
 
 export interface QuestionItem {
   question: string;
@@ -67,6 +68,7 @@ export class QuizzesPage implements OnInit {
 
   private quizzesService = inject(QuizzesService);
   private authService = inject(AuthService);
+  private communityService = inject(CommunityService);
   isLoading: boolean = false;
   quizzesList: Quiz[] = [];
 
@@ -516,8 +518,9 @@ export class QuizzesPage implements OnInit {
 
   selectShareOption() {
     if (this.selectedQuizIdForPrivacy !== null) {
+      const quizId = this.selectedQuizIdForPrivacy;
       this.closePrivacyModal();
-      this.openShareModal(this.selectedQuizIdForPrivacy);
+      this.openShareModal(quizId);
     }
   }
 
@@ -568,17 +571,92 @@ export class QuizzesPage implements OnInit {
     if (
       this.selectedQuizId &&
       this.shareTitle.trim() &&
-      this.shareDescription.trim() &&
       this.shareCategory.trim()
     ) {
       const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizId);
+      const currentUser = this.authService.getCurrentUser();
 
-      if (quiz) {
-        quiz.is_public = true;
-        this.quizzesList = [...this.quizzesList];
+      if (quiz && currentUser) {
+        const quizContent = `${quiz.description || 'A quiz set to test your knowledge!'} • ${this.getQuestionTypeLabel(quiz.questionType)}`;
+
+        const quizSlug = `quiz-${quiz.quiz_id}-${this.slugify(this.shareTitle)}`;
+        
+        this.communityService.createPost({
+          user_id: String(currentUser.userId),
+          username: currentUser.username,
+          title: this.shareTitle,
+          content: quizContent,
+          slug: quizSlug,
+          category: this.shareCategory,
+          is_published: true,
+          commentcount: 0,
+          showcomment: true,
+          likes: 0,
+          dislikes: 0
+        });
+
+        const quizItems: QuizItem[] = quiz.questions.map(q => ({
+          quizType: quiz.questionType === QuestionType.MULTIPLE_CHOICE 
+            ? QuizType.MULTIPLE_CHOICE 
+            : QuizType.IDENTIFICATION_ANSWER,
+          question: q.question,
+          optionA: q.optionA,
+          optionB: q.optionB,
+          optionC: q.optionC,
+          optionD: q.optionD,
+          correctAnswer: q.correctAnswer,
+          identificationAnswer: q.answer,
+          points: 1
+        }));
+
+        this.quizzesService.updateQuizSet(
+          quiz.quiz_id,
+          currentUser.userId,
+          quiz.title,
+          quiz.description || '',
+          true,
+          quiz.questionType === QuestionType.MULTIPLE_CHOICE 
+            ? QuizType.MULTIPLE_CHOICE 
+            : QuizType.IDENTIFICATION_ANSWER,
+          quizItems
+        ).subscribe({
+          next: () => {
+            quiz.is_public = true;
+            this.quizzesList = [...this.quizzesList];
+            
+            this.showNotification(
+              'Success',
+              'Quiz shared to community successfully!',
+              'success'
+            );
+          },
+          error: (error) => {
+            console.error('Error updating quiz visibility:', error);
+            this.showNotification(
+              'Warning',
+              'Quiz was shared but visibility update failed.',
+              'warning'
+            );
+          }
+        });
       }
 
       this.closeShareModal();
+    } else {
+      let errorMessage = 'Please ';
+      const missing = [];
+      
+      if (!this.selectedQuizId) missing.push('select a quiz');
+      if (!this.shareTitle.trim()) missing.push('enter a title');
+      if (!this.shareCategory.trim()) missing.push('select a category');
+      
+      errorMessage += missing.join(', ') + ' before sharing.';
+      
+      this.showNotification(
+        'Warning',
+        errorMessage,
+        'warning'
+      );
     }
   }
   
@@ -603,5 +681,15 @@ export class QuizzesPage implements OnInit {
 
   isIdentification(): boolean {
     return this.selectedQuestionType === QuestionType.IDENTIFICATION;
+  }
+
+  private slugify(text: string): string {
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w\-]+/g, '')
+      .replace(/\-\-+/g, '-');
   }
 }
