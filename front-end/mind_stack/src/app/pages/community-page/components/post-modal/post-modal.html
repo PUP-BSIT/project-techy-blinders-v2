@@ -111,7 +111,7 @@
         <div class="comments-section">
         @for (comment of comments; track comment.comment_id) {
         <div class="comment-thread">
-            <div class="comment-item">
+            <div class="comment-item" [attr.data-comment-id]="comment.comment_id">
             <div class="comment-header">
                 <div class="user-avatar-small">
                     {{ getInitial(comment.username) }}
@@ -229,7 +229,7 @@
             @if (comment.replies && comment.replies.length > 0) {
             <div class="replies-container">
                 @for (reply of comment.replies; track reply.comment_id) {
-                <div class="comment-item reply">
+                <div class="comment-item reply" [attr.data-comment-id]="reply.comment_id">
                     <div class="comment-header">
                     <div class="user-avatar-small">
                         {{ getInitial(reply.username) }}

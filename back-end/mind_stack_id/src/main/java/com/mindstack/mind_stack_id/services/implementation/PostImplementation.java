@@ -18,6 +18,8 @@ import com.mindstack.mind_stack_id.repositories.PostRepository;
 import com.mindstack.mind_stack_id.repositories.UserRepository;
 import com.mindstack.mind_stack_id.repositories.PostReactionRepository;
 import com.mindstack.mind_stack_id.services.PostService;
+import com.mindstack.mind_stack_id.services.NotificationService;
+import com.mindstack.mind_stack_id.models.Notification;
 
 @Service
 public class PostImplementation implements PostService {
@@ -31,19 +33,21 @@ public class PostImplementation implements PostService {
     @Autowired
     private PostReactionRepository postReactionRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @Override
     public PostCreation createPost(PostCreation post) {
         long randomPostId = ThreadLocalRandom.current().nextLong(1000000000L, 10000000000L);
         post.setPostId(randomPostId);
-        
+
         post.setCreatedAt(LocalDateTime.now());
         post.setUpdatedAt(LocalDateTime.now());
-        
+
         if (post.getPublish() == null) {
             post.setPublish(false);
         }
 
-        // Initialize nullable counters/toggles to sane defaults if missing
         if (post.getCommentCount() == null) {
             post.setCommentCount(0);
         }
@@ -58,18 +62,18 @@ public class PostImplementation implements PostService {
         }
 
         ensureUsername(post);
-        
+
         System.out.println("Created post with ID: " + post.getPostId());
-        
+
         return postRepository.save(post);
     }
 
     @Override
     public List<PostDTO> getAllPosts(Long userId) {
         return postRepository.findAll()
-            .stream()
-            .map(p -> mapToDto(p, userId))
-            .toList();
+                .stream()
+                .map(p -> mapToDto(p, userId))
+                .toList();
     }
 
     @Override
@@ -82,7 +86,7 @@ public class PostImplementation implements PostService {
     public List<PostDTO> getPostsByUserId(long userId) {
         return postRepository.findByUserId(userId)
                 .stream()
-            .map(p -> mapToDto(p, null))
+                .map(p -> mapToDto(p, null))
                 .toList();
     }
 
@@ -91,7 +95,7 @@ public class PostImplementation implements PostService {
         CategoryType categoryType = CategoryType.fromValue(category);
         return postRepository.findByCategory(categoryType)
                 .stream()
-            .map(p -> mapToDto(p, null))
+                .map(p -> mapToDto(p, null))
                 .toList();
     }
 
@@ -99,7 +103,7 @@ public class PostImplementation implements PostService {
     public List<PostDTO> getPublishedPosts() {
         return postRepository.findByIsPublished(true)
                 .stream()
-            .map(p -> mapToDto(p, null))
+                .map(p -> mapToDto(p, null))
                 .toList();
     }
 
@@ -120,12 +124,12 @@ public class PostImplementation implements PostService {
             updatedPost.setNumDislike(post.getNumDislike());
             updatedPost.setUpdatedAt(LocalDateTime.now());
             ensureUsername(updatedPost);
-            
+
             System.out.println("Updated post with ID: " + updatedPost.getPostId());
-            
+
             return postRepository.save(updatedPost);
         }
-        
+
         System.out.println("Post not found: " + id);
         return null;
     }
@@ -138,7 +142,7 @@ public class PostImplementation implements PostService {
             System.out.println("Deleted post with ID: " + id);
             return true;
         }
-        
+
         System.out.println("Post not found: " + id);
         return false;
     }
@@ -151,12 +155,12 @@ public class PostImplementation implements PostService {
             publishedPost.setPublish(true);
             publishedPost.setUpdatedAt(LocalDateTime.now());
             ensureUsername(publishedPost);
-            
+
             System.out.println("Published post with ID: " + publishedPost.getPostId());
-            
+
             return postRepository.save(publishedPost);
         }
-        
+
         System.out.println("Post not found: " + id);
         return null;
     }
@@ -169,12 +173,12 @@ public class PostImplementation implements PostService {
             unpublishedPost.setPublish(false);
             unpublishedPost.setUpdatedAt(LocalDateTime.now());
             ensureUsername(unpublishedPost);
-            
+
             System.out.println("Unpublished post with ID: " + unpublishedPost.getPostId());
-            
+
             return postRepository.save(unpublishedPost);
         }
-        
+
         System.out.println("Post not found: " + id);
         return null;
     }
@@ -204,10 +208,13 @@ public class PostImplementation implements PostService {
                     postReactionRepository.delete(reaction);
                 } else {
                     // Switch from dislike to like
-                    likedPost.setNumDislike(Math.max(0, likedPost.getNumDislike() != null ? likedPost.getNumDislike() - 1 : 0));
+                    likedPost.setNumDislike(
+                            Math.max(0, likedPost.getNumDislike() != null ? likedPost.getNumDislike() - 1 : 0));
                     likedPost.setNumLike(likedPost.getNumLike() != null ? likedPost.getNumLike() + 1 : 1);
                     reaction.setReaction(newReaction);
                     postReactionRepository.save(reaction);
+                    // Notify on switch to like
+                    createPostReactionNotification(likedPost, userId, "POST_LIKE", "liked your post");
                 }
             } else {
                 // New like
@@ -217,12 +224,14 @@ public class PostImplementation implements PostService {
                 reaction.setUserId(userId);
                 reaction.setReaction(newReaction);
                 postReactionRepository.save(reaction);
+                // Notify on new like
+                createPostReactionNotification(likedPost, userId, "POST_LIKE", "liked your post");
             }
 
             PostCreation saved = postRepository.save(likedPost);
             return mapToDto(saved, userId);
         }
-        
+
         System.out.println("Post not found: " + id);
         return null;
     }
@@ -248,14 +257,19 @@ public class PostImplementation implements PostService {
                 PostReaction reaction = existing.get();
                 if (reaction.getReaction() == ReactionType.DISLIKE) {
                     // Undo dislike
-                    dislikedPost.setNumDislike(Math.max(0, dislikedPost.getNumDislike() != null ? dislikedPost.getNumDislike() - 1 : 0));
+                    dislikedPost.setNumDislike(
+                            Math.max(0, dislikedPost.getNumDislike() != null ? dislikedPost.getNumDislike() - 1 : 0));
                     postReactionRepository.delete(reaction);
                 } else {
                     // Switch from like to dislike
-                    dislikedPost.setNumLike(Math.max(0, dislikedPost.getNumLike() != null ? dislikedPost.getNumLike() - 1 : 0));
-                    dislikedPost.setNumDislike(dislikedPost.getNumDislike() != null ? dislikedPost.getNumDislike() + 1 : 1);
+                    dislikedPost.setNumLike(
+                            Math.max(0, dislikedPost.getNumLike() != null ? dislikedPost.getNumLike() - 1 : 0));
+                    dislikedPost
+                            .setNumDislike(dislikedPost.getNumDislike() != null ? dislikedPost.getNumDislike() + 1 : 1);
                     reaction.setReaction(newReaction);
                     postReactionRepository.save(reaction);
+                    // Notify on switch to dislike
+                    createPostReactionNotification(dislikedPost, userId, "POST_DISLIKE", "disliked your post");
                 }
             } else {
                 // New dislike
@@ -265,20 +279,49 @@ public class PostImplementation implements PostService {
                 reaction.setUserId(userId);
                 reaction.setReaction(newReaction);
                 postReactionRepository.save(reaction);
+                // Notify on new dislike
+                createPostReactionNotification(dislikedPost, userId, "POST_DISLIKE", "disliked your post");
             }
 
             PostCreation saved = postRepository.save(dislikedPost);
             return mapToDto(saved, userId);
         }
-        
+
         System.out.println("Post not found: " + id);
         return null;
     }
 
+    private void createPostReactionNotification(PostCreation post, Long actorUserId, String type, String actionText) {
+        if (post == null || actorUserId == null)
+            return;
+        Long targetUserId = post.getUserId();
+        if (targetUserId == null || targetUserId.equals(actorUserId))
+            return;
+
+        String actorName = null;
+        User actor = userRepository.findByUserId(actorUserId);
+        if (actor != null && actor.getUsername() != null && !actor.getUsername().isBlank()) {
+            actorName = actor.getUsername();
+        }
+        if (actorName == null || actorName.isBlank()) {
+            actorName = "User " + actorUserId;
+        }
+
+        Notification n = new Notification();
+        n.setUserId(targetUserId);
+        n.setActorUserId(actorUserId);
+        n.setPostId(post.getPostId());
+        n.setType(type);
+        n.setMessage(actorName + " " + actionText + ".");
+        n.setIsRead(false);
+        notificationService.createNotification(n);
+    }
+
     private PostDTO mapToDto(PostCreation post, Long userId) {
         String username = post.getUsername();
-        System.out.println("Post ID: " + post.getPostId() + ", User ID: " + post.getUserId() + ", Original username: " + username);
-        
+        System.out.println(
+                "Post ID: " + post.getPostId() + ", User ID: " + post.getUserId() + ", Original username: " + username);
+
         if (username == null || username.isBlank()) {
             User user = userRepository.findByUserId(post.getUserId());
             System.out.println("Looking up user by ID: " + post.getUserId() + ", Found: " + (user != null));
@@ -321,8 +364,7 @@ public class PostImplementation implements PostService {
                 post.getNumLike() != null ? post.getNumLike() : 0,
                 post.getNumDislike() != null ? post.getNumDislike() : 0,
                 userLiked,
-                userDisliked
-        );
+                userDisliked);
     }
 
     private void ensureUsername(PostCreation post) {

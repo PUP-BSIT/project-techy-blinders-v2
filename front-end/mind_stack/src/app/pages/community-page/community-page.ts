@@ -9,6 +9,7 @@ import { CreatePost } from './components/create-post/create-post';
 import { Search } from './components/search/search';
 import { PostModal } from './components/post-modal/post-modal';
 import { AuthService } from '../../../service/auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-community-page',
@@ -24,6 +25,7 @@ import { AuthService } from '../../../service/auth.service';
 })
 export class CommunityPage implements OnInit, OnDestroy {
   private authService = inject(AuthService);
+  private route = inject(ActivatedRoute);
   
   posts: Post[] = [];
   allComments: Comment[] = [];
@@ -38,6 +40,8 @@ export class CommunityPage implements OnInit, OnDestroy {
   isSidebarCollapsed = false;
   now: Date = new Date();
   private timeInterval: any;
+  pendingPostId: string | null = null;
+  pendingCommentId: string | null = null;
 
   private destroy$ = new Subject<void>();
 
@@ -46,6 +50,20 @@ export class CommunityPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.setCurrentUserInitial();
     this.communityService.loadInitialData();
+    // Capture deep-link targets from query params (postId, commentId)
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      const postId = params['postId'];
+      const commentId = params['commentId'];
+      this.pendingPostId = postId ?? null;
+      this.pendingCommentId = commentId ?? null;
+      // If posts already loaded, try opening immediately
+      if (this.pendingPostId && this.posts.length > 0) {
+        const target = this.posts.find(p => p.post_id === this.pendingPostId);
+        if (target) {
+          this.openPostModal(target);
+        }
+      }
+    });
     this.subscribeToUpdates();
     // Global clock: update frequently to refresh time labels in sync with child components
     this.timeInterval = setInterval(() => {
@@ -81,6 +99,16 @@ export class CommunityPage implements OnInit, OnDestroy {
           posts.find(p => p.post_id === this.selectedPost!.post_id);
           if (updatedPost) {
             this.selectedPost = updatedPost;
+          }
+        }
+
+        // Handle pending deep-link to a specific post (from notifications)
+        if (this.pendingPostId) {
+          const target = posts.find(p => p.post_id === this.pendingPostId);
+          if (target) {
+            this.openPostModal(target);
+            // Clear pending after opening
+            this.pendingPostId = null;
           }
         }
       });

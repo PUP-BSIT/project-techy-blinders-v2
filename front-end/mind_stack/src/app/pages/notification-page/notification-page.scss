@@ -93,7 +93,8 @@ h2 {
 .notifications-list {
     background-color: $color-text-white;
     border-radius: 15px;
-    padding: 20px;
+    padding: 20px 25px;
+    padding-bottom: 30px;
     box-shadow: $shadow-medium;
     flex: 1;
     overflow-y: auto;
@@ -110,6 +111,7 @@ h2 {
     transition: background-color 0.2s ease;
     border-radius: 8px;
     background-color: transparent;
+    cursor: pointer;
 
     &:last-child {
         margin-bottom: 0;
@@ -117,6 +119,30 @@ h2 {
 
     &:hover {
         background-color: #f8f9fa;
+    }
+
+    &.unread {
+        background-color: #e8f5e9;
+        border: none;
+        border-left: 4px solid $color-primary;
+        border-radius: 8px;
+        padding: 15px;
+        padding-left: 11px;
+        margin-right: 0;
+
+        .notification-content .notification-text {
+            font-weight: 600;
+            color: $color-primary-dark;
+        }
+
+        .read-status {
+            color: $color-primary;
+            font-weight: 600;
+        }
+
+        &:hover {
+            background-color: #d4edda;
+        }
     }
 
     .avatar {

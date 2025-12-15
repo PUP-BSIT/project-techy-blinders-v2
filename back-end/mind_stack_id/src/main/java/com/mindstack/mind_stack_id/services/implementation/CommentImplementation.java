@@ -18,6 +18,8 @@ import com.mindstack.mind_stack_id.repositories.CommentRepository;
 import com.mindstack.mind_stack_id.repositories.PostRepository;
 import com.mindstack.mind_stack_id.repositories.UserRepository;
 import com.mindstack.mind_stack_id.services.CommentService;
+import com.mindstack.mind_stack_id.services.NotificationService;
+import com.mindstack.mind_stack_id.models.Notification;
 
 @Service
 public class CommentImplementation implements CommentService {
@@ -26,13 +28,15 @@ public class CommentImplementation implements CommentService {
     private final PostRepository postRepo;
     private final UserRepository userRepo;
     private final CommentReactionRepository commentReactionRepository;
+    private final NotificationService notificationService;
 
     public CommentImplementation(CommentRepository commentRepo, PostRepository postRepo, UserRepository userRepo,
-            CommentReactionRepository commentReactionRepository) {
+            CommentReactionRepository commentReactionRepository, NotificationService notificationService) {
         this.commentRepo = commentRepo;
         this.postRepo = postRepo;
         this.userRepo = userRepo;
         this.commentReactionRepository = commentReactionRepository;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -102,7 +106,27 @@ public class CommentImplementation implements CommentService {
         long randomCommentId = ThreadLocalRandom.current().nextLong(10000000000L, 99999999999L);
         comment.setCommentId(randomCommentId);
 
-        return commentRepo.save(comment);
+        Comment saved = commentRepo.save(comment);
+
+        // Create notifications
+        if (saved.getParentCommentId() == null) {
+            // New top-level comment -> notify post owner
+            PostCreation post = ensurePostExists(saved.getPostId());
+            if (post != null) {
+                createCommentNotification(post.getUserId(), saved.getUserId(), saved.getPostId(), null,
+                        "POST_COMMENT", "commented on your post");
+            }
+        } else {
+            // Reply to a comment -> notify parent comment owner
+            Comment parent = ensureCommentExists(saved.getParentCommentId());
+            if (parent != null) {
+                createCommentNotification(parent.getUserId(), saved.getUserId(), saved.getPostId(),
+                        saved.getParentCommentId(),
+                        "COMMENT_REPLY", "replied to your comment");
+            }
+        }
+
+        return saved;
     }
 
     @Override
@@ -128,6 +152,7 @@ public class CommentImplementation implements CommentService {
 
         ReactionType newReaction = ReactionType.LIKE;
         var existingReaction = commentReactionRepository.findByCommentIdAndUserId(id, userId);
+        boolean shouldNotify = false;
 
         if (existingReaction.isPresent()) {
             CommentReaction reaction = existingReaction.get();
@@ -139,6 +164,7 @@ public class CommentImplementation implements CommentService {
                 existing.setNumLike(existing.getNumLike() + 1);
                 reaction.setReaction(newReaction);
                 commentReactionRepository.save(reaction);
+                shouldNotify = true; // switch to like
             }
         } else {
             existing.setNumLike(existing.getNumLike() + 1);
@@ -147,9 +173,14 @@ public class CommentImplementation implements CommentService {
             reaction.setUserId(userId);
             reaction.setReaction(newReaction);
             commentReactionRepository.save(reaction);
+            shouldNotify = true; // new like
         }
 
         Comment saved = commentRepo.save(existing);
+        if (shouldNotify) {
+            // Notify on new like or switch to like
+            createCommentReactionNotification(saved, userId, "COMMENT_LIKE", "liked your comment");
+        }
         return mapToDto(saved, userId);
     }
 
@@ -165,6 +196,7 @@ public class CommentImplementation implements CommentService {
 
         ReactionType newReaction = ReactionType.DISLIKE;
         var existingReaction = commentReactionRepository.findByCommentIdAndUserId(id, userId);
+        boolean shouldNotify = false;
 
         if (existingReaction.isPresent()) {
             CommentReaction reaction = existingReaction.get();
@@ -176,6 +208,7 @@ public class CommentImplementation implements CommentService {
                 existing.setNumDislike(existing.getNumDislike() + 1);
                 reaction.setReaction(newReaction);
                 commentReactionRepository.save(reaction);
+                shouldNotify = true; // switch to dislike
             }
         } else {
             existing.setNumDislike(existing.getNumDislike() + 1);
@@ -184,9 +217,14 @@ public class CommentImplementation implements CommentService {
             reaction.setUserId(userId);
             reaction.setReaction(newReaction);
             commentReactionRepository.save(reaction);
+            shouldNotify = true; // new dislike
         }
 
         Comment saved = commentRepo.save(existing);
+        if (shouldNotify) {
+            // Notify on new dislike or switch to dislike
+            createCommentReactionNotification(saved, userId, "COMMENT_DISLIKE", "disliked your comment");
+        }
         return mapToDto(saved, userId);
     }
 
@@ -231,7 +269,7 @@ public class CommentImplementation implements CommentService {
                 userDisliked = reaction == ReactionType.DISLIKE;
             }
         }
-        
+
         return new CommentDTO(
                 comment.getCommentId(),
                 comment.getUserId(),
@@ -275,5 +313,40 @@ public class CommentImplementation implements CommentService {
 
     private boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
+    }
+
+    private void createCommentNotification(Long targetUserId, Long actorUserId, Long postId, Long commentId,
+            String type, String actionText) {
+        if (targetUserId == null || actorUserId == null)
+            return;
+        if (targetUserId.equals(actorUserId))
+            return;
+
+        String actorName = null;
+        User actor = userRepo.findByUserId(actorUserId);
+        if (actor != null && actor.getUsername() != null && !actor.getUsername().isBlank()) {
+            actorName = actor.getUsername();
+        }
+        if (actorName == null || actorName.isBlank()) {
+            actorName = "User " + actorUserId;
+        }
+
+        Notification n = new Notification();
+        n.setUserId(targetUserId);
+        n.setActorUserId(actorUserId);
+        n.setPostId(postId);
+        n.setCommentId(commentId);
+        n.setType(type);
+        n.setMessage(actorName + " " + actionText + ".");
+        n.setIsRead(false);
+        notificationService.createNotification(n);
+    }
+
+    private void createCommentReactionNotification(Comment comment, Long actorUserId, String type, String actionText) {
+        if (comment == null || actorUserId == null)
+            return;
+        Long targetUserId = comment.getUserId();
+        createCommentNotification(targetUserId, actorUserId, comment.getPostId(), comment.getCommentId(), type,
+                actionText);
     }
 }

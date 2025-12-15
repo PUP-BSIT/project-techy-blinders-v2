@@ -15,6 +15,7 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
   @Input() currentUserInitial: string = 'J';
   @Input() currentUserId: string = '';
   @Input() now?: Date;
+  @Input() focusCommentId?: string;
   
   private updateInterval: any;
   currentTime = new Date();
@@ -54,6 +55,14 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['now'] && this.now) {
       this.currentTime = this.now;
+    }
+    const shouldFocusComment = (changes['focusCommentId'] && this.focusCommentId) || (changes['comments'] && this.focusCommentId);
+    if (shouldFocusComment) {
+      // Attempt multiple times to ensure the DOM has rendered
+      const targetId = this.focusCommentId!;
+      setTimeout(() => this.scrollToComment(targetId), 0);
+      setTimeout(() => this.scrollToComment(targetId), 50);
+      requestAnimationFrame(() => this.scrollToComment(targetId));
     }
   }
 
@@ -197,5 +206,15 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
   cancelDeleteComment(event: Event) {
     event.stopPropagation();
     this.showDeleteConfirmForComment = undefined;
+  }
+
+  private scrollToComment(commentId: string) {
+    const el = document.querySelector(`[data-comment-id="${commentId}"]`);
+    if (el) {
+      el.classList.add('highlight');
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Remove highlight after a short delay
+      setTimeout(() => el.classList.remove('highlight'), 1500);
+    }
   }
 }
