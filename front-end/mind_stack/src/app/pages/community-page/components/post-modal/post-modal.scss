@@ -659,6 +659,11 @@
     border: none;
     border-radius: 20px;
     outline: none;
+
+.comment-item.highlight {
+    outline: 2px solid #3DAC78;
+    box-shadow: 0 0 0 4px rgba(61, 172, 120, 0.15);
+}
     font-size: 13px;
     background: white;
     color: #374151;

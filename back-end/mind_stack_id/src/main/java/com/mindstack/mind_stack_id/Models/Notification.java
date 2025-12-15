@@ -6,29 +6,40 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "tbl_notification")
 public class Notification {
-    
+
     @Id
     @Column(name = "notification_id")
     private Long notifId;
-    
+
     @Column(name = "user_id")
     private Long userId;
-    
+
+    @Column(name = "actor_user_id")
+    private Long actorUserId;
+
+    @Column(name = "post_id")
+    private Long postId;
+
+    @Column(name = "comment_id")
+    private Long commentId;
+
     @Column(name = "type")
     private String type;
-    
+
     @Column(name = "message")
     private String message;
-    
+
     @Column(name = "is_read")
     private Boolean isRead;
-    
+
     @Column(name = "created_at")
     private LocalDateTime isCreatedAt;
 
-    public Notification() {}
+    public Notification() {
+    }
 
-    public Notification(Long notifId, Long userId, String type, String message, Boolean isRead, LocalDateTime isCreatedAt) {
+    public Notification(Long notifId, Long userId, String type, String message, Boolean isRead,
+            LocalDateTime isCreatedAt) {
         this.notifId = notifId;
         this.userId = userId;
         this.type = type;
@@ -51,6 +62,30 @@ public class Notification {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Long getActorUserId() {
+        return actorUserId;
+    }
+
+    public void setActorUserId(Long actorUserId) {
+        this.actorUserId = actorUserId;
+    }
+
+    public Long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Long postId) {
+        this.postId = postId;
+    }
+
+    public Long getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(Long commentId) {
+        this.commentId = commentId;
     }
 
     public String getType() {

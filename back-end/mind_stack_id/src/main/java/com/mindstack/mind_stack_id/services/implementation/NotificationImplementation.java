@@ -7,6 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mindstack.mind_stack_id.models.Notification;
 import com.mindstack.mind_stack_id.models.dto.NotificationDTO;
@@ -38,13 +39,15 @@ public class NotificationImplementation implements NotificationService {
         return notificationRepository.findAll()
                 .stream()
                 .map(f -> new NotificationDTO(
-                    f.getNotifId(),
-                    f.getUserId(),
-                    f.getType(),
-                    f.getMessage(),
-                    f.getIsRead(),
-                    f.getIsCreatedAt()
-                ))
+                        f.getNotifId(),
+                        f.getUserId(),
+                        f.getActorUserId(),
+                        f.getPostId(),
+                        f.getCommentId(),
+                        f.getType(),
+                        f.getMessage(),
+                        f.getIsRead(),
+                        f.getIsCreatedAt()))
                 .toList();
     }
 
@@ -57,10 +60,10 @@ public class NotificationImplementation implements NotificationService {
     @Override
     public Notification updateNotification(long id, Notification updatedNotify) {
         Optional<Notification> existingNotify = notificationRepository.findById(id);
-        
+
         if (existingNotify.isPresent()) {
             Notification notify = existingNotify.get();
-            
+
             if (updatedNotify.getMessage() != null && !updatedNotify.getMessage().isEmpty()) {
                 notify.setMessage(updatedNotify.getMessage());
             }
@@ -70,7 +73,7 @@ public class NotificationImplementation implements NotificationService {
             if (updatedNotify.getIsRead() != null) {
                 notify.setIsRead(updatedNotify.getIsRead());
             }
-            
+
             return notificationRepository.save(notify);
         }
         return null;
@@ -90,20 +93,27 @@ public class NotificationImplementation implements NotificationService {
         return notificationRepository.findByUserId(userId)
                 .stream()
                 .map(f -> new NotificationDTO(
-                    f.getNotifId(),
-                    f.getUserId(),
-                    f.getType(),
-                    f.getMessage(),
-                    f.getIsRead(),
-                    f.getIsCreatedAt()
-                ))
+                        f.getNotifId(),
+                        f.getUserId(),
+                        f.getActorUserId(),
+                        f.getPostId(),
+                        f.getCommentId(),
+                        f.getType(),
+                        f.getMessage(),
+                        f.getIsRead(),
+                        f.getIsCreatedAt()))
                 .toList();
     }
 
     @Override
+    @Transactional
     public boolean markAsRead(long id) {
+        int updated = notificationRepository.markAsReadById(id);
+        if (updated > 0) {
+            return true;
+        }
+
         Optional<Notification> notify = notificationRepository.findById(id);
-        
         if (notify.isPresent()) {
             Notification notification = notify.get();
             notification.setIsRead(true);

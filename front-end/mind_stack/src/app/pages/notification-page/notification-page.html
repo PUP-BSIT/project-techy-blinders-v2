@@ -10,10 +10,10 @@
                 </button>
                 <button 
                     type="button" 
-                    [class.active]="activeFilter === 'latest'"
-                    (click)="setFilter('latest')">
+                    [class.active]="activeFilter === 'unread'"
+                    (click)="setFilter('unread')">
                     <img src="assets/bell-icon.png" alt="Bell" class="bell-icon">
-                    Latest
+                    Unread
                 </button>
             </div>
 
@@ -21,20 +21,21 @@
 
             <div class="notifications-list">
                 <div 
-                    *ngFor="let notification of filteredNotifications" 
-                    class="notification-item">
+                    *ngFor="let n of filteredNotifications" 
+                    class="notification-item"
+                    [class.unread]="!n.isRead"
+                    (click)="toggleReadStatus(n)">
                     <div class="avatar">
                         <img src="assets/Group.png" alt="User Avatar">
                     </div>
                     <div class="notification-content">
                         <p class="notification-text">
-                            <span class="user-name">{{ notification.userName }}</span>
-                            {{ notification.message }}
+                            {{ n.message }}
                         </p>
-                        <p class="timestamp">{{ notification.timestamp }}</p>
+                        <p class="timestamp">{{ getTimeAgo(n.createdAt) }}</p>
                     </div>
                     <span class="read-status">
-                        Read | Unread
+                        {{ n.isRead ? 'Read' : 'Unread' }}
                     </span>
                 </div>
             </div>

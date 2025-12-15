@@ -1,13 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface Notification {
-  id: number;
-  userName: string;
-  message: string;
-  timestamp: string;
-  isRead: boolean;
-}
+import { NotificationService, NotificationItem } from '../../../service/notification.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-notification-page',
@@ -16,31 +10,63 @@ interface Notification {
   templateUrl: './notification-page.html',
   styleUrl: './notification-page.scss'
 })
-export class NotificationPage {
-  activeFilter: 'all' | 'latest' = 'all';
-  
-  notifications: Notification[] = [
-    {
-      id: 1,
-      userName: 'Jane Dee',
-      message: 'commented on your study set "study set title"',
-      timestamp: '1 minute ago',
-      isRead: false
-    }
-  ];
+export class NotificationPage implements OnInit {
+  private notificationsService = inject(NotificationService);
+  private router = inject(Router);
+  activeFilter: 'all' | 'unread' = 'all';
+  now = signal<Date>(new Date());
 
-  setFilter(filter: 'all' | 'latest') {
+  notifications = signal<NotificationItem[]>([]);
+
+  constructor() {
+    this.notificationsService.notifications$.subscribe(list => this.notifications.set(list));
+    this.notificationsService.refresh();
+    setInterval(() => this.now.set(new Date()), 15000);
+  }
+
+  ngOnInit(): void {
+    // Ensure a fresh pull whenever this page is instantiated
+    this.notificationsService.refresh();
+  }
+
+  setFilter(filter: 'all' | 'unread') {
     this.activeFilter = filter;
   }
 
-  toggleReadStatus(notification: Notification) {
-    notification.isRead = !notification.isRead;
+  toggleReadStatus(notification: NotificationItem) {
+    // Mark as read if unread
+    if (!notification.isRead) {
+      this.notificationsService.markAsRead(notification.notificationId);
+    }
+    // Navigate to target content based on type & ids
+    this.navigateToTarget(notification);
+  }
+
+  private navigateToTarget(n: NotificationItem) {
+    // Default route to community with optional query params
+    const qp: any = {};
+    if (n.postId) qp.postId = n.postId;
+    if (n.commentId) qp.commentId = n.commentId;
+
+    // For known types, ensure we land on Community page
+    // Types: POST_LIKE, POST_DISLIKE, POST_COMMENT -> post
+    //        COMMENT_LIKE, COMMENT_DISLIKE, COMMENT_REPLY -> comment
+    this.router.navigate(['/app/community'], { queryParams: qp });
   }
 
   get filteredNotifications() {
-    if (this.activeFilter === 'latest') {
-      return this.notifications.filter(n => !n.isRead);
+    const list = this.notifications();
+    if (this.activeFilter === 'unread') {
+      return list.filter(n => !n.isRead);
     }
-    return this.notifications;
+    return list;
+  }
+
+  getTimeAgo(date: Date): string {
+    // Always show: Mon DD, HH:MM AM/PM (e.g., Dec 16, 9:59 PM)
+    const d = new Date(date);
+    const datePart = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const timePart = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    return `${datePart}, ${timePart}`;
   }
 }
