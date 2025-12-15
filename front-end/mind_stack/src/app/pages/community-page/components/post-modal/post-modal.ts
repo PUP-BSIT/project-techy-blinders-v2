@@ -138,9 +138,9 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
 
   onReply(comment: Comment, isReply: boolean) {
     this.replyingTo = { comment, isReply };
-    const mention = `@${comment.username} `;
-    if (!this.newCommentText.startsWith(mention)) {
-      this.newCommentText = mention + this.newCommentText;
+    // Only set mention if input is empty, don't append to existing text
+    if (!this.newCommentText.trim()) {
+      this.newCommentText = `@${comment.username} `;
     }
     queueMicrotask(() => this.replyInputRef?.nativeElement?.focus());
   }

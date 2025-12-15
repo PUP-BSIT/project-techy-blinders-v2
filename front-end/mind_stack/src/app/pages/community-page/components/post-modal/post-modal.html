@@ -285,24 +285,32 @@
     </div>
 
     <div class="add-comment">
-        <div class="user-avatar-small">{{ currentUserInitial }}</div>
-        <input 
-        type="text"
-        class="comment-input"
-        placeholder="Add your Reply"
-        [(ngModel)]="newCommentText"
-        (keyup.enter)="onAddComment()"
-        #replyInput
-        />
-        <button 
-        class="send-btn"
-        [disabled]="!newCommentText.trim()"
-        (click)="onAddComment()"
-        >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M15 1L7 9M15 1L10 15L7 9M15 1L1 6L7 9"/>
-        </svg>
-        </button>
+        @if (replyingTo) {
+            <div class="replying-to-indicator">
+                <span>Replying to <strong>@{{ replyingTo.comment.username }}</strong></span>
+                <button class="cancel-reply-btn" (click)="replyingTo = undefined; newCommentText = ''">✕</button>
+            </div>
+        }
+        <div class="comment-input-wrapper">
+            <div class="user-avatar-small">{{ currentUserInitial }}</div>
+            <input 
+            type="text"
+            class="comment-input"
+            placeholder="Add your Reply"
+            [(ngModel)]="newCommentText"
+            (keyup.enter)="onAddComment()"
+            #replyInput
+            />
+            <button 
+            class="send-btn"
+            [disabled]="!newCommentText.trim()"
+            (click)="onAddComment()"
+            >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M15 1L7 9M15 1L10 15L7 9M15 1L1 6L7 9"/>
+            </svg>
+            </button>
+        </div>
     </div>
     </div>
 </div>
