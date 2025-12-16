@@ -103,6 +103,7 @@ h2 {
 }
 
 .notification-item {
+    width: 95%;
     display: flex;
     align-items: flex-start;
     gap: 15px;
@@ -122,6 +123,7 @@ h2 {
     }
 
     &.unread {
+        width: 95%;
         background-color: #e8f5e9;
         border: none;
         border-left: 4px solid $color-primary;
