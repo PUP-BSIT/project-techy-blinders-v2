@@ -40,9 +40,6 @@ public class UserImplementation implements UserService {
         String plainPassword = user.getPassword().trim();
         String hash = passwordEncoder.encode(plainPassword);
         user.setPassword(hash);
-
-        user.setDate(LocalDateTime.now());
-        user.setUpdateAt(LocalDateTime.now());
         
         return repo.save(user);
     }

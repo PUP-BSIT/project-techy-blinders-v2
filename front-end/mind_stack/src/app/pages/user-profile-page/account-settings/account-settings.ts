@@ -1,6 +1,7 @@
 import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
 import { SideBar } from '../../../shared/components/side-bar/side-bar';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../../../service/auth.service';
 
 @Component({
   selector: 'app-account-settings',
@@ -12,6 +13,10 @@ export class AccountSettings {
   @Output() onCancel = new EventEmitter<void>();
 
   formBuilder = inject (FormBuilder);
+  authService = inject(AuthService);
+  loading: boolean = false;
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
   accountSettingForm: FormGroup;
 
   constructor() {
@@ -34,8 +39,31 @@ export class AccountSettings {
   }
 
   accountSettingInformation() {
-    console.log(this.accountSettingForm);
-    this.onCancel.emit();
+    if (this.accountSettingForm.invalid) return;
+
+    const { current_password, new_password, confirm_password } = this.accountSettingForm.value;
+
+    if (new_password !== confirm_password) {
+      this.errorMessage = 'Passwords do not match';
+      return;
+    }
+
+    this.loading = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+
+    this.authService.updatePassword(current_password, new_password).subscribe({
+      next: (res: any) => {
+        this.successMessage = res?.message || 'Password updated successfully';
+        this.accountSettingForm.reset();
+        this.loading = false;
+        this.onCancel.emit();
+      },
+      error: (err: any) => {
+        this.errorMessage = err?.error?.message || err?.error || err?.message || 'Failed to update password';
+        this.loading = false;
+      }
+    });
   }
 
   cancel() {
