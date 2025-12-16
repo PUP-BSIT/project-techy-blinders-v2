@@ -33,7 +33,13 @@
             <!-- Password -->
             <div class="password-class">
                 <div><label>Password</label></div>
-                <input formControlName="password" type="password" placeholder="Enter password...">
+                <div class="password-input-container">
+                    <input formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="Enter password...">
+                    <button type="button" class="show-password-btn" (click)="togglePasswordVisibility()">
+                        <img [src]="showPassword ? 'assets/unshow-password-icon.png' : 'assets/show-password-icon.png'" 
+                             [alt]="showPassword ? 'Hide password' : 'Show password'">
+                    </button>
+                </div>
 
                 @if (passwordControl?.touched) {
                     @if(passwordControl?.errors?.['required']) {

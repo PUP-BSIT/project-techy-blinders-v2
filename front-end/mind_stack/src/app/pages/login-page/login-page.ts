@@ -19,6 +19,7 @@ export class LoginPage {
   private router = inject(Router);
   private authService = inject(AuthService);
   showForgotPasswordModal = false;
+  showPassword = false;
 
   loginForm: FormGroup;
   isLoading = false;
@@ -94,5 +95,9 @@ export class LoginPage {
 
   closeModal() {
     this.showForgotPasswordModal = false;
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 }
