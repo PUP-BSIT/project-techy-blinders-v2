@@ -106,12 +106,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 90%;
     padding: 20px 30px;
     background-color: #357d5d;
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
+    margin-left: 2%;
 }
 
 .milestone-card:hover {
