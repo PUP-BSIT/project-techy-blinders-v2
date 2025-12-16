@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { AccountSettings } from './account-settings';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -11,7 +12,8 @@ describe('AccountSettings', () => {
     await TestBed.configureTestingModule({
       imports: [
         AccountSettings,
-        RouterTestingModule
+        RouterTestingModule,
+        HttpClientTestingModule
       ]
     })
     .compileComponents();

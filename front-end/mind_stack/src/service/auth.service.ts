@@ -55,6 +55,12 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  // Update password
+  updatePassword(currentPassword: string, newPassword: string): Observable<any> {
+    const body = { currentPassword, newPassword };
+    return this.http.put<any>(`${this.apiUrl}/update-password`, body);
+  }
+
   // Check if user is logged in and token is valid
   isLoggedIn(): boolean {
     const token = this.getToken();
