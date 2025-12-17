@@ -615,9 +615,9 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
   selectPrivateOption() {
     if (this.selectedStudySetId !== null) {
-      this.togglePrivacy(this.selectedStudySetId);
-      this.closePrivacyModal();
+      this.makeStudySetPrivate(this.selectedStudySetId);
     }
+    this.closePrivacyModal();
   }
 
   openShareModal(studySetId?: number) {
@@ -724,5 +724,66 @@ export class StudySetsPage implements OnInit, OnDestroy {
       .replace(/\s+/g, '-')
       .replace(/[^\w\-]+/g, '')
       .replace(/\-\-+/g, '-');
+  }
+
+  /**
+   * Persist a flashcard set as private and remove any associated community post(s).
+   * This mirrors the quiz behavior: once made private, it disappears from the
+   * community feed and the badge stays Private even after refresh/navigation.
+   */
+  private makeStudySetPrivate(studySetId: number) {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      console.error('User not logged in');
+      // Fallback: just toggle locally via existing logic
+      this.togglePrivacy(studySetId);
+      return;
+    }
+
+    const studySet = this.studySets.find(s => s.flashcard_id === studySetId);
+    if (!studySet) {
+      console.error('Study set not found');
+      return;
+    }
+
+    this.isLoading = true;
+
+    this.studySetsService.updateStudySet(
+      studySetId,
+      currentUser.userId,
+      studySet.title,
+      studySet.description,
+      false,
+      studySet.flashcards
+    ).subscribe({
+      next: (updatedStudySet) => {
+        const index = this.studySets.findIndex(s => s.flashcard_id === updatedStudySet.flashcard_id);
+        if (index !== -1) {
+          this.studySets[index] = updatedStudySet;
+        }
+
+        // Remove related community post(s) for this flashcard set
+        this.removeStudySetFromCommunity(studySetId);
+
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error making study set private:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  /**
+   * Find and delete any community post(s) created for the given flashcard set.
+   * Flashcard share slugs are in the format: "flashcard-{flashcard_id}-{slugified-title}".
+   */
+  private removeStudySetFromCommunity(studySetId: number) {
+    const slugPrefix = `flashcard-${studySetId}-`;
+    const posts = this.communityService.getPosts();
+
+    posts
+      .filter(post => post.slug && post.slug.startsWith(slugPrefix))
+      .forEach(post => this.communityService.deletePost(post.post_id));
   }
 }

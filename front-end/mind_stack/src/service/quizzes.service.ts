@@ -43,8 +43,11 @@ interface CreateQuizSetRequest {
   userId: number;
   title: string;
   description: string;
+  /**
+   * Frontend uses `isPublic`, but backend historically exposed `public` for this flag.
+   * We keep `isPublic` for type-safety and also send a `public` field for compatibility.
+   */
   isPublic: boolean;
-  quizType: QuizType;
   quizzes: {
     quizType: QuizType;
     question: string;
@@ -56,6 +59,9 @@ interface CreateQuizSetRequest {
     identificationAnswer?: string;
     points?: number;
   }[];
+  // Optional `public` field for backends that expect this name instead of `isPublic`
+  public?: boolean;
+  quizType: QuizType;
 }
 
 interface QuizSetResponse {
@@ -63,7 +69,12 @@ interface QuizSetResponse {
   userId: number;
   title: string;
   description: string;
-  isPublic: boolean;
+  /**
+   * Some backends expose this flag as `public`, others as `isPublic`.
+   * Support both to make the mapping resilient.
+   */
+  isPublic?: boolean;
+  public?: boolean;
   slug: string;
   quizType: QuizType;
   quizzes: {
@@ -120,6 +131,8 @@ export class QuizzesService {
         points: q.points || 1
       }))
     };
+    // Ensure compatibility with backends that expect `public` instead of `isPublic`
+    (request as any).public = isPublic;
 
     return this.http.post<QuizSetResponse>(this.apiUrl, request).pipe(
       map(response => {
@@ -169,6 +182,8 @@ export class QuizzesService {
         points: q.points || 1
       }))
     };
+    // Ensure compatibility with backends that expect `public` instead of `isPublic`
+    (request as any).public = isPublic;
 
     return this.http.put<QuizSetResponse>(`${this.apiUrl}/${id}`, request).pipe(
       map(response => this.mapResponseToQuizSet(response))
@@ -206,12 +221,17 @@ export class QuizzesService {
   }
 
   private mapResponseToQuizSet(response: QuizSetResponse): QuizSet {
+    const resolvedIsPublic =
+      response.isPublic ??
+      (response as any).public ??
+      false;
+
     return {
       quiz_set_id: response.quizSetId,
       user_id: response.userId,
       title: response.title,
       description: response.description,
-      is_public: response.isPublic,
+      is_public: resolvedIsPublic,
       quiz_type: response.quizType,
       slug: response.slug,
       quizzes: (response.quizzes || []).map(q => ({

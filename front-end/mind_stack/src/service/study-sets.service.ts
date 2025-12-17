@@ -17,8 +17,14 @@ interface CreateFlashcardSetRequest {
   userId: number;
   title: string;
   description: string;
+  /**
+   * Frontend uses `isPublic` but backend boolean properties are often exposed as `public`.
+   * Keep `isPublic` for type safety and also send a `public` flag for compatibility.
+   */
   isPublic: boolean;
   flashcards: { flashcardId?: number; title: string; description: string }[];
+  // Optional alias used by some backends
+  public?: boolean;
 }
 
 interface FlashcardSetResponse {
@@ -26,7 +32,11 @@ interface FlashcardSetResponse {
   userId: number;
   title: string;
   description: string;
-  public: boolean;
+  /**
+   * Support both shapes coming from the backend (`public` or `isPublic`).
+   */
+  public?: boolean;
+  isPublic?: boolean;
   slug: string;
   flashcards: {
     flashcardId: number;
@@ -59,6 +69,8 @@ export class StudySetsService {
         description: f.definition
       }))
     };
+    // Ensure compatibility with backends that expect `public` instead of `isPublic`
+    (request as any).public = isPublic;
 
     return this.http.post<FlashcardSetResponse>(this.apiUrl, request).pipe(
       map(response => {
@@ -107,6 +119,8 @@ export class StudySetsService {
         description: f.definition
       }))
     };
+    // Ensure compatibility with backends that expect `public` instead of `isPublic`
+    (request as any).public = isPublic;
 
     return this.http.put<FlashcardSetResponse>(`${this.apiUrl}/${id}`, request).pipe(
       map(response => this.mapResponseToStudySet(response))
@@ -169,6 +183,11 @@ export class StudySetsService {
       throw new Error('Response is null or undefined');
     }
 
+    const resolvedIsPublic =
+      (response as any).public ??
+      response.isPublic ??
+      false;
+
     return {
       flashcard_id: response.studySetId || 0,
       title: response.title || '',
@@ -179,7 +198,7 @@ export class StudySetsService {
         definition: f.description || ''
       })),
       created_at: new Date(),
-      is_public: response.public !== undefined ? response.public : false
+      is_public: resolvedIsPublic
     };
   }
 }

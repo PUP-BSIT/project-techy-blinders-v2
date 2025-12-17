@@ -526,7 +526,7 @@ export class QuizzesPage implements OnInit {
 
   selectPrivateOption() {
     if (this.selectedQuizIdForPrivacy !== null) {
-      this.togglePrivacy(this.selectedQuizIdForPrivacy);
+      this.makeQuizPrivate(this.selectedQuizIdForPrivacy);
     }
     this.closePrivacyModal();
   }
@@ -537,6 +537,88 @@ export class QuizzesPage implements OnInit {
       quiz.is_public = !quiz.is_public;
       this.quizzesList = [...this.quizzesList];
     }
+  }
+
+  /**
+   * Persist a quiz as private and remove any associated community post(s).
+   * This ensures that after refresh/navigation the badge remains Private
+   * and the quiz no longer appears in the community feed.
+   */
+  private makeQuizPrivate(quizId: number) {
+    const quiz = this.quizzesList.find(q => q.quiz_id === quizId);
+    const currentUser = this.authService.getCurrentUser();
+
+    if (!quiz || !currentUser || !currentUser.userId) {
+      // Fallback to local-only toggle if we cannot persist
+      this.togglePrivacy(quizId);
+      return;
+    }
+
+    const quizItems: QuizItem[] = quiz.questions.map(q => ({
+      quizType: quiz.questionType === QuestionType.MULTIPLE_CHOICE
+        ? QuizType.MULTIPLE_CHOICE
+        : QuizType.IDENTIFICATION_ANSWER,
+      question: q.question,
+      optionA: q.optionA,
+      optionB: q.optionB,
+      optionC: q.optionC,
+      optionD: q.optionD,
+      correctAnswer: q.correctAnswer,
+      identificationAnswer: q.answer,
+      points: 1
+    }));
+
+    this.isLoading = true;
+
+    this.quizzesService.updateQuizSet(
+      quiz.quiz_id,
+      currentUser.userId,
+      quiz.title,
+      quiz.description || '',
+      false,
+      quiz.questionType === QuestionType.MULTIPLE_CHOICE
+        ? QuizType.MULTIPLE_CHOICE
+        : QuizType.IDENTIFICATION_ANSWER,
+      quizItems
+    ).subscribe({
+      next: () => {
+        // Persisted as private on backend – update local state
+        quiz.is_public = false;
+        this.quizzesList = [...this.quizzesList];
+
+        // Remove related community post(s) for this quiz
+        this.removeQuizFromCommunity(quiz.quiz_id);
+
+        this.isLoading = false;
+        this.showNotification(
+          'Privacy Updated',
+          'Quiz is now private and removed from the community.',
+          'success'
+        );
+      },
+      error: (error) => {
+        console.error('Error making quiz private:', error);
+        this.isLoading = false;
+        this.showNotification(
+          'Update Failed',
+          'Unable to update quiz privacy. Please try again.',
+          'error'
+        );
+      }
+    });
+  }
+
+  /**
+   * Find and delete any community post(s) created for the given quiz.
+   * Quiz share slugs are in the format: "quiz-{quiz_id}-{slugified-title}".
+   */
+  private removeQuizFromCommunity(quizId: number) {
+    const slugPrefix = `quiz-${quizId}-`;
+    const posts = this.communityService.getPosts();
+
+    posts
+      .filter(post => post.slug && post.slug.startsWith(slugPrefix))
+      .forEach(post => this.communityService.deletePost(post.post_id));
   }
 
   openShareModal(quizId?: number) {
