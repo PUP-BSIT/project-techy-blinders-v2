@@ -42,4 +42,15 @@ export class ForgotPassword {
     this.onCancel.emit();
   }
 
+  get emailControl () {
+    return this.forgotPasswordForm.get ('email');
+  }
+
+  get confirmPasswordControl() {
+    return this.forgotPasswordForm.get ('confirmPassword');
+  }
+
+  get newPasswordControl() {
+    return this.forgotPasswordForm.get ('newPassword');
+  }
 }
