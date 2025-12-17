@@ -5,7 +5,7 @@
     </div>
 
     <div class="button-class">
-        <button type="button" class="edit-profile-btn" (click)="editProfile()">Edit Profile</button>
+        <button type="button" class="edit-profile-btn" (click)="editProfile()">Edit Email</button>
         <button type="button" class="change-password-btn" (click)="accountSetting()">Change Password</button>
     </div>
 </div>
@@ -35,7 +35,7 @@
     <div class="modal-overlay" (click)="closeModal()">
         <div class="modal-content" (click)="$event.stopPropagation()">
             <div class="modal-header">
-                <h2>Edit Profile</h2>
+                <h2>Edit Email</h2>
                 <button class="close-btn" (click)="closeModal()">×</button>
             </div>
             <div class="modal-body">
@@ -57,12 +57,6 @@
                     </div>
                 </div>
 
-                <div class="edit-field">
-                    <label class="field-label">Username</label>
-                    <div class="field-content">
-                        <span class="field-value">{{ currentUser?.username }}</span>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
