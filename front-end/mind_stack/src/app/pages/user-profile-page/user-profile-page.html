@@ -31,11 +31,40 @@
     </div>
 </div>
 
-
 @if (showEditModal) {
     <div class="modal-overlay" (click)="closeModal()">
-        <div (click)="$event.stopPropagation()">
-            <app-edit-profile-page (onCancel)="closeModal()"></app-edit-profile-page>
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>Edit Profile</h2>
+                <button class="close-btn" (click)="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="edit-field">
+                    <label class="field-label">Email</label>
+                    <div class="field-content">
+                        @if (!editingEmail) {
+                            <span class="field-value">{{ currentUser?.email }}</span>
+                            <button class="edit-btn" (click)="startEdit('email')">Edit</button>
+                        } @else {
+                            <input [(ngModel)]="editEmailValue" type="email" class="field-input" />
+                            <button class="save-btn" (click)="saveEdit('email')">Save</button>
+                        }
+                    </div>
+                </div>
+
+                <div class="edit-field">
+                    <label class="field-label">Username</label>
+                    <div class="field-content">
+                        @if (!editingUsername) {
+                            <span class="field-value">{{ currentUser?.username }}</span>
+                            <button class="edit-btn" (click)="startEdit('username')">Edit</button>
+                        } @else {
+                            <input [(ngModel)]="editUsernameValue" type="text" class="field-input" />
+                            <button class="save-btn" (click)="saveEdit('username')">Save</button>
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 }
