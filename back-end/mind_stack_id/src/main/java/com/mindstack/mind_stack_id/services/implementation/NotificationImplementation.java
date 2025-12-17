@@ -1,6 +1,7 @@
 package com.mindstack.mind_stack_id.services.implementation;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -24,7 +25,8 @@ public class NotificationImplementation implements NotificationService {
     public Notification createNotification(Notification notify) {
         long randomNotifId = ThreadLocalRandom.current().nextLong(1000000000L, 10000000000L);
         notify.setNotifId(randomNotifId);
-        notify.setIsCreatedAt(LocalDateTime.now());
+        // Ensure timestamps are recorded in Asia/Manila regardless of server timezone
+        notify.setIsCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Manila")));
 
         if (notify.getIsRead() == null) {
             notify.setIsRead(false);
