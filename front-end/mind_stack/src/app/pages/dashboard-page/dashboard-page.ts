@@ -64,43 +64,18 @@ export class DashboardPage implements OnInit {
         this.userEmail = data.userEmail;
         this.flashcardCount = data.flashcardCount;
         this.quizCount = data.quizCount;
-        
-        this.studyLibrary = [
-          ...data.recentFlashcards.map((fc: any) => ({
-            id: fc.flashcardId?.toString() || fc.id?.toString(),
-            name: fc.title || fc.flashcardTitle,
-            type: 'flashcard' as const,
-            flashcardCount: fc.flashcards?.length || 0
-          })),
-          ...data.recentQuizzes.map((quiz: any) => ({
-            id: quiz.quizId?.toString() || quiz.id?.toString(),
-            name: quiz.title || quiz.quizTitle,
-            type: 'quiz' as const
-          }))
-        ].slice(0, 5);
-
-        this.recentActivities = [
-          ...data.recentFlashcards.map((fc: any) => ({
-            id: fc.flashcardId?.toString() || fc.id?.toString(),
-            type: 'flashcard' as const,
-            title: fc.title || fc.flashcardTitle,
-            timestamp: new Date(fc.createdAt || Date.now())
-          })),
-          ...data.recentQuizzes.map((quiz: any) => ({
-            id: quiz.quizId?.toString() || quiz.id?.toString(),
-            type: 'quiz' as const,
-            title: quiz.title || quiz.quizTitle,
-            timestamp: new Date(quiz.createdAt || Date.now())
-          }))
-        ].slice(0, 5);
-
+        this.studyLibrary = [];
+        this.recentActivities = [];
         this.isLoading = false;
       },
-      error: (error) => {
-        console.error('Error loading dashboard data:', error);
+      error: () => {
         this.userName = currentUser.username;
         this.userId = currentUser.userId.toString();
         this.userEmail = currentUser.email;
+        this.flashcardCount = 0;
+        this.quizCount = 0;
+        this.studyLibrary = [];
+        this.recentActivities = [];
         this.isLoading = false;
       }
     });
@@ -141,4 +116,6 @@ export class DashboardPage implements OnInit {
   navigateToFlashcards() {
     this.router.navigate(['/app/study-sets']);
   }
+
+
 }

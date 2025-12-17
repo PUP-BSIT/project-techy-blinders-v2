@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, forkJoin, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 export interface DashboardData {
   userName: string;
@@ -22,9 +22,15 @@ export class DashboardService {
 
   getDashboardData(userId: number): Observable<DashboardData> {
     return forkJoin({
-      user: this.http.get<any>(`${this.apiUrl}/users/me`),
-      flashcards: this.http.get<any[]>(`${this.apiUrl}/flashcards/user/${userId}`),
-      quizzes: this.http.get<any[]>(`${this.apiUrl}/quiz`)
+      user: this.http.get<any>(`${this.apiUrl}/users/me`).pipe(
+        catchError(() => of({ username: 'User', userId: userId, email: 'user@example.com' }))
+      ),
+      flashcards: this.http.get<any[]>(`/api/flashcards/user/${userId}`).pipe(
+        catchError(() => of([]))
+      ),
+      quizzes: this.http.get<any[]>(`/api/quizzes/user/${userId}`).pipe(
+        catchError(() => of([]))
+      )
     }).pipe(
       map(({ user, flashcards, quizzes }) => ({
         userName: user.username,
@@ -32,8 +38,8 @@ export class DashboardService {
         userEmail: user.email,
         flashcardCount: flashcards.length,
         quizCount: quizzes.length,
-        recentFlashcards: flashcards.slice(0, 5),
-        recentQuizzes: quizzes.slice(0, 5)
+        recentFlashcards: [],
+        recentQuizzes: []
       }))
     );
   }
