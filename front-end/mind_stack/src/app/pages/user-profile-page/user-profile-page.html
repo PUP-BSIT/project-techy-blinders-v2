@@ -5,7 +5,7 @@
     </div>
 
     <div class="button-class">
-        <button type="button" class="edit-profile-btn" (click)="editProfile()">Edit Profile</button>
+        <button type="button" class="edit-profile-btn" (click)="editProfile()">Edit Email</button>
         <button type="button" class="change-password-btn" (click)="accountSetting()">Change Password</button>
     </div>
 </div>
@@ -31,11 +31,33 @@
     </div>
 </div>
 
-
 @if (showEditModal) {
     <div class="modal-overlay" (click)="closeModal()">
-        <div (click)="$event.stopPropagation()">
-            <app-edit-profile-page (onCancel)="closeModal()"></app-edit-profile-page>
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>Edit Email</h2>
+                <button class="close-btn" (click)="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                @if (errorMessage) {
+                    <div class="error-message">{{ errorMessage }}</div>
+                }
+                <div class="edit-field">
+                    <label class="field-label">Email</label>
+                    <div class="field-content">
+                        @if (!editingEmail) {
+                            <span class="field-value">{{ currentUser?.email }}</span>
+                            <button class="edit-btn" (click)="startEdit('email')" [disabled]="isLoading">Edit</button>
+                        } @else {
+                            <input [(ngModel)]="editEmailValue" type="email" class="field-input" [disabled]="isLoading" />
+                            <button class="save-btn" (click)="saveEdit('email')" [disabled]="isLoading">
+                                {{ isLoading ? 'Saving...' : 'Save' }}
+                            </button>
+                        }
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 }

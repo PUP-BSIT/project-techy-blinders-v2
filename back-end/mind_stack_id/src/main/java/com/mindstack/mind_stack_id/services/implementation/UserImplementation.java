@@ -94,6 +94,32 @@ public class UserImplementation implements UserService {
         
         return repo.save(user);
     }
+
+    // @Override
+    // public User updateUsername(Long userId, String newUsername) {
+    //     User user = repo.findByUserId(userId);
+        
+    //     if (user == null) {
+    //         throw new RuntimeException("User not found");
+    //     }
+        
+    //     if (newUsername == null || newUsername.trim().isEmpty()) {
+    //         throw new RuntimeException("Username cannot be empty");
+    //     }
+        
+    //     if (newUsername.trim().length() < 3) {
+    //         throw new RuntimeException("Username must be at least 3 characters long");
+    //     }
+        
+    //     if (newUsername.trim().length() > 50) {
+    //         throw new RuntimeException("Username cannot exceed 50 characters");
+    //     }
+        
+    //     user.setUsername(newUsername.trim());
+    //     user.setUpdateAt(LocalDateTime.now());
+        
+    //     return repo.save(user);
+    // }
     
     private boolean isValidEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";

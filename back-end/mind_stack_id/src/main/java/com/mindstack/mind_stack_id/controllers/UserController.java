@@ -140,6 +140,33 @@ public class UserController {
             }});
         }
     }
+
+    // @PutMapping("/update-username")
+    // public ResponseEntity<?> updateUsername(
+    //         @RequestBody UsernameUpdateRequest request,
+    //         Authentication auth) {
+    //     try {
+    //         String email = auth.getName();
+    //         User user = repo.findByEmail(email);
+            
+    //         if (user == null) {
+    //             return ResponseEntity.status(404).body("User not found");
+    //         }
+            
+    //         User updatedUser = userService.updateUsername(user.getUserId(), request.getNewUsername());
+            
+    //         return ResponseEntity.ok(new HashMap<>() {{
+    //             put("success", true);
+    //             put("message", "Username updated successfully");
+    //             put("username", updatedUser.getUsername());
+    //         }});
+    //     } catch (RuntimeException e) {
+    //         return ResponseEntity.status(400).body(new HashMap<>() {{
+    //             put("success", false);
+    //             put("message", e.getMessage());
+    //         }});
+    //     }
+    // }
     
     public static class PasswordUpdateRequest {
         private String currentPassword;
@@ -157,4 +184,11 @@ public class UserController {
         public String getNewEmail() { return newEmail; }
         public void setNewEmail(String newEmail) { this.newEmail = newEmail; }
     }
+
+    // public static class UsernameUpdateRequest {
+    //     private String newUsername;
+        
+    //     public String getNewUsername() { return newUsername; }
+    //     public void setNewUsername(String newUsername) { this.newUsername = newUsername; }
+    // }
 }

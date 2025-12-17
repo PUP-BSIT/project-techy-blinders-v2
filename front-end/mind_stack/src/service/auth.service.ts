@@ -61,6 +61,25 @@ export class AuthService {
     return this.http.put<any>(`${this.apiUrl}/update-password`, body);
   }
 
+  // Update email
+  updateEmail(newEmail: string): Observable<any> {
+    const body = { newEmail };
+    return this.http.put<any>(`${this.apiUrl}/update-email`, body).pipe(
+      map(res => {
+        if (res.token) {
+          localStorage.setItem('token', res.token);
+        }
+        return res;
+      })
+    );
+  }
+
+  // Update username
+  updateUsername(newUsername: string): Observable<any> {
+    const body = { newUsername };
+    return this.http.put<any>(`${this.apiUrl}/update-username`, body);
+  }
+
   // Check if user is logged in and token is valid
   isLoggedIn(): boolean {
     const token = this.getToken();
