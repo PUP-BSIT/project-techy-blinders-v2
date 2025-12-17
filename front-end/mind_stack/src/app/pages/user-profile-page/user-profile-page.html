@@ -39,15 +39,20 @@
                 <button class="close-btn" (click)="closeModal()">×</button>
             </div>
             <div class="modal-body">
+                @if (errorMessage) {
+                    <div class="error-message">{{ errorMessage }}</div>
+                }
                 <div class="edit-field">
                     <label class="field-label">Email</label>
                     <div class="field-content">
                         @if (!editingEmail) {
                             <span class="field-value">{{ currentUser?.email }}</span>
-                            <button class="edit-btn" (click)="startEdit('email')">Edit</button>
+                            <button class="edit-btn" (click)="startEdit('email')" [disabled]="isLoading">Edit</button>
                         } @else {
-                            <input [(ngModel)]="editEmailValue" type="email" class="field-input" />
-                            <button class="save-btn" (click)="saveEdit('email')">Save</button>
+                            <input [(ngModel)]="editEmailValue" type="email" class="field-input" [disabled]="isLoading" />
+                            <button class="save-btn" (click)="saveEdit('email')" [disabled]="isLoading">
+                                {{ isLoading ? 'Saving...' : 'Save' }}
+                            </button>
                         }
                     </div>
                 </div>
@@ -55,13 +60,7 @@
                 <div class="edit-field">
                     <label class="field-label">Username</label>
                     <div class="field-content">
-                        @if (!editingUsername) {
-                            <span class="field-value">{{ currentUser?.username }}</span>
-                            <button class="edit-btn" (click)="startEdit('username')">Edit</button>
-                        } @else {
-                            <input [(ngModel)]="editUsernameValue" type="text" class="field-input" />
-                            <button class="save-btn" (click)="saveEdit('username')">Save</button>
-                        }
+                        <span class="field-value">{{ currentUser?.username }}</span>
                     </div>
                 </div>
             </div>

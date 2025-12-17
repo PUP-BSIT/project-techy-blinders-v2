@@ -29,41 +29,49 @@ export class UserProfilePage implements OnInit {
   totalLikes = 10;
 
   editingEmail = false;
-  editingUsername = false;
   editEmailValue = '';
-  editUsernameValue = '';
+  isLoading = false;
+  errorMessage = '';
 
   constructor(private route: Router, private authService: AuthService) {}
 
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();
     this.editEmailValue = this.currentUser?.email || '';
-    this.editUsernameValue = this.currentUser?.username || '';
   }
   
   editProfile() {
     this.showEditModal = true;
   }
 
-  startEdit(type: 'email' | 'username') {
-    if (type === 'email') {
-      this.editingEmail = true;
-      this.editEmailValue = this.currentUser?.email || '';
-    } else if (type === 'username') {
-      this.editingUsername = true;
-      this.editUsernameValue = this.currentUser?.username || '';
-    }
+  startEdit(type: 'email') {
+    this.editingEmail = true;
+    this.editEmailValue = this.currentUser?.email || '';
+    this.errorMessage = '';
   }
 
-  saveEdit(type: 'email' | 'username') {
+  saveEdit(type: 'email') {
     if (!this.currentUser) return;
-    if (type === 'email') {
-      this.currentUser.email = this.editEmailValue;
-      this.editingEmail = false;
-    } else if (type === 'username') {
-      this.currentUser.username = this.editUsernameValue;
-      this.editingUsername = false;
-    }
+    
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.authService.updateEmail(this.editEmailValue).subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.currentUser!.email = this.editEmailValue;
+          localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+          this.editingEmail = false;
+        } else {
+          this.errorMessage = res.message || 'Failed to update email';
+        }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Failed to update email';
+        this.isLoading = false;
+      }
+    });
   }
 
   closeModal() {
