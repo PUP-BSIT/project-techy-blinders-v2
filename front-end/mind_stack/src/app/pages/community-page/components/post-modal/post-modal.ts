@@ -25,7 +25,7 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
   @Output() likePost = new EventEmitter<void>();
   @Output() dislikePost = new EventEmitter<void>();
   @Output() editPost = new EventEmitter<Post>();
-  @Output() deletePost = new EventEmitter<Post>();
+  @Output() deletePost = new EventEmitter<{ post: Post; setPrivate: boolean; permanent: boolean }>();
   @Output() addComment = new EventEmitter<string>();
   @Output() likeComment = 
     new EventEmitter<{comment: Comment, isReply: boolean}>();
@@ -122,7 +122,7 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
 
   confirmDeletePost(event: Event) {
     event.stopPropagation();
-    this.deletePost.emit(this.post);
+    this.deletePost.emit({ post: this.post, setPrivate: true, permanent: false });
     this.showDeleteConfirmForPost = false;
     this.showPostMenu = false;
   }

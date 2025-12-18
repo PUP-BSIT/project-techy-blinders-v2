@@ -147,13 +147,26 @@ export class CommunityService {
     });
   }
 
-  deletePost(postId: string): void {
+  unpublishPost(postId: string, setPrivate: boolean): void {
+    const params = setPrivate ? { setPrivate: 'true' } : undefined;
+    const options = params ? { params } : {};
+    this.http.put<any>(`${this.apiUrl}/posts/${postId}/unpublish`, {}, options).subscribe({
+      next: updated => {
+        // Remove from feed; keep comments removed from view to match unpublish
+        this.postsSubject.next(this.postsSubject.value.filter(p => p.post_id !== postId));
+        this.commentsSubject.next(this.commentsSubject.value.filter(c => c.post_id !== postId));
+      },
+      error: err => console.error('Failed to unpublish post', err)
+    });
+  }
+
+  deletePostPermanently(postId: string): void {
     this.http.delete(`${this.apiUrl}/posts/${postId}`).subscribe({
       next: () => {
         this.postsSubject.next(this.postsSubject.value.filter(p => p.post_id !== postId));
         this.commentsSubject.next(this.commentsSubject.value.filter(c => c.post_id !== postId));
       },
-      error: err => console.error('Failed to delete post', err)
+      error: err => console.error('Failed to delete post permanently', err)
     });
   }
 

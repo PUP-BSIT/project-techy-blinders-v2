@@ -3,6 +3,8 @@ package com.mindstack.mind_stack_id.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import com.mindstack.mind_stack_id.models.PostCreation;
 import com.mindstack.mind_stack_id.models.dto.PostDTO;
 import com.mindstack.mind_stack_id.services.PostService;
+import com.mindstack.mind_stack_id.models.User;
+import com.mindstack.mind_stack_id.repositories.UserRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -18,6 +22,9 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping
     public ResponseEntity<PostCreation> createPost(@RequestBody PostCreation post) {
@@ -94,8 +101,30 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePost(@PathVariable("id") long id) {
-        boolean deleted = postService.deletePost(id);
+        // Fetch the post first
+        PostCreation post = postService.getPostById(id);
+        if (post == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
+        }
 
+        // Determine the current authenticated user
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+
+        String email = auth.getName();
+        User currentUser = userRepository.findByEmail(email);
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+
+        // Only the owner of the post can delete it
+        if (post.getUserId() != currentUser.getUserId()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You can only delete your own post");
+        }
+
+        boolean deleted = postService.deletePost(id);
         if (!deleted) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
         }
@@ -105,6 +134,26 @@ public class PostController {
 
     @PutMapping("/{id}/publish")
     public ResponseEntity<PostCreation> publishPost(@PathVariable("id") long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        String email = auth.getName();
+        User currentUser = userRepository.findByEmail(email);
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        PostCreation post = postService.getPostById(id);
+        if (post == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        if (post.getUserId() != currentUser.getUserId()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+
         PostCreation publishedPost = postService.publishPost(id);
 
         if (publishedPost == null) {
@@ -115,8 +164,31 @@ public class PostController {
     }
 
     @PutMapping("/{id}/unpublish")
-    public ResponseEntity<PostCreation> unpublishPost(@PathVariable("id") long id) {
-        PostCreation unpublishedPost = postService.unpublishPost(id);
+    public ResponseEntity<PostCreation> unpublishPost(
+            @PathVariable("id") long id,
+            @RequestParam(value = "setPrivate", defaultValue = "false") boolean setPrivate) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        String email = auth.getName();
+        User currentUser = userRepository.findByEmail(email);
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        PostCreation post = postService.getPostById(id);
+        if (post == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        if (post.getUserId() != currentUser.getUserId()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+
+        PostCreation unpublishedPost = postService.unpublishPost(id, setPrivate, currentUser.getUserId());
 
         if (unpublishedPost == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
