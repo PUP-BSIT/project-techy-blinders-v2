@@ -10,6 +10,7 @@ import { Search } from './components/search/search';
 import { PostModal } from './components/post-modal/post-modal';
 import { AuthService } from '../../../service/auth.service';
 import { ActivatedRoute } from '@angular/router';
+import { ProfanityFilterService } from '../../../service/profanity-filter.service';
 
 @Component({
   selector: 'app-community-page',
@@ -45,7 +46,7 @@ export class CommunityPage implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  constructor(private communityService: CommunityService) {}
+  constructor(private communityService: CommunityService, private profanityService: ProfanityFilterService) {}
 
   ngOnInit() {
     this.setCurrentUserInitial();
@@ -196,8 +197,25 @@ export class CommunityPage implements OnInit, OnDestroy {
   }
 
   onAddComment(content: string) {
-    if (this.selectedPost) {
-      this.communityService.createComment(this.selectedPost.post_id, content);
+    if (!this.selectedPost) return;
+    
+    const hashBadwords = this.profanityService.hasBadWords(content);
+    const cleanedContent = this.profanityService.clean(content);
+
+    if (!cleanedContent.trim()) {
+      alert ('Comment cannot be empty');
+      return;
+    }
+
+    if (hashBadwords) {
+      console.warn('Profanity deteced and cleaned');
+    }
+
+    if (this.selectedPost?.post_id) {
+      this.communityService.createComment(
+        this.selectedPost.post_id,
+        cleanedContent
+      );
     }
   }
 
