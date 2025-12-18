@@ -1,8 +1,8 @@
 <div class="post-card-wrapper">
   <div class="user-header">
-    <div class="user-avatar">{{ getInitial(post.username) }}</div>
+    <div class="user-avatar" (click)="goToUserProfile($event, post.user_id)">{{ getInitial(post.username) }}</div>
     <div class="user-info">
-      <div class="username">{{ post.username }}</div>
+      <div class="username" (click)="goToUserProfile($event, post.user_id)">{{ post.username }}</div>
       <div class="timestamp">Posted {{ getTimeAgo(post.created_at) }}</div>
     </div>
   </div>

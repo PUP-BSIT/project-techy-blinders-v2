@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output, ViewChild, ElementRef, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, ElementRef, OnInit, OnDestroy, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { Post, Comment } from '../../../../models/post.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-post-modal',
@@ -43,6 +44,7 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
   showPostMenu = false;
   showDeleteConfirmForPost = false;
   @ViewChild('replyInput') replyInputRef?: ElementRef<HTMLInputElement>;
+  private router = inject(Router);
 
   ngOnInit() {
     this.currentTime = this.now ?? new Date();
@@ -206,6 +208,21 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
   cancelDeleteComment(event: Event) {
     event.stopPropagation();
     this.showDeleteConfirmForComment = undefined;
+  }
+
+  goToUserProfile(userId: string, event?: Event) {
+    event?.stopPropagation();
+
+    if (!userId) {
+      return;
+    }
+
+    const target = userId === this.currentUserId
+      ? ['/app/user-profile']
+      : ['/app/user-profile', userId];
+
+    this.closeModalEvent.emit();
+    this.router.navigate(target);
   }
 
   private scrollToComment(commentId: string) {

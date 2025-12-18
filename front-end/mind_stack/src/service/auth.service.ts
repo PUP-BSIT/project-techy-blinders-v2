@@ -4,6 +4,15 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from '../app/models/user.model';
 
+export interface UserProfile {
+  userId: number;
+  username: string;
+  email: string;
+  quizzesCreated: number;
+  flashcardSetsCreated: number;
+  totalLikes: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -53,6 +62,11 @@ export class AuthService {
   // Get current user
   getCurrentUser(): LoginResponse | null {
     return this.currentUserSubject.value;
+  }
+
+  // Get a user profile by id (used for viewing other users)
+  getUserById(userId: number): Observable<UserProfile> {
+    return this.http.get<UserProfile>(`${this.apiUrl}/${userId}`);
   }
 
   // Update password
