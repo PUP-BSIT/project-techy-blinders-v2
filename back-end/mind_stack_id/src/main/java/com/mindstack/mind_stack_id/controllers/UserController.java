@@ -23,9 +23,10 @@ import com.mindstack.mind_stack_id.security.JwtUtil;
 import java.util.HashMap;
 import org.springframework.security.core.Authentication;
 
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = {"http://localhost:4200", "https://techymindstack.site"}, allowCredentials = "true")
 public class UserController {
     @Autowired
     private UserService userService;

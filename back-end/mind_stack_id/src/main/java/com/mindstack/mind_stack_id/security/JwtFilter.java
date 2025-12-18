@@ -33,6 +33,16 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+        
+        // Skip JWT validation for public endpoints
+        if (path.equals("/api/users/reset-password") || 
+            path.equals("/api/users/login") ||
+            (path.equals("/api/users") && request.getMethod().equals("POST"))) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         String authHeader = request.getHeader("Authorization");
         String email = null;
         String token = null;
