@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.mindstack.mind_stack_id.models.LoginRequest;
 import com.mindstack.mind_stack_id.models.User;
+import com.mindstack.mind_stack_id.models.dto.ResetPasswordRequest;
 import com.mindstack.mind_stack_id.models.dto.UserDTO;
 import com.mindstack.mind_stack_id.services.UserService;
 
@@ -191,4 +192,36 @@ public class UserController {
     //     public String getNewUsername() { return newUsername; }
     //     public void setNewUsername(String newUsername) { this.newUsername = newUsername; }
     // }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
+        try {
+            if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+                return ResponseEntity.status(400).body(new HashMap<>() {{
+                    put("success", false);
+                    put("message", "Passwords do not match");
+                }});
+            }
+            
+            if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+                return ResponseEntity.status(400).body(new HashMap<>() {{
+                    put("success", false);
+                    put("message", "Email is required");
+                }});
+            }
+            
+            userService.resetPasswordByEmail(request.getEmail(), request.getNewPassword());
+            
+            return ResponseEntity.ok(new HashMap<>() {{
+                put("success", true);
+                put("message", "Password has been reset successfully");
+            }});
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(new HashMap<>() {{
+                put("success", false);
+                put("message", e.getMessage());
+            }});
+        }
+    }
+
 }
