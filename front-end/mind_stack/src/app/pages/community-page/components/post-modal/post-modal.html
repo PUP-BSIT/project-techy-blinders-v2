@@ -48,21 +48,34 @@
                           stroke-linecap="round" 
                           stroke-linejoin="round"/>
                     </svg>
-                    Delete
+                    Unpublish
                 </button>
-                @if (showDeleteConfirmForPost) {
-                    <div class="confirm-box">
-                    <div class="confirm-text">Delete this post?</div>
-                    <div class="confirm-actions">
-                        <button class="btn-cancel" 
-                                (click)="cancelDeletePost($event)">Cancel
-                        </button>
-                        <button class="btn-delete" 
-                                (click)="confirmDeletePost($event)">Delete
-                        </button>
-                    </div>
-                    </div>
-                }
+                        @if (showDeleteConfirmForPost) {
+                            <div class="confirm-overlay" 
+                                 (click)="cancelDeletePost($event)">
+                                <div class="confirm-modal" 
+                                     (click)="$event.stopPropagation()">
+                                    <div class="confirm-title">
+                                        Unpublish this post?
+                                    </div>
+                                    <div class="confirm-subtext">
+                                        This will remove it from Community 
+                                        and set the linked to Private. 
+                                        You can republish later.
+                                    </div>
+                                    <div class="confirm-actions">
+                                        <button class="btn-cancel" 
+                                        (click)="cancelDeletePost($event)">
+                                            Cancel
+                                        </button>
+                                        <button class="btn-danger" 
+                                        (click)="confirmDeletePost($event)">
+                                            Unpublish
+                                    </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                 </div>
             }
             }

@@ -1,12 +1,13 @@
 import { Component, Input, Output, EventEmitter, HostListener, OnInit, OnDestroy, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Post } from '../../../../../models/post.model';
 
 @Component({
   selector: 'app-post-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './post-card.html',
   styleUrl: './post-card.scss'
 })
@@ -23,7 +24,7 @@ export class PostCard implements OnInit, OnDestroy, OnChanges {
   @Output() openModal = new EventEmitter<Post>();
   @Output() likePost = new EventEmitter<Post>();
   @Output() dislikePost = new EventEmitter<Post>();
-  @Output() deletePost = new EventEmitter<Post>();
+  @Output() deletePost = new EventEmitter<{ post: Post; setPrivate: boolean; permanent: boolean }>();
   @Output() editPost = new EventEmitter<Post>();
 
   showMenu = false;
@@ -95,11 +96,11 @@ export class PostCard implements OnInit, OnDestroy, OnChanges {
     this.showDeleteConfirm = true;
   }
 
-  confirmDelete(event: Event) {
+  confirmUnpublish(event: Event) {
     event.stopPropagation();
     this.showMenu = false;
     this.showDeleteConfirm = false;
-    this.deletePost.emit(this.post);
+    this.deletePost.emit({ post: this.post, setPrivate: true, permanent: false });
   }
 
   cancelDelete(event: Event) {

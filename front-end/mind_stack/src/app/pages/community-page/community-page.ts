@@ -187,8 +187,12 @@ export class CommunityPage implements OnInit, OnDestroy {
     }
   }
 
-  onDeletePost(post: Post) {
-    this.communityService.deletePost(post.post_id);
+  onDeletePost(action: { post: Post; setPrivate?: boolean; permanent?: boolean }) {
+    if (action.permanent) {
+      this.communityService.deletePostPermanently(action.post.post_id);
+    } else {
+      this.communityService.unpublishPost(action.post.post_id, action.setPrivate ?? false);
+    }
   }
 
   onEditPost(post: Post) {

@@ -618,7 +618,7 @@ export class QuizzesPage implements OnInit {
 
     posts
       .filter(post => post.slug && post.slug.startsWith(slugPrefix))
-      .forEach(post => this.communityService.deletePost(post.post_id));
+      .forEach(post => this.communityService.deletePostPermanently(post.post_id));
   }
 
   openShareModal(quizId?: number) {

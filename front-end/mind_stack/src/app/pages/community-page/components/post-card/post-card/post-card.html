@@ -1,6 +1,7 @@
 <div class="post-card-wrapper">
   <div class="user-header">
-    <div class="user-avatar" (click)="goToUserProfile($event, post.user_id)">{{ getInitial(post.username) }}</div>
+    <div class="user-avatar" 
+         (click)="goToUserProfile($event, post.user_id)">{{ getInitial(post.username) }}</div>
     <div class="user-info">
       <div class="username" (click)="goToUserProfile($event, post.user_id)">{{ post.username }}</div>
       <div class="timestamp">Posted {{ getTimeAgo(post.created_at) }}</div>
@@ -41,26 +42,29 @@
                  stroke="currentColor">
               <path d="M1.5 3.5H12.5M11 3.5V12C11 12.5 10.5 13 10 13H4C3.5 13 3 12.5 3 12V3.5M4.5 3.5V2C4.5 1.5 5 1 5.5 1H8.5C9 1 9.5 1.5 9.5 2V3.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            Delete
+            Unpublish
           </button>
-          @if (showDeleteConfirm) {
-            <div class="confirm-box">
-              <div class="confirm-text">Delete this post?</div>
-              <div class="confirm-actions">
-                <button class="btn-cancel" 
-                        (click)="cancelDelete($event)">Cancel
-                </button>
-                <button class="btn-delete" 
-                        (click)="confirmDelete($event)">Delete
-                </button>
-              </div>
-            </div>
-          }
+      
         </div>
       }
       }
     </div>
 
+
+    @if (showDeleteConfirm) {
+      <div class="confirm-overlay" (click)="cancelDelete($event)">
+        <div class="confirm-modal" (click)="$event.stopPropagation()">
+          <div class="confirm-title">Unpublish this post?</div>
+          <div class="confirm-subtext">
+            This will remove it from Community and set the linked to Private. You can republish later.
+          </div>
+          <div class="confirm-actions">
+            <button class="btn-cancel" (click)="cancelDelete($event)">Cancel</button>
+            <button class="btn-danger" (click)="confirmUnpublish($event)">Unpublish</button>
+          </div>
+        </div>
+      </div>
+    }
     <div class="post-category-section">
       <span class="category-label">Category:</span>
       <span class="category-value">{{ post.category }}</span>

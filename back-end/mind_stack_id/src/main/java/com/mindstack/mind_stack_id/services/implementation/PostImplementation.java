@@ -7,6 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mindstack.mind_stack_id.models.PostCreation;
 import com.mindstack.mind_stack_id.models.PostCreation.CategoryType;
@@ -17,6 +18,8 @@ import com.mindstack.mind_stack_id.models.PostReaction.ReactionType;
 import com.mindstack.mind_stack_id.repositories.PostRepository;
 import com.mindstack.mind_stack_id.repositories.UserRepository;
 import com.mindstack.mind_stack_id.repositories.PostReactionRepository;
+import com.mindstack.mind_stack_id.repositories.FlashcardSetRepository;
+import com.mindstack.mind_stack_id.repositories.QuizSetRepository;
 import com.mindstack.mind_stack_id.services.PostService;
 import com.mindstack.mind_stack_id.services.NotificationService;
 import com.mindstack.mind_stack_id.models.Notification;
@@ -32,6 +35,12 @@ public class PostImplementation implements PostService {
 
     @Autowired
     private PostReactionRepository postReactionRepository;
+
+    @Autowired
+    private FlashcardSetRepository flashcardSetRepository;
+
+    @Autowired
+    private QuizSetRepository quizSetRepository;
 
     @Autowired
     private NotificationService notificationService;
@@ -166,13 +175,18 @@ public class PostImplementation implements PostService {
     }
 
     @Override
-    public PostCreation unpublishPost(long id) {
-        Optional<PostCreation> post = postRepository.findById(id);
-        if (post.isPresent()) {
-            PostCreation unpublishedPost = post.get();
+    @Transactional
+    public PostCreation unpublishPost(long id, boolean setPrivate, Long actorUserId) {
+        Optional<PostCreation> postOpt = postRepository.findById(id);
+        if (postOpt.isPresent()) {
+            PostCreation unpublishedPost = postOpt.get();
             unpublishedPost.setPublish(false);
             unpublishedPost.setUpdatedAt(LocalDateTime.now());
             ensureUsername(unpublishedPost);
+
+            if (setPrivate) {
+                setUnderlyingSetPrivate(unpublishedPost, actorUserId);
+            }
 
             System.out.println("Unpublished post with ID: " + unpublishedPost.getPostId());
 
@@ -365,6 +379,53 @@ public class PostImplementation implements PostService {
                 post.getNumDislike() != null ? post.getNumDislike() : 0,
                 userLiked,
                 userDisliked);
+    }
+
+    private void setUnderlyingSetPrivate(PostCreation post, Long actorUserId) {
+        if (post == null || actorUserId == null) {
+            return;
+        }
+
+        String slug = post.getSlug();
+        if (slug == null || slug.isBlank()) {
+            return;
+        }
+
+        // flashcard-{id}-..., quiz-{id}-...
+        if (slug.startsWith("flashcard-")) {
+            Long setId = extractIdFromSlug(slug, "flashcard-");
+            if (setId != null) {
+                flashcardSetRepository.findById(setId).ifPresent(set -> {
+                    if (actorUserId.equals(set.getUserId())) {
+                        set.setPublic(false);
+                        set.setUpdatedAt(LocalDateTime.now());
+                        flashcardSetRepository.save(set);
+                    }
+                });
+            }
+        } else if (slug.startsWith("quiz-")) {
+            Long setId = extractIdFromSlug(slug, "quiz-");
+            if (setId != null) {
+                quizSetRepository.findById(setId).ifPresent(set -> {
+                    if (actorUserId.equals(set.getUserId())) {
+                        set.setPublic(false);
+                        set.setUpdatedAt(LocalDateTime.now());
+                        quizSetRepository.save(set);
+                    }
+                });
+            }
+        }
+    }
+
+    private Long extractIdFromSlug(String slug, String prefix) {
+        try {
+            int start = prefix.length();
+            int dash = slug.indexOf('-', start);
+            String idPart = dash >= 0 ? slug.substring(start, dash) : slug.substring(start);
+            return Long.parseLong(idPart);
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     private void ensureUsername(PostCreation post) {
