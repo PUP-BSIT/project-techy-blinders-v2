@@ -4,13 +4,27 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from '../app/models/user.model';
 
+export interface ResetPasswordRequest {
+  email: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface ResetPasswordResponse {
+  success: boolean;
+  message: string;
+}
+
 export interface UserProfile {
   userId: number;
   username: string;
   email: string;
+  createdAt?: string;
+  updatedAt?: string;
   quizzesCreated: number;
   flashcardSetsCreated: number;
   totalLikes: number;
+  // Add any other profile fields you need
 }
 
 @Injectable({
@@ -64,11 +78,6 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  // Get a user profile by id (used for viewing other users)
-  getUserById(userId: number): Observable<UserProfile> {
-    return this.http.get<UserProfile>(`${this.apiUrl}/${userId}`);
-  }
-
   // Update password
   updatePassword(currentPassword: string, newPassword: string): Observable<any> {
     const body = { currentPassword, newPassword };
@@ -92,6 +101,16 @@ export class AuthService {
   updateUsername(newUsername: string): Observable<any> {
     const body = { newUsername };
     return this.http.put<any>(`${this.apiUrl}/update-username`, body);
+  }
+
+  // Reset password by email (for forgot password)
+  resetPassword(request: ResetPasswordRequest): Observable<ResetPasswordResponse> {
+    return this.http.post<ResetPasswordResponse>(`${this.apiUrl}/reset-password`, request);
+  }
+
+  // Get user profile by ID
+  getUserById(userId: number): Observable<UserProfile> {
+    return this.http.get<UserProfile>(`${this.apiUrl}/${userId}`);
   }
 
   // Check if user is logged in and token is valid
