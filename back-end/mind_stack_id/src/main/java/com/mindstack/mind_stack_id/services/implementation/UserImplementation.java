@@ -120,7 +120,28 @@ public class UserImplementation implements UserService {
         
     //     return repo.save(user);
     // }
-    
+
+    @Override
+    public User resetPasswordByEmail(String email, String newPassword) {
+        User user = repo.findByEmail(email);
+        
+        if (user == null) {
+            throw new RuntimeException("Email not found in our system");
+        }
+        
+        // Validate new password
+        if (newPassword == null || newPassword.trim().length() < 6) {
+            throw new RuntimeException("New password must be at least 6 characters long");
+        }
+        
+        // Update password
+        String hashedPassword = passwordEncoder.encode(newPassword.trim());
+        user.setPassword(hashedPassword);
+        user.setUpdateAt(LocalDateTime.now());
+        
+        return repo.save(user);
+    }
+
     private boolean isValidEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
         return email.matches(emailRegex);
