@@ -1,6 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { NavBar } from '../../shared/components/nav-bar/nav-bar';
 import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
+import { ContactService } from '../../../service/contact.service';
+import { response } from 'express';
+import { error } from 'console';
 
 interface Contact {
   name: string;
@@ -16,7 +19,11 @@ interface Contact {
 })
 export class ContactPage {
   formBuilder = inject(FormBuilder);
+  contactService = inject(ContactService)
   contactForm: FormGroup;
+  isSubmitting = false;
+  submitMessage = '';
+  isSubmitSuccess = true;
 
   constructor() {
     this.contactForm = this.formBuilder.group ({
@@ -38,7 +45,27 @@ export class ContactPage {
   }
 
   contactValidation () {
-    console.log(this.contactForm.value);
+    if (this.contactForm.valid) {
+      this.isSubmitting = true;
+      this.submitMessage = '';
+
+      this.contactService.sendContactForm(this.contactForm.value).subscribe({
+        next: (response) => {
+          this.isSubmitSuccess = true;
+          this.submitMessage = response.message;
+          this.contactForm.reset();
+          this.isSubmitting = false;
+        },
+
+        error: (error) => {
+          this.isSubmitSuccess = false;
+          this.submitMessage = 'Failed to send message';
+          this.isSubmitting = false;
+        }
+      });
+    }else {
+      this.contactForm.markAllAsTouched();
+    }
   }
 
   get nameControl () {

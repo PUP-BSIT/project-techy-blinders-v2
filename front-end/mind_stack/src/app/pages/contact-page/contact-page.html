@@ -68,4 +68,10 @@
             </div>
         </form>
     </div>
+
+    @if (submitMessage) {
+    <div [class]="isSubmitSuccess? 'success-message' : 'error-message'">
+        {{ submitMessage }}
+    </div>
+    }
 </div>
