@@ -1,13 +1,17 @@
 <div class="header-class">
     <div class="user-info">
-        <h1 class="username">{{ currentUser?.username }}</h1>
-        <p class="email">{{ currentUser?.email }}</p>
+        <h1 class="username">{{ displayUser?.username }}</h1>
+        <p class="email">{{ displayUser?.email }}</p>
     </div>
 
-    <div class="button-class">
-        <button type="button" class="edit-profile-btn" (click)="editProfile()">Edit Email</button>
-        <button type="button" class="change-password-btn" (click)="accountSetting()">Change Password</button>
-    </div>
+    @if (isOwnProfile) {
+        <div class="button-class">
+            <button type="button" class="edit-profile-btn" (click)="editProfile()">Edit Email</button>
+            <button type="button" class="change-password-btn" (click)="accountSetting()">Change Password</button>
+        </div>
+    } @else {
+        <div class="view-only">Viewing public profile</div>
+    }
 </div>
 
 <div class="milestone-section">
@@ -46,7 +50,7 @@
                     <label class="field-label">Email</label>
                     <div class="field-content">
                         @if (!editingEmail) {
-                            <span class="field-value">{{ currentUser?.email }}</span>
+                            <span class="field-value">{{ displayUser?.email }}</span>
                             <button class="edit-btn" (click)="startEdit('email')" [disabled]="isLoading">Edit</button>
                         } @else {
                             <input [(ngModel)]="editEmailValue" type="email" class="field-input" [disabled]="isLoading" />

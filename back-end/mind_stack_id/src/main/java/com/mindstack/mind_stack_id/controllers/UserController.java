@@ -11,9 +11,13 @@ import com.mindstack.mind_stack_id.models.LoginRequest;
 import com.mindstack.mind_stack_id.models.User;
 import com.mindstack.mind_stack_id.models.dto.ResetPasswordRequest;
 import com.mindstack.mind_stack_id.models.dto.UserDTO;
+import com.mindstack.mind_stack_id.models.dto.UserProfileDTO;
 import com.mindstack.mind_stack_id.services.UserService;
 
 import com.mindstack.mind_stack_id.repositories.UserRepository;
+import com.mindstack.mind_stack_id.repositories.QuizSetRepository;
+import com.mindstack.mind_stack_id.repositories.FlashcardSetRepository;
+import com.mindstack.mind_stack_id.repositories.PostRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.mindstack.mind_stack_id.security.JwtUtil;
 import java.util.HashMap;
@@ -35,20 +39,65 @@ public class UserController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private QuizSetRepository quizSetRepository;
+
+    @Autowired
+    private FlashcardSetRepository flashcardSetRepository;
+
+    @Autowired
+    private PostRepository postRepository;
+
     @GetMapping
     public ResponseEntity<List<UserDTO>> getUsers() {
         List<UserDTO> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getUserById(@PathVariable Long userId) {
+        User user = userService.findUserById(userId);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new HashMap<>() {
+                        {
+                            put("success", false);
+                            put("message", "User not found");
+                        }
+                    });
+        }
+
+        // Count user's milestones
+        long quizzesCreated = quizSetRepository.findByUserId(userId).size();
+        long flashcardSetsCreated = flashcardSetRepository.findByUserId(userId).size();
+
+        // Count total likes on user's posts
+        long totalLikes = postRepository.findByUserId(userId).stream()
+                .mapToLong(post -> post.getNumLike())
+                .sum();
+
+        UserProfileDTO profileDTO = new UserProfileDTO(
+                user.getUsername(),
+                user.getUserId(),
+                user.getEmail(),
+                quizzesCreated,
+                flashcardSetsCreated,
+                totalLikes);
+
+        return ResponseEntity.ok(profileDTO);
+    }
+
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody User user) {
         User createdUser = userService.createUser(user);
-        
-        return ResponseEntity.status(HttpStatus.CREATED).body(new HashMap<>() {{
-            put("account_successfully_created", true);
-            put("user_id", createdUser.getUserId());
-        }});
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new HashMap<>() {
+            {
+                put("account_successfully_created", true);
+                put("user_id", createdUser.getUserId());
+            }
+        });
     }
 
     @PostMapping("/login")
@@ -67,12 +116,14 @@ public class UserController {
 
         String token = jwtUtil.generateToken(user.getEmail());
 
-        return ResponseEntity.ok(new HashMap<>() {{
-            put("token", token);
-            put("userId", user.getUserId());
-            put("username", user.getUsername());
-            put("email", user.getEmail());
-        }});
+        return ResponseEntity.ok(new HashMap<>() {
+            {
+                put("token", token);
+                put("userId", user.getUserId());
+                put("username", user.getUsername());
+                put("email", user.getEmail());
+            }
+        });
     }
 
     @GetMapping("/me")
@@ -89,29 +140,32 @@ public class UserController {
         try {
             String email = auth.getName();
             User user = repo.findByEmail(email);
-            
+
             if (user == null) {
                 return ResponseEntity.status(404).body("User not found");
             }
-            
+
             userService.updatePassword(
-                user.getUserId(), 
-                request.getCurrentPassword(), 
-                request.getNewPassword()
-            );
-            
-            return ResponseEntity.ok(new HashMap<>() {{
-                put("success", true);
-                put("message", "Password updated successfully");
-            }});
+                    user.getUserId(),
+                    request.getCurrentPassword(),
+                    request.getNewPassword());
+
+            return ResponseEntity.ok(new HashMap<>() {
+                {
+                    put("success", true);
+                    put("message", "Password updated successfully");
+                }
+            });
         } catch (RuntimeException e) {
-            return ResponseEntity.status(400).body(new HashMap<>() {{
-                put("success", false);
-                put("message", e.getMessage());
-            }});
+            return ResponseEntity.status(400).body(new HashMap<>() {
+                {
+                    put("success", false);
+                    put("message", e.getMessage());
+                }
+            });
         }
     }
-    
+
     @PutMapping("/update-email")
     public ResponseEntity<?> updateEmail(
             @RequestBody EmailUpdateRequest request,
@@ -119,108 +173,138 @@ public class UserController {
         try {
             String currentEmail = auth.getName();
             User user = repo.findByEmail(currentEmail);
-            
+
             if (user == null) {
                 return ResponseEntity.status(404).body("User not found");
             }
-            
+
             User updatedUser = userService.updateEmail(user.getUserId(), request.getNewEmail());
-            
+
             String newToken = jwtUtil.generateToken(updatedUser.getEmail());
-            
-            return ResponseEntity.ok(new HashMap<>() {{
-                put("success", true);
-                put("message", "Email updated successfully");
-                put("token", newToken);
-                put("email", updatedUser.getEmail());
-            }});
+
+            return ResponseEntity.ok(new HashMap<>() {
+                {
+                    put("success", true);
+                    put("message", "Email updated successfully");
+                    put("token", newToken);
+                    put("email", updatedUser.getEmail());
+                }
+            });
         } catch (RuntimeException e) {
-            return ResponseEntity.status(400).body(new HashMap<>() {{
-                put("success", false);
-                put("message", e.getMessage());
-            }});
+            return ResponseEntity.status(400).body(new HashMap<>() {
+                {
+                    put("success", false);
+                    put("message", e.getMessage());
+                }
+            });
         }
     }
 
     // @PutMapping("/update-username")
     // public ResponseEntity<?> updateUsername(
-    //         @RequestBody UsernameUpdateRequest request,
-    //         Authentication auth) {
-    //     try {
-    //         String email = auth.getName();
-    //         User user = repo.findByEmail(email);
-            
-    //         if (user == null) {
-    //             return ResponseEntity.status(404).body("User not found");
-    //         }
-            
-    //         User updatedUser = userService.updateUsername(user.getUserId(), request.getNewUsername());
-            
-    //         return ResponseEntity.ok(new HashMap<>() {{
-    //             put("success", true);
-    //             put("message", "Username updated successfully");
-    //             put("username", updatedUser.getUsername());
-    //         }});
-    //     } catch (RuntimeException e) {
-    //         return ResponseEntity.status(400).body(new HashMap<>() {{
-    //             put("success", false);
-    //             put("message", e.getMessage());
-    //         }});
-    //     }
+    // @RequestBody UsernameUpdateRequest request,
+    // Authentication auth) {
+    // try {
+    // String email = auth.getName();
+    // User user = repo.findByEmail(email);
+
+    // if (user == null) {
+    // return ResponseEntity.status(404).body("User not found");
     // }
-    
+
+    // User updatedUser = userService.updateUsername(user.getUserId(),
+    // request.getNewUsername());
+
+    // return ResponseEntity.ok(new HashMap<>() {{
+    // put("success", true);
+    // put("message", "Username updated successfully");
+    // put("username", updatedUser.getUsername());
+    // }});
+    // } catch (RuntimeException e) {
+    // return ResponseEntity.status(400).body(new HashMap<>() {{
+    // put("success", false);
+    // put("message", e.getMessage());
+    // }});
+    // }
+    // }
+
     public static class PasswordUpdateRequest {
         private String currentPassword;
         private String newPassword;
-        
-        public String getCurrentPassword() { return currentPassword; }
-        public void setCurrentPassword(String currentPassword) { this.currentPassword = currentPassword; }
-        public String getNewPassword() { return newPassword; }
-        public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
+
+        public String getCurrentPassword() {
+            return currentPassword;
+        }
+
+        public void setCurrentPassword(String currentPassword) {
+            this.currentPassword = currentPassword;
+        }
+
+        public String getNewPassword() {
+            return newPassword;
+        }
+
+        public void setNewPassword(String newPassword) {
+            this.newPassword = newPassword;
+        }
     }
-    
+
     public static class EmailUpdateRequest {
         private String newEmail;
-        
-        public String getNewEmail() { return newEmail; }
-        public void setNewEmail(String newEmail) { this.newEmail = newEmail; }
+
+        public String getNewEmail() {
+            return newEmail;
+        }
+
+        public void setNewEmail(String newEmail) {
+            this.newEmail = newEmail;
+        }
     }
 
     // public static class UsernameUpdateRequest {
-    //     private String newUsername;
-        
-    //     public String getNewUsername() { return newUsername; }
-    //     public void setNewUsername(String newUsername) { this.newUsername = newUsername; }
+    // private String newUsername;
+
+    // public String getNewUsername() { return newUsername; }
+    // public void setNewUsername(String newUsername) { this.newUsername =
+    // newUsername; }
     // }
 
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
         try {
             if (!request.getNewPassword().equals(request.getConfirmPassword())) {
-                return ResponseEntity.status(400).body(new HashMap<>() {{
-                    put("success", false);
-                    put("message", "Passwords do not match");
-                }});
+                return ResponseEntity.status(400).body(new HashMap<>() {
+                    {
+                        put("success", false);
+                        put("message", "Passwords do not match");
+                    }
+                });
             }
-            
+
             if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
-                return ResponseEntity.status(400).body(new HashMap<>() {{
-                    put("success", false);
-                    put("message", "Email is required");
-                }});
+                return ResponseEntity.status(400).body(new HashMap<>() {
+                    {
+                        put("success", false);
+                        put("message", "Email is required");
+                    }
+                });
             }
-            
+
             userService.resetPasswordByEmail(request.getEmail(), request.getNewPassword());
-            
-            return ResponseEntity.ok(new HashMap<>() {{
-                put("success", true);
-                put("message", "Password has been reset successfully");
-            }});
+
+            return ResponseEntity.ok(new HashMap<>() {
+                {
+                    put("success", true);
+                    put("message", "Password has been reset successfully");
+                }
+            });
         } catch (RuntimeException e) {
-            return ResponseEntity.status(400).body(new HashMap<>() {{
-                put("success", false);
-                put("message", e.getMessage());
-            }});
+            return ResponseEntity.status(400).body(new HashMap<>() {
+                {
+                    put("success", false);
+                    put("message", e.getMessage());
+                }
+            });
         }
     }
 

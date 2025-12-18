@@ -4,9 +4,9 @@
     <div class="scrollable-content">
         <div class="post-section">
         <div class="user-header">
-            <div class="user-avatar">{{ getInitial(post.username) }}</div>
+            <div class="user-avatar" (click)="goToUserProfile(post.user_id, $event)">{{ getInitial(post.username) }}</div>
             <div class="user-info">
-            <span class="username">{{ post.username }}</span>
+            <span class="username" (click)="goToUserProfile(post.user_id, $event)">{{ post.username }}</span>
             <span class="timestamp">Posted {{ getTimeAgo(post.created_at) }}</span>
             </div>
         </div>
@@ -113,11 +113,11 @@
         <div class="comment-thread">
             <div class="comment-item" [attr.data-comment-id]="comment.comment_id">
             <div class="comment-header">
-                <div class="user-avatar-small">
+                <div class="user-avatar-small" (click)="goToUserProfile(comment.user_id, $event)">
                     {{ getInitial(comment.username) }}
                 </div>
                 <div class="comment-info">
-                <span class="username">{{ comment.username }}</span>
+                <span class="username" (click)="goToUserProfile(comment.user_id, $event)">{{ comment.username }}</span>
                 <span class="timestamp">
                      · {{ getTimeAgo(comment.created_at) }}
                 </span>
@@ -231,11 +231,11 @@
                 @for (reply of comment.replies; track reply.comment_id) {
                 <div class="comment-item reply" [attr.data-comment-id]="reply.comment_id">
                     <div class="comment-header">
-                    <div class="user-avatar-small">
+                    <div class="user-avatar-small" (click)="goToUserProfile(reply.user_id, $event)">
                         {{ getInitial(reply.username) }}
                     </div>
                     <div class="comment-info">
-                        <span class="username">{{ reply.username }}</span>
+                        <span class="username" (click)="goToUserProfile(reply.user_id, $event)">{{ reply.username }}</span>
                         <span class="timestamp">
                              · {{ getTimeAgo(reply.created_at) }}
                         </span>

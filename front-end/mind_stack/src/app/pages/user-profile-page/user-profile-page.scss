@@ -83,6 +83,15 @@
     transform: scale(1.05);
 }
 
+.view-only {
+    color: #0b6a39;
+    font-weight: 600;
+    font-family: "Poppins", sans-serif;
+    padding: 8px 12px;
+    background: rgba(11, 106, 57, 0.08);
+    border-radius: 10px;
+}
+
 .milestone-section {
     width: 100%;
     max-width: 1000px;

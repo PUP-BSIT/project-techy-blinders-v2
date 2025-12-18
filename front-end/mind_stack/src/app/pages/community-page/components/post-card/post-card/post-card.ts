@@ -117,6 +117,19 @@ export class PostCard implements OnInit, OnDestroy, OnChanges {
     this.dislikePost.emit(this.post);
   }
 
+  goToUserProfile(event: Event, userId: string) {
+    event.stopPropagation();
+    if (!userId) {
+      return;
+    }
+
+    const target = userId === this.currentUserId
+      ? ['/app/user-profile']
+      : ['/app/user-profile', userId];
+
+    this.router.navigate(target);
+  }
+
   onCommentClick(event: Event) {
     event.stopPropagation();
     if (this.isQuizPost()) {

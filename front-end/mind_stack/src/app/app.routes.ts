@@ -52,6 +52,7 @@ export const routes: Routes = [
             },
             { path: 'community', component: CommunityPage },
             { path: 'notifications', component: NotificationPage },
+            { path: 'user-profile/:userId', component: UserProfilePage },
             { path: 'user-profile', component: UserProfilePage },
             { path: 'edit-profile-setting', component: EditProfilePage},
             { path: 'account-setting', component: AccountSettings}
