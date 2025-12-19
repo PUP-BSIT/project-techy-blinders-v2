@@ -83,14 +83,24 @@ export class CommunityService {
     if (!value) return new Date();
     if (value instanceof Date) return value;
     let s = String(value).trim();
-    // Format: yyyy-MM-dd HH:mm:ss (DB typical) -> treat as UTC
+
+    // If the server sent a trailing Z (UTC marker) but the value actually represents local time
+    // (e.g., Asia/Manila), strip the Z so the date is interpreted in the user's local timezone.
+    if (s.endsWith('Z')) {
+      s = s.slice(0, -1);
+    }
+
+    // Format: yyyy-MM-dd HH:mm:ss -> interpret as local time (no implicit UTC shift)
     if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(s)) {
-      s = s.replace(' ', 'T') + 'Z';
+      s = s.replace(' ', 'T');
+      return new Date(s);
     }
-    // Format: yyyy-MM-ddTHH:mm:ss(.fraction) without Z -> treat as UTC
-    else if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?$/.test(s)) {
-      s = s + 'Z';
+
+    // Format: yyyy-MM-ddTHH:mm:ss(.fraction) -> interpret as local time
+    if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?$/.test(s)) {
+      return new Date(s);
     }
+
     // Otherwise, let Date parse it as-is
     return new Date(s);
   }
