@@ -15,6 +15,12 @@ import { CommunityService } from '../../../service/community.service';
   styleUrls: ['./study-sets-page.scss']
 })
 export class StudySetsPage implements OnInit, OnDestroy {
+
+  get isShareDisabledForSelectedSet(): boolean {
+    if (this.selectedStudySetId == null) return false;
+    const set = this.studySets?.find((s: any) => s.flashcard_id === this.selectedStudySetId);
+    return !!set?.is_public;
+  }
   isModalOpen: boolean = false;
   isFlashcardModalOpen: boolean = false;
   isConfirmModalOpen: boolean = false;
