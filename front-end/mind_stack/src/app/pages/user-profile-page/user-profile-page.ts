@@ -18,6 +18,7 @@ export class UserProfilePage implements OnInit {
 
   showEditModal = false;
   showAccountSettingsModal = false;
+  showSuccessPopup = false;
   
   activeTab: 'overview' | 'account-settings' = 'overview';
   currentUser: LoginResponse | null = null;
@@ -54,7 +55,6 @@ export class UserProfilePage implements OnInit {
 
         if (this.isOwnProfile) {
           this.editEmailValue = loggedInUser?.email || '';
-          // Load profile data including milestones for own profile
           if (loggedInUser?.userId) {
             this.loadUserProfile(loggedInUser.userId);
           }
@@ -65,7 +65,6 @@ export class UserProfilePage implements OnInit {
         this.isOwnProfile = true;
         this.viewedUserId = loggedInUser?.userId;
         this.editEmailValue = loggedInUser?.email || '';
-        // Load profile data including milestones for own profile
         if (loggedInUser?.userId) {
           this.loadUserProfile(loggedInUser.userId);
         }
@@ -98,6 +97,8 @@ export class UserProfilePage implements OnInit {
           this.displayUser!.email = this.editEmailValue;
           localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
           this.editingEmail = false;
+          this.showEditModal = false;
+          this.showSuccessPopup = true;
         } else {
           this.errorMessage = res.message || 'Failed to update email';
         }
@@ -115,6 +116,10 @@ export class UserProfilePage implements OnInit {
     this.showAccountSettingsModal = false;
   }
 
+  closeSuccessPopup() {
+    this.showSuccessPopup = false;
+  }
+
   accountSetting() {
     if (!this.isOwnProfile) return;
     this.showAccountSettingsModal = true;
@@ -129,7 +134,6 @@ export class UserProfilePage implements OnInit {
         console.log('Loaded user profile:', profile);
         this.displayUser = profile;
         
-        // Update milestones from API
         this.quizzesCreated = profile.quizzesCreated;
         this.flashcardSetsCreated = profile.flashcardSetsCreated;
         this.totalLikes = profile.totalLikes;

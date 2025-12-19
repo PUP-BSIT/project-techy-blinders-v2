@@ -58,7 +58,6 @@
                         }
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -68,6 +67,16 @@
     <div class="modal-overlay" (click)="closeModal()">
         <div (click)="$event.stopPropagation()">
             <app-account-settings (onCancel)="closeModal()"></app-account-settings>
+        </div>
+    </div>
+}
+
+@if (showSuccessPopup) {
+    <div class="popup-overlay" (click)="closeSuccessPopup()">
+        <div class="popup" (click)="$event.stopPropagation()">
+            <h2>Success!</h2>
+            <p>Your email has been updated successfully.</p>
+            <button (click)="closeSuccessPopup()">OK</button>
         </div>
     </div>
 }
