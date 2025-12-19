@@ -45,9 +45,15 @@ export class CreatePost {
         const updates: Partial<Post> = {
           title: this.title,
           category: this.category,
-          content: this.content,
-          slug: this.title.toLowerCase().replace(/\s+/g, '-')
+          content: this.content
         };
+        
+        // Only update slug if it's not a flashcard or quiz post
+        // (flashcard/quiz posts have special slug format: flashcard-{id}-... or quiz-{id}-...)
+        if (!this.editPost.slug.startsWith('flashcard-') && !this.editPost.slug.startsWith('quiz-')) {
+          updates.slug = this.title.toLowerCase().replace(/\s+/g, '-');
+        }
+        
         this.updatePost.emit({ postId: this.editPost.post_id, updates });
       } else {
         const newPost: Partial<Post> = {
