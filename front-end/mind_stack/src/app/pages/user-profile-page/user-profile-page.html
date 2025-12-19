@@ -1,3 +1,11 @@
+@if (!isOwnProfile) {
+    <div class="back-stack">
+        <button class="back-button" (click)="goBack()">
+            ‹ Back
+        </button>
+    </div>
+}
+
 <div class="header-class">
     <div class="user-info">
         <h1 class="username">{{ displayUser?.username }}</h1>
