@@ -6,7 +6,7 @@
     margin-top: 5%;
     border: solid 0px;
     height: auto;
-    width: 100%;
+    width: 90%;
     padding: 30px;
     background-color: #b4ddba;
     border-radius: 15px;
@@ -32,6 +32,7 @@
 .account-setting-label h1 {
     font-family: "Poppins", sans-serif;
     font-weight: bold;
+    margin-bottom: 30px;
 }
 
 .current-password-class, .new-password-class, .confirm-password-class {
@@ -43,8 +44,9 @@
 .new-password-class label,
 .confirm-password-class label {
     font-family: "Poppins", sans-serif;
-    font-size: 17px;
-    font-weight: 200;
+    font-size: 15px;
+    font-weight: 400;
+    margin-left: 15px;
 }
 
 .current-password-class input, 
@@ -52,10 +54,11 @@
 .confirm-password-class input {
     margin-top: 2%;
     border: solid 0px;
-    width: 95%;
+    width: 90%;
     height: 30px;
     padding: 5px;
     border-radius: 10px;
+    margin-left: 15px;
 }
 
 .current-password-class input:focus,
@@ -74,6 +77,7 @@
     color: #d32f2f;
     font-family: "Poppins", sans-serif;
     font-size: 12px;
+    margin-left: 25px;
 }
 
 .password-match-error {
@@ -85,7 +89,7 @@
     justify-content: center;
     margin-top: 0%;
     margin-left: 0%;
-    gap: 20px;
+    gap: 10px;
 }
 
 #submit_button_password {

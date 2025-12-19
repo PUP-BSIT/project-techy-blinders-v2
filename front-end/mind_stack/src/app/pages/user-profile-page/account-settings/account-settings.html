@@ -1,6 +1,6 @@
 <div class="account-setting-class">
     <div class="account-setting-label">
-        <h1>Account Setting</h1>
+        <h1>Change Password</h1>
     </div>
 
     <form [formGroup]="accountSettingForm" (ngSubmit)="accountSettingInformation()">
@@ -9,7 +9,7 @@
                 <div class="current-password-label">
                     <label>Current Password</label>
                 </div>
-                <input type="password" formControlName="current_password" placeholder="Current Password">
+                <input type="password" formControlName="current_password" placeholder="Input current password...">
                 <div class="error-message">
                     @if(passwordControl?.touched) {
                         @if (passwordControl?.errors?.['required']) {
@@ -23,7 +23,7 @@
                 <div class="new-password-label">
                     <label>New Password</label>
                 </div>
-                <input type="password" formControlName="new_password" placeholder="New Password">
+                <input type="password" formControlName="new_password" placeholder="Input new password...">
                 <div class="error-message">
                     @if (newPasswordControl?.touched) {
                         @if(newPasswordControl?.errors?.['required']) {
@@ -37,7 +37,7 @@
                 <div class="confirm-password-label">
                     <label>Confirm Password</label>
                 </div>
-                <input type="password" formControlName="confirm_password" placeholder="Confirm Passowrd">
+                <input type="password" formControlName="confirm_password" placeholder="Confirm password...">
                 <div class="error-message">
                     @if (confirmPasswordControl?.touched) {
                         @if(confirmPasswordControl?.errors?.['required']) {
