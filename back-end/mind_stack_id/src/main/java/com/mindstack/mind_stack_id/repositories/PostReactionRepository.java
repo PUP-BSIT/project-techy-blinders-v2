@@ -8,7 +8,11 @@ import org.springframework.stereotype.Repository;
 import com.mindstack.mind_stack_id.models.PostReaction;
 import com.mindstack.mind_stack_id.models.PostReactionId;
 
+import java.util.List;
+
 @Repository
 public interface PostReactionRepository extends JpaRepository<PostReaction, PostReactionId> {
     Optional<PostReaction> findByPostIdAndUserId(long postId, long userId);
+
+    List<PostReaction> findByPostId(long postId);
 }

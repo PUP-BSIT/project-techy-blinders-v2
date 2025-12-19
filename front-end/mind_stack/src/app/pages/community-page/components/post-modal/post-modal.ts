@@ -121,7 +121,7 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
 
   confirmDeletePost(event: Event) {
     event.stopPropagation();
-    this.deletePost.emit({ post: this.post, setPrivate: true, permanent: false });
+    this.deletePost.emit({ post: this.post, setPrivate: true, permanent: true });
     this.showDeleteConfirmForPost = false;
     this.showPostMenu = false;
   }
@@ -260,4 +260,32 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
     }
     return this.post.content || '';
   }
-}
+
+  onPlayClick(event: Event) {
+    event.stopPropagation();
+    if (this.isQuizPost()) {
+      this.playQuiz(event);
+    } else if (this.isFlashcardPost()) {
+      this.playFlashcard(event);
+    }
+  }
+
+  playQuiz(event: Event) {
+    event.stopPropagation();
+    const parts = this.post.slug?.split('-') || [];
+    if (parts.length >= 2) {
+      const quizId = parts[1];
+      this.closeModal();
+      this.router.navigate(['/app/quizzes', quizId]);
+    }
+  }
+
+  playFlashcard(event: Event) {
+    event.stopPropagation();
+    const parts = this.post.slug?.split('-') || [];
+    if (parts.length >= 2) {
+      const flashcardId = parts[1];
+      this.closeModal();
+      this.router.navigate(['/app/study-sets', flashcardId]);
+    }
+  }}

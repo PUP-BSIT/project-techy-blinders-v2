@@ -100,7 +100,9 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable("id") long id) {
+    public ResponseEntity<String> deletePost(
+            @PathVariable("id") long id,
+            @RequestParam(required = false, defaultValue = "false") boolean setPrivate) {
         // Fetch the post first
         PostCreation post = postService.getPostById(id);
         if (post == null) {
@@ -124,7 +126,7 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: You can only delete your own post");
         }
 
-        boolean deleted = postService.deletePost(id);
+        boolean deleted = postService.deletePost(id, setPrivate, currentUser.getUserId());
         if (!deleted) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
         }

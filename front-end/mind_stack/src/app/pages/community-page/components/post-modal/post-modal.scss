@@ -435,14 +435,15 @@
 
 .edit-comment-input {
     width: 100%;
-    padding: 10px;
+    padding: 8px;
     border: 1px solid #D1D5DB;
-    border-radius: 8px;
-    font-size: 13px;
+    border-radius: 6px;
+    font-size: 12px;
     font-family: inherit;
-    resize: vertical;
-    margin-bottom: 8px;
+    resize: none;
+    margin-bottom: 6px;
     box-sizing: border-box;
+    max-height: 80px;
 
     &:focus {
         outline: none;
@@ -457,34 +458,34 @@
 }
 
 .btn-cancel {
-    padding: 6px 14px;
+    padding: 10px 20px;
     border: none;
-    background: #16dc81;
+    background: #95D5B2;
     color: white;
     border-radius: 6px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
 
     &:hover {
-        background: #14c674;
+        background: #7AC99E;
     }
 }
 
 .btn-save {
-    padding: 6px 14px;
+    padding: 10px 20px;
     border: none;
-    background: #287c55;
+    background: #2D8659;
     color: white;
     border-radius: 6px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
 
     &:hover {
-        background: #226646;
+        background: #1F5F42;
     }
 }
 
@@ -515,6 +516,58 @@
     color: #374151;
     margin-bottom: 10px;
     font-weight: 500;
+}
+
+.confirm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+}
+
+.confirm-modal {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 400px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.confirm-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 16px;
+}
+
+.confirm-subtext {
+    font-size: 14px;
+    color: #6B7280;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.btn-danger {
+    padding: 10px 20px;
+    border: none;
+    background: #B7094C;
+    color: white;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        background: #8B0639;
+    }
 }
 
 .confirm-actions {

@@ -21,7 +21,7 @@ public interface PostService {
 
     PostCreation updatePost(long id, PostCreation post);
 
-    boolean deletePost(long id);
+    boolean deletePost(long id, boolean setPrivate, Long actorUserId);
 
     PostCreation publishPost(long id);
 

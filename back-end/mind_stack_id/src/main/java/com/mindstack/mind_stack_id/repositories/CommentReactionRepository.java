@@ -8,7 +8,11 @@ import org.springframework.stereotype.Repository;
 import com.mindstack.mind_stack_id.models.CommentReaction;
 import com.mindstack.mind_stack_id.models.CommentReactionId;
 
+import java.util.List;
+
 @Repository
 public interface CommentReactionRepository extends JpaRepository<CommentReaction, CommentReactionId> {
     Optional<CommentReaction> findByCommentIdAndUserId(long commentId, long userId);
+
+    List<CommentReaction> findByCommentId(long commentId);
 }
