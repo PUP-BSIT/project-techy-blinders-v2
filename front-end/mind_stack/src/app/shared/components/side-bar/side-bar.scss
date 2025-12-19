@@ -177,14 +177,43 @@ a.active {
     filter: brightness(0.6);
 }
 
-.icon {
+.icon-wrapper {
+    position: relative;
     width: 35px;
     height: 35px;
     min-width: 35px;
     margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon {
+    width: 35px;
+    height: 35px;
+    min-width: 35px;
     object-fit: contain;
     vertical-align: middle;
-    transition: filter 0.3s ease;
+    transition: opacity 0.3s ease;
+    position: absolute;
+}
+
+.icon-default {
+    opacity: 1;
+}
+
+.icon-hover {
+    opacity: 0;
+}
+
+a:hover .icon-default,
+a.active .icon-default {
+    opacity: 0;
+}
+
+a:hover .icon-hover,
+a.active .icon-hover {
+    opacity: 1;
 }
 
 .sidebar-user {
