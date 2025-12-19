@@ -68,7 +68,7 @@
                         <img src="assets/bell.png" 
                               alt="Notification icon" 
                               class="icon icon-default">
-                        <img src="assets/bell.png" 
+                        <img src="assets/notification-hover-icon.png" 
                               alt="Notification hover icon" 
                               class="icon icon-hover">
                     </div>
@@ -89,12 +89,18 @@
             </div>
 
             <button class="logout-btn text-content" (click)="onLogout()">
-                <img src="assets/logout-icon.png" class="icon-btn" alt="Logout">
+                <div class="icon-wrapper-logout">
+                    <img src="assets/logout-icon.png" class="icon-btn icon-default" alt="Logout">
+                    <img src="assets/logout-hover-icon.png" class="icon-btn icon-hover" alt="Logout hover">
+                </div>
             </button>
         </div>
 
         <button class="logout-btn-collapsed" (click)="onLogout()" title="Logout">
-            <img src="assets/logout-icon.png" class="icon-btn" alt="Logout">
+            <div class="icon-wrapper-logout">
+                <img src="assets/logout-icon.png" class="icon-btn icon-default" alt="Logout">
+                <img src="assets/logout-hover-icon.png" class="icon-btn icon-hover" alt="Logout hover">
+            </div>
         </button>
     </mat-sidenav>
 

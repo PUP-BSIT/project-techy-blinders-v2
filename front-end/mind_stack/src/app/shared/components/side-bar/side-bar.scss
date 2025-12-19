@@ -307,10 +307,6 @@ a.active .icon-hover {
     }
 }
 
-.logout-btn:hover {
-    text-decoration: underline;
-}
-
 .logout-btn-collapsed {
     position: absolute;
     bottom: 15px;
@@ -323,17 +319,11 @@ a.active .icon-hover {
     display: none;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
     width: 51px;
     height: 51px;
     
     .collapsed & {
         display: flex;
-    }
-    
-    &:hover {
-        background-color: rgba(0, 0, 0, 0.2);
     }
 }
 
@@ -341,6 +331,38 @@ a.active .icon-hover {
     width: 35px;
     height: 35px;
     object-fit: contain;
+}
+
+.icon-wrapper-logout {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-btn .icon-default,
+.logout-btn-collapsed .icon-default {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.logout-btn .icon-hover,
+.logout-btn-collapsed .icon-hover {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    position: absolute;
+}
+
+.logout-btn:hover .icon-default,
+.logout-btn-collapsed:hover .icon-default {
+    opacity: 0;
+}
+
+.logout-btn:hover .icon-hover,
+.logout-btn-collapsed:hover .icon-hover {
+    opacity: 1;
 }
 
 .modal-backdrop {
