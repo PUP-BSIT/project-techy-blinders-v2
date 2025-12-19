@@ -197,7 +197,7 @@
         <div class="privacy-settings-modal" (click)="$event.stopPropagation()">
             <h3 class="privacy-settings-title">PRIVACY SETTINGS</h3>
             <div class="privacy-options">
-                <button class="privacy-option share" (click)="selectShareOption()">
+                <button class="privacy-option share" (click)="selectShareOption()" [disabled]="isShareDisabledForSelectedSet">
                     <img src="assets/globe-icon.png" alt="Share" class="option-icon">
                     <div class="option-content">
                         <span>Share</span>

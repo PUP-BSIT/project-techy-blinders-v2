@@ -34,6 +34,11 @@ export interface Quiz {
   styleUrls: ['./quizzes-page.scss']
 })
 export class QuizzesPage implements OnInit {
+    get isShareDisabledForSelectedQuiz(): boolean {
+      if (this.selectedQuizIdForPrivacy === null) return false;
+      const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizIdForPrivacy);
+      return !!quiz?.is_public;
+    }
   isModalOpen: boolean = false;
   isQuestionModalOpen: boolean = false;
   isConfirmModalOpen: boolean = false;
