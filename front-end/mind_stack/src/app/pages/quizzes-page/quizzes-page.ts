@@ -582,11 +582,9 @@ export class QuizzesPage implements OnInit {
       quizItems
     ).subscribe({
       next: () => {
-        // Persisted as private on backend – update local state
         quiz.is_public = false;
         this.quizzesList = [...this.quizzesList];
 
-        // Remove related community post(s) for this quiz
         this.removeQuizFromCommunity(quiz.quiz_id);
 
         this.isLoading = false;
@@ -608,10 +606,6 @@ export class QuizzesPage implements OnInit {
     });
   }
 
-  /**
-   * Find and delete any community post(s) created for the given quiz.
-   * Quiz share slugs are in the format: "quiz-{quiz_id}-{slugified-title}".
-   */
   private removeQuizFromCommunity(quizId: number) {
     const slugPrefix = `quiz-${quizId}-`;
     const posts = this.communityService.getPosts();
@@ -629,7 +623,7 @@ export class QuizzesPage implements OnInit {
 
       const quiz = this.quizzes.find(q => q.quiz_id === quizId);
       if (quiz) {
-        this.shareTitle = quiz.title;
+        this.shareTitle = '';
         this.shareDescription = quiz.description || '';
         this.shareCategory = ''; 
       }
@@ -659,7 +653,7 @@ export class QuizzesPage implements OnInit {
       const currentUser = this.authService.getCurrentUser();
 
       if (quiz && currentUser) {
-        const quizContent = `${quiz.description || 'A quiz set to test your knowledge!'} • ${this.getQuestionTypeLabel(quiz.questionType)}`;
+        const quizContent = `${quiz.title} • ${quiz.description || 'A quiz set to test your knowledge!'} • ${this.getQuestionTypeLabel(quiz.questionType)}`;
 
         const quizSlug = `quiz-${quiz.quiz_id}-${this.slugify(this.shareTitle)}`;
         
@@ -729,7 +723,7 @@ export class QuizzesPage implements OnInit {
       const missing = [];
       
       if (!this.selectedQuizId) missing.push('select a quiz');
-      if (!this.shareTitle.trim()) missing.push('enter a title');
+      if (!this.shareTitle.trim()) missing.push('enter a caption');
       if (!this.shareCategory.trim()) missing.push('select a category');
       
       errorMessage += missing.join(', ') + ' before sharing.';
