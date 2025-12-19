@@ -1,20 +1,25 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../service/auth.service';
 
 @Component({
   selector: 'app-forgot-password',
-  imports: [FormsModule, ReactiveFormsModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './forgot-password.html',
-  styleUrl: './forgot-password.scss'
+  styleUrls: ['./forgot-password.scss']
 })
 export class ForgotPassword {
   @Output() onCancel = new EventEmitter<void>();
 
-  showForgotPasswordModal = false;
-  isLoading = false;
-  errorMessage = '';
-  successMessage = '';
+  isLoading = signal(false);
+  errorMessage = signal('');
+  successMessage = signal('');
+  showSuccessPopup = signal(false);
 
   formBuilder = inject(FormBuilder);
   authService = inject(AuthService);
@@ -22,72 +27,53 @@ export class ForgotPassword {
 
   constructor() {
     this.forgotPasswordForm = this.formBuilder.group({
-      email: ['', {
-        validators: [Validators.required, Validators.email],
-        updateOn: 'change'
-      }],
-
-      newPassword: ['', {
-        validators: [Validators.required, Validators.minLength(6)],
-        updateOn: 'change'
-      }],
-
-      confirmPassword: ['', {
-        validators: [Validators.required],
-        updateOn: 'change'
-      }]
+      email: ['', [Validators.required, Validators.email]],
+      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
     });
   }
 
   forgotPassword() {
-    if (this.forgotPasswordForm.invalid) {
-      return;
-    }
+    if (this.forgotPasswordForm.invalid) return;
 
-    // Reset messages
-    this.errorMessage = '';
-    this.successMessage = '';
-    this.isLoading = true;
+    this.errorMessage.set('');
+    this.successMessage.set('');
+    this.isLoading.set(true);
 
     const formValue = this.forgotPasswordForm.value;
-    
+
     this.authService.resetPassword({
       email: formValue.email,
       newPassword: formValue.newPassword,
       confirmPassword: formValue.confirmPassword
     }).subscribe({
       next: (response) => {
-        this.isLoading = false;
+        this.isLoading.set(false);
+
         if (response.success) {
-          this.successMessage = response.message;
-          setTimeout(() => {
-            this.forgotPasswordForm.reset();
-            this.onCancel.emit();
-          }, 2000);
+          this.successMessage.set(response.message);
+          this.showSuccessPopup.set(true);
         } else {
-          this.errorMessage = response.message;
+          this.errorMessage.set(response.message);
         }
       },
-      error: (error) => {
-        this.isLoading = false;
-        if (error.status === 403) {
-          this.errorMessage = 'Access forbidden. Please contact support if this issue persists.';
-        } else if (error.error && error.error.message) {
-          this.errorMessage = error.error.message;
-        } else if (error.status === 0) {
-          this.errorMessage = 'Cannot connect to server. Please check your internet connection.';
-        } else {
-          this.errorMessage = 'An error occurred while resetting password. Please try again.';
-        }
-        console.error('Reset password error:', error);
+      error: () => {
+        this.isLoading.set(false);
+        this.errorMessage.set('An error occurred. Please try again.');
       }
     });
   }
 
+  closeSuccessPopup() {
+    this.showSuccessPopup.set(false);
+    this.forgotPasswordForm.reset();
+    this.onCancel.emit();
+  }
+
   cancel() {
     this.forgotPasswordForm.reset();
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.errorMessage.set('');
+    this.successMessage.set('');
     this.onCancel.emit();
   }
 
@@ -95,11 +81,11 @@ export class ForgotPassword {
     return this.forgotPasswordForm.get('email');
   }
 
-  get confirmPasswordControl() {
-    return this.forgotPasswordForm.get('confirmPassword');
-  }
-
   get newPasswordControl() {
     return this.forgotPasswordForm.get('newPassword');
+  }
+
+  get confirmPasswordControl() {
+    return this.forgotPasswordForm.get('confirmPassword');
   }
 }
