@@ -6,7 +6,7 @@
 
     @if (isOwnProfile) {
         <div class="button-class">
-            <button type="button" class="edit-profile-btn" (click)="editProfile()">Edit Email</button>
+            <button type="button" class="edit-profile-btn" (click)="editProfile()">Change Email</button>
             <button type="button" class="change-password-btn" (click)="accountSetting()">Change Password</button>
         </div>
     } @else {
@@ -19,15 +19,13 @@
 
     <div class="milestone-cards">
         <div class="milestone-card">
-            <span class="milestone-label">Quiz Sets Created</span>
-            <span class="milestone-count">{{ quizzesCreated }}</span>
-        </div>
-
-        <div class="milestone-card">
             <span class="milestone-label">Flashcard Sets Created</span>
             <span class="milestone-count">{{ flashcardSetsCreated }}</span>
         </div>
-
+        <div class="milestone-card">
+            <span class="milestone-label">Quiz Sets Created</span>
+            <span class="milestone-count">{{ quizzesCreated }}</span>
+        </div>
         <div class="milestone-card">
             <span class="milestone-label">Total Likes</span>
             <span class="milestone-count">{{ totalLikes }}</span>
