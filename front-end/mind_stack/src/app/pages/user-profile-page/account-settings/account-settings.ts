@@ -11,11 +11,12 @@ import { AuthService } from '../../../../service/auth.service';
 })
 export class AccountSettings {
   @Output() onCancel = new EventEmitter<void>();
+  @Output() onSuccess = new EventEmitter<void>();
 
   formBuilder = inject (FormBuilder);
   authService = inject(AuthService);
   loading: boolean = false;
-  successMessage: string | null = null;
+  showSuccessPopup: boolean = false;
   errorMessage: string | null = null;
   accountSettingForm: FormGroup;
 
@@ -50,20 +51,23 @@ export class AccountSettings {
 
     this.loading = true;
     this.errorMessage = null;
-    this.successMessage = null;
 
     this.authService.updatePassword(current_password, new_password).subscribe({
       next: (res: any) => {
-        this.successMessage = res?.message || 'Password updated successfully';
         this.accountSettingForm.reset();
         this.loading = false;
-        this.onCancel.emit();
+        this.showSuccessPopup = true;
       },
       error: (err: any) => {
         this.errorMessage = err?.error?.message || err?.error || err?.message || 'Failed to update password';
         this.loading = false;
       }
     });
+  }
+
+  closeSuccessPopup() {
+    this.showSuccessPopup = false;
+    this.onCancel.emit();
   }
 
   cancel() {
