@@ -253,7 +253,7 @@ $transition-normal: 0.3s ease;
     margin-top: 0.25rem;
 
     &:hover {
-        background: darken(#2C9969, 5%);
+        background: color.adjust(#2C9969, $lightness: -5%);
         transform: translateY(-1px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
@@ -382,7 +382,7 @@ $transition-normal: 0.3s ease;
     }
 
     &.private:hover {
-        background: darken($color-primary, 5%);
+        background: color.adjust($color-primary, $lightness: -5%);
     }
 
     &:active {
@@ -500,7 +500,7 @@ $transition-normal: 0.3s ease;
     }
 
     &.private:hover {
-        background: darken($color-primary, 5%);
+        background: color.adjust($color-primary, $lightness: -5%);
     }
 
     &:active {
@@ -1707,7 +1707,7 @@ $transition-normal: 0.3s ease;
         color: $color-text-white;
 
         &:hover {
-            background: darken(#2D6A4F, 5%);
+            background: color.adjust(#2D6A4F, $lightness: -5%);
             transform: translateY(-2px);
             box-shadow: $shadow-medium;
         }

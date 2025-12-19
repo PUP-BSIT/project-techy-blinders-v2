@@ -1,3 +1,6 @@
+@use "sass:color";
+
+$color-primary: #3498db;
 $color-primary: #3DAC78;
 $color-primary-dark: #2D6A4F;
 $color-primary-darker: #1F4A3A;
@@ -251,7 +254,7 @@ $transition-normal: 0.3s ease;
     margin-top: 0.25rem;
 
     &:hover {
-        background: darken(#2C9969, 5%);
+        background: color.adjust(#2C9969, $lightness: -5%);
         transform: translateY(-1px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
@@ -380,7 +383,7 @@ $transition-normal: 0.3s ease;
     }
 
     &.private:hover {
-        background: darken($color-primary, 5%);
+        background: color.adjust($color-primary, $lightness: -5%);
     }
 
     &:active {
