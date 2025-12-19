@@ -20,9 +20,13 @@ import com.mindstack.mind_stack_id.repositories.UserRepository;
 import com.mindstack.mind_stack_id.repositories.PostReactionRepository;
 import com.mindstack.mind_stack_id.repositories.FlashcardSetRepository;
 import com.mindstack.mind_stack_id.repositories.QuizSetRepository;
+import com.mindstack.mind_stack_id.repositories.CommentRepository;
+import com.mindstack.mind_stack_id.repositories.CommentReactionRepository;
 import com.mindstack.mind_stack_id.services.PostService;
 import com.mindstack.mind_stack_id.services.NotificationService;
 import com.mindstack.mind_stack_id.models.Notification;
+import com.mindstack.mind_stack_id.models.Comment;
+import com.mindstack.mind_stack_id.models.CommentReaction;
 
 @Service
 public class PostImplementation implements PostService {
@@ -41,6 +45,12 @@ public class PostImplementation implements PostService {
 
     @Autowired
     private QuizSetRepository quizSetRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private CommentReactionRepository commentReactionRepository;
 
     @Autowired
     private NotificationService notificationService;
@@ -144,9 +154,34 @@ public class PostImplementation implements PostService {
     }
 
     @Override
-    public boolean deletePost(long id) {
-        Optional<PostCreation> post = postRepository.findById(id);
-        if (post.isPresent()) {
+    @Transactional
+    public boolean deletePost(long id, boolean setPrivate, Long actorUserId) {
+        Optional<PostCreation> postOpt = postRepository.findById(id);
+        if (postOpt.isPresent()) {
+            PostCreation post = postOpt.get();
+
+            // If setPrivate is true, set the underlying flashcard/quiz to private before
+            // deleting
+            if (setPrivate && actorUserId != null) {
+                setUnderlyingSetPrivate(post, actorUserId);
+            }
+
+            // Cascade delete: First delete all comment reactions for this post's comments
+            List<Comment> comments = commentRepository.findByPostId(id);
+            for (Comment comment : comments) {
+                List<CommentReaction> commentReactions = commentReactionRepository
+                        .findByCommentId(comment.getCommentId());
+                commentReactionRepository.deleteAll(commentReactions);
+            }
+
+            // Then delete all comments
+            commentRepository.deleteAll(comments);
+
+            // Then delete all post reactions
+            List<PostReaction> postReactions = postReactionRepository.findByPostId(id);
+            postReactionRepository.deleteAll(postReactions);
+
+            // Finally delete the post
             postRepository.deleteById(id);
             System.out.println("Deleted post with ID: " + id);
             return true;

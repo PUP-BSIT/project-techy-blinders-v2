@@ -160,8 +160,10 @@ export class CommunityService {
     });
   }
 
-  deletePostPermanently(postId: string): void {
-    this.http.delete(`${this.apiUrl}/posts/${postId}`).subscribe({
+  deletePostPermanently(postId: string, setPrivate: boolean = true): void {
+    const params = setPrivate ? { setPrivate: 'true' } : undefined;
+    const options = params ? { params } : {};
+    this.http.delete(`${this.apiUrl}/posts/${postId}`, options).subscribe({
       next: () => {
         this.postsSubject.next(this.postsSubject.value.filter(p => p.post_id !== postId));
         this.commentsSubject.next(this.commentsSubject.value.filter(c => c.post_id !== postId));

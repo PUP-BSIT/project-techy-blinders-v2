@@ -48,7 +48,7 @@
                           stroke-linecap="round" 
                           stroke-linejoin="round"/>
                     </svg>
-                    Unpublish
+                    Delete Post
                 </button>
                         @if (showDeleteConfirmForPost) {
                             <div class="confirm-overlay" 
@@ -56,12 +56,10 @@
                                 <div class="confirm-modal" 
                                      (click)="$event.stopPropagation()">
                                     <div class="confirm-title">
-                                        Unpublish this post?
+                                        Delete this post?
                                     </div>
                                     <div class="confirm-subtext">
-                                        This will remove it from Community 
-                                        and set the linked to Private. 
-                                        You can republish later.
+                                        This will permanently delete the post from Community and set the linked flashcard/quiz to Private. This action cannot be undone.
                                     </div>
                                     <div class="confirm-actions">
                                         <button class="btn-cancel" 
@@ -70,7 +68,7 @@
                                         </button>
                                         <button class="btn-danger" 
                                         (click)="confirmDeletePost($event)">
-                                            Unpublish
+                                            Delete
                                     </button>
                                     </div>
                                 </div>
@@ -87,7 +85,7 @@
             </div>
 
             <div class="post-content-card">
-            <button class="play-btn">
+            <button class="play-btn" (click)="onPlayClick($event)">
                 ▶
             </button>
             <div class="post-info">
@@ -174,16 +172,25 @@
                         Delete
                     </button>
                     @if (showDeleteConfirmForComment === comment.comment_id) {
-                        <div class="confirm-box">
-                        <div class="confirm-text">Delete this comment?</div>
-                        <div class="confirm-actions">
-                            <button class="btn-cancel" 
-                                    (click)="cancelDeleteComment($event)">Cancel
-                            </button>
-                            <button class="btn-delete" 
-                                    (click)="confirmDeleteComment($event, comment)">Delete
-                            </button>
-                        </div>
+                        <div class="confirm-overlay" 
+                             (click)="cancelDeleteComment($event)">
+                            <div class="confirm-modal" 
+                                 (click)="$event.stopPropagation()">
+                                <div class="confirm-title">
+                                    Delete this comment?
+                                </div>
+                                <div class="confirm-subtext">
+                                    This will permanently delete the comment. This action cannot be undone.
+                                </div>
+                                <div class="confirm-actions">
+                                    <button class="btn-cancel" 
+                                            (click)="cancelDeleteComment($event)">Cancel
+                                    </button>
+                                    <button class="btn-danger" 
+                                            (click)="confirmDeleteComment($event, comment)">Delete
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     }
                     </div>

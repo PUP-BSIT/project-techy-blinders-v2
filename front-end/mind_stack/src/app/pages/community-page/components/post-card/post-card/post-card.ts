@@ -96,11 +96,11 @@ export class PostCard implements OnInit, OnDestroy, OnChanges {
     this.showDeleteConfirm = true;
   }
 
-  confirmUnpublish(event: Event) {
+  confirmDelete(event: Event) {
     event.stopPropagation();
     this.showMenu = false;
     this.showDeleteConfirm = false;
-    this.deletePost.emit({ post: this.post, setPrivate: true, permanent: false });
+    this.deletePost.emit({ post: this.post, setPrivate: true, permanent: true });
   }
 
   cancelDelete(event: Event) {
