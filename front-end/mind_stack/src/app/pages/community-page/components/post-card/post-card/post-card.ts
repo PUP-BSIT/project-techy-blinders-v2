@@ -63,7 +63,13 @@ export class PostCard implements OnInit, OnDestroy, OnChanges {
   }
 
   getTimeAgo(date: Date): string {
-    const diffMs = Math.max(0, this.currentTime.getTime() - new Date(date).getTime());
+    // Ensure date is a Date object, not a string
+    let dateObj = date;
+    if (typeof date === 'string') {
+      dateObj = new Date(date);
+    }
+    
+    const diffMs = Math.max(0, this.currentTime.getTime() - dateObj.getTime());
     const seconds = Math.floor(diffMs / 1000);
     const minutes = Math.floor(diffMs / (1000 * 60));
     const hours = Math.floor(diffMs / (1000 * 60 * 60));

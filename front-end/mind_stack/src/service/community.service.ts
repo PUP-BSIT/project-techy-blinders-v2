@@ -480,13 +480,15 @@ export class CommunityService {
 
   private mapCommentFromApi(comment: any): Comment {
     console.log('Mapping comment:', comment);
+    const createdDate = comment.createdAt ? this.parseBackendDate(comment.createdAt) : comment.created_at ? this.parseBackendDate(comment.created_at) : new Date();
+    console.log('Comment created_at raw:', comment.createdAt ?? comment.created_at, 'parsed to:', createdDate);
     return {
       comment_id: String(comment.commentId ?? comment.comment_id ?? ''),
       post_id: String(comment.postId ?? comment.post_id ?? ''),
       user_id: String(comment.userId ?? comment.user_id ?? ''),
       username: comment.username ?? '',
       content: comment.content ?? '',
-      created_at: comment.createdAt ? this.parseBackendDate(comment.createdAt) : comment.created_at ? this.parseBackendDate(comment.created_at) : new Date(),
+      created_at: createdDate,
       updated_at: comment.updatedAt ? this.parseBackendDate(comment.updatedAt) : comment.updated_at ? this.parseBackendDate(comment.updated_at) : new Date(),
       likes: comment.numLike ?? comment.likes ?? 0,
       dislikes: comment.numDislike ?? comment.dislikes ?? 0,
