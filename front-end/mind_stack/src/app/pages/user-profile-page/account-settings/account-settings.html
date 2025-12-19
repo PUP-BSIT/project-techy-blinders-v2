@@ -54,9 +54,6 @@
             </div>
 
             <div class="api-messages">
-                @if(successMessage) {
-                    <div class="success-message"><span>{{successMessage}}</span></div>
-                }
                 @if(errorMessage) {
                     <div class="error-message"><span>{{errorMessage}}</span></div>
                 }
@@ -64,8 +61,24 @@
         </div>
 
        <div class="button-class">
-               <button type="submit" id="submit_button_password" [disabled]="accountSettingForm.invalid || loading">@if(loading) { <span>Saving...</span> } @else { <span>Save</span> }</button>
+            <button type="submit" id="submit_button_password" [disabled]="accountSettingForm.invalid || loading">
+                @if(loading) { 
+                    <span>Saving...</span> 
+                } @else { 
+                    <span>Save</span> 
+                }
+            </button>
             <button type="button" id="cancel_button_password" (click)="cancel()">Cancel</button>
         </div> 
     </form>
 </div>
+
+@if (showSuccessPopup) {
+    <div class="popup-overlay" (click)="closeSuccessPopup()">
+        <div class="popup" (click)="$event.stopPropagation()">
+            <h2>Success!</h2>
+            <p>Your password has been updated successfully.</p>
+            <button (click)="closeSuccessPopup()">OK</button>
+        </div>
+    </div>
+}
