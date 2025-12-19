@@ -12,7 +12,8 @@
                     type="button" 
                     [class.active]="activeFilter === 'unread'"
                     (click)="setFilter('unread')">
-                    <img src="assets/bell-icon.png" alt="Bell" class="bell-icon">
+                    <img src="assets/bell-icon.png" alt="Bell" 
+                                class="bell-icon">
                     Unread
                 </button>
             </div>
@@ -26,7 +27,7 @@
                     [class.unread]="!n.isRead"
                     (click)="toggleReadStatus(n)">
                     <div class="avatar">
-                        <img src="assets/Group.png" alt="User Avatar">
+                        {{ getActorInitial(n.message) }}
                     </div>
                     <div class="notification-content">
                         <p class="notification-text">

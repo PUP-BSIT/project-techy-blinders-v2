@@ -151,12 +151,16 @@ h2 {
         width: 45px;
         height: 45px;
         border-radius: 50%;
-        background-color: $color-avatar;
+        background-color: #2D6A4F;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
         overflow: hidden;
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        font-family: "Poppins", sans-serif;
 
         img {
             width: 100%;
