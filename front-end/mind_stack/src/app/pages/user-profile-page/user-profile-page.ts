@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AccountSettings } from "./account-settings/account-settings";
 import { AuthService, UserProfile } from '../../../service/auth.service';
 import { LoginResponse } from '../../models/user.model';
@@ -40,6 +40,10 @@ export class UserProfilePage implements OnInit {
     private route: ActivatedRoute,
     private authService: AuthService
   ) {}
+
+  goBack() {
+    window.history.back();
+  }
 
   ngOnInit() {
     const loggedInUser = this.authService.getCurrentUser();

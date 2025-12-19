@@ -7,7 +7,48 @@
     align-items: center;
     min-height: 100vh;
     background-color: #d8f3dc;
-    padding: 50px 150px;
+    padding: 2rem 150px 50px 150px;
+    position: relative;
+}
+
+.back-stack {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.back-button {
+    position: relative;
+    background: white;
+    color: #2D6A4F;
+    border: none;
+    border-radius: 25px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: "Poppins", sans-serif;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
+    transition: all 0.3s ease;
+
+    svg {
+        stroke: #2D6A4F;
+        transition: stroke 0.3s ease;
+    }
+
+    &:hover {
+        background: #95D5B2;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 }
 
 .header-class {
@@ -15,12 +56,13 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: auto;
+    max-width: 1000px;
     padding: 30px 40px;
     border-radius: 20px;
     background-color: #3dac78;
     box-shadow: 0 4px 12px rgba(61, 172, 120, 0.3);
     margin-bottom: 50px;
+    position: relative;
 }
 
 .user-info {
@@ -33,7 +75,7 @@
     color: white;
     font-family: "Roboto", sans-serif;
     margin: 0 0 8px 0;
-    margin-left: 3%;
+    margin-left: 0;
 }
 
 .email {
@@ -41,7 +83,7 @@
     font-weight: 500;
     color: #185E3D;
     font-family: "Roboto", sans-serif;
-    margin-left: 2%;
+    margin-left: 0;
     padding: 5px 10px;
 }
 
@@ -90,6 +132,7 @@
     padding: 8px 12px;
     background: rgba(11, 106, 57, 0.08);
     border-radius: 10px;
+    align-self: center;
 }
 
 .milestone-section {
@@ -353,3 +396,4 @@
     opacity: 1;
   }
 }
+
