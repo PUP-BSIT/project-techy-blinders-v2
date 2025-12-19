@@ -69,4 +69,13 @@ export class NotificationPage implements OnInit {
     const timePart = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     return `${datePart}, ${timePart}`;
   }
+
+  getActorInitial(message: string): string {
+    // Extract username from message like "mikemike commented on your post."
+    const match = message.match(/^([^\s]+)/);
+    if (match && match[1]) {
+      return match[1].charAt(0).toUpperCase();
+    }
+    return 'U';
+  }
 }
