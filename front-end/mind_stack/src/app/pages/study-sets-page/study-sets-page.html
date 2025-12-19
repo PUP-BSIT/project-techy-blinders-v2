@@ -255,4 +255,12 @@
             </div>
         </div>
     </div>
+
+    <div class="popup-overlay" *ngIf="isSuccessPopupOpen">
+        <div class="popup">
+            <h2>Success!</h2>
+            <p>Flashcard set shared to community successfully!</p>
+            <button (click)="closeSuccessPopup()">OK</button>
+        </div>
+    </div>
 </div>

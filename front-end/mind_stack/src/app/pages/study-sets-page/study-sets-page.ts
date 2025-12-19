@@ -19,7 +19,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
   get isShareDisabledForSelectedSet(): boolean {
     if (this.selectedStudySetId == null) return false;
     const set = this.studySets?.find((s: any) => s.flashcard_id === this.selectedStudySetId);
-    // Disable if already public or if less than 3 flashcards
+    // Disable if already public OR if less than 3 flashcards
     return !!set?.is_public || (set?.flashcards?.length ?? 0) < 3;
   }
 
@@ -49,6 +49,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
   shareCategory: string = '';
   shareDescription: string = '';
   isLoading: boolean = false;
+  isSuccessPopupOpen: boolean = false;
   studySets: StudySet[] = [];
 
   private studySetsService = inject(StudySetsService);
@@ -668,6 +669,14 @@ export class StudySetsPage implements OnInit, OnDestroy {
     this.shareDescription = '';
   }
 
+  openSuccessPopup() {
+    this.isSuccessPopupOpen = true;
+  }
+
+  closeSuccessPopup() {
+    this.isSuccessPopupOpen = false;
+  }
+
   saveShare() {
     if (this.selectedStudySetId && this.shareTitle.trim() && this.shareCategory.trim()) {
       const currentUser = this.authService.getCurrentUser();
@@ -721,8 +730,8 @@ export class StudySetsPage implements OnInit, OnDestroy {
             this.studySets[index] = updatedStudySet;
           }
           this.isLoading = false;
-          alert('Flashcard set shared to community successfully!');
           this.closeShareModal();
+          this.openSuccessPopup();
         },
         error: (error) => {
           console.error('Error updating flashcard visibility:', error);
