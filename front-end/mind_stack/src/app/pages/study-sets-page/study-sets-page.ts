@@ -626,7 +626,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
       this.selectedStudySetId = studySetId;
       const studySet = this.studySets.find(s => s.flashcard_id === studySetId);
       if (studySet) {
-        this.shareTitle = studySet.title;
+        this.shareTitle = '';
         this.shareDescription = studySet.description || '';
       }
     } else {
@@ -660,7 +660,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
         return;
       }
 
-      const flashcardContent = `${studySet.description || 'A flashcard set to help you study!'} • Flashcards`;
+      const flashcardContent = `${studySet.title} • ${studySet.description || 'A flashcard set to help you study!'} • Flashcards`;
 
       const flashcardSlug = `flashcard-${studySet.flashcard_id}-${this.slugify(this.shareTitle)}`;
       
@@ -708,7 +708,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
       const missing = [];
       
       if (!this.selectedStudySetId) missing.push('select a flashcard set');
-      if (!this.shareTitle.trim()) missing.push('enter a title');
+      if (!this.shareTitle.trim()) missing.push('enter a caption');
       if (!this.shareCategory.trim()) missing.push('select a category');
       
       errorMessage += missing.join(', ') + ' before sharing.';
@@ -726,16 +726,10 @@ export class StudySetsPage implements OnInit, OnDestroy {
       .replace(/\-\-+/g, '-');
   }
 
-  /**
-   * Persist a flashcard set as private and remove any associated community post(s).
-   * This mirrors the quiz behavior: once made private, it disappears from the
-   * community feed and the badge stays Private even after refresh/navigation.
-   */
   private makeStudySetPrivate(studySetId: number) {
     const currentUser = this.authService.getCurrentUser();
     if (!currentUser) {
       console.error('User not logged in');
-      // Fallback: just toggle locally via existing logic
       this.togglePrivacy(studySetId);
       return;
     }
@@ -762,7 +756,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
           this.studySets[index] = updatedStudySet;
         }
 
-        // Remove related community post(s) for this flashcard set
         this.removeStudySetFromCommunity(studySetId);
 
         this.isLoading = false;
@@ -774,10 +767,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Find and delete any community post(s) created for the given flashcard set.
-   * Flashcard share slugs are in the format: "flashcard-{flashcard_id}-{slugified-title}".
-   */
   private removeStudySetFromCommunity(studySetId: number) {
     const slugPrefix = `flashcard-${studySetId}-`;
     const posts = this.communityService.getPosts();

@@ -167,4 +167,24 @@ export class PostCard implements OnInit, OnDestroy, OnChanges {
       this.router.navigate(['/app/study-sets', flashcardId]);
     }
   }
+
+  getOriginalTitle(): string {
+    if (this.isQuizPost() || this.isFlashcardPost()) {
+      const parts = this.post.content?.split(' • ') || [];
+      if (parts.length > 0) {
+        return parts[0];
+      }
+    }
+    return this.post.title;
+  }
+
+  getSubtitle(): string {
+    if (this.isQuizPost() || this.isFlashcardPost()) {
+      const parts = this.post.content?.split(' • ') || [];
+      if (parts.length > 1) {
+        return parts.slice(1).join(' • ');
+      }
+    }
+    return this.post.content || '';
+  }
 }

@@ -60,7 +60,6 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
     }
     const shouldFocusComment = (changes['focusCommentId'] && this.focusCommentId) || (changes['comments'] && this.focusCommentId);
     if (shouldFocusComment) {
-      // Attempt multiple times to ensure the DOM has rendered
       const targetId = this.focusCommentId!;
       setTimeout(() => this.scrollToComment(targetId), 0);
       setTimeout(() => this.scrollToComment(targetId), 50);
@@ -230,8 +229,35 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
     if (el) {
       el.classList.add('highlight');
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      // Remove highlight after a short delay
       setTimeout(() => el.classList.remove('highlight'), 1500);
     }
+  }
+
+  isQuizPost(): boolean {
+    return this.post.slug?.startsWith('quiz-') || false;
+  }
+
+  isFlashcardPost(): boolean {
+    return this.post.slug?.startsWith('flashcard-') || false;
+  }
+
+  getOriginalTitle(): string {
+    if (this.isQuizPost() || this.isFlashcardPost()) {
+      const parts = this.post.content?.split(' • ') || [];
+      if (parts.length > 0) {
+        return parts[0];
+      }
+    }
+    return this.post.title;
+  }
+
+  getSubtitle(): string {
+    if (this.isQuizPost() || this.isFlashcardPost()) {
+      const parts = this.post.content?.split(' • ') || [];
+      if (parts.length > 1) {
+        return parts.slice(1).join(' • ');
+      }
+    }
+    return this.post.content || '';
   }
 }
