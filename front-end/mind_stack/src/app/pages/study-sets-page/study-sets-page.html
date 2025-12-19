@@ -201,7 +201,12 @@
                     <img src="assets/globe-icon.png" alt="Share" class="option-icon">
                     <div class="option-content">
                         <span>Share</span>
-                        <span class="option-description">Anyone can view and study this set</span>
+                        <span class="option-description" *ngIf="canShareSelectedSet">
+                            Anyone can view and study this set
+                        </span>
+                        <span class="option-description warning" *ngIf="!canShareSelectedSet" style="color: #ff6b6b;">
+                            Minimum 3 flashcards required to share
+                        </span>
                     </div>
                 </button>
                 <button class="privacy-option private" (click)="selectPrivateOption()">

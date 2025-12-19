@@ -19,8 +19,16 @@ export class StudySetsPage implements OnInit, OnDestroy {
   get isShareDisabledForSelectedSet(): boolean {
     if (this.selectedStudySetId == null) return false;
     const set = this.studySets?.find((s: any) => s.flashcard_id === this.selectedStudySetId);
-    return !!set?.is_public;
+    // Disable if already public or if less than 3 flashcards
+    return !!set?.is_public || (set?.flashcards?.length ?? 0) < 3;
   }
+
+  get canShareSelectedSet(): boolean {
+    if (this.selectedStudySetId == null) return false;
+    const set = this.studySets?.find((s: any) => s.flashcard_id === this.selectedStudySetId);
+    return (set?.flashcards?.length ?? 0) >= 3;
+  }
+
   isModalOpen: boolean = false;
   isFlashcardModalOpen: boolean = false;
   isConfirmModalOpen: boolean = false;
@@ -551,7 +559,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
   playStudySet(id: number) {
     this.router.navigate(['/app/study-sets', id]);
-    this.closeDropdown(); // Close any open dropdown
+    this.closeDropdown();
   }
 
   toggleDropdown(index: number) {
@@ -613,6 +621,14 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
   selectShareOption() {
     if (this.selectedStudySetId !== null) {
+      // Check if the study set has at least 3 flashcards
+      const studySet = this.studySets.find(s => s.flashcard_id === this.selectedStudySetId);
+      if (studySet && studySet.flashcards.length < 3) {
+        alert('You need at least 3 flashcards in this set before you can share it publicly.');
+        this.closePrivacyModal();
+        return;
+      }
+
       const studySetId = this.selectedStudySetId;
       this.closePrivacyModal();
       this.openShareModal(studySetId);
@@ -663,6 +679,12 @@ export class StudySetsPage implements OnInit, OnDestroy {
       const studySet = this.studySets.find(s => s.flashcard_id === this.selectedStudySetId);
       if (!studySet) {
         console.error('Study set not found');
+        return;
+      }
+
+      // Final validation check before sharing
+      if (studySet.flashcards.length < 3) {
+        alert('You need at least 3 flashcards in this set before you can share it publicly.');
         return;
       }
 
