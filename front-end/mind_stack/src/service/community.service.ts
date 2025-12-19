@@ -39,11 +39,11 @@ export class CommunityService {
   }
 
   private refreshPosts(): void {
-    console.log('Fetching posts from:', `${this.apiUrl}/posts`);
+    console.log('Fetching published posts from:', `${this.apiUrl}/posts/published`);
     const currentUser = this.authService.getCurrentUser();
     const userId = currentUser?.userId;
 
-    this.http.get<any[]>(`${this.apiUrl}/posts`, { params: userId ? { userId: String(userId) } : {} }).subscribe({
+    this.http.get<any[]>(`${this.apiUrl}/posts/published`, { params: userId ? { userId: String(userId) } : {} }).subscribe({
       next: posts => {
         console.log('✓ Raw API Response:', posts);
         console.log('First post sample:', posts[0]);

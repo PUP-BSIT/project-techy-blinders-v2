@@ -133,11 +133,18 @@ export class PostCard implements OnInit, OnDestroy, OnChanges {
 
   onCommentClick(event: Event) {
     event.stopPropagation();
+    // Comment should open the post modal (discussion), not navigate to the set
+    this.openModal.emit(this.post);
+  }
+
+  onPlayClick(event: Event) {
+    event.stopPropagation();
     if (this.isQuizPost()) {
       this.playQuiz(event);
     } else if (this.isFlashcardPost()) {
       this.playFlashcard(event);
     } else {
+      // If not a linked set, fallback to opening the post modal
       this.openModal.emit(this.post);
     }
   }
