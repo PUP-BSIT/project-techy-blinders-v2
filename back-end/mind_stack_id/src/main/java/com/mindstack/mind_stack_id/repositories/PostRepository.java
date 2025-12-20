@@ -11,8 +11,14 @@ import com.mindstack.mind_stack_id.models.PostCreation.CategoryType;
 @Repository
 public interface PostRepository extends JpaRepository<PostCreation, Long> {
     List<PostCreation> findByUserId(long userId);
+
     List<PostCreation> findByCategory(CategoryType category);
-    List<PostCreation> findByIsPublished(boolean isPublished);  
+
+    List<PostCreation> findByIsPublished(boolean isPublished);
+
     List<PostCreation> findByUserIdAndIsPublished(long userId, boolean isPublished);
+
     List<PostCreation> findByCategoryAndIsPublished(CategoryType category, boolean isPublished);
+
+    void deleteBySlugStartingWith(String slugPrefix);
 }
