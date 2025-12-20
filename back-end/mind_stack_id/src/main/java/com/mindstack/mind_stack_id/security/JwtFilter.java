@@ -38,6 +38,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // Skip JWT validation for public endpoints
         if (path.equals("/api/users/reset-password") || 
             path.equals("/api/users/login") ||
+            path.equals("/api/suggestions/") ||
             (path.equals("/api/users") && request.getMethod().equals("POST"))) {
             chain.doFilter(request, response);
             return;
