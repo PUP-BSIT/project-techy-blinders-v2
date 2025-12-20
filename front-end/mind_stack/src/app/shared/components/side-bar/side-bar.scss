@@ -1,14 +1,12 @@
 $sidebar-bg: #3DAC78;
 $sidebar-text: #ffffff;
-$sidebar-hover-underline: #ffffff;
-
 $sidebar-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 $sidebar-font-size: x-large;
-
 $sidebar-width: 280px;
 $sidebar-width-collapsed: 80px;
-$sidebar-padding: 20px;
 $sidebar-gap: 10px;
+$mobile-breakpoint: 768px;
+$tablet-breakpoint: 1024px;
 
 .sidenav-container {
     height: 100%;
@@ -23,6 +21,15 @@ mat-sidenav {
 
 mat-sidenav-content {
     margin-left: 0;
+    position: relative;
+    z-index: 1;
+    
+    @media (max-width: $mobile-breakpoint) {
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 }
 
 .sidebar {
@@ -40,6 +47,7 @@ mat-sidenav-content {
     transition: width 0.3s ease, padding 0.3s ease;
     overflow-x: hidden;
     overflow-y: auto;
+    z-index: 1000;
 
     &.collapsed {
         width: $sidebar-width-collapsed;
@@ -62,6 +70,108 @@ mat-sidenav-content {
         display: none;
         transition: opacity 0.1s ease, visibility 0.1s ease;
     }
+
+    &.mobile-sidebar {
+        width: 280px !important;
+        padding: 20px;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        
+        .text-content {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
+        }
+        
+        &.collapsed .text-content {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
+        }
+    }
+}
+
+.mobile-header {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background-color: $sidebar-bg;
+    color: $sidebar-text;
+    padding: 0 15px;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1001;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    @media (max-width: $mobile-breakpoint) {
+        display: flex;
+    }
+}
+
+.mobile-hamburger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    .hamburger-line {
+        width: 24px;
+        height: 3px;
+        background-color: $sidebar-text;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+        transform-origin: center;
+    }
+
+    &.active {
+        .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+    }
+}
+
+.mobile-logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: auto;
+
+    .mobile-logo-img {
+        width: 35px;
+        height: 35px;
+        object-fit: contain;
+    }
+}
+
+.desktop-only {
+    @media (max-width: $mobile-breakpoint) {
+        display: none !important;
+    }
 }
 
 .toggle-btn {
@@ -72,14 +182,12 @@ mat-sidenav-content {
     padding: 8px;
     border-radius: 8px;
     font-size: 1.5rem;
-    transition: background-color 0.3s ease, opacity 0.2s ease, visibility 0.2s ease;
+    transition: background-color 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     width: 51px;
     margin-bottom: 2px;
-    opacity: 1;
-    visibility: visible;
     outline: none;
 
     &:hover {
@@ -169,31 +277,31 @@ a {
     border-radius: 8px;
     font-size: $sidebar-font-size;
     transition: background-color 0.3s ease;
-}
 
-a:hover {
-    cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.2);
+    &:hover {
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    &.active {
+        background-color: rgba(0, 0, 0, 0.3);
+    }
 }
 
 .collapsed a:hover {
     background-color: transparent;
-}
 
-.collapsed a:hover .icon {
-    filter: brightness(0.7);
-}
-
-a.active {
-    background-color: rgba(0, 0, 0, 0.3);
+    .icon {
+        filter: brightness(0.7);
+    }
 }
 
 .collapsed a.active {
     background-color: transparent;
-}
 
-.collapsed a.active .icon {
-    filter: brightness(0.6);
+    .icon {
+        filter: brightness(0.6);
+    }
 }
 
 .icon-wrapper {
@@ -292,6 +400,8 @@ a.active .icon-hover {
     flex-direction: column;
     justify-content: center;
     overflow: hidden;
+    gap: 2px;
+    min-width: 0;
 }
 
 .user-name {
@@ -300,6 +410,9 @@ a.active .icon-hover {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.2;
+    margin: 0;
+    display: block;
 }
 
 .user-email {
@@ -308,6 +421,9 @@ a.active .icon-hover {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.2;
+    margin: 0;
+    display: block;
 }
 
 .logout-btn {
@@ -388,7 +504,6 @@ a.active .icon-hover {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(2px);
   z-index: 999;
   opacity: 0;
   animation: fadeInBackdrop 0.3s forwards;
@@ -452,4 +567,83 @@ a.active .icon-hover {
   color: #555;
   margin: 0;
   font-size: 14px;
+}
+
+@media (max-width: $mobile-breakpoint) {
+    .sidebar {
+        width: 280px !important;
+        padding: 20px !important;
+        top: 60px;
+        height: calc(100vh - 60px);
+        
+        &.collapsed {
+            width: 280px !important;
+            padding: 20px !important;
+            
+            .text-content {
+                opacity: 1 !important;
+                visibility: visible !important;
+                display: block !important;
+            }
+        }
+
+        .text-content {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
+        }
+        
+        .user-info.text-content {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 4px !important;
+            
+            .user-name {
+                display: block !important;
+                font-size: 16px !important;
+                line-height: 1.2 !important;
+                margin: 0 !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+            
+            .user-email {
+                display: block !important;
+                font-size: 13px !important;
+                line-height: 1.2 !important;
+                margin: 0 !important;
+                opacity: 0.8 !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+        }
+    }
+
+    .toggle-btn {
+        display: none !important;
+    }
+
+    .sidebar-user {
+        display: flex !important;
+        
+        .logout-btn {
+            display: flex !important;
+        }
+    }
+
+    .logout-btn-collapsed {
+        display: none !important;
+    }
+}
+
+@media (min-width: #{$mobile-breakpoint + 1px}) and (max-width: $tablet-breakpoint) {
+    .sidebar {
+        width: 280px;
+        
+        &.collapsed {
+            width: 80px;
+        }
+    }
 }

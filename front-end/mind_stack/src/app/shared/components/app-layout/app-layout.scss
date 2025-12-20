@@ -17,4 +17,31 @@
     margin-left: 0;
     overflow: hidden;
   }
+
+  &.mobile-content {
+    margin-left: 0;
+  }
+
+  &.mobile-menu-open {
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0 !important;
+    
+    &.no-sidebar {
+      padding-top: 0;
+    }
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .main-content {
+    margin-left: 280px;
+    
+    &.sidebar-collapsed {
+      margin-left: 80px;
+    }
+  }
 }

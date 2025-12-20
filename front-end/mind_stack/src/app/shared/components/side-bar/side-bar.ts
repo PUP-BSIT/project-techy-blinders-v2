@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, OnInit, inject, signal } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, inject, signal, HostListener } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { AuthService } from '../../../../service/auth.service';
@@ -14,7 +14,10 @@ import { LoginResponse } from '../../../models/user.model';
 })
 export class SideBar implements OnInit {
   isCollapsed = false;
+  isMobileMenuOpen = false;
+  isMobile = false;
   @Output() sidebarToggled = new EventEmitter<boolean>();
+  @Output() mobileMenuToggled = new EventEmitter<boolean>();
   
   currentUser: LoginResponse | null = null;
   userName: string = 'User';
@@ -28,6 +31,20 @@ export class SideBar implements OnInit {
 
   ngOnInit() {
     this.loadUserData();
+    this.checkScreenSize();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkScreenSize();
+  }
+
+  private checkScreenSize() {
+    this.isMobile = window.innerWidth <= 768;
+    if (!this.isMobile) {
+      this.isMobileMenuOpen = false;
+      this.mobileMenuToggled.emit(false);
+    }
   }
 
   loadUserData() {
@@ -42,8 +59,20 @@ export class SideBar implements OnInit {
   }
 
   toggleSidebar() {
-    this.isCollapsed = !this.isCollapsed;
-    this.sidebarToggled.emit(this.isCollapsed);
+    if (this.isMobile) {
+      this.isMobileMenuOpen = !this.isMobileMenuOpen;
+      this.mobileMenuToggled.emit(this.isMobileMenuOpen);
+    } else {
+      this.isCollapsed = !this.isCollapsed;
+      this.sidebarToggled.emit(this.isCollapsed);
+    }
+  }
+
+  closeMobileMenu() {
+    if (this.isMobile && this.isMobileMenuOpen) {
+      this.isMobileMenuOpen = false;
+      this.mobileMenuToggled.emit(false);
+    }
   }
 
   onLogout() {
