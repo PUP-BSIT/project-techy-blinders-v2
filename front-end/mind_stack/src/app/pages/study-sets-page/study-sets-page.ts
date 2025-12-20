@@ -32,6 +32,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
   isModalOpen: boolean = false;
   isFlashcardModalOpen: boolean = false;
   isConfirmModalOpen: boolean = false;
+  isPrivateSuccessPopupOpen: boolean = false;
   studySetTitle: string = '';
   studySetDescription: string = '';
   flashcards: { flashcardId?: number; term: string; definition: string; isNew?: boolean }[] = [];
@@ -643,6 +644,14 @@ export class StudySetsPage implements OnInit, OnDestroy {
     this.closePrivacyModal();
   }
 
+  openPrivateSuccessPopup() {
+    this.isPrivateSuccessPopupOpen = true;
+  }
+
+  closePrivateSuccessPopup() {
+    this.isPrivateSuccessPopupOpen = false;
+  }
+
   openShareModal(studySetId?: number) {
     this.isShareModalOpen = true;
     if (studySetId) {
@@ -796,6 +805,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
         this.removeStudySetFromCommunity(studySetId);
 
         this.isLoading = false;
+        this.openPrivateSuccessPopup();
       },
       error: (error) => {
         console.error('Error making study set private:', error);
