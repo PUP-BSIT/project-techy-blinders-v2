@@ -209,7 +209,7 @@
                         </span>
                     </div>
                 </button>
-                <button class="privacy-option private" (click)="selectPrivateOption()">
+                <button class="privacy-option private" (click)="selectPrivateOption()" [disabled]="isPrivateDisabledForSelectedSet">
                     <img src="assets/lock.png" alt="Private" class="option-icon">
                     <div class="option-content">
                         <span>Private</span>

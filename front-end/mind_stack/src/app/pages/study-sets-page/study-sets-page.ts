@@ -23,6 +23,13 @@ export class StudySetsPage implements OnInit, OnDestroy {
     return !!set?.is_public || (set?.flashcards?.length ?? 0) < 3;
   }
 
+  get isPrivateDisabledForSelectedSet(): boolean {
+    if (this.selectedStudySetId == null) return false;
+    const set = this.studySets?.find((s: any) => s.flashcard_id === this.selectedStudySetId);
+    // Disable if already private (is_public is false)
+    return set?.is_public === false;
+  }
+
   get canShareSelectedSet(): boolean {
     if (this.selectedStudySetId == null) return false;
     const set = this.studySets?.find((s: any) => s.flashcard_id === this.selectedStudySetId);
