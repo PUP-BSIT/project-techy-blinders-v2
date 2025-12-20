@@ -200,11 +200,11 @@ export class CommunityPage implements OnInit, OnDestroy {
     this.showCreateModal = true;
   }
 
-  onAddComment(content: string) {
+  onAddComment(data: {content: string, parentCommentId?: string}) {
     if (!this.selectedPost) return;
     
-    const hashBadwords = this.profanityService.hasBadWords(content);
-    const cleanedContent = this.profanityService.clean(content);
+    const hashBadwords = this.profanityService.hasBadWords(data.content);
+    const cleanedContent = this.profanityService.clean(data.content);
 
     if (!cleanedContent.trim()) {
       alert ('Comment cannot be empty');
@@ -218,7 +218,8 @@ export class CommunityPage implements OnInit, OnDestroy {
     if (this.selectedPost?.post_id) {
       this.communityService.createComment(
         this.selectedPost.post_id,
-        cleanedContent
+        cleanedContent,
+        data.parentCommentId
       );
     }
   }

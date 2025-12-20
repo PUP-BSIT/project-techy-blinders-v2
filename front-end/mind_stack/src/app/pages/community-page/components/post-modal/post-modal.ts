@@ -26,7 +26,7 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
   @Output() dislikePost = new EventEmitter<void>();
   @Output() editPost = new EventEmitter<Post>();
   @Output() deletePost = new EventEmitter<{ post: Post; setPrivate: boolean; permanent: boolean }>();
-  @Output() addComment = new EventEmitter<string>();
+  @Output() addComment = new EventEmitter<{content: string, parentCommentId?: string}>();
   @Output() likeComment = 
     new EventEmitter<{comment: Comment, isReply: boolean}>();
   @Output() dislikeComment = 
@@ -139,8 +139,12 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
 
   onAddComment() {
     if (this.newCommentText.trim()) {
-      this.addComment.emit(this.newCommentText);
+      this.addComment.emit({
+        content: this.newCommentText,
+        parentCommentId: this.replyingTo?.comment.comment_id
+      });
       this.newCommentText = '';
+      this.replyingTo = undefined;
     }
   }
 
