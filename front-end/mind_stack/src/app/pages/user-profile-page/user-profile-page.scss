@@ -397,3 +397,162 @@
   }
 }
 
+@media (max-width: 768px) {
+  :host {
+    padding: 70px 16px 20px 16px;
+    min-height: calc(100vh - 70px);
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .back-stack {
+    margin-bottom: 16px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .back-button {
+    padding: 10px 16px;
+    font-size: 14px;
+    border-radius: 20px;
+  }
+
+  .header-class {
+    flex-direction: column;
+    padding: 20px 16px;
+    margin-bottom: 20px;
+    text-align: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .user-info {
+    margin-bottom: 0;
+    width: 100%;
+  }
+
+  .username {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+
+  .email {
+    font-size: 13px;
+    padding: 3px 6px;
+  }
+
+  .button-class {
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .edit-profile-btn,
+  .change-password-btn {
+    width: 100%;
+    max-width: 160px;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .milestone-section {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .milestones-header {
+    font-size: 18px;
+    margin-bottom: 12px;
+    text-align: left;
+  }
+
+  .milestone-cards {
+    width: 100%;
+    gap: 16px;
+  }
+
+  .milestone-card {
+    width: 100% !important;
+    margin-left: 0 !important;
+    padding: 12px 16px;
+    box-sizing: border-box;
+  }
+
+  .milestone-label {
+    font-size: 15px;
+  }
+
+  .milestone-count {
+    font-size: 16px;
+  }
+
+  .modal-content {
+    width: 92%;
+    max-width: 420px;
+    margin: 16px;
+  }
+
+  .modal-header {
+    padding: 16px 20px;
+
+    h2 {
+      font-size: 18px;
+    }
+
+    .close-btn {
+      font-size: 22px;
+      width: 26px;
+      height: 26px;
+    }
+  }
+
+  .modal-body {
+    padding: 20px;
+  }
+
+  .edit-field {
+    margin-bottom: 18px;
+  }
+
+  .field-label {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .field-value,
+  .field-input {
+    font-size: 15px;
+    padding: 12px 14px;
+  }
+
+  .edit-btn,
+  .save-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .popup {
+    width: 88%;
+    max-width: 340px;
+    margin: 16px;
+    padding: 18px 16px;
+  }
+
+  .popup h2 {
+    font-size: 17px;
+    margin-bottom: 8px;
+  }
+
+  .popup p {
+    font-size: 14px;
+    margin-bottom: 14px;
+  }
+
+  .popup button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+

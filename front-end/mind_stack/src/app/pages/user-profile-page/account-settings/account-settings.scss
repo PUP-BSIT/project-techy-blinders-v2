@@ -193,3 +193,119 @@
     opacity: 1;
   }
 }
+
+@media (max-width: 768px) {
+  .account-setting-class {
+    margin: 0;
+    width: 100%;
+    max-width: 92vw;
+    padding: 20px 16px;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .account-setting-label h1 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .current-password-class, 
+  .new-password-class, 
+  .confirm-password-class {
+    margin-top: 6px;
+    margin-bottom: 6px;
+    min-height: auto;
+  }
+
+  .current-password-class:first-of-type {
+    margin-top: 0;
+  }
+
+  .current-password-class label, 
+  .new-password-class label,
+  .confirm-password-class label {
+    font-size: 13px;
+    font-weight: 500;
+    margin-left: 0;
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  .current-password-class input, 
+  .new-password-class input, 
+  .confirm-password-class input {
+    width: 100%;
+    height: 42px;
+    margin: 0;
+    margin-bottom: 3px;
+    padding: 0 14px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+  }
+
+  .current-password-class input:focus,
+  .new-password-class input:focus,
+  .confirm-password-class input:focus {
+    box-shadow: 0 0 6px rgba(1, 27, 6, 0.25);
+    border-color: #287c55;
+  }
+
+  .error-message {
+    min-height: 14px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+  }
+
+  .error-message span {
+    margin-left: 0;
+    font-size: 11px;
+  }
+
+  .password-match-error {
+    font-size: 11px;
+    margin-left: 0;
+    margin-top: 1px;
+    margin-bottom: 1px;
+  }
+
+  .button-class {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  #submit_button_password,
+  #cancel_button_password {
+    width: 100%;
+    height: 44px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+  }
+
+  .popup {
+    width: 88%;
+    max-width: 360px;
+    margin: 16px;
+    padding: 18px 16px;
+  }
+
+  .popup h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .popup p {
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .popup button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
