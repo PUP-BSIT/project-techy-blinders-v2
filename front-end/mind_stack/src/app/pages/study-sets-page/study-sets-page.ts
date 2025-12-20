@@ -41,6 +41,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
   isConfirmModalOpen: boolean = false;
   isPrivateSuccessPopupOpen: boolean = false;
   isWarningPopupOpen: boolean = false;
+  isFlashcardSaveSuccessPopupOpen: boolean = false;
   warningMessage: string = '';
   studySetTitle: string = '';
   studySetDescription: string = '';
@@ -380,6 +381,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
         this.isLoading = false;
         this.closeFlashcardModal();
         this.refreshStudySetFromBackend(studySetIdToRefresh, createdIds);
+        this.openFlashcardSaveSuccessPopup();
       },
       error: (error) => {
         console.error('Error saving individual flashcards:', error);
@@ -669,6 +671,14 @@ export class StudySetsPage implements OnInit, OnDestroy {
   closeWarningPopup() {
     this.isWarningPopupOpen = false;
     this.warningMessage = '';
+  }
+
+  openFlashcardSaveSuccessPopup() {
+    this.isFlashcardSaveSuccessPopupOpen = true;
+  }
+
+  closeFlashcardSaveSuccessPopup() {
+    this.isFlashcardSaveSuccessPopupOpen = false;
   }
 
   openShareModal(studySetId?: number) {

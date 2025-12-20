@@ -285,4 +285,14 @@
             </div>
         </div>
     }
+
+    @if (isFlashcardSaveSuccessPopupOpen) {
+        <div class="popup-overlay">
+            <div class="popup">
+                <h2>Success!</h2>
+                <p>Flashcards saved successfully!</p>
+                <button (click)="closeFlashcardSaveSuccessPopup()">OK</button>
+            </div>
+        </div>
+    }
 </div>
