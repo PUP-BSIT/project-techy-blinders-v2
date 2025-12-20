@@ -209,7 +209,7 @@
                         </span>
                     </div>
                 </button>
-                <button class="privacy-option private" (click)="selectPrivateOption()">
+                <button class="privacy-option private" (click)="selectPrivateOption()" [disabled]="isPrivateDisabledForSelectedSet">
                     <img src="assets/lock.png" alt="Private" class="option-icon">
                     <div class="option-content">
                         <span>Private</span>
@@ -256,11 +256,43 @@
         </div>
     </div>
 
-    <div class="popup-overlay" *ngIf="isSuccessPopupOpen">
-        <div class="popup">
-            <h2>Success!</h2>
-            <p>Flashcard set shared to community successfully!</p>
-            <button (click)="closeSuccessPopup()">OK</button>
+    @if (isSuccessPopupOpen) {
+        <div class="popup-overlay">
+            <div class="popup">
+                <h2>Success!</h2>
+                <p>Flashcard set shared to community successfully!</p>
+                <button (click)="closeSuccessPopup()">OK</button>
+            </div>
         </div>
-    </div>
+    }
+
+    @if (isPrivateSuccessPopupOpen) {
+        <div class="popup-overlay">
+            <div class="popup">
+                <h2>Success!</h2>
+                <p>Flashcard set is now private!</p>
+                <button (click)="closePrivateSuccessPopup()">OK</button>
+            </div>
+        </div>
+    }
+
+    @if (isWarningPopupOpen) {
+        <div class="popup-overlay">
+            <div class="popup warning">
+                <h2>Warning!</h2>
+                <p>{{ warningMessage }}</p>
+                <button (click)="closeWarningPopup()">OK</button>
+            </div>
+        </div>
+    }
+
+    @if (isFlashcardSaveSuccessPopupOpen) {
+        <div class="popup-overlay">
+            <div class="popup">
+                <h2>Success!</h2>
+                <p>Flashcards saved successfully!</p>
+                <button (click)="closeFlashcardSaveSuccessPopup()">OK</button>
+            </div>
+        </div>
+    }
 </div>

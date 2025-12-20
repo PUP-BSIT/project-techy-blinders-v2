@@ -23,6 +23,13 @@ export class StudySetsPage implements OnInit, OnDestroy {
     return !!set?.is_public || (set?.flashcards?.length ?? 0) < 3;
   }
 
+  get isPrivateDisabledForSelectedSet(): boolean {
+    if (this.selectedStudySetId == null) return false;
+    const set = this.studySets?.find((s: any) => s.flashcard_id === this.selectedStudySetId);
+    // Disable if already private (is_public is false)
+    return set?.is_public === false;
+  }
+
   get canShareSelectedSet(): boolean {
     if (this.selectedStudySetId == null) return false;
     const set = this.studySets?.find((s: any) => s.flashcard_id === this.selectedStudySetId);
@@ -32,6 +39,10 @@ export class StudySetsPage implements OnInit, OnDestroy {
   isModalOpen: boolean = false;
   isFlashcardModalOpen: boolean = false;
   isConfirmModalOpen: boolean = false;
+  isPrivateSuccessPopupOpen: boolean = false;
+  isWarningPopupOpen: boolean = false;
+  isFlashcardSaveSuccessPopupOpen: boolean = false;
+  warningMessage: string = '';
   studySetTitle: string = '';
   studySetDescription: string = '';
   flashcards: { flashcardId?: number; term: string; definition: string; isNew?: boolean }[] = [];
@@ -370,6 +381,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
         this.isLoading = false;
         this.closeFlashcardModal();
         this.refreshStudySetFromBackend(studySetIdToRefresh, createdIds);
+        this.openFlashcardSaveSuccessPopup();
       },
       error: (error) => {
         console.error('Error saving individual flashcards:', error);
@@ -625,7 +637,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
       // Check if the study set has at least 3 flashcards
       const studySet = this.studySets.find(s => s.flashcard_id === this.selectedStudySetId);
       if (studySet && studySet.flashcards.length < 3) {
-        alert('You need at least 3 flashcards in this set before you can share it publicly.');
+        this.openWarningPopup('You need at least 3 flashcards in this set before you can share it publicly.');
         this.closePrivacyModal();
         return;
       }
@@ -641,6 +653,32 @@ export class StudySetsPage implements OnInit, OnDestroy {
       this.makeStudySetPrivate(this.selectedStudySetId);
     }
     this.closePrivacyModal();
+  }
+
+  openPrivateSuccessPopup() {
+    this.isPrivateSuccessPopupOpen = true;
+  }
+
+  closePrivateSuccessPopup() {
+    this.isPrivateSuccessPopupOpen = false;
+  }
+
+  openWarningPopup(message: string) {
+    this.warningMessage = message;
+    this.isWarningPopupOpen = true;
+  }
+
+  closeWarningPopup() {
+    this.isWarningPopupOpen = false;
+    this.warningMessage = '';
+  }
+
+  openFlashcardSaveSuccessPopup() {
+    this.isFlashcardSaveSuccessPopupOpen = true;
+  }
+
+  closeFlashcardSaveSuccessPopup() {
+    this.isFlashcardSaveSuccessPopupOpen = false;
   }
 
   openShareModal(studySetId?: number) {
@@ -693,7 +731,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
       // Final validation check before sharing
       if (studySet.flashcards.length < 3) {
-        alert('You need at least 3 flashcards in this set before you can share it publicly.');
+        this.openWarningPopup('You need at least 3 flashcards in this set before you can share it publicly.');
         return;
       }
 
@@ -749,7 +787,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
       if (!this.shareCategory.trim()) missing.push('select a category');
       
       errorMessage += missing.join(', ') + ' before sharing.';
-      alert(errorMessage);
+      this.openWarningPopup(errorMessage);
     }
   }
 
@@ -796,6 +834,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
         this.removeStudySetFromCommunity(studySetId);
 
         this.isLoading = false;
+        this.openPrivateSuccessPopup();
       },
       error: (error) => {
         console.error('Error making study set private:', error);
