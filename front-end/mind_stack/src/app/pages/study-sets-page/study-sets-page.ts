@@ -33,6 +33,8 @@ export class StudySetsPage implements OnInit, OnDestroy {
   isFlashcardModalOpen: boolean = false;
   isConfirmModalOpen: boolean = false;
   isPrivateSuccessPopupOpen: boolean = false;
+  isWarningPopupOpen: boolean = false;
+  warningMessage: string = '';
   studySetTitle: string = '';
   studySetDescription: string = '';
   flashcards: { flashcardId?: number; term: string; definition: string; isNew?: boolean }[] = [];
@@ -626,7 +628,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
       // Check if the study set has at least 3 flashcards
       const studySet = this.studySets.find(s => s.flashcard_id === this.selectedStudySetId);
       if (studySet && studySet.flashcards.length < 3) {
-        alert('You need at least 3 flashcards in this set before you can share it publicly.');
+        this.openWarningPopup('You need at least 3 flashcards in this set before you can share it publicly.');
         this.closePrivacyModal();
         return;
       }
@@ -650,6 +652,16 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
   closePrivateSuccessPopup() {
     this.isPrivateSuccessPopupOpen = false;
+  }
+
+  openWarningPopup(message: string) {
+    this.warningMessage = message;
+    this.isWarningPopupOpen = true;
+  }
+
+  closeWarningPopup() {
+    this.isWarningPopupOpen = false;
+    this.warningMessage = '';
   }
 
   openShareModal(studySetId?: number) {
@@ -702,7 +714,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
       // Final validation check before sharing
       if (studySet.flashcards.length < 3) {
-        alert('You need at least 3 flashcards in this set before you can share it publicly.');
+        this.openWarningPopup('You need at least 3 flashcards in this set before you can share it publicly.');
         return;
       }
 
@@ -758,7 +770,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
       if (!this.shareCategory.trim()) missing.push('select a category');
       
       errorMessage += missing.join(', ') + ' before sharing.';
-      alert(errorMessage);
+      this.openWarningPopup(errorMessage);
     }
   }
 

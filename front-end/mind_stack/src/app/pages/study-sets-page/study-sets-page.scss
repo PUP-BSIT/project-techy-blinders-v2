@@ -1295,3 +1295,17 @@ $transition-normal: 0.3s ease;
     opacity: 1;
   }
 }
+
+.popup.warning {
+  h2 {
+    color: #ffa500;
+  }
+
+  button {
+    background: #ffa500;
+
+    &:hover {
+      background: #ff8c00;
+    }
+  }
+}
