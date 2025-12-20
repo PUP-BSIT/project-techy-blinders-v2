@@ -276,24 +276,25 @@ export class CommunityService {
     this.updatePost(postId, { ...post, showcomment: !post.showcomment });
   }
 
-  createComment(postId: string, content: string): void {
+  createComment(postId: string, content: string, parentCommentId?: string): void {
     const currentUser = this.authService.getCurrentUser();
     const userId = currentUser?.userId?.toString() || '0';
     const username = currentUser?.username || 'Guest User';
 
-    const mentionMatch = content.match(/^@([^@\n]+?)\s+(.+)/);
-    let parentCommentId: string | null = null;
-    let cleanContent = content;
+    // If parentCommentId is provided directly, use it; otherwise try to extract from @mention
+    let resolvedParentCommentId: string | null = parentCommentId || null;
 
-    if (mentionMatch) {
-      const mentionedUsername = mentionMatch[1].trim();
-      const comments = this.commentsSubject.value;
-      const parentComment = comments.find(
-        c => c.username.toLowerCase() === mentionedUsername.toLowerCase() && c.post_id === postId && !c.parent_comment_id
-      );
-      if (parentComment) {
-        parentCommentId = parentComment.comment_id;
-        cleanContent = mentionMatch[2].trim();
+    if (!resolvedParentCommentId) {
+      const mentionMatch = content.match(/^@([^@\n]+?)\s+(.+)/);
+      if (mentionMatch) {
+        const mentionedUsername = mentionMatch[1].trim();
+        const comments = this.commentsSubject.value;
+        const parentComment = comments.find(
+          c => c.username.toLowerCase() === mentionedUsername.toLowerCase() && c.post_id === postId && !c.parent_comment_id
+        );
+        if (parentComment) {
+          resolvedParentCommentId = parentComment.comment_id;
+        }
       }
     }
 
@@ -301,8 +302,8 @@ export class CommunityService {
       userId: Number(userId),
       postId: Number(postId),
       username,
-      content: cleanContent,
-      parentCommentId: parentCommentId ? Number(parentCommentId) : null
+      content: content,
+      parentCommentId: resolvedParentCommentId ? Number(resolvedParentCommentId) : null
     };
 
     this.http.post<any>(`${this.apiUrl}/comments`, payload).subscribe({
