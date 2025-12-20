@@ -1,6 +1,7 @@
 package com.mindstack.mind_stack_id.services.implementation;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -60,8 +61,8 @@ public class PostImplementation implements PostService {
         long randomPostId = ThreadLocalRandom.current().nextLong(1000000000L, 10000000000L);
         post.setPostId(randomPostId);
 
-        post.setCreatedAt(LocalDateTime.now());
-        post.setUpdatedAt(LocalDateTime.now());
+        post.setCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Manila")));
+        post.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Manila")));
 
         if (post.getPublish() == null) {
             post.setPublish(false);
@@ -141,7 +142,7 @@ public class PostImplementation implements PostService {
             updatedPost.setCommentCount(post.getCommentCount());
             updatedPost.setNumLike(post.getNumLike());
             updatedPost.setNumDislike(post.getNumDislike());
-            updatedPost.setUpdatedAt(LocalDateTime.now());
+            updatedPost.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Manila")));
             ensureUsername(updatedPost);
 
             System.out.println("Updated post with ID: " + updatedPost.getPostId());
@@ -197,7 +198,7 @@ public class PostImplementation implements PostService {
         if (post.isPresent()) {
             PostCreation publishedPost = post.get();
             publishedPost.setPublish(true);
-            publishedPost.setUpdatedAt(LocalDateTime.now());
+            publishedPost.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Manila")));
             ensureUsername(publishedPost);
 
             System.out.println("Published post with ID: " + publishedPost.getPostId());
@@ -216,7 +217,7 @@ public class PostImplementation implements PostService {
         if (postOpt.isPresent()) {
             PostCreation unpublishedPost = postOpt.get();
             unpublishedPost.setPublish(false);
-            unpublishedPost.setUpdatedAt(LocalDateTime.now());
+            unpublishedPost.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Manila")));
             ensureUsername(unpublishedPost);
 
             if (setPrivate) {
@@ -237,7 +238,7 @@ public class PostImplementation implements PostService {
         Optional<PostCreation> post = postRepository.findById(id);
         if (post.isPresent()) {
             PostCreation likedPost = post.get();
-            likedPost.setUpdatedAt(LocalDateTime.now());
+            likedPost.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Manila")));
             ensureUsername(likedPost);
 
             if (userId == null) {
@@ -290,7 +291,7 @@ public class PostImplementation implements PostService {
         Optional<PostCreation> post = postRepository.findById(id);
         if (post.isPresent()) {
             PostCreation dislikedPost = post.get();
-            dislikedPost.setUpdatedAt(LocalDateTime.now());
+            dislikedPost.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Manila")));
             ensureUsername(dislikedPost);
 
             if (userId == null) {
@@ -433,7 +434,7 @@ public class PostImplementation implements PostService {
                 flashcardSetRepository.findById(setId).ifPresent(set -> {
                     if (actorUserId.equals(set.getUserId())) {
                         set.setPublic(false);
-                        set.setUpdatedAt(LocalDateTime.now());
+                        set.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Manila")));
                         flashcardSetRepository.save(set);
                     }
                 });
@@ -444,7 +445,7 @@ public class PostImplementation implements PostService {
                 quizSetRepository.findById(setId).ifPresent(set -> {
                     if (actorUserId.equals(set.getUserId())) {
                         set.setPublic(false);
-                        set.setUpdatedAt(LocalDateTime.now());
+                        set.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Manila")));
                         quizSetRepository.save(set);
                     }
                 });
