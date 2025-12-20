@@ -1,7 +1,16 @@
 <div class="app-layout">
-  <app-side-bar *ngIf="!hideSidebar" (sidebarToggled)="onSidebarToggle($event)"></app-side-bar>
+  @if (!hideSidebar) {
+    <app-side-bar 
+      (sidebarToggled)="onSidebarToggle($event)"
+      (mobileMenuToggled)="onMobileMenuToggle($event)">
+    </app-side-bar>
+  }
   
-  <main class="main-content" [class.sidebar-collapsed]="isSidebarCollapsed" [class.no-sidebar]="hideSidebar">
+  <main class="main-content" 
+        [class.sidebar-collapsed]="!isMobile && isSidebarCollapsed" 
+        [class.no-sidebar]="hideSidebar"
+        [class.mobile-content]="isMobile"
+        [class.mobile-menu-open]="isMobile && isMobileMenuOpen">
     <router-outlet></router-outlet>
   </main>
 </div>

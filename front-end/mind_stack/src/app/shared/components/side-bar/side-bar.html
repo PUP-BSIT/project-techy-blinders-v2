@@ -1,8 +1,29 @@
-<mat-sidenav-container class="sidenav-container">
-    <mat-sidenav mode="push" opened [class.collapsed]="isCollapsed" class="sidebar">
-        <button class="toggle-btn" (click)="toggleSidebar()">
-            <span class="toggle-icon">☰</span>
+@if (isMobile) {
+    <div class="mobile-header">
+        <button class="mobile-hamburger" (click)="toggleSidebar()" [class.active]="isMobileMenuOpen">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
         </button>
+        <div class="mobile-logo">
+            <img src="assets/image-logo.png" alt="Mindstack Logo" class="mobile-logo-img"/>
+        </div>
+    </div>
+}
+
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav 
+        [mode]="isMobile ? 'over' : 'push'" 
+        [opened]="isMobile ? isMobileMenuOpen : true" 
+        [class.collapsed]="!isMobile && isCollapsed" 
+        class="sidebar"
+        [class.mobile-sidebar]="isMobile">
+        
+        @if (!isMobile) {
+            <button class="toggle-btn desktop-only" (click)="toggleSidebar()">
+                <span class="toggle-icon">☰</span>
+            </button>
+        }
         
         <div class="side-bar-header">
             <img src="assets/image-logo.png" alt="Mindstack Logo" class="logo"/>
@@ -11,7 +32,7 @@
 
         <ul class="menu">
             <li>
-                <a routerLink="/app/dashboard" routerLinkActive="active">
+                <a routerLink="/app/dashboard" routerLinkActive="active" (click)="closeMobileMenu()">
                     <div class="icon-wrapper">
                         <img src="assets/book-dashboard.png" 
                               alt="Dashboard icon" 
@@ -24,7 +45,7 @@
                 </a>
             </li>
             <li>
-                <a routerLink="/app/study-sets" routerLinkActive="active">
+                <a routerLink="/app/study-sets" routerLinkActive="active" (click)="closeMobileMenu()">
                     <div class="icon-wrapper">
                         <img src="assets/Edit.png" 
                               alt="Study Sets icon" 
@@ -37,7 +58,7 @@
                 </a>
             </li>
             <li>
-                <a routerLink="/app/quizzes" routerLinkActive="active">
+                <a routerLink="/app/quizzes" routerLinkActive="active" (click)="closeMobileMenu()">
                     <div class="icon-wrapper">
                         <img src="assets/Clipboard.png" 
                               alt="Quizzes icon" 
@@ -50,7 +71,7 @@
                 </a>
             </li>
             <li>
-                <a routerLink="/app/community" routerLinkActive="active">
+                <a routerLink="/app/community" routerLinkActive="active" (click)="closeMobileMenu()">
                     <div class="icon-wrapper">
                         <img src="assets/Trello.png" 
                               alt="Community icon" 
@@ -63,7 +84,7 @@
                 </a>
             </li>
             <li>
-                <a routerLink="/app/notifications" routerLinkActive="active">
+                <a routerLink="/app/notifications" routerLinkActive="active" (click)="closeMobileMenu()">
                     <div class="icon-wrapper">
                         <img src="assets/bell.png" 
                               alt="Notification icon" 
@@ -80,7 +101,7 @@
         <div class="sidebar-user">
             <div class="user-left">
                 <div class="user-profile-initial">
-                    <a routerLink="/app/user-profile">
+                    <a routerLink="/app/user-profile" (click)="closeMobileMenu()">
                         <div class="user-avatar-circle">{{ userInitial }}</div>
                     </a>
                 </div>
@@ -107,7 +128,7 @@
         </button>
     </mat-sidenav>
 
-    <mat-sidenav-content>
+    <mat-sidenav-content (click)="isMobile && isMobileMenuOpen ? closeMobileMenu() : null">
         <ng-content></ng-content>
     </mat-sidenav-content>
 </mat-sidenav-container>
