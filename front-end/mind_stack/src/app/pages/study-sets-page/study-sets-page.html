@@ -201,7 +201,12 @@
                     <img src="assets/globe-icon.png" alt="Share" class="option-icon">
                     <div class="option-content">
                         <span>Share</span>
-                        <span class="option-description">Anyone can view and study this set</span>
+                        <span class="option-description" *ngIf="canShareSelectedSet">
+                            Anyone can view and study this set
+                        </span>
+                        <span class="option-description warning" *ngIf="!canShareSelectedSet" style="color: #ff6b6b;">
+                            Minimum 3 flashcards required to share
+                        </span>
                     </div>
                 </button>
                 <button class="privacy-option private" (click)="selectPrivateOption()">
@@ -248,6 +253,14 @@
                 <button class="btn-share-save" (click)="saveShare()">Save</button>
                 <button class="btn-share-cancel" (click)="closeShareModal()">Cancel</button>
             </div>
+        </div>
+    </div>
+
+    <div class="popup-overlay" *ngIf="isSuccessPopupOpen">
+        <div class="popup">
+            <h2>Success!</h2>
+            <p>Flashcard set shared to community successfully!</p>
+            <button (click)="closeSuccessPopup()">OK</button>
         </div>
     </div>
 </div>
