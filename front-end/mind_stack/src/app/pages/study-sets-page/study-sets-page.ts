@@ -15,6 +15,15 @@ import { CommunityService } from '../../../service/community.service';
   styleUrls: ['./study-sets-page.scss']
 })
 export class StudySetsPage implements OnInit, OnDestroy {
+    isStudySetDeleteSuccessPopupOpen: boolean = false;
+
+    openStudySetDeleteSuccessPopup() {
+      this.isStudySetDeleteSuccessPopupOpen = true;
+    }
+
+    closeStudySetDeleteSuccessPopup() {
+      this.isStudySetDeleteSuccessPopupOpen = false;
+    }
   isStudySetCreateSuccessPopupOpen: boolean = false;
 
   openStudySetCreateSuccessPopup() {
@@ -234,6 +243,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
       this.pendingDeleteStudySetId = null;
       this.closeConfirmModal();
       this.deleteStudySet(id);
+      this.openStudySetDeleteSuccessPopup();
     }
   }
 
@@ -346,6 +356,13 @@ export class StudySetsPage implements OnInit, OnDestroy {
       .map(f => ({ keyTerm: f.term.trim(), definition: f.definition.trim(), flashcardId: f.flashcardId, isNew: f.isNew }))
       .filter(f => f.keyTerm && f.definition);
 
+    // If no valid flashcards, do not show the success popup
+    if (prepared.length === 0) {
+      this.isLoading = false;
+      this.closeFlashcardModal();
+      return;
+    }
+
     console.log('Saving flashcards (individual):', prepared);
 
     const studySetIdToRefresh = this.currentStudySetId as number;
@@ -390,9 +407,11 @@ export class StudySetsPage implements OnInit, OnDestroy {
         }
 
         this.isLoading = false;
+        if (prepared.length > 0) {
+          this.openFlashcardSaveSuccessPopup();
+        }
         this.closeFlashcardModal();
         this.refreshStudySetFromBackend(studySetIdToRefresh, createdIds);
-        this.openFlashcardSaveSuccessPopup();
       },
       error: (error) => {
         console.error('Error saving individual flashcards:', error);
@@ -487,6 +506,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
   editStudySet(id: number) {
     this.isLoading = true;
+    this.isFlashcardSaveSuccessPopupOpen = false;
     this.studySetsService.getStudySetById(id).subscribe({
       next: (studySet) => {
         this.currentStudySetId = id;
