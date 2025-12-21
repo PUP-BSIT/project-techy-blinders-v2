@@ -342,31 +342,10 @@ export class QuizzesPage implements OnInit {
         return;
       }
 
-      if (this.questions.length === 0) {
-        this.showNotification('Add Questions', 'Please add at least one question to your quiz set.', 'warning');
-        return;
+      let quizType: QuizType = QuizType.MULTIPLE_CHOICE;
+      if (this.selectedQuestionType === QuestionType.IDENTIFICATION) {
+        quizType = QuizType.IDENTIFICATION_ANSWER;
       }
-
-      const incompleteQuestion = this.questions.find(q => {
-        if (!q.question.trim()) return true;
-        if (this.selectedQuestionType === QuestionType.MULTIPLE_CHOICE) {
-          return !q.optionA?.trim() || !q.optionB?.trim() || 
-                 !q.optionC?.trim() || !q.optionD?.trim() || !q.correctAnswer;
-        } else {
-          return !q.answer?.trim();
-        }
-      });
-
-      if (incompleteQuestion) {
-        this.showNotification('Complete Questions', 'Please fill in all question fields before saving.', 'warning');
-        return;
-      }
-
-      this.isLoading = true;
-
-      const quizType = this.selectedQuestionType === QuestionType.MULTIPLE_CHOICE 
-        ? QuizType.MULTIPLE_CHOICE 
-        : QuizType.IDENTIFICATION_ANSWER;
 
       const quizItems: QuizItem[] = this.questions.map(q => ({
         quizType: quizType,
@@ -572,17 +551,11 @@ export class QuizzesPage implements OnInit {
     }
   }
 
-  /**
-   * Persist a quiz as private and remove any associated community post(s).
-   * This ensures that after refresh/navigation the badge remains Private
-   * and the quiz no longer appears in the community feed.
-   */
   private makeQuizPrivate(quizId: number) {
     const quiz = this.quizzesList.find(q => q.quiz_id === quizId);
     const currentUser = this.authService.getCurrentUser();
 
     if (!quiz || !currentUser || !currentUser.userId) {
-      // Fallback to local-only toggle if we cannot persist
       this.togglePrivacy(quizId);
       return;
     }
