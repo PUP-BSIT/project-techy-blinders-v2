@@ -15,6 +15,15 @@ import { CommunityService } from '../../../service/community.service';
   styleUrls: ['./study-sets-page.scss']
 })
 export class StudySetsPage implements OnInit, OnDestroy {
+  isStudySetCreateSuccessPopupOpen: boolean = false;
+
+  openStudySetCreateSuccessPopup() {
+    this.isStudySetCreateSuccessPopupOpen = true;
+  }
+
+  closeStudySetCreateSuccessPopup() {
+    this.isStudySetCreateSuccessPopupOpen = false;
+  }
 
   get isShareDisabledForSelectedSet(): boolean {
     if (this.selectedStudySetId == null) return false;
@@ -261,6 +270,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
           this.studySets.sort((a, b) => (a.flashcard_id || 0) - (b.flashcard_id || 0));
 
           try { localStorage.setItem('studySetsUpdated', Date.now().toString()); } catch (e) {}
+          this.openStudySetCreateSuccessPopup();
         },
         error: (error) => {
           console.error('Error creating study set:', error);
@@ -289,6 +299,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
   }
 
   saveFlashcards() {
+    this.isFlashcardSaveSuccessPopupOpen = false;
     console.log('=== SAVE FLASHCARDS CALLED ===');
     console.log('Current Study Set ID:', this.currentStudySetId);
     console.log('Total Flashcards:', this.flashcards.length);

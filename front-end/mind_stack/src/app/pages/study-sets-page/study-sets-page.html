@@ -262,6 +262,12 @@
     </div>
     }
 
+    @if (isStudySetCreateSuccessPopupOpen) {
+    <div class="popup-alert" (click)="closeStudySetCreateSuccessPopup()">
+        <p>Flashcard set created!</p>
+    </div>
+    }
+
     @if (isPrivateSuccessPopupOpen) {
     <div class="popup-alert">
         <p>Flashcard set is now private!</p>
@@ -279,12 +285,8 @@
     }
 
     @if (isFlashcardSaveSuccessPopupOpen) {
-        <div class="popup-overlay">
-            <div class="popup">
-                <h2>Success!</h2>
-                <p>Flashcards saved successfully!</p>
-                <button (click)="closeFlashcardSaveSuccessPopup()">OK</button>
-            </div>
-        </div>
+    <div class="popup-alert">
+        <p>Flashcard(s) saved!</p>
+    </div>
     }
 </div>
