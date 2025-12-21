@@ -243,7 +243,10 @@ export class StudySetsPage implements OnInit, OnDestroy {
       this.pendingDeleteStudySetId = null;
       this.closeConfirmModal();
       this.deleteStudySet(id);
-      this.openStudySetDeleteSuccessPopup();
+      this.isStudySetDeleteSuccessPopupOpen = false;
+      setTimeout(() => {
+        this.openStudySetDeleteSuccessPopup();
+      }, 10);
     }
   }
 
@@ -280,7 +283,10 @@ export class StudySetsPage implements OnInit, OnDestroy {
           this.studySets.sort((a, b) => (a.flashcard_id || 0) - (b.flashcard_id || 0));
 
           try { localStorage.setItem('studySetsUpdated', Date.now().toString()); } catch (e) {}
-          this.openStudySetCreateSuccessPopup();
+          this.isStudySetCreateSuccessPopupOpen = false;
+          setTimeout(() => {
+            this.openStudySetCreateSuccessPopup();
+          }, 10);
         },
         error: (error) => {
           console.error('Error creating study set:', error);
@@ -803,7 +809,10 @@ export class StudySetsPage implements OnInit, OnDestroy {
           }
           this.isLoading = false;
           this.closeShareModal();
-          this.openSuccessPopup();
+          this.isSuccessPopupOpen = false;
+          setTimeout(() => {
+            this.openSuccessPopup();
+          }, 10);
         },
         error: (error) => {
           console.error('Error updating flashcard visibility:', error);
@@ -868,7 +877,10 @@ export class StudySetsPage implements OnInit, OnDestroy {
         this.removeStudySetFromCommunity(studySetId);
 
         this.isLoading = false;
-        this.openPrivateSuccessPopup();
+        this.isPrivateSuccessPopupOpen = false;
+        setTimeout(() => {
+          this.openPrivateSuccessPopup();
+        }, 10);
       },
       error: (error) => {
         console.error('Error making study set private:', error);
