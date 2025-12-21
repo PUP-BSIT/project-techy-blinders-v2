@@ -15,6 +15,24 @@ import { CommunityService } from '../../../service/community.service';
   styleUrls: ['./study-sets-page.scss']
 })
 export class StudySetsPage implements OnInit, OnDestroy {
+    isStudySetDeleteSuccessPopupOpen: boolean = false;
+
+    openStudySetDeleteSuccessPopup() {
+      this.isStudySetDeleteSuccessPopupOpen = true;
+    }
+
+    closeStudySetDeleteSuccessPopup() {
+      this.isStudySetDeleteSuccessPopupOpen = false;
+    }
+  isStudySetCreateSuccessPopupOpen: boolean = false;
+
+  openStudySetCreateSuccessPopup() {
+    this.isStudySetCreateSuccessPopupOpen = true;
+  }
+
+  closeStudySetCreateSuccessPopup() {
+    this.isStudySetCreateSuccessPopupOpen = false;
+  }
 
   get isShareDisabledForSelectedSet(): boolean {
     if (this.selectedStudySetId == null) return false;
@@ -225,6 +243,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
       this.pendingDeleteStudySetId = null;
       this.closeConfirmModal();
       this.deleteStudySet(id);
+      this.openStudySetDeleteSuccessPopup();
     }
   }
 
@@ -261,6 +280,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
           this.studySets.sort((a, b) => (a.flashcard_id || 0) - (b.flashcard_id || 0));
 
           try { localStorage.setItem('studySetsUpdated', Date.now().toString()); } catch (e) {}
+          this.openStudySetCreateSuccessPopup();
         },
         error: (error) => {
           console.error('Error creating study set:', error);
@@ -289,6 +309,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
   }
 
   saveFlashcards() {
+    this.isFlashcardSaveSuccessPopupOpen = false;
     console.log('=== SAVE FLASHCARDS CALLED ===');
     console.log('Current Study Set ID:', this.currentStudySetId);
     console.log('Total Flashcards:', this.flashcards.length);
@@ -335,6 +356,13 @@ export class StudySetsPage implements OnInit, OnDestroy {
       .map(f => ({ keyTerm: f.term.trim(), definition: f.definition.trim(), flashcardId: f.flashcardId, isNew: f.isNew }))
       .filter(f => f.keyTerm && f.definition);
 
+    // If no valid flashcards, do not show the success popup
+    if (prepared.length === 0) {
+      this.isLoading = false;
+      this.closeFlashcardModal();
+      return;
+    }
+
     console.log('Saving flashcards (individual):', prepared);
 
     const studySetIdToRefresh = this.currentStudySetId as number;
@@ -379,9 +407,11 @@ export class StudySetsPage implements OnInit, OnDestroy {
         }
 
         this.isLoading = false;
+        if (prepared.length > 0) {
+          this.openFlashcardSaveSuccessPopup();
+        }
         this.closeFlashcardModal();
         this.refreshStudySetFromBackend(studySetIdToRefresh, createdIds);
-        this.openFlashcardSaveSuccessPopup();
       },
       error: (error) => {
         console.error('Error saving individual flashcards:', error);
@@ -476,6 +506,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
   editStudySet(id: number) {
     this.isLoading = true;
+    this.isFlashcardSaveSuccessPopupOpen = false;
     this.studySetsService.getStudySetById(id).subscribe({
       next: (studySet) => {
         this.currentStudySetId = id;
@@ -660,12 +691,16 @@ export class StudySetsPage implements OnInit, OnDestroy {
   }
 
   closePrivateSuccessPopup() {
-    this.isPrivateSuccessPopupOpen = false;
+    this.isPrivateSuccessPopupOpen = true;
   }
 
   openWarningPopup(message: string) {
-    this.warningMessage = message;
-    this.isWarningPopupOpen = true;
+    this.isWarningPopupOpen = false;
+    this.warningMessage = '';
+    setTimeout(() => {
+      this.warningMessage = message;
+      this.isWarningPopupOpen = true;
+    }, 0);
   }
 
   closeWarningPopup() {
@@ -711,10 +746,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
     this.isSuccessPopupOpen = true;
   }
 
-  closeSuccessPopup() {
-    this.isSuccessPopupOpen = false;
-  }
-
   saveShare() {
     if (this.selectedStudySetId && this.shareTitle.trim() && this.shareCategory.trim()) {
       const currentUser = this.authService.getCurrentUser();
@@ -731,7 +762,10 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
       // Final validation check before sharing
       if (studySet.flashcards.length < 3) {
-        this.openWarningPopup('You need at least 3 flashcards in this set before you can share it publicly.');
+        this.isWarningPopupOpen = false;
+        setTimeout(() => {
+          this.openWarningPopup('You need at least 3 flashcards in this set before you can share it publicly.');
+        }, 0);
         return;
       }
 
