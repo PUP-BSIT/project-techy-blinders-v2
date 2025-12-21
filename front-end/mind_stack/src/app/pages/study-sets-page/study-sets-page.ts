@@ -695,8 +695,12 @@ export class StudySetsPage implements OnInit, OnDestroy {
   }
 
   openWarningPopup(message: string) {
-    this.warningMessage = message;
-    this.isWarningPopupOpen = true;
+    this.isWarningPopupOpen = false;
+    this.warningMessage = '';
+    setTimeout(() => {
+      this.warningMessage = message;
+      this.isWarningPopupOpen = true;
+    }, 0);
   }
 
   closeWarningPopup() {
@@ -758,7 +762,10 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
       // Final validation check before sharing
       if (studySet.flashcards.length < 3) {
-        this.openWarningPopup('You need at least 3 flashcards in this set before you can share it publicly.');
+        this.isWarningPopupOpen = false;
+        setTimeout(() => {
+          this.openWarningPopup('You need at least 3 flashcards in this set before you can share it publicly.');
+        }, 0);
         return;
       }
 

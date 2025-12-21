@@ -203,12 +203,16 @@
                     <img src="assets/globe-icon.png" alt="Share" class="option-icon">
                     <div class="option-content">
                         <span>Share</span>
-                        <span class="option-description" *ngIf="canShareSelectedSet">
-                            Anyone can view and study this set
-                        </span>
-                        <span class="option-description warning" *ngIf="!canShareSelectedSet" style="color: #ff6b6b;">
-                            Minimum 3 flashcards required to share
-                        </span>
+                        @if (canShareSelectedSet) {
+                            <span class="option-description">
+                                Anyone can view and study this set
+                            </span>
+                        }
+                        @if (!canShareSelectedSet) {
+                            <span class="option-description warning">
+                                Minimum 3 flashcards required to share
+                            </span>
+                        }
                     </div>
                 </button>
                 <button class="privacy-option private" (click)="selectPrivateOption()" [disabled]="isPrivateDisabledForSelectedSet">
@@ -259,37 +263,34 @@
     </div>
 
     @if (isSuccessPopupOpen) {
-    <div class="popup-alert">
-        <p>Flashcard set shared to community!</p>
-    </div>
+        <div class="popup-alert">
+            <p>Flashcard set shared to community!</p>
+        </div>
     }
 
     @if (isStudySetCreateSuccessPopupOpen) {
-    <div class="popup-alert" (click)="closeStudySetCreateSuccessPopup()">
-        <p>Flashcard set created!</p>
-    </div>
+        <div class="popup-alert" (click)="closeStudySetCreateSuccessPopup()">
+            <p>Flashcard set created!</p>
+        </div>
     }
 
 
     @if (isPrivateSuccessPopupOpen) {
-    <div class="popup-alert">
-        <p>Flashcard set is now private!</p>
-    </div>
+        <div class="popup-alert">
+            <p>Flashcard set is now private!</p>
+        </div>
     }
 
     @if (isStudySetDeleteSuccessPopupOpen) {
-    <div class="popup-alert" (click)="closeStudySetDeleteSuccessPopup()">
-        <p>Flashcard set deleted!</p>
-    </div>
+        <div class="popup-alert" (click)="closeStudySetDeleteSuccessPopup()">
+            <p>Flashcard set deleted!</p>
+        </div>
     }
 
     @if (isWarningPopupOpen) {
-        <div class="popup-overlay">
-            <div class="popup warning">
-                <h2>Warning!</h2>
-                <p>{{ warningMessage }}</p>
-                <button (click)="closeWarningPopup()">OK</button>
-            </div>
+        <div class="popup-alert warning">
+            <h2>Warning!</h2>
+            <p>{{ warningMessage }}</p>
         </div>
     }
 
