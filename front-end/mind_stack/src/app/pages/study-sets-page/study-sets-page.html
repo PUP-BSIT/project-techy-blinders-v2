@@ -257,23 +257,15 @@
     </div>
 
     @if (isSuccessPopupOpen) {
-        <div class="popup-overlay">
-            <div class="popup">
-                <h2>Success!</h2>
-                <p>Flashcard set shared to community successfully!</p>
-                <button (click)="closeSuccessPopup()">OK</button>
-            </div>
-        </div>
+    <div class="popup-alert">
+        <p>Flashcard set shared to community!</p>
+    </div>
     }
 
     @if (isPrivateSuccessPopupOpen) {
-        <div class="popup-overlay">
-            <div class="popup">
-                <h2>Success!</h2>
-                <p>Flashcard set is now private!</p>
-                <button (click)="closePrivateSuccessPopup()">OK</button>
-            </div>
-        </div>
+    <div class="popup-alert">
+        <p>Flashcard set is now private!</p>
+    </div>
     }
 
     @if (isWarningPopupOpen) {

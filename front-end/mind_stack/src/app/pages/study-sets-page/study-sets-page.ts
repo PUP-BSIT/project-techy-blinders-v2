@@ -660,7 +660,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
   }
 
   closePrivateSuccessPopup() {
-    this.isPrivateSuccessPopupOpen = false;
+    this.isPrivateSuccessPopupOpen = true;
   }
 
   openWarningPopup(message: string) {
@@ -709,10 +709,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
   openSuccessPopup() {
     this.isSuccessPopupOpen = true;
-  }
-
-  closeSuccessPopup() {
-    this.isSuccessPopupOpen = false;
   }
 
   saveShare() {
