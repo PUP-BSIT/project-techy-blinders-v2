@@ -100,7 +100,7 @@
                 </select>
             </div>
             <div class="modal-footer">
-                <button class="btn-cancel" (click)="openConfirmModal()" [disabled]="isLoading">Cancel</button>
+                <button class="btn-cancel" (click)="closeModal()" [disabled]="isLoading">Cancel</button>
                 <button class="btn-continue" (click)="saveQuiz()" [disabled]="isLoading || !quizTitle.trim() || !selectedQuestionType">
                     {{ isLoading ? 'Loading...' : 'Continue' }}
                 </button>
@@ -259,27 +259,12 @@
     </div>
 
     <div class="confirm-overlay" 
-            [class.open]="isConfirmModalOpen" (click)="closeConfirmModal()">
-        <div class="confirm-modal" (click)="$event.stopPropagation()">
-            <h3 class="confirm-title">Are you sure?</h3>
-            <p class="confirm-message">
-                Do you really want to cancel? All unsaved changes 
-                will be lost.
-            </p>
-            <div class="confirm-actions">
-                <button class="btn-confirm-no" (click)="closeConfirmModal()">No</button>
-                <button class="btn-confirm-yes" (click)="confirmCancel()">Yes</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="confirm-overlay" 
             [class.open]="isDeleteModalOpen" (click)="closeDeleteModal()">
         <div class="confirm-modal" (click)="$event.stopPropagation()">
             <h3 class="confirm-title">Delete Quiz Set?</h3>
             <p class="confirm-message">
-                Are you sure you want to delete this quiz set? 
-                This action cannot be undone.
+                    Do you really want to delete this study set?<br>
+                    This action cannot be undone.
             </p>
             <div class="confirm-actions">
                 <button class="btn-confirm-no" (click)="closeDeleteModal()">Cancel</button>
@@ -362,5 +347,16 @@
             </div>
         </div>
     </div>
+    
+    @if (isQuizSetCreateSuccessPopupOpen) {
+        <div class="popup-alert" (click)="closeQuizSetCreateSuccessPopup()">
+            <p>Quiz set created!</p>
+        </div>
+    }
 
+    @if (isQuizSetDeleteSuccessPopupOpen) {
+        <div class="popup-alert" (click)="closeQuizSetDeleteSuccessPopup()">
+            <p>Quiz set deleted!</p>
+        </div>
+    }
 </div>

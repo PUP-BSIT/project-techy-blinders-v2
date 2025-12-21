@@ -34,11 +34,32 @@ export interface Quiz {
   styleUrls: ['./quizzes-page.scss']
 })
 export class QuizzesPage implements OnInit {
-    get isShareDisabledForSelectedQuiz(): boolean {
-      if (this.selectedQuizIdForPrivacy === null) return false;
-      const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizIdForPrivacy);
-      return !!quiz?.is_public;
-    }
+  get isShareDisabledForSelectedQuiz(): boolean {
+    if (this.selectedQuizIdForPrivacy === null) return false;
+    const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizIdForPrivacy);
+    return !!quiz?.is_public;
+  }
+
+  isQuizSetCreateSuccessPopupOpen: boolean = false;
+
+  openQuizSetCreateSuccessPopup() {
+    this.isQuizSetCreateSuccessPopupOpen = true;
+  }
+
+  closeQuizSetCreateSuccessPopup() {
+    this.isQuizSetCreateSuccessPopupOpen = false;
+  }
+
+  isQuizSetDeleteSuccessPopupOpen: boolean = false;
+
+  openQuizSetDeleteSuccessPopup() {
+    this.isQuizSetDeleteSuccessPopupOpen = true;
+  }
+
+  closeQuizSetDeleteSuccessPopup() {
+    this.isQuizSetDeleteSuccessPopupOpen = false;
+  }
+  
   isModalOpen: boolean = false;
   isQuestionModalOpen: boolean = false;
   isConfirmModalOpen: boolean = false;
@@ -306,6 +327,10 @@ export class QuizzesPage implements OnInit {
     if (this.quizTitle.trim() && this.selectedQuestionType !== '') {
       this.isModalOpen = false;
       this.isQuestionModalOpen = true;
+      this.isQuizSetCreateSuccessPopupOpen = false;
+      setTimeout(() => {
+        this.openQuizSetCreateSuccessPopup();
+      }, 0);
     }
   }
 
@@ -393,6 +418,7 @@ export class QuizzesPage implements OnInit {
           next: (response) => {
             this.loadQuizSetsFromBackend();
             this.closeModal();
+            this.openQuizSetCreateSuccessPopup();
           },
           error: (error) => {
             this.isLoading = false;
@@ -491,13 +517,15 @@ export class QuizzesPage implements OnInit {
     this.quizzesService.deleteQuizSet(this.quizIdToDelete).subscribe({
       next: () => {
         this.loadQuizSetsFromBackend();
-        
         const maxPage = Math.max(0, Math.ceil(this.quizzesList.length / this.quizzesPerPage) - 1);
         if (this.quizzesCurrentPage > maxPage) {
           this.quizzesCurrentPage = maxPage;
         }
-
         this.quizIdToDelete = null;
+        this.isQuizSetDeleteSuccessPopupOpen = false;
+        setTimeout(() => {
+          this.openQuizSetDeleteSuccessPopup();
+        }, 0);
       },
       error: (error) => {
         this.isLoading = false;

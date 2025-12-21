@@ -15,15 +15,16 @@ import { CommunityService } from '../../../service/community.service';
   styleUrls: ['./study-sets-page.scss']
 })
 export class StudySetsPage implements OnInit, OnDestroy {
-    isStudySetDeleteSuccessPopupOpen: boolean = false;
+  isStudySetDeleteSuccessPopupOpen: boolean = false;
 
-    openStudySetDeleteSuccessPopup() {
-      this.isStudySetDeleteSuccessPopupOpen = true;
-    }
+  openStudySetDeleteSuccessPopup() {
+    this.isStudySetDeleteSuccessPopupOpen = true;
+  }
 
-    closeStudySetDeleteSuccessPopup() {
-      this.isStudySetDeleteSuccessPopupOpen = false;
-    }
+  closeStudySetDeleteSuccessPopup() {
+    this.isStudySetDeleteSuccessPopupOpen = false;
+  }
+
   isStudySetCreateSuccessPopupOpen: boolean = false;
 
   openStudySetCreateSuccessPopup() {
