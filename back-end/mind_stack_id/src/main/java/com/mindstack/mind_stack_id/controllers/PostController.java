@@ -95,7 +95,8 @@ public class PostController {
                 updatedPost.getNumLike(),
                 updatedPost.getNumDislike(),
                 false,
-                false);
+                false,
+                updatedPost.getEdited() != null ? updatedPost.getEdited() : false);
         return ResponseEntity.ok(dto);
     }
 

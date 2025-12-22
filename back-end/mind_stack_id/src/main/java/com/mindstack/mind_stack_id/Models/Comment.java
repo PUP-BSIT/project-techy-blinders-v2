@@ -44,6 +44,9 @@ public class Comment {
     @Column(name = "parent_comment_id")
     private Long parentCommentId;
 
+    @Column(name = "edited")
+    private Boolean edited = false;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now(ZoneId.of("Asia/Manila"));
@@ -133,5 +136,13 @@ public class Comment {
 
     public void setParentCommentId(Long parentCommentId) {
         this.parentCommentId = parentCommentId;
+    }
+
+    public Boolean getEdited() {
+        return edited;
+    }
+
+    public void setEdited(Boolean edited) {
+        this.edited = edited;
     }
 }

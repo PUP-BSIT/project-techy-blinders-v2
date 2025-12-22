@@ -19,13 +19,14 @@ public class CommentDTO {
     private int replyCount;
     private boolean userLiked;
     private boolean userDisliked;
+    private Boolean edited;
 
     public CommentDTO() {
     }
 
     public CommentDTO(long commentId, long userId, long postId, String username, String content,
             LocalDateTime createdAt, LocalDateTime updatedAt, int numLike, int numDislike,
-            Long parentCommentId, int replyCount, boolean userLiked, boolean userDisliked) {
+            Long parentCommentId, int replyCount, boolean userLiked, boolean userDisliked, Boolean edited) {
         this.commentId = commentId;
         this.userId = userId;
         this.postId = postId;
@@ -39,6 +40,7 @@ public class CommentDTO {
         this.replyCount = replyCount;
         this.userLiked = userLiked;
         this.userDisliked = userDisliked;
+        this.edited = edited;
     }
 
     public long getCommentId() {
@@ -143,5 +145,13 @@ public class CommentDTO {
 
     public void setUserDisliked(boolean userDisliked) {
         this.userDisliked = userDisliked;
+    }
+
+    public Boolean getEdited() {
+        return edited;
+    }
+
+    public void setEdited(Boolean edited) {
+        this.edited = edited;
     }
 }

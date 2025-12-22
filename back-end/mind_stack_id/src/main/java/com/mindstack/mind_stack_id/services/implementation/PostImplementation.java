@@ -132,6 +132,12 @@ public class PostImplementation implements PostService {
         Optional<PostCreation> existingPost = postRepository.findById(id);
         if (existingPost.isPresent()) {
             PostCreation updatedPost = existingPost.get();
+
+            // Check if content fields changed to set edited flag
+            boolean contentChanged = !updatedPost.getTitle().equals(post.getTitle()) ||
+                    !updatedPost.getContent().equals(post.getContent()) ||
+                    !updatedPost.getCategory().equals(post.getCategory());
+
             updatedPost.setTitle(post.getTitle());
             updatedPost.setContent(post.getContent());
             updatedPost.setSlug(post.getSlug());
@@ -143,6 +149,12 @@ public class PostImplementation implements PostService {
             updatedPost.setNumLike(post.getNumLike());
             updatedPost.setNumDislike(post.getNumDislike());
             updatedPost.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Manila")));
+
+            // Set edited flag if content changed
+            if (contentChanged) {
+                updatedPost.setEdited(true);
+            }
+
             ensureUsername(updatedPost);
 
             System.out.println("Updated post with ID: " + updatedPost.getPostId());
@@ -166,6 +178,8 @@ public class PostImplementation implements PostService {
             }
 
             List<Comment> comments = commentRepository.findByPostId(id);
+
+            // First, delete all comment reactions and notifications
             for (Comment comment : comments) {
                 List<CommentReaction> commentReactions = commentReactionRepository
                         .findByCommentId(comment.getCommentId());
@@ -173,7 +187,40 @@ public class PostImplementation implements PostService {
                 notificationService.deleteNotificationsForComment(comment.getCommentId());
             }
 
-            commentRepository.deleteAll(comments);
+            // Delete comments recursively from deepest level to top
+            // Keep deleting comments with parent_comment_id until no more exist
+            boolean hasReplies = true;
+            while (hasReplies) {
+                // Get all remaining comments for this post
+                List<Comment> remainingComments = commentRepository.findByPostId(id);
+
+                // Find replies that don't have any child replies
+                List<Comment> leafReplies = remainingComments.stream()
+                        .filter(c -> c.getParentCommentId() != null)
+                        .filter(c -> {
+                            // Check if this comment has no children
+                            long childCount = remainingComments.stream()
+                                    .filter(child -> child.getParentCommentId() != null &&
+                                            child.getParentCommentId().equals(c.getCommentId()))
+                                    .count();
+                            return childCount == 0;
+                        })
+                        .collect(java.util.stream.Collectors.toList());
+
+                if (leafReplies.isEmpty()) {
+                    // No more replies to delete, break the loop
+                    hasReplies = false;
+                } else {
+                    // Delete the leaf replies
+                    commentRepository.deleteAll(leafReplies);
+                }
+            }
+
+            // Finally, delete all top-level comments (no parent)
+            List<Comment> topLevelComments = commentRepository.findByPostId(id).stream()
+                    .filter(c -> c.getParentCommentId() == null)
+                    .collect(java.util.stream.Collectors.toList());
+            commentRepository.deleteAll(topLevelComments);
 
             List<PostReaction> postReactions = postReactionRepository.findByPostId(id);
             postReactionRepository.deleteAll(postReactions);
@@ -409,7 +456,8 @@ public class PostImplementation implements PostService {
                 post.getNumLike() != null ? post.getNumLike() : 0,
                 post.getNumDislike() != null ? post.getNumDislike() : 0,
                 userLiked,
-                userDisliked);
+                userDisliked,
+                post.getEdited() != null ? post.getEdited() : false);
     }
 
     private void setUnderlyingSetPrivate(PostCreation post, Long actorUserId) {

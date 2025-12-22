@@ -7,7 +7,7 @@
             <div class="user-avatar" (click)="goToUserProfile(post.user_id, $event)">{{ getInitial(post.username) }}</div>
             <div class="user-info">
             <span class="username" (click)="goToUserProfile(post.user_id, $event)">{{ post.username }}</span>
-            <span class="timestamp">Posted {{ getTimeAgo(post.created_at) }}</span>
+            <span class="timestamp">Posted {{ getTimeAgo(post.created_at) }}@if (post.edited) { <span class="edited-label"> · Edited</span>}</span>
             </div>
         </div>
 
@@ -129,9 +129,9 @@
                 </div>
                 <div class="comment-info">
                 <span class="username" (click)="goToUserProfile(comment.user_id, $event)">{{ comment.username }}</span>
-                <span class="timestamp">
-                     · {{ getTimeAgo(comment.created_at) }}
-                </span>
+                 <span class="timestamp">
+                     · {{ getTimeAgo(comment.created_at) }}@if (comment.edited) { · Edited}
+                 </span>
                 </div>
                 @if (isCommentOwner(comment)) {
                 <button class="comment-menu-btn" 
@@ -241,7 +241,7 @@
                 <img src="assets/comment-circle.png" 
                      alt="comment" 
                      class="action-icon-small">
-                <span>{{ (comment.replyCount || 0) }}</span>
+                <span>{{ (comment.replies?.length || 0) }}</span>
                 </button>
             </div>
             </div>
@@ -256,9 +256,9 @@
                         </div>
                         <div class="comment-info">
                             <span class="username" (click)="goToUserProfile(reply.user_id, $event)">{{ reply.username }}</span>
-                            <span class="timestamp">
-                                 · {{ getTimeAgo(reply.created_at) }}
-                            </span>
+                               <span class="timestamp">
+                                   · {{ getTimeAgo(reply.created_at) }}@if (reply.edited) { · Edited}
+                               </span>
                         </div>
                         @if (isCommentOwner(reply)) {
                         <button class="comment-menu-btn" 

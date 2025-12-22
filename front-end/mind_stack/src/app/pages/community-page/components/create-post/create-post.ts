@@ -36,7 +36,7 @@ export class CreatePost {
   }
 
   isValid(): boolean {
-    return !!(this.title.trim() && this.category && this.content.trim());
+    return !!(this.title.trim() && this.category);
   }
 
   onSubmit() {

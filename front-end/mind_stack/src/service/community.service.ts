@@ -152,6 +152,12 @@ export class CommunityService {
         // preserve local UI flags
         mapped.userLiked = merged.userLiked;
         mapped.userDisliked = merged.userDisliked;
+          // mark as edited only when core fields change
+          const contentChanged =
+            (existing.title ?? '') !== (mapped.title ?? '') ||
+            (existing.content ?? '') !== (mapped.content ?? '') ||
+            (existing.category ?? '') !== (mapped.category ?? '');
+          mapped.edited = contentChanged || existing.edited === true;
         this.replacePost(mapped);
       },
       error: err => console.error('Failed to update post', err)
@@ -217,6 +223,7 @@ export class CommunityService {
         const mapped = this.mapPostFromApi(result);
         mapped.userLiked = result.userLiked ?? mapped.userLiked ?? updated.userLiked;
         mapped.userDisliked = result.userDisliked ?? mapped.userDisliked ?? updated.userDisliked;
+          mapped.edited = post.edited ?? false;
         this.replacePost(mapped);
       },
       error: err => {
@@ -260,6 +267,7 @@ export class CommunityService {
         const mapped = this.mapPostFromApi(result);
         mapped.userLiked = result.userLiked ?? mapped.userLiked ?? updated.userLiked;
         mapped.userDisliked = result.userDisliked ?? mapped.userDisliked ?? updated.userDisliked;
+          mapped.edited = post.edited ?? false;
         this.replacePost(mapped);
       },
       error: err => {
@@ -355,6 +363,7 @@ export class CommunityService {
         const mapped = this.mapCommentFromApi(result);
         mapped.userLiked = result.userLiked ?? mapped.userLiked ?? updated.userLiked;
         mapped.userDisliked = result.userDisliked ?? mapped.userDisliked ?? updated.userDisliked;
+        mapped.edited = comment.edited ?? false;
         this.updateCommentInState(mapped);
       },
       error: err => {
@@ -393,6 +402,7 @@ export class CommunityService {
         const mapped = this.mapCommentFromApi(result);
         mapped.userLiked = result.userLiked ?? mapped.userLiked ?? updated.userLiked;
         mapped.userDisliked = result.userDisliked ?? mapped.userDisliked ?? updated.userDisliked;
+        mapped.edited = comment.edited ?? false;
         this.updateCommentInState(mapped);
       },
       error: err => {
@@ -408,16 +418,44 @@ export class CommunityService {
     // Get only top-level comments for this post (no parent_comment_id)
     const topLevelComments = allComments.filter(c => c.post_id === postId && !c.parent_comment_id);
     
-    // For each top-level comment, attach its replies
-    return topLevelComments.map(comment => ({
-      ...comment,
-      replies: allComments.filter(c => c.parent_comment_id === comment.comment_id)
-    }));
+    // Helper function to find the root parent comment ID
+    const findRootParentId = (commentId: string): string => {
+      const comment = allComments.find(c => c.comment_id === commentId);
+      if (!comment || !comment.parent_comment_id) {
+        return commentId;
+      }
+      return findRootParentId(comment.parent_comment_id);
+    };
+    
+    // For each top-level comment, attach ALL replies (including replies to replies)
+    return topLevelComments.map(comment => {
+      // Find all comments that are descendants of this top-level comment
+      const allReplies = allComments.filter(c => {
+        if (!c.parent_comment_id) return false;
+        const rootId = findRootParentId(c.comment_id);
+        return rootId === comment.comment_id;
+      });
+      
+      // For each reply, count how many direct replies it has
+      const repliesWithCounts = allReplies.map(reply => ({
+        ...reply,
+        replies: allComments.filter(c => String(c.parent_comment_id) === String(reply.comment_id))
+      }));
+      
+      return {
+        ...comment,
+        replies: repliesWithCounts
+      };
+    });
   }
 
   updateComment(commentId: string, newContent: string): void {
     this.http.put<any>(`${this.apiUrl}/comments/${commentId}`, { content: newContent }).subscribe({
-      next: updated => this.updateCommentInState(this.mapCommentFromApi(updated)),
+        next: updated => {
+          const mapped = this.mapCommentFromApi(updated);
+          mapped.edited = true;
+          this.updateCommentInState(mapped);
+        },
       error: err => console.error('Failed to update comment', err)
     });
   }
@@ -477,7 +515,8 @@ export class CommunityService {
       likes: post.numLike ?? post.likes ?? post.num_like ?? post.likeCount ?? 0,
       dislikes: post.numDislike ?? post.dislikes ?? post.num_dislike ?? post.dislikeCount ?? 0,
       userLiked: Boolean(post.userLiked ?? post.user_liked ?? false),
-      userDisliked: Boolean(post.userDisliked ?? post.user_disliked ?? false)
+      userDisliked: Boolean(post.userDisliked ?? post.user_disliked ?? false),
+      edited: Boolean(post.edited ?? post.isEdited ?? false)
     };
     console.log('Mapped post:', mapped);
     return mapped;
@@ -501,7 +540,8 @@ export class CommunityService {
       userDisliked: Boolean(comment.userDisliked ?? comment.user_disliked ?? false),
       parent_comment_id: comment.parentCommentId ? String(comment.parentCommentId) : comment.parent_comment_id ?? null,
       replies: comment.replies ?? [],
-      replyCount: comment.replyCount ?? comment.reply_count ?? 0
+      replyCount: comment.replyCount ?? comment.reply_count ?? 0,
+      edited: Boolean(comment.edited ?? comment.isEdited ?? false)
     };
   }
 

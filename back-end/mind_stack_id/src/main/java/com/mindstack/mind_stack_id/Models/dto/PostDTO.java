@@ -22,6 +22,7 @@ public class PostDTO {
     private Integer numDislike;
     private Boolean userLiked;
     private Boolean userDisliked;
+    private Boolean edited;
 
     public PostDTO() {
     }
@@ -30,7 +31,7 @@ public class PostDTO {
             String category,
             Boolean isPublished, LocalDateTime createdAt, LocalDateTime updatedAt,
             Integer commentCount, Boolean showComment, Integer numLike, Integer numDislike,
-            Boolean userLiked, Boolean userDisliked) {
+            Boolean userLiked, Boolean userDisliked, Boolean edited) {
         this.postId = postId;
         this.userId = userId;
         this.title = title;
@@ -47,6 +48,7 @@ public class PostDTO {
         this.numDislike = numDislike;
         this.userLiked = userLiked;
         this.userDisliked = userDisliked;
+        this.edited = edited;
     }
 
     public long getPostId() {
@@ -175,5 +177,13 @@ public class PostDTO {
 
     public void setUserDisliked(Boolean userDisliked) {
         this.userDisliked = userDisliked;
+    }
+
+    public Boolean getEdited() {
+        return edited;
+    }
+
+    public void setEdited(Boolean edited) {
+        this.edited = edited;
     }
 }
