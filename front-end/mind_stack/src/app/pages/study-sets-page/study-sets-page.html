@@ -4,6 +4,12 @@
             + Create New Flashcard Set
         </button>
 
+        @if (isLoading) {
+            <div class="loading-indicator">
+                Loading Flashcard Sets...
+            </div>
+        }
+
         <div class="study-sets-wrapper" [class.hidden]="studySets.length === 0">
             <div class="study-sets-list">
                 <div class="study-set-card" *ngFor="let studySet of paginatedStudySets; let i = index">

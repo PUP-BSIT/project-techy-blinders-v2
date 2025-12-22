@@ -15,17 +15,23 @@ export class NotificationPage implements OnInit {
   private router = inject(Router);
   activeFilter: 'all' | 'unread' = 'all';
   now = signal<Date>(new Date());
+  isLoading = signal(false);
 
   notifications = signal<NotificationItem[]>([]);
 
   constructor() {
-    this.notificationsService.notifications$.subscribe(list => this.notifications.set(list));
+    this.notificationsService.notifications$.subscribe(list => {
+      this.notifications.set(list);
+      this.isLoading.set(false);
+    });
+    this.isLoading.set(true);
     this.notificationsService.refresh();
     setInterval(() => this.now.set(new Date()), 15000);
   }
 
   ngOnInit(): void {
     // Ensure a fresh pull whenever this page is instantiated
+    this.isLoading.set(true);
     this.notificationsService.refresh();
   }
 

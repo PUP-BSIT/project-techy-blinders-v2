@@ -37,7 +37,21 @@ export class QuizzesPage implements OnInit {
   get isShareDisabledForSelectedQuiz(): boolean {
     if (this.selectedQuizIdForPrivacy === null) return false;
     const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizIdForPrivacy);
-    return !!quiz?.is_public;
+
+    return !!quiz?.is_public || (quiz?.questions?.length ?? 0) < 3;
+  }
+
+  get isPrivateDisabledForSelectedQuiz(): boolean {
+    if (this.selectedQuizIdForPrivacy === null) return false;
+    const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizIdForPrivacy);
+    // Disable if already private
+    return quiz?.is_public === false;
+  }
+
+  get canShareSelectedQuiz(): boolean {
+    if (this.selectedQuizIdForPrivacy === null) return false;
+    const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizIdForPrivacy);
+    return (quiz?.questions?.length ?? 0) >= 3;
   }
 
   isQuizSetCreateSuccessPopupOpen: boolean = false;
@@ -59,13 +73,67 @@ export class QuizzesPage implements OnInit {
   closeQuizSetDeleteSuccessPopup() {
     this.isQuizSetDeleteSuccessPopupOpen = false;
   }
+
+  openQuizItemSaveSuccessPopup() {
+    this.isQuizItemSaveSuccessPopupOpen = true;
+    setTimeout(() => {
+      this.isQuizItemSaveSuccessPopupOpen = false;
+    }, 5000);
+  }
+
+  closeQuizItemSaveSuccessPopup() {
+    this.isQuizItemSaveSuccessPopupOpen = false;
+  }
+
+  isPrivateSuccessPopupOpen: boolean = false;
+
+  openPrivateSuccessPopup() {
+    this.isPrivateSuccessPopupOpen = true;
+    setTimeout(() => {
+      this.isPrivateSuccessPopupOpen = false;
+    }, 5000);
+  }
+
+  closePrivateSuccessPopup() {
+    this.isPrivateSuccessPopupOpen = false;
+  }
   
+  isQuizShareSuccessPopupOpen: boolean = false;
+
+  openQuizShareSuccessPopup() {
+    this.isQuizShareSuccessPopupOpen = true;
+    setTimeout(() => {
+      this.isQuizShareSuccessPopupOpen = false;
+    }, 5000);
+  }
+
+  closeQuizShareSuccessPopup() {
+    this.isQuizShareSuccessPopupOpen = false;
+  }
+
+  openWarningPopup(message: string) {
+    this.isWarningPopupOpen = false;
+    this.warningMessage = '';
+    setTimeout(() => {
+      this.warningMessage = message;
+      this.isWarningPopupOpen = true;
+    }, 0);
+  }
+
+  closeWarningPopup() {
+    this.isWarningPopupOpen = false;
+    this.warningMessage = '';
+  }
+  
+  isQuizItemSaveSuccessPopupOpen: boolean = false;
   isModalOpen: boolean = false;
   isQuestionModalOpen: boolean = false;
   isConfirmModalOpen: boolean = false;
   isPrivacyModalOpen: boolean = false;
   isDeleteModalOpen: boolean = false;
   isNotificationModalOpen: boolean = false;
+  isWarningPopupOpen: boolean = false;
+  warningMessage: string = '';
   notificationTitle: string = '';
   notificationMessage: string = '';
   notificationType: 'success' | 'error' | 'warning' = 'success';
@@ -338,7 +406,10 @@ export class QuizzesPage implements OnInit {
     if (this.quizTitle.trim()) {
       const currentUser = this.authService.getCurrentUser();
       if (!currentUser || !currentUser.userId) {
-        this.showNotification('Login Required', 'Please log in to save your quiz sets.', 'warning');
+        this.isWarningPopupOpen = false;
+        setTimeout(() => {
+          this.openWarningPopup('Please log in to save your quiz sets.');
+        }, 0);
         return;
       }
 
@@ -358,6 +429,10 @@ export class QuizzesPage implements OnInit {
         identificationAnswer: q.answer,
         points: 1
       }));
+
+      if (this.questions.length > 0) {
+        this.openQuizItemSaveSuccessPopup();
+      }
 
       if (this.editingQuizId !== null) {
         this.quizzesService.getQuizSetById(this.editingQuizId).subscribe({
@@ -594,11 +669,7 @@ export class QuizzesPage implements OnInit {
         this.removeQuizFromCommunity(quiz.quiz_id);
 
         this.isLoading = false;
-        this.showNotification(
-          'Privacy Updated',
-          'Quiz is now private and removed from the community.',
-          'success'
-        );
+        this.openPrivateSuccessPopup();
       },
       error: (error) => {
         console.error('Error making quiz private:', error);
@@ -659,6 +730,14 @@ export class QuizzesPage implements OnInit {
       const currentUser = this.authService.getCurrentUser();
 
       if (quiz && currentUser) {
+        if (quiz.questions.length < 3) {
+          this.isWarningPopupOpen = false;
+          setTimeout(() => {
+            this.openWarningPopup('You need at least 3 questions in this quiz set before you can share it publicly.');
+          }, 0);
+          return;
+        }
+
         const quizContent = `${quiz.title} • ${quiz.description || 'A quiz set to test your knowledge!'} • ${this.getQuestionTypeLabel(quiz.questionType)}`;
 
         const quizSlug = `quiz-${quiz.quiz_id}-${this.slugify(this.shareTitle)}`;
@@ -706,19 +785,15 @@ export class QuizzesPage implements OnInit {
             quiz.is_public = true;
             this.quizzesList = [...this.quizzesList];
             
-            this.showNotification(
-              'Success',
-              'Quiz shared to community successfully!',
-              'success'
-            );
+            this.closeShareModal();
+            this.openQuizShareSuccessPopup();
           },
           error: (error) => {
             console.error('Error updating quiz visibility:', error);
-            this.showNotification(
-              'Warning',
-              'Quiz was shared but visibility update failed.',
-              'warning'
-            );
+            this.isWarningPopupOpen = false;
+            setTimeout(() => {
+              this.openWarningPopup('Quiz was shared but visibility update failed.');
+            }, 0);
           }
         });
       }
@@ -734,11 +809,10 @@ export class QuizzesPage implements OnInit {
       
       errorMessage += missing.join(', ') + ' before sharing.';
       
-      this.showNotification(
-        'Warning',
-        errorMessage,
-        'warning'
-      );
+      this.isWarningPopupOpen = false;
+      setTimeout(() => {
+        this.openWarningPopup(errorMessage);
+      }, 0);
     }
   }
   
