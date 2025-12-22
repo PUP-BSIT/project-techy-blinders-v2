@@ -27,24 +27,25 @@
                         Loading Notifications...
                     </div>
                 }
-                <div 
-                    *ngFor="let n of filteredNotifications" 
-                    class="notification-item"
-                    [class.unread]="!n.isRead"
-                    (click)="toggleReadStatus(n)">
-                    <div class="avatar">
-                        {{ getActorInitial(n.message) }}
+                @for (n of filteredNotifications; track n.notificationId) {
+                    <div 
+                        class="notification-item"
+                        [class.unread]="!n.isRead"
+                        (click)="toggleReadStatus(n)">
+                        <div class="avatar">
+                            {{ getActorInitial(n.message) }}
+                        </div>
+                        <div class="notification-content">
+                            <p class="notification-text">
+                                {{ n.message }}
+                            </p>
+                            <p class="timestamp">{{ getTimeAgo(n.createdAt) }}</p>
+                        </div>
+                        <span class="read-status">
+                            {{ n.isRead ? 'Read' : 'Unread' }}
+                        </span>
                     </div>
-                    <div class="notification-content">
-                        <p class="notification-text">
-                            {{ n.message }}
-                        </p>
-                        <p class="timestamp">{{ getTimeAgo(n.createdAt) }}</p>
-                    </div>
-                    <span class="read-status">
-                        {{ n.isRead ? 'Read' : 'Unread' }}
-                    </span>
-                </div>
+                }
             </div>
         </div>
     </div>
