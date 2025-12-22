@@ -14,13 +14,13 @@ import jakarta.persistence.Table;
 @Table(name = "tbl_post")
 public class PostCreation {
     public enum CategoryType {
-        STUDY_TIPS ("Study Tips"),
-        PRODUCT_UPDATES ("Product Updates"),
-        LEARNING_STRATEGIES ("Learning Strategies"),
-        USER_STORIES ("User Stories"),
-        TUTORIALS ("Tutorials"),
-        ANNOUNCEMENT ("Announcements"),
-        EDUCATIONAL_RESOURCES ("Educational Resources");
+        STUDY_TIPS("Study Tips"),
+        PRODUCT_UPDATES("Product Updates"),
+        LEARNING_STRATEGIES("Learning Strategies"),
+        USER_STORIES("User Stories"),
+        TUTORIALS("Tutorials"),
+        ANNOUNCEMENT("Announcements"),
+        EDUCATIONAL_RESOURCES("Educational Resources");
 
         private final String value;
 
@@ -39,23 +39,22 @@ public class PostCreation {
                 throw new IllegalArgumentException("Category type cannot be null");
             }
 
-            for (CategoryType type: CategoryType.values()) {
-                if(type.name().equalsIgnoreCase(input)) {
+            for (CategoryType type : CategoryType.values()) {
+                if (type.name().equalsIgnoreCase(input)) {
                     return type;
                 }
             }
 
-            for (CategoryType type: CategoryType.values()) {
+            for (CategoryType type : CategoryType.values()) {
                 if (type.value.equalsIgnoreCase(input)) {
                     return type;
                 }
             }
 
             throw new IllegalArgumentException(
-                "Unknown category type. Accepted values: " +
-                "'Study Tips', 'Product Updates', 'Learning Strategies', " +
-                "'User Stories', 'Tutorials', 'Announcements', 'Educational Resources'"
-            );
+                    "Unknown category type. Accepted values: " +
+                            "'Study Tips', 'Product Updates', 'Learning Strategies', " +
+                            "'User Stories', 'Tutorials', 'Announcements', 'Educational Resources'");
         }
     }
 
@@ -63,44 +62,47 @@ public class PostCreation {
     @Column(name = "post_id")
     private long postId;
 
-    @Column (name = "user_id")
+    @Column(name = "user_id")
     private long userId;
 
-    @Column (name = "username")
+    @Column(name = "username")
     private String username;
 
-    @Column (name = "title")
+    @Column(name = "title")
     private String title;
 
-    @Column (name = "content")
+    @Column(name = "content")
     private String content;
 
-    @Column (name = "slug")
+    @Column(name = "slug")
     private String slug;
 
-    @Column (name = "category")
+    @Column(name = "category")
     private CategoryType category;
 
-    @Column (name = "is_published")
+    @Column(name = "is_published")
     private Boolean isPublished;
 
-    @Column (name = "commentcount")
+    @Column(name = "commentcount")
     private Integer commentCount;
 
-    @Column (name = "showcomment")
+    @Column(name = "showcomment")
     private Boolean showComment;
 
-    @Column (name = "num_like")
+    @Column(name = "num_like")
     private Integer numLike;
 
-    @Column (name = "num_dislike")
+    @Column(name = "num_dislike")
     private Integer numDislike;
 
-    @Column (name = "created_at")
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column (name = "updated_at")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "edited")
+    private Boolean edited = false;
 
     public void setPostId(long postId) {
         this.postId = postId;
@@ -113,7 +115,7 @@ public class PostCreation {
     public void setUserId(long userId) {
         this.userId = userId;
     }
-    
+
     public long getUserId() {
         return userId;
     }
@@ -142,7 +144,7 @@ public class PostCreation {
         return slug;
     }
 
-    public void setCategory (CategoryType category) {
+    public void setCategory(CategoryType category) {
         this.category = category;
     }
 
@@ -212,5 +214,13 @@ public class PostCreation {
 
     public String getUsername() {
         return username;
+    }
+
+    public Boolean getEdited() {
+        return edited;
+    }
+
+    public void setEdited(Boolean edited) {
+        this.edited = edited;
     }
 }

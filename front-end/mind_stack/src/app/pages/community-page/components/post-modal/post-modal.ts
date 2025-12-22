@@ -97,6 +97,13 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
     return `${days} days ago`;
   }
 
+  isEdited(createdAt: Date, updatedAt: Date): boolean {
+    const created = new Date(createdAt).getTime();
+    const updated = new Date(updatedAt).getTime();
+    // Consider edited if updated is more than 1 second after created
+    return updated - created > 1000;
+  }
+
   closeModal() {
     this.closeModalEvent.emit();
   }

@@ -15,6 +15,7 @@ export interface Post {
   dislikes: number;
   userLiked?: boolean;
   userDisliked?: boolean;
+  edited?: boolean;
 }
 
 export interface Comment {
@@ -32,6 +33,7 @@ export interface Comment {
   parent_comment_id?: string | null; 
   replies?: Comment[];
   replyCount?: number;
+  edited?: boolean;
 }
 
 export const CATEGORY_OPTIONS = [

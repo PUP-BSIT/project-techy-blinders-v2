@@ -31,6 +31,17 @@
 
     .form-group {
       margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Match label styling used in Share Study Set modal */
+    .form-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2E7D5E;
+      text-align: left;
     }
 
     .form-input,

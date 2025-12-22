@@ -141,6 +141,12 @@ public class CommentImplementation implements CommentService {
         }
 
         Comment existing = getCommentById(id);
+
+        // Set edited flag when content changes
+        if (!existing.getContent().equals(content)) {
+            existing.setEdited(true);
+        }
+
         existing.setContent(content);
         return commentRepo.save(existing);
     }
@@ -321,7 +327,8 @@ public class CommentImplementation implements CommentService {
                 comment.getParentCommentId(),
                 replyCount,
                 userLiked,
-                userDisliked);
+                userDisliked,
+                comment.getEdited() != null ? comment.getEdited() : false);
     }
 
     private User ensureUserExists(long userId) {
