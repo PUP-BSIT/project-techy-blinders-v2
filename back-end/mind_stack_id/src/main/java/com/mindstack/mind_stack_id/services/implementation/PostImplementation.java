@@ -161,28 +161,26 @@ public class PostImplementation implements PostService {
         if (postOpt.isPresent()) {
             PostCreation post = postOpt.get();
 
-            // If setPrivate is true, set the underlying flashcard/quiz to private before
-            // deleting
             if (setPrivate && actorUserId != null) {
                 setUnderlyingSetPrivate(post, actorUserId);
             }
 
-            // Cascade delete: First delete all comment reactions for this post's comments
             List<Comment> comments = commentRepository.findByPostId(id);
             for (Comment comment : comments) {
                 List<CommentReaction> commentReactions = commentReactionRepository
                         .findByCommentId(comment.getCommentId());
                 commentReactionRepository.deleteAll(commentReactions);
+                notificationService.deleteNotificationsForComment(comment.getCommentId());
             }
 
-            // Then delete all comments
             commentRepository.deleteAll(comments);
 
-            // Then delete all post reactions
             List<PostReaction> postReactions = postReactionRepository.findByPostId(id);
             postReactionRepository.deleteAll(postReactions);
 
-            // Finally delete the post
+            // Remove all notifications related to this post (comments, replies, reactions)
+            notificationService.deleteNotificationsForPost(id);
+
             postRepository.deleteById(id);
             System.out.println("Deleted post with ID: " + id);
             return true;
@@ -253,16 +251,16 @@ public class PostImplementation implements PostService {
             if (existing.isPresent()) {
                 PostReaction reaction = existing.get();
                 if (reaction.getReaction() == ReactionType.LIKE) {
-                    // Undo like
                     likedPost.setNumLike(Math.max(0, likedPost.getNumLike() != null ? likedPost.getNumLike() - 1 : 0));
                     postReactionRepository.delete(reaction);
+                    notificationService.deletePostReactionNotifications(userId, id);
                 } else {
-                    // Switch from dislike to like
                     likedPost.setNumDislike(
                             Math.max(0, likedPost.getNumDislike() != null ? likedPost.getNumDislike() - 1 : 0));
                     likedPost.setNumLike(likedPost.getNumLike() != null ? likedPost.getNumLike() + 1 : 1);
                     reaction.setReaction(newReaction);
                     postReactionRepository.save(reaction);
+                    notificationService.deletePostReactionNotifications(userId, id);
                     // Notify on switch to like
                     createPostReactionNotification(likedPost, userId, "POST_LIKE", "liked your post");
                 }
@@ -306,30 +304,27 @@ public class PostImplementation implements PostService {
             if (existing.isPresent()) {
                 PostReaction reaction = existing.get();
                 if (reaction.getReaction() == ReactionType.DISLIKE) {
-                    // Undo dislike
                     dislikedPost.setNumDislike(
                             Math.max(0, dislikedPost.getNumDislike() != null ? dislikedPost.getNumDislike() - 1 : 0));
                     postReactionRepository.delete(reaction);
+                    notificationService.deletePostReactionNotifications(userId, id);
                 } else {
-                    // Switch from like to dislike
                     dislikedPost.setNumLike(
                             Math.max(0, dislikedPost.getNumLike() != null ? dislikedPost.getNumLike() - 1 : 0));
                     dislikedPost
                             .setNumDislike(dislikedPost.getNumDislike() != null ? dislikedPost.getNumDislike() + 1 : 1);
                     reaction.setReaction(newReaction);
                     postReactionRepository.save(reaction);
-                    // Notify on switch to dislike
+                    notificationService.deletePostReactionNotifications(userId, id);
                     createPostReactionNotification(dislikedPost, userId, "POST_DISLIKE", "disliked your post");
                 }
             } else {
-                // New dislike
                 dislikedPost.setNumDislike(dislikedPost.getNumDislike() != null ? dislikedPost.getNumDislike() + 1 : 1);
                 PostReaction reaction = new PostReaction();
                 reaction.setPostId(id);
                 reaction.setUserId(userId);
                 reaction.setReaction(newReaction);
                 postReactionRepository.save(reaction);
-                // Notify on new dislike
                 createPostReactionNotification(dislikedPost, userId, "POST_DISLIKE", "disliked your post");
             }
 
@@ -427,7 +422,6 @@ public class PostImplementation implements PostService {
             return;
         }
 
-        // flashcard-{id}-..., quiz-{id}-...
         if (slug.startsWith("flashcard-")) {
             Long setId = extractIdFromSlug(slug, "flashcard-");
             if (setId != null) {

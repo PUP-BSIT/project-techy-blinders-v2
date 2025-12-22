@@ -1,7 +1,12 @@
 package com.mindstack.mind_stack_id.services.implementation;
 
 import java.util.List;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Queue;
 import java.util.concurrent.ThreadLocalRandom;
+
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -159,12 +164,14 @@ public class CommentImplementation implements CommentService {
             if (reaction.getReaction() == ReactionType.LIKE) {
                 existing.setNumLike(Math.max(0, existing.getNumLike() - 1));
                 commentReactionRepository.delete(reaction);
+                notificationService.deleteCommentReactionNotifications(userId, id);
             } else {
                 existing.setNumDislike(Math.max(0, existing.getNumDislike() - 1));
                 existing.setNumLike(existing.getNumLike() + 1);
                 reaction.setReaction(newReaction);
                 commentReactionRepository.save(reaction);
-                shouldNotify = true; // switch to like
+                notificationService.deleteCommentReactionNotifications(userId, id);
+                shouldNotify = true;
             }
         } else {
             existing.setNumLike(existing.getNumLike() + 1);
@@ -201,13 +208,16 @@ public class CommentImplementation implements CommentService {
         if (existingReaction.isPresent()) {
             CommentReaction reaction = existingReaction.get();
             if (reaction.getReaction() == ReactionType.DISLIKE) {
+                // Undo dislike - remove dislike notification
                 existing.setNumDislike(Math.max(0, existing.getNumDislike() - 1));
                 commentReactionRepository.delete(reaction);
+                notificationService.deleteCommentReactionNotifications(userId, id);
             } else {
                 existing.setNumLike(Math.max(0, existing.getNumLike() - 1));
                 existing.setNumDislike(existing.getNumDislike() + 1);
                 reaction.setReaction(newReaction);
                 commentReactionRepository.save(reaction);
+                notificationService.deleteCommentReactionNotifications(userId, id);
                 shouldNotify = true; // switch to dislike
             }
         } else {
@@ -229,9 +239,37 @@ public class CommentImplementation implements CommentService {
     }
 
     @Override
+    @Transactional
     public void delete(long id) {
         ensureCommentExists(id);
-        commentRepo.deleteById(id);
+
+        // Collect the comment and all descendant replies (breadth-first)
+        List<Comment> toDelete = new ArrayList<>();
+        Queue<Comment> queue = new ArrayDeque<>();
+        queue.add(commentRepo.findById(id).orElseThrow());
+        while (!queue.isEmpty()) {
+            Comment current = queue.poll();
+            toDelete.add(current);
+            var children = commentRepo.findByParentCommentId(current.getCommentId());
+            for (Comment child : children) {
+                queue.add(child);
+            }
+        }
+
+        for (int i = toDelete.size() - 1; i >= 0; i--) {
+            Comment c = toDelete.get(i);
+            var reactions = commentReactionRepository.findByCommentId(c.getCommentId());
+            commentReactionRepository.deleteAll(reactions);
+            notificationService.deleteNotificationsForComment(c.getCommentId());
+            if (c.getParentCommentId() != null) {
+                // Remove reply notifications sent to parent owner from this actor
+                notificationService.deleteCommentReplyNotifications(c.getUserId(), c.getParentCommentId());
+            } else {
+                // Top-level comment: remove "commented on your post" notifications by actor
+                notificationService.deletePostCommentNotifications(c.getUserId(), c.getPostId());
+            }
+            commentRepo.deleteById(c.getCommentId());
+        }
     }
 
     @Override

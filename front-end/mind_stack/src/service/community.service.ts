@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { Post, Comment } from '../app/models/post.model';
 import { AuthService } from './auth.service';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { AuthService } from './auth.service';
 export class CommunityService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  // Relative URL so Angular proxy handles forwarding like other services (e.g., StudySetsService)
+  private notificationService = inject(NotificationService);
   private readonly apiUrl = '/api';
   
   private postsSubject = new BehaviorSubject<Post[]>([]);
@@ -177,6 +178,7 @@ export class CommunityService {
       next: () => {
         this.postsSubject.next(this.postsSubject.value.filter(p => p.post_id !== postId));
         this.commentsSubject.next(this.commentsSubject.value.filter(c => c.post_id !== postId));
+        this.notificationService.removeNotificationsByPostId(postId);
       },
       error: err => console.error('Failed to delete post permanently', err)
     });
@@ -433,6 +435,8 @@ export class CommunityService {
           );
           this.postsSubject.next(posts);
         }
+
+        this.notificationService.removeNotificationsByCommentId(commentId);
       },
       error: err => console.error('Failed to delete comment', err)
     });
