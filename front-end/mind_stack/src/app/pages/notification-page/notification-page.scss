@@ -109,6 +109,32 @@ h2 {
     flex-shrink: 0;
 }
 
+.loading-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    font-size: 1.1rem;
+    color: $color-primary-dark;
+    width: 100%;
+    
+    &::before {
+        content: '';
+        width: 20px;
+        height: 20px;
+        border: 2px solid lighten($color-primary, 20%);
+        border-top: 2px solid $color-primary;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 12px;
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 .notifications-list {
     background-color: $color-text-white;
     border-radius: 15px;

@@ -21,6 +21,12 @@
             <h2>Today</h2>
 
             <div class="notifications-list">
+
+                @if (isLoading()) {
+                    <div class="loading-indicator">
+                        Loading Notifications...
+                    </div>
+                }
                 <div 
                     *ngFor="let n of filteredNotifications" 
                     class="notification-item"
