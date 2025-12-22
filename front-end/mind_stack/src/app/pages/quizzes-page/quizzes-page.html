@@ -297,7 +297,16 @@
                     <img src="assets/globe-icon.png" alt="Share" class="option-icon">
                     <div class="option-content">
                         <span>Share</span>
-                        <span class="option-description">Anyone can view and study this set</span>
+                        @if (canShareSelectedQuiz) {
+                            <span class="option-description">
+                                Anyone can view and study this set
+                            </span>
+                        }
+                        @if (!canShareSelectedQuiz) {
+                            <span class="option-description warning">
+                                Minimum 3 questions required to share
+                            </span>
+                        }
                     </div>
                 </button>
                 <button class="privacy-option private" (click)="selectPrivateOption()" [disabled]="isPrivateDisabledForSelectedQuiz">
@@ -369,6 +378,12 @@
     @if (isQuizItemSaveSuccessPopupOpen) {
         <div class="popup-alert">
             <p>Quiz item(s) saved!</p>
+        </div>
+    }
+
+    @if (isQuizShareSuccessPopupOpen) {
+        <div class="popup-alert">
+            <p>Quiz set shared to community!</p>
         </div>
     }
 </div>

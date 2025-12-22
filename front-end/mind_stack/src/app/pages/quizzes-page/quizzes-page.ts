@@ -37,7 +37,8 @@ export class QuizzesPage implements OnInit {
   get isShareDisabledForSelectedQuiz(): boolean {
     if (this.selectedQuizIdForPrivacy === null) return false;
     const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizIdForPrivacy);
-    return !!quiz?.is_public;
+
+    return !!quiz?.is_public || (quiz?.questions?.length ?? 0) < 3;
   }
 
   get isPrivateDisabledForSelectedQuiz(): boolean {
@@ -45,6 +46,12 @@ export class QuizzesPage implements OnInit {
     const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizIdForPrivacy);
     // Disable if already private
     return quiz?.is_public === false;
+  }
+
+  get canShareSelectedQuiz(): boolean {
+    if (this.selectedQuizIdForPrivacy === null) return false;
+    const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizIdForPrivacy);
+    return (quiz?.questions?.length ?? 0) >= 3;
   }
 
   isQuizSetCreateSuccessPopupOpen: boolean = false;
@@ -89,6 +96,19 @@ export class QuizzesPage implements OnInit {
 
   closePrivateSuccessPopup() {
     this.isPrivateSuccessPopupOpen = false;
+  }
+  
+  isQuizShareSuccessPopupOpen: boolean = false;
+
+  openQuizShareSuccessPopup() {
+    this.isQuizShareSuccessPopupOpen = true;
+    setTimeout(() => {
+      this.isQuizShareSuccessPopupOpen = false;
+    }, 5000);
+  }
+
+  closeQuizShareSuccessPopup() {
+    this.isQuizShareSuccessPopupOpen = false;
   }
   
   isQuizItemSaveSuccessPopupOpen: boolean = false;
@@ -691,6 +711,15 @@ export class QuizzesPage implements OnInit {
       const currentUser = this.authService.getCurrentUser();
 
       if (quiz && currentUser) {
+        if (quiz.questions.length < 3) {
+          this.showNotification(
+            'Cannot Share Quiz',
+            'You need at least 3 questions in this quiz set before you can share it publicly.',
+            'warning'
+          );
+          return;
+        }
+
         const quizContent = `${quiz.title} • ${quiz.description || 'A quiz set to test your knowledge!'} • ${this.getQuestionTypeLabel(quiz.questionType)}`;
 
         const quizSlug = `quiz-${quiz.quiz_id}-${this.slugify(this.shareTitle)}`;
@@ -738,11 +767,8 @@ export class QuizzesPage implements OnInit {
             quiz.is_public = true;
             this.quizzesList = [...this.quizzesList];
             
-            this.showNotification(
-              'Success',
-              'Quiz shared to community successfully!',
-              'success'
-            );
+            this.closeShareModal();
+            this.openQuizShareSuccessPopup();
           },
           error: (error) => {
             console.error('Error updating quiz visibility:', error);
