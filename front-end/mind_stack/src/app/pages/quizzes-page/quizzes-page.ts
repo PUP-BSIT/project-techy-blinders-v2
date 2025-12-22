@@ -110,6 +110,20 @@ export class QuizzesPage implements OnInit {
   closeQuizShareSuccessPopup() {
     this.isQuizShareSuccessPopupOpen = false;
   }
+
+  openWarningPopup(message: string) {
+    this.isWarningPopupOpen = false;
+    this.warningMessage = '';
+    setTimeout(() => {
+      this.warningMessage = message;
+      this.isWarningPopupOpen = true;
+    }, 0);
+  }
+
+  closeWarningPopup() {
+    this.isWarningPopupOpen = false;
+    this.warningMessage = '';
+  }
   
   isQuizItemSaveSuccessPopupOpen: boolean = false;
   isModalOpen: boolean = false;
@@ -118,6 +132,8 @@ export class QuizzesPage implements OnInit {
   isPrivacyModalOpen: boolean = false;
   isDeleteModalOpen: boolean = false;
   isNotificationModalOpen: boolean = false;
+  isWarningPopupOpen: boolean = false;
+  warningMessage: string = '';
   notificationTitle: string = '';
   notificationMessage: string = '';
   notificationType: 'success' | 'error' | 'warning' = 'success';
@@ -390,7 +406,10 @@ export class QuizzesPage implements OnInit {
     if (this.quizTitle.trim()) {
       const currentUser = this.authService.getCurrentUser();
       if (!currentUser || !currentUser.userId) {
-        this.showNotification('Login Required', 'Please log in to save your quiz sets.', 'warning');
+        this.isWarningPopupOpen = false;
+        setTimeout(() => {
+          this.openWarningPopup('Please log in to save your quiz sets.');
+        }, 0);
         return;
       }
 
@@ -712,11 +731,10 @@ export class QuizzesPage implements OnInit {
 
       if (quiz && currentUser) {
         if (quiz.questions.length < 3) {
-          this.showNotification(
-            'Cannot Share Quiz',
-            'You need at least 3 questions in this quiz set before you can share it publicly.',
-            'warning'
-          );
+          this.isWarningPopupOpen = false;
+          setTimeout(() => {
+            this.openWarningPopup('You need at least 3 questions in this quiz set before you can share it publicly.');
+          }, 0);
           return;
         }
 
@@ -772,11 +790,10 @@ export class QuizzesPage implements OnInit {
           },
           error: (error) => {
             console.error('Error updating quiz visibility:', error);
-            this.showNotification(
-              'Warning',
-              'Quiz was shared but visibility update failed.',
-              'warning'
-            );
+            this.isWarningPopupOpen = false;
+            setTimeout(() => {
+              this.openWarningPopup('Quiz was shared but visibility update failed.');
+            }, 0);
           }
         });
       }
@@ -792,11 +809,10 @@ export class QuizzesPage implements OnInit {
       
       errorMessage += missing.join(', ') + ' before sharing.';
       
-      this.showNotification(
-        'Warning',
-        errorMessage,
-        'warning'
-      );
+      this.isWarningPopupOpen = false;
+      setTimeout(() => {
+        this.openWarningPopup(errorMessage);
+      }, 0);
     }
   }
   

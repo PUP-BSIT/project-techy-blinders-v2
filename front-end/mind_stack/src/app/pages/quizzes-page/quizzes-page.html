@@ -4,9 +4,11 @@
             + Create New Quiz Set
         </button>
 
-        <div *ngIf="isLoading" class="loading-indicator" style="text-align: center; padding: 20px;">
-            Loading quiz sets...
-        </div>
+        @if (isLoading) {
+            <div class="loading-indicator" style="text-align: center; padding: 20px;">
+                Loading quiz sets...
+            </div>
+        }
 
         <div class="study-sets-wrapper" [class.hidden]="quizzes.length === 0 || isLoading">
             <div class="study-sets-list">
@@ -20,8 +22,12 @@
                         <h3 class="study-set-title">{{ quiz.title }}</h3>
                         <p class="study-set-description">{{ quiz.description || 'About the Quiz' }} • {{ getQuestionTypeLabel(quiz.questionType) }}</p>
                         <button class="privacy-badge" (click)="openPrivacyModal(quiz.quiz_id)">
-                            <img *ngIf="quiz.is_public" src="assets/globe-icon.png" alt="Public" class="privacy-icon">
-                            <img *ngIf="!quiz.is_public" src="assets/lock.png" alt="Private" class="privacy-icon">
+                            @if (quiz.is_public) {
+                                <img src="assets/globe-icon.png" alt="Public" class="privacy-icon">
+                            }
+                            @if (!quiz.is_public) {
+                                <img src="assets/lock.png" alt="Private" class="privacy-icon">
+                            }
                             <span class="privacy-text">{{ quiz.is_public ? 'Public' : 'Private' }}</span>
                             <span class="dropdown-arrow">▼</span>
                         </button>
@@ -384,6 +390,13 @@
     @if (isQuizShareSuccessPopupOpen) {
         <div class="popup-alert">
             <p>Quiz set shared to community!</p>
+        </div>
+    }
+
+    @if (isWarningPopupOpen) {
+        <div class="popup-alert warning">
+            <h2>Warning!</h2>
+            <p>{{ warningMessage }}</p>
         </div>
     }
 </div>
