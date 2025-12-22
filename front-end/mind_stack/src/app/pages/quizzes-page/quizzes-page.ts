@@ -59,7 +59,19 @@ export class QuizzesPage implements OnInit {
   closeQuizSetDeleteSuccessPopup() {
     this.isQuizSetDeleteSuccessPopupOpen = false;
   }
+
+  openQuizItemSaveSuccessPopup() {
+    this.isQuizItemSaveSuccessPopupOpen = true;
+    setTimeout(() => {
+      this.isQuizItemSaveSuccessPopupOpen = false;
+    }, 5000);
+  }
+
+  closeQuizItemSaveSuccessPopup() {
+    this.isQuizItemSaveSuccessPopupOpen = false;
+  }
   
+  isQuizItemSaveSuccessPopupOpen: boolean = false;
   isModalOpen: boolean = false;
   isQuestionModalOpen: boolean = false;
   isConfirmModalOpen: boolean = false;
@@ -358,6 +370,10 @@ export class QuizzesPage implements OnInit {
         identificationAnswer: q.answer,
         points: 1
       }));
+
+      if (this.questions.length > 0) {
+        this.openQuizItemSaveSuccessPopup();
+      }
 
       if (this.editingQuizId !== null) {
         this.quizzesService.getQuizSetById(this.editingQuizId).subscribe({
