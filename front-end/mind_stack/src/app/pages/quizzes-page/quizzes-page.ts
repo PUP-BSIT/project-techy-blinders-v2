@@ -40,6 +40,13 @@ export class QuizzesPage implements OnInit {
     return !!quiz?.is_public;
   }
 
+  get isPrivateDisabledForSelectedQuiz(): boolean {
+    if (this.selectedQuizIdForPrivacy === null) return false;
+    const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizIdForPrivacy);
+    // Disable if already private
+    return quiz?.is_public === false;
+  }
+
   isQuizSetCreateSuccessPopupOpen: boolean = false;
 
   openQuizSetCreateSuccessPopup() {
@@ -69,6 +76,19 @@ export class QuizzesPage implements OnInit {
 
   closeQuizItemSaveSuccessPopup() {
     this.isQuizItemSaveSuccessPopupOpen = false;
+  }
+
+  isPrivateSuccessPopupOpen: boolean = false;
+
+  openPrivateSuccessPopup() {
+    this.isPrivateSuccessPopupOpen = true;
+    setTimeout(() => {
+      this.isPrivateSuccessPopupOpen = false;
+    }, 5000);
+  }
+
+  closePrivateSuccessPopup() {
+    this.isPrivateSuccessPopupOpen = false;
   }
   
   isQuizItemSaveSuccessPopupOpen: boolean = false;
@@ -610,11 +630,7 @@ export class QuizzesPage implements OnInit {
         this.removeQuizFromCommunity(quiz.quiz_id);
 
         this.isLoading = false;
-        this.showNotification(
-          'Privacy Updated',
-          'Quiz is now private and removed from the community.',
-          'success'
-        );
+        this.openPrivateSuccessPopup();
       },
       error: (error) => {
         console.error('Error making quiz private:', error);

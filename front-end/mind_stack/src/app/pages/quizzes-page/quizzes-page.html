@@ -300,7 +300,7 @@
                         <span class="option-description">Anyone can view and study this set</span>
                     </div>
                 </button>
-                <button class="privacy-option private" (click)="selectPrivateOption()">
+                <button class="privacy-option private" (click)="selectPrivateOption()" [disabled]="isPrivateDisabledForSelectedQuiz">
                     <img src="assets/lock.png" alt="Private" class="option-icon">
                     <div class="option-content">
                         <span>Private</span>
@@ -357,6 +357,12 @@
     @if (isQuizSetDeleteSuccessPopupOpen) {
         <div class="popup-alert" (click)="closeQuizSetDeleteSuccessPopup()">
             <p>Quiz set deleted!</p>
+        </div>
+    }
+
+    @if (isPrivateSuccessPopupOpen) {
+        <div class="popup-alert">
+            <p>Quiz set is now private!</p>
         </div>
     }
 

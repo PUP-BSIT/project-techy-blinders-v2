@@ -1791,3 +1791,8 @@ $transition-normal: 0.3s ease;
     opacity: 0;
   }
 }
+
+.privacy-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
