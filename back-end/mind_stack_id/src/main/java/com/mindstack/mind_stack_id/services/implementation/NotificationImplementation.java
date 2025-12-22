@@ -124,4 +124,56 @@ public class NotificationImplementation implements NotificationService {
         }
         return false;
     }
+
+    @Override
+    @Transactional
+    public void deletePostReactionNotifications(Long actorUserId, Long postId) {
+        if (actorUserId == null || postId == null)
+            return;
+        List<String> types = List.of("POST_LIKE", "POST_DISLIKE");
+        notificationRepository.deleteByActorAndPostAndTypes(actorUserId, postId, types);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCommentReactionNotifications(Long actorUserId, Long commentId) {
+        if (actorUserId == null || commentId == null)
+            return;
+        List<String> types = List.of("COMMENT_LIKE", "COMMENT_DISLIKE");
+        notificationRepository.deleteByActorAndCommentAndTypes(actorUserId, commentId, types);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCommentReplyNotifications(Long actorUserId, Long parentCommentId) {
+        if (actorUserId == null || parentCommentId == null)
+            return;
+        List<String> types = List.of("COMMENT_REPLY");
+        notificationRepository.deleteByActorAndCommentAndTypes(actorUserId, parentCommentId, types);
+    }
+
+    @Override
+    @Transactional
+    public void deletePostCommentNotifications(Long actorUserId, Long postId) {
+        if (actorUserId == null || postId == null)
+            return;
+        List<String> types = List.of("POST_COMMENT");
+        notificationRepository.deleteByActorAndPostAndTypes(actorUserId, postId, types);
+    }
+
+    @Override
+    @Transactional
+    public void deleteNotificationsForPost(Long postId) {
+        if (postId == null)
+            return;
+        notificationRepository.deleteByPostId(postId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteNotificationsForComment(Long commentId) {
+        if (commentId == null)
+            return;
+        notificationRepository.deleteByCommentId(commentId);
+    }
 }

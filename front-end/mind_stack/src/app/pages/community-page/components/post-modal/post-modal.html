@@ -251,17 +251,96 @@
                 @for (reply of comment.replies; track reply.comment_id) {
                 <div class="comment-item reply" [attr.data-comment-id]="reply.comment_id">
                     <div class="comment-header">
-                    <div class="user-avatar-small" (click)="goToUserProfile(reply.user_id, $event)">
-                        {{ getInitial(reply.username) }}
+                        <div class="user-avatar-small" (click)="goToUserProfile(reply.user_id, $event)">
+                            {{ getInitial(reply.username) }}
+                        </div>
+                        <div class="comment-info">
+                            <span class="username" (click)="goToUserProfile(reply.user_id, $event)">{{ reply.username }}</span>
+                            <span class="timestamp">
+                                 · {{ getTimeAgo(reply.created_at) }}
+                            </span>
+                        </div>
+                        @if (isCommentOwner(reply)) {
+                        <button class="comment-menu-btn" 
+                                (click)="toggleCommentMenu($event, reply.comment_id)">
+                            <svg width="4" height="16" viewBox="0 0 4 16" fill="currentColor">
+                            <circle cx="2" cy="2" r="2"/>
+                            <circle cx="2" cy="8" r="2"/>
+                            <circle cx="2" cy="14" r="2"/>
+                            </svg>
+                        </button>
+                        @if (showMenuForComment === reply.comment_id) {
+                            <div class="comment-dropdown-menu">
+                            <button class="dropdown-item" 
+                                    (click)="onEditComment($event, reply)">
+                                <svg width="14" height="14" 
+                                     viewBox="0 0 14 14" 
+                                     fill="none" 
+                                     stroke="currentColor">
+                                <path d="M10 1.5L12.5 4L4.5 12H2V9.5L10 1.5Z" 
+                                      stroke-width="1.5" 
+                                      stroke-linecap="round" 
+                                      stroke-linejoin="round"/>
+                                </svg>
+                                Edit
+                            </button>
+                            <button class="dropdown-item delete" 
+                                    (click)="onDeleteComment($event, reply)">
+                                <svg width="14" 
+                                     height="14" 
+                                     viewBox="0 0 14 14" 
+                                     fill="none" 
+                                     stroke="currentColor">
+                                <path d="M1.5 3.5H12.5M11 3.5V12C11 12.5 10.5 13 10 13H4C3.5 13 3 12.5 3 12V3.5M4.5 3.5V2C4.5 1.5 5 1 5.5 1H8.5C9 1 9.5 1.5 9.5 2V3.5" 
+                                      stroke-width="1.5" 
+                                      stroke-linecap="round" 
+                                      stroke-linejoin="round"/>
+                                </svg>
+                                Delete
+                            </button>
+                            @if (showDeleteConfirmForComment === reply.comment_id) {
+                                <div class="confirm-overlay" 
+                                     (click)="cancelDeleteComment($event)">
+                                    <div class="confirm-modal" 
+                                         (click)="$event.stopPropagation()">
+                                        <div class="confirm-title">
+                                            Delete this comment?
+                                        </div>
+                                        <div class="confirm-subtext">
+                                            This will permanently delete the comment. This action cannot be undone.
+                                        </div>
+                                        <div class="confirm-actions">
+                                            <button class="btn-cancel" 
+                                                    (click)="cancelDeleteComment($event)">Cancel
+                                            </button>
+                                            <button class="btn-danger" 
+                                                    (click)="confirmDeleteComment($event, reply)">Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            </div>
+                        }
+                        }
                     </div>
-                    <div class="comment-info">
-                        <span class="username" (click)="goToUserProfile(reply.user_id, $event)">{{ reply.username }}</span>
-                        <span class="timestamp">
-                             · {{ getTimeAgo(reply.created_at) }}
-                        </span>
-                    </div>
-                    </div>
-                    <p class="comment-content">{{ reply.content }}</p>
+
+                    @if (editingComment?.comment_id === reply.comment_id) {
+                        <div class="edit-comment-box">
+                        <textarea 
+                            class="edit-comment-input"
+                            [(ngModel)]="editCommentText"
+                            rows="3"
+                        ></textarea>
+                        <div class="edit-comment-actions">
+                            <button class="btn-cancel" (click)="onCancelEdit()">Cancel</button>
+                            <button class="btn-save" (click)="onSaveEdit(reply)">Save</button>
+                        </div>
+                        </div>
+                    } @else {
+                        <p class="comment-content">{{ reply.content }}</p>
+                    }
+
                     <div class="comment-actions">
                     <button 
                         class="action-btn-small"

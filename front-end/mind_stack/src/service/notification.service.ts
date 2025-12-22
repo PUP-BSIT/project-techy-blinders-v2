@@ -67,6 +67,16 @@ export class NotificationService {
     });
   }
 
+  removeNotificationsByPostId(postId: string): void {
+    const filtered = this.notificationsSubject.value.filter(n => n.postId !== postId);
+    this.notificationsSubject.next(filtered);
+  }
+
+  removeNotificationsByCommentId(commentId: string): void {
+    const filtered = this.notificationsSubject.value.filter(n => n.commentId !== commentId);
+    this.notificationsSubject.next(filtered);
+  }
+
   private mapFromApi(n: any): NotificationItem {
     return {
       notificationId: String(n.notificationId ?? n.notifId ?? n.id ?? ''),
