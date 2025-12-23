@@ -87,7 +87,8 @@ export class StudySetsPage implements OnInit, OnDestroy {
   suggestedQuestions: string[] = [];
   isLoadingSuggestion: boolean = false;
   isShowSuggestion: boolean = false;
-
+  isAiSuggestionsModalOpen: boolean = false;
+  
   private studySetsService = inject(StudySetsService);
   private authService = inject(AuthService);
   private communityService = inject(CommunityService);
@@ -119,7 +120,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
       this.openWarningPopup('Please enter a title first');
       return;
     }
-
+    this.isAiSuggestionsModalOpen = true;
     this.isLoadingSuggestion = true;
     this.isShowSuggestion = false;
 
@@ -141,20 +142,9 @@ export class StudySetsPage implements OnInit, OnDestroy {
       }
     });
   }
-
-  useSuggestionAsFlashcard(question: string) {
-    if(this.isFlashcardModalOpen) {
-      const newFlashcard = {
-        term: question,
-        definition: '',
-        isNew: true
-      };
-      this.flashcards.push(newFlashcard);
-      this.currentPage = Math.floor((this.flashcards.length - 1) / this.itemsPerPage);
-    }
-  }
-
+  
   closeSuggestions() {
+    this.isAiSuggestionsModalOpen = false;
     this.isShowSuggestion = false;
     this.suggestedQuestions = [];
   }
