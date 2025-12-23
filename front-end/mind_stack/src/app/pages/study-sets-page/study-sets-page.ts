@@ -6,6 +6,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../service/auth.service';
 import { StudySet, StudySetsService } from '../../../service/study-sets.service';
 import { CommunityService } from '../../../service/community.service';
+import { QuestionSuggestionService } from '../../../service/question-suggestion.service';
+import { response } from 'express';
+import { error } from 'console';
 
 @Component({
   selector: 'app-study-sets-page',
@@ -81,10 +84,14 @@ export class StudySetsPage implements OnInit, OnDestroy {
   isLoading: boolean = false;
   isSuccessPopupOpen: boolean = false;
   studySets: StudySet[] = [];
+  suggestedQuestions: string[] = [];
+  isLoadingSuggestion: boolean = false;
+  isShowSuggestion: boolean = false;
 
   private studySetsService = inject(StudySetsService);
   private authService = inject(AuthService);
   private communityService = inject(CommunityService);
+  private questionSuggestionService = inject (QuestionSuggestionService)
 
   constructor(
     private router: Router,
@@ -107,6 +114,51 @@ export class StudySetsPage implements OnInit, OnDestroy {
     window.addEventListener('storage', this.onStorageEvent);
   }
 
+  generateAiSuggestions() {
+    if (!this.studySetTitle.trim()) {
+      this.openWarningPopup('Please enter a title first');
+      return;
+    }
+
+    this.isLoadingSuggestion = true;
+    this.isShowSuggestion = false;
+
+    this.questionSuggestionService.generateSuggestion (
+      this.studySetTitle,
+      this.studySetDescription || 'A Study set that will help you learn'
+    ).subscribe ({
+      next:(response) => {
+        this.suggestedQuestions = response.questions;
+        this.isShowSuggestion = true;
+        this.isLoadingSuggestion = false;
+        console.log('AI Suggestions:', this.suggestedQuestions);
+      },
+
+      error:(error) => {
+        console.error('Error generating suggestions', error);
+        this.isLoadingSuggestion = false;
+        this.openWarningPopup('Failed to load a suggestions.')
+      }
+    });
+  }
+
+  useSuggestionAsFlashcard(question: string) {
+    if(this.isFlashcardModalOpen) {
+      const newFlashcard = {
+        term: question,
+        definition: '',
+        isNew: true
+      };
+      this.flashcards.push(newFlashcard);
+      this.currentPage = Math.floor((this.flashcards.length - 1) / this.itemsPerPage);
+    }
+  }
+
+  closeSuggestions() {
+    this.isShowSuggestion = false;
+    this.suggestedQuestions = [];
+  }
+  
   private onStorageEvent = (e: StorageEvent) => {
     if (!e) return;
     if (e.key === 'studySetsUpdated') {

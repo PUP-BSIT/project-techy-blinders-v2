@@ -96,6 +96,22 @@
                             placeholder="Description"
                             [(ngModel)]="studySetDescription"/>
                 </div>
+
+                <div class="form-group">
+                    <button class="btn-ai-suggestion"
+                            (click)="generateAiSuggestions()"
+                            [disabled]="isLoadingSuggestion || !studySetTitle.trim()">
+
+                            @if (!isLoadingSuggestion) {
+                                <span>Generated Ai suggestion</span>
+                            }
+
+                            @if (isLoadingSuggestion) {
+                                <span>Loading suggestion</span>
+                            }
+
+                    </button>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn-cancel" (click)="closeModal()">Cancel</button>
