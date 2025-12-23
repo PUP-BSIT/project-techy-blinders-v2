@@ -284,6 +284,23 @@
         </div>
     </div>
 
+    <div class="ai-suggestion-panel">
+        @if(isShowSuggestion && suggestedQuestions.length > 0) {
+            <div class="suggestions-header">
+                <h3>Ai generated Question</h3>
+                <button class="btn-close-suggestion" (click)="closeSuggestions()">X</button>
+            </div>
+        }
+
+        <div class="suggestions-list">
+            <div class="suggested-items">
+                @for (question of suggestedQuestions; track $index) {
+                    <div class="suggested-question"> {{$index + 1}}. {{question}}</div>
+                }
+            </div>
+        </div>
+    </div>
+
     @if (isSuccessPopupOpen) {
         <div class="popup-alert">
             <p>Flashcard set shared to community!</p>
