@@ -21,13 +21,9 @@ import com.mindstack.mind_stack_id.repositories.UserRepository;
 import com.mindstack.mind_stack_id.repositories.PostReactionRepository;
 import com.mindstack.mind_stack_id.repositories.FlashcardSetRepository;
 import com.mindstack.mind_stack_id.repositories.QuizSetRepository;
-import com.mindstack.mind_stack_id.repositories.CommentRepository;
-import com.mindstack.mind_stack_id.repositories.CommentReactionRepository;
 import com.mindstack.mind_stack_id.services.PostService;
 import com.mindstack.mind_stack_id.services.NotificationService;
 import com.mindstack.mind_stack_id.models.Notification;
-import com.mindstack.mind_stack_id.models.Comment;
-import com.mindstack.mind_stack_id.models.CommentReaction;
 
 @Service
 public class PostImplementation implements PostService {
@@ -46,12 +42,6 @@ public class PostImplementation implements PostService {
 
     @Autowired
     private QuizSetRepository quizSetRepository;
-
-    @Autowired
-    private CommentRepository commentRepository;
-
-    @Autowired
-    private CommentReactionRepository commentReactionRepository;
 
     @Autowired
     private NotificationService notificationService;
@@ -92,6 +82,7 @@ public class PostImplementation implements PostService {
     public List<PostDTO> getAllPosts(Long userId) {
         return postRepository.findAll()
                 .stream()
+                .filter(p -> p.getIsDeleted() == null || !p.getIsDeleted())
                 .map(p -> mapToDto(p, userId))
                 .toList();
     }
@@ -99,13 +90,17 @@ public class PostImplementation implements PostService {
     @Override
     public PostCreation getPostById(long id) {
         Optional<PostCreation> post = postRepository.findById(id);
-        return post.orElse(null);
+        if (post.isPresent() && (post.get().getIsDeleted() == null || !post.get().getIsDeleted())) {
+            return post.get();
+        }
+        return null;
     }
 
     @Override
     public List<PostDTO> getPostsByUserId(long userId) {
         return postRepository.findByUserId(userId)
                 .stream()
+                .filter(p -> p.getIsDeleted() == null || !p.getIsDeleted())
                 .map(p -> mapToDto(p, null))
                 .toList();
     }
@@ -115,6 +110,7 @@ public class PostImplementation implements PostService {
         CategoryType categoryType = CategoryType.fromValue(category);
         return postRepository.findByCategory(categoryType)
                 .stream()
+                .filter(p -> p.getIsDeleted() == null || !p.getIsDeleted())
                 .map(p -> mapToDto(p, null))
                 .toList();
     }
@@ -123,6 +119,7 @@ public class PostImplementation implements PostService {
     public List<PostDTO> getPublishedPosts() {
         return postRepository.findByIsPublished(true)
                 .stream()
+                .filter(p -> p.getIsDeleted() == null || !p.getIsDeleted())
                 .map(p -> mapToDto(p, null))
                 .toList();
     }
@@ -177,59 +174,11 @@ public class PostImplementation implements PostService {
                 setUnderlyingSetPrivate(post, actorUserId);
             }
 
-            List<Comment> comments = commentRepository.findByPostId(id);
+            // Soft delete: mark post as deleted instead of hard delete
+            post.setIsDeleted(true);
+            postRepository.save(post);
 
-            // First, delete all comment reactions and notifications
-            for (Comment comment : comments) {
-                List<CommentReaction> commentReactions = commentReactionRepository
-                        .findByCommentId(comment.getCommentId());
-                commentReactionRepository.deleteAll(commentReactions);
-                notificationService.deleteNotificationsForComment(comment.getCommentId());
-            }
-
-            // Delete comments recursively from deepest level to top
-            // Keep deleting comments with parent_comment_id until no more exist
-            boolean hasReplies = true;
-            while (hasReplies) {
-                // Get all remaining comments for this post
-                List<Comment> remainingComments = commentRepository.findByPostId(id);
-
-                // Find replies that don't have any child replies
-                List<Comment> leafReplies = remainingComments.stream()
-                        .filter(c -> c.getParentCommentId() != null)
-                        .filter(c -> {
-                            // Check if this comment has no children
-                            long childCount = remainingComments.stream()
-                                    .filter(child -> child.getParentCommentId() != null &&
-                                            child.getParentCommentId().equals(c.getCommentId()))
-                                    .count();
-                            return childCount == 0;
-                        })
-                        .collect(java.util.stream.Collectors.toList());
-
-                if (leafReplies.isEmpty()) {
-                    // No more replies to delete, break the loop
-                    hasReplies = false;
-                } else {
-                    // Delete the leaf replies
-                    commentRepository.deleteAll(leafReplies);
-                }
-            }
-
-            // Finally, delete all top-level comments (no parent)
-            List<Comment> topLevelComments = commentRepository.findByPostId(id).stream()
-                    .filter(c -> c.getParentCommentId() == null)
-                    .collect(java.util.stream.Collectors.toList());
-            commentRepository.deleteAll(topLevelComments);
-
-            List<PostReaction> postReactions = postReactionRepository.findByPostId(id);
-            postReactionRepository.deleteAll(postReactions);
-
-            // Remove all notifications related to this post (comments, replies, reactions)
-            notificationService.deleteNotificationsForPost(id);
-
-            postRepository.deleteById(id);
-            System.out.println("Deleted post with ID: " + id);
+            System.out.println("Soft deleted post with ID: " + id);
             return true;
         }
 
