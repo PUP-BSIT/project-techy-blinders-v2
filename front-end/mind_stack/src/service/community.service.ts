@@ -227,6 +227,8 @@ export class CommunityService {
         // Backend returned correct state, trust it completely
         const mapped = this.mapPostFromApi(result);
         mapped.edited = post.edited ?? false;
+        // Preserve the comment count from the current state
+        mapped.commentcount = post.commentcount;
         this.replacePost(mapped);
         this.pendingPostReactions.delete(postId);
       },
@@ -272,6 +274,8 @@ export class CommunityService {
         // Backend returned correct state, trust it completely
         const mapped = this.mapPostFromApi(result);
         mapped.edited = post.edited ?? false;
+        // Preserve the comment count from the current state
+        mapped.commentcount = post.commentcount;
         this.replacePost(mapped);
         this.pendingPostReactions.delete(postId);
       },
@@ -426,7 +430,8 @@ export class CommunityService {
     const allComments = this.commentsSubject.value;
     
     // Get only top-level comments for this post (no parent_comment_id)
-    const topLevelComments = allComments.filter(c => c.post_id === postId && !c.parent_comment_id);
+    // Convert both to strings to ensure comparison works
+    const topLevelComments = allComments.filter(c => String(c.post_id) === String(postId) && !c.parent_comment_id);
     
     // Helper function to find the root parent comment ID
     const findRootParentId = (commentId: string): string => {
