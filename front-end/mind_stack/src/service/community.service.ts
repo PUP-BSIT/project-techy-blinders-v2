@@ -20,6 +20,10 @@ export class CommunityService {
   private commentsSubject = new BehaviorSubject<Comment[]>([]);
   public comments$ = this.commentsSubject.asObservable();
 
+  // Track pending reactions to prevent multiple simultaneous requests
+  private pendingPostReactions = new Set<string>();
+  private pendingCommentReactions = new Set<string>();
+
   constructor() {
     this.refreshPosts();
     this.refreshComments();
@@ -192,9 +196,10 @@ export class CommunityService {
 
   toggleLikePost(postId: string): void {
     const post = this.postsSubject.value.find(p => p.post_id === postId);
-    if (!post) {
+    if (!post || this.pendingPostReactions.has(postId)) {
       return;
     }
+    this.pendingPostReactions.add(postId);
 
     // Optimistic update
     const updated: Post = { ...post };
@@ -223,20 +228,23 @@ export class CommunityService {
         const mapped = this.mapPostFromApi(result);
         mapped.edited = post.edited ?? false;
         this.replacePost(mapped);
+        this.pendingPostReactions.delete(postId);
       },
       error: err => {
         console.error('Failed to like post', err);
         // Revert on error
         this.replacePost(post);
+        this.pendingPostReactions.delete(postId);
       }
     });
   }
 
   toggleDislikePost(postId: string): void {
     const post = this.postsSubject.value.find(p => p.post_id === postId);
-    if (!post) {
+    if (!post || this.pendingPostReactions.has(postId)) {
       return;
     }
+    this.pendingPostReactions.add(postId);
 
     // Optimistic update
     const updated: Post = { ...post };
@@ -265,11 +273,13 @@ export class CommunityService {
         const mapped = this.mapPostFromApi(result);
         mapped.edited = post.edited ?? false;
         this.replacePost(mapped);
+        this.pendingPostReactions.delete(postId);
       },
       error: err => {
         console.error('Failed to dislike post', err);
         // Revert on error
         this.replacePost(post);
+        this.pendingPostReactions.delete(postId);
       }
     });
   }
@@ -332,9 +342,10 @@ export class CommunityService {
 
   toggleLikeComment(commentId: string): void {
     const comment = this.commentsSubject.value.find(c => c.comment_id === commentId);
-    if (!comment) {
+    if (!comment || this.pendingCommentReactions.has(commentId)) {
       return;
     }
+    this.pendingCommentReactions.add(commentId);
 
     const updated: Comment = { ...comment };
     if (updated.userLiked) {
@@ -360,19 +371,22 @@ export class CommunityService {
         const mapped = this.mapCommentFromApi(result);
         mapped.edited = comment.edited ?? false;
         this.updateCommentInState(mapped);
+        this.pendingCommentReactions.delete(commentId);
       },
       error: err => {
         console.error('Failed to like comment', err);
         this.updateCommentInState(comment);
+        this.pendingCommentReactions.delete(commentId);
       }
     });
   }
 
   toggleDislikeComment(commentId: string): void {
     const comment = this.commentsSubject.value.find(c => c.comment_id === commentId);
-    if (!comment) {
+    if (!comment || this.pendingCommentReactions.has(commentId)) {
       return;
     }
+    this.pendingCommentReactions.add(commentId);
 
     const updated: Comment = { ...comment };
     if (updated.userDisliked) {
@@ -398,10 +412,12 @@ export class CommunityService {
         const mapped = this.mapCommentFromApi(result);
         mapped.edited = comment.edited ?? false;
         this.updateCommentInState(mapped);
+        this.pendingCommentReactions.delete(commentId);
       },
       error: err => {
         console.error('Failed to dislike comment', err);
         this.updateCommentInState(comment);
+        this.pendingCommentReactions.delete(commentId);
       }
     });
   }

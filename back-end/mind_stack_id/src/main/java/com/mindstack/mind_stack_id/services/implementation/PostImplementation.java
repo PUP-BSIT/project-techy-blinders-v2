@@ -117,9 +117,8 @@ public class PostImplementation implements PostService {
 
     @Override
     public List<PostDTO> getPublishedPosts() {
-        return postRepository.findByIsPublished(true)
+        return postRepository.findPublishedAndNotDeleted()
                 .stream()
-                .filter(p -> p.getIsDeleted() == null || !p.getIsDeleted())
                 .map(p -> mapToDto(p, null))
                 .toList();
     }
