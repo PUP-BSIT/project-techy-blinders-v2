@@ -47,6 +47,9 @@ public class Comment {
     @Column(name = "edited")
     private Boolean edited = false;
 
+    @Column(name = "is_deleted")
+    private Boolean isDeleted = false;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now(ZoneId.of("Asia/Manila"));
@@ -144,5 +147,13 @@ public class Comment {
 
     public void setEdited(Boolean edited) {
         this.edited = edited;
+    }
+
+    public Boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

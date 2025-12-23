@@ -1,9 +1,7 @@
 package com.mindstack.mind_stack_id.services.implementation;
 
 import java.util.List;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Queue;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -48,32 +46,46 @@ public class CommentImplementation implements CommentService {
     public List<CommentDTO> getAllComments(Long userId) {
         return commentRepo.findAll()
                 .stream()
+                .filter(c -> c.getIsDeleted() == null || !c.getIsDeleted())
                 .map(comment -> mapToDto(comment, userId))
                 .toList();
     }
 
     @Override
     public Comment getCommentById(long id) {
-        return commentRepo.findById(id)
+        var comment = commentRepo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+        if (comment.getIsDeleted() != null && comment.getIsDeleted()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found");
+        }
+        return comment;
     }
 
     @Override
     public List<Comment> getCommentsByPost(long postId) {
         ensurePostExists(postId);
-        return commentRepo.findByPostId(postId);
+        return commentRepo.findByPostId(postId)
+                .stream()
+                .filter(c -> c.getIsDeleted() == null || !c.getIsDeleted())
+                .toList();
     }
 
     @Override
     public List<Comment> getTopLevelCommentsByPost(long postId) {
         ensurePostExists(postId);
-        return commentRepo.findByPostIdAndParentCommentIdIsNull(postId);
+        return commentRepo.findByPostIdAndParentCommentIdIsNull(postId)
+                .stream()
+                .filter(c -> c.getIsDeleted() == null || !c.getIsDeleted())
+                .toList();
     }
 
     @Override
     public List<Comment> getReplies(long parentCommentId) {
         ensureCommentExists(parentCommentId);
-        return commentRepo.findByParentCommentId(parentCommentId);
+        return commentRepo.findByParentCommentId(parentCommentId)
+                .stream()
+                .filter(c -> c.getIsDeleted() == null || !c.getIsDeleted())
+                .toList();
     }
 
     @Override
@@ -247,53 +259,41 @@ public class CommentImplementation implements CommentService {
     @Override
     @Transactional
     public void delete(long id) {
-        ensureCommentExists(id);
+        Optional<Comment> comment = commentRepo.findById(id);
+        if (comment.isPresent()) {
+            Comment c = comment.get();
 
-        // Collect the comment and all descendant replies (breadth-first)
-        List<Comment> toDelete = new ArrayList<>();
-        Queue<Comment> queue = new ArrayDeque<>();
-        queue.add(commentRepo.findById(id).orElseThrow());
-        while (!queue.isEmpty()) {
-            Comment current = queue.poll();
-            toDelete.add(current);
-            var children = commentRepo.findByParentCommentId(current.getCommentId());
-            for (Comment child : children) {
-                queue.add(child);
-            }
-        }
+            // Soft delete: mark comment as deleted
+            c.setIsDeleted(true);
+            commentRepo.save(c);
 
-        for (int i = toDelete.size() - 1; i >= 0; i--) {
-            Comment c = toDelete.get(i);
-            var reactions = commentReactionRepository.findByCommentId(c.getCommentId());
-            commentReactionRepository.deleteAll(reactions);
-            notificationService.deleteNotificationsForComment(c.getCommentId());
-            if (c.getParentCommentId() != null) {
-                // Remove reply notifications sent to parent owner from this actor
-                notificationService.deleteCommentReplyNotifications(c.getUserId(), c.getParentCommentId());
-            } else {
-                // Top-level comment: remove "commented on your post" notifications by actor
-                notificationService.deletePostCommentNotifications(c.getUserId(), c.getPostId());
-            }
-            commentRepo.deleteById(c.getCommentId());
+            System.out.println("Soft deleted comment with ID: " + id);
+            notificationService.deleteNotificationsForComment(id);
         }
     }
 
     @Override
     public long countByPost(long postId) {
         ensurePostExists(postId);
-        return commentRepo.countByPostId(postId);
+        return commentRepo.findByPostId(postId).stream()
+                .filter(c -> c.getIsDeleted() == null || !c.getIsDeleted())
+                .count();
     }
 
     @Override
     public long countByUser(long userId) {
         ensureUserExists(userId);
-        return commentRepo.countByUserId(userId);
+        return commentRepo.findByUserId(userId).stream()
+                .filter(c -> c.getIsDeleted() == null || !c.getIsDeleted())
+                .count();
     }
 
     @Override
     public long countReplies(long parentCommentId) {
         ensureCommentExists(parentCommentId);
-        return commentRepo.countByParentCommentId(parentCommentId);
+        return commentRepo.findByParentCommentId(parentCommentId).stream()
+                .filter(c -> c.getIsDeleted() == null || !c.getIsDeleted())
+                .count();
     }
 
     private CommentDTO mapToDto(Comment comment, Long userId) {
