@@ -219,11 +219,9 @@ export class CommunityService {
 
     this.http.put<any>(`${this.apiUrl}/posts/${postId}/like`, {}, { params: userId ? { userId: String(userId) } : {} }).subscribe({
       next: result => {
-        // Backend incremented, sync the actual count
+        // Backend returned correct state, trust it completely
         const mapped = this.mapPostFromApi(result);
-        mapped.userLiked = result.userLiked ?? mapped.userLiked ?? updated.userLiked;
-        mapped.userDisliked = result.userDisliked ?? mapped.userDisliked ?? updated.userDisliked;
-          mapped.edited = post.edited ?? false;
+        mapped.edited = post.edited ?? false;
         this.replacePost(mapped);
       },
       error: err => {
@@ -263,11 +261,9 @@ export class CommunityService {
     // Call backend
     this.http.put<any>(`${this.apiUrl}/posts/${postId}/dislike`, {}, { params: userId ? { userId: String(userId) } : {} }).subscribe({
       next: result => {
-        // Backend incremented, sync the actual count
+        // Backend returned correct state, trust it completely
         const mapped = this.mapPostFromApi(result);
-        mapped.userLiked = result.userLiked ?? mapped.userLiked ?? updated.userLiked;
-        mapped.userDisliked = result.userDisliked ?? mapped.userDisliked ?? updated.userDisliked;
-          mapped.edited = post.edited ?? false;
+        mapped.edited = post.edited ?? false;
         this.replacePost(mapped);
       },
       error: err => {
@@ -360,9 +356,8 @@ export class CommunityService {
 
     this.http.put<any>(`${this.apiUrl}/comments/${commentId}/like`, {}, { params: userId ? { userId: String(userId) } : {} }).subscribe({
       next: result => {
+        // Backend returned correct state, trust it completely
         const mapped = this.mapCommentFromApi(result);
-        mapped.userLiked = result.userLiked ?? mapped.userLiked ?? updated.userLiked;
-        mapped.userDisliked = result.userDisliked ?? mapped.userDisliked ?? updated.userDisliked;
         mapped.edited = comment.edited ?? false;
         this.updateCommentInState(mapped);
       },
@@ -399,9 +394,8 @@ export class CommunityService {
 
     this.http.put<any>(`${this.apiUrl}/comments/${commentId}/dislike`, {}, { params: userId ? { userId: String(userId) } : {} }).subscribe({
       next: result => {
+        // Backend returned correct state, trust it completely
         const mapped = this.mapCommentFromApi(result);
-        mapped.userLiked = result.userLiked ?? mapped.userLiked ?? updated.userLiked;
-        mapped.userDisliked = result.userDisliked ?? mapped.userDisliked ?? updated.userDisliked;
         mapped.edited = comment.edited ?? false;
         this.updateCommentInState(mapped);
       },
