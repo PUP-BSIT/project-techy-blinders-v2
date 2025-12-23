@@ -35,6 +35,69 @@
   margin: 0;
 }
 
+// Popup Alert Styles
+.popup-alert {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  background: #ffffff;
+  padding: 10px 15px;
+  min-width: 260px;
+  max-width: 320px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  z-index: 1000;
+  border-left: 4px solid #13c272;
+  animation: toastSlide 5s ease-in-out forwards;
+
+  h2 {
+    margin: 0 0 2px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.35;
+    font-weight: 500;
+    color: #555;
+  }
+
+  &.success {
+    border-left-color: #13c272;
+    h2 {
+      color: #13c272;
+    }
+  }
+
+  &.warning {
+    border-left-color: #ffa500;
+    h2 {
+      color: #ffa500;
+    }
+  }
+}
+
+@keyframes toastSlide {
+  0% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  10% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  85% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
 @media (max-width: 768px) {
   .community-container {
     padding: 16px;

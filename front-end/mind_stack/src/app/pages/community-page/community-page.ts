@@ -44,6 +44,22 @@ export class CommunityPage implements OnInit, OnDestroy {
   pendingPostId: string | null = null;
   pendingCommentId: string | null = null;
 
+  // Popup alert properties
+  isCommentAddedPopupOpen: boolean = false;
+  isCommentEditedPopupOpen: boolean = false;
+  isCommentDeletedPopupOpen: boolean = false;
+  isPostEditedPopupOpen: boolean = false;
+  isPostDeletedPopupOpen: boolean = false;
+  isPostLikedPopupOpen: boolean = false;
+  isPostDislikedPopupOpen: boolean = false;
+  isCommentLikedPopupOpen: boolean = false;
+  isCommentDislikedPopupOpen: boolean = false;
+
+  postLikeMessage: string = 'Post liked!';
+  postDislikeMessage: string = 'Post disliked!';
+  commentLikeMessage: string = 'Comment liked!';
+  commentDislikeMessage: string = 'Comment disliked!';
+
   private destroy$ = new Subject<void>();
 
   constructor(private communityService: CommunityService, private profanityService: ProfanityFilterService) {}
@@ -165,25 +181,53 @@ export class CommunityPage implements OnInit, OnDestroy {
 
   onUpdatePost(event: {postId: string, updates: Partial<Post>}) {
     this.communityService.updatePost(event.postId, event.updates);
+    this.isPostEditedPopupOpen = false;
+    setTimeout(() => {
+      this.openPostEditedPopup();
+    }, 10);
   }
 
   onLikePost(post: Post) {
+    const wasLiked = post.userLiked === true;
     this.communityService.toggleLikePost(post.post_id);
+    this.isPostLikedPopupOpen = false;
+    this.postLikeMessage = wasLiked ? 'Like removed!' : 'Post liked!';
+    setTimeout(() => {
+      this.openPostLikedPopup();
+    }, 10);
   }
 
   onDislikePost(post: Post) {
+    const wasDisliked = post.userDisliked === true;
     this.communityService.toggleDislikePost(post.post_id);
+    this.isPostDislikedPopupOpen = false;
+    this.postDislikeMessage = wasDisliked ? 'Dislike removed!' : 'Post disliked!';
+    setTimeout(() => {
+      this.openPostDislikedPopup();
+    }, 10);
   }
 
   onLikePostInModal() {
     if (this.selectedPost) {
+      const wasLiked = this.selectedPost.userLiked === true;
       this.communityService.toggleLikePost(this.selectedPost.post_id);
+      this.isPostLikedPopupOpen = false;
+      this.postLikeMessage = wasLiked ? 'Like removed!' : 'Post liked!';
+      setTimeout(() => {
+        this.openPostLikedPopup();
+      }, 10);
     }
   }
 
   onDislikePostInModal() {
     if (this.selectedPost) {
+      const wasDisliked = this.selectedPost.userDisliked === true;
       this.communityService.toggleDislikePost(this.selectedPost.post_id);
+      this.isPostDislikedPopupOpen = false;
+      this.postDislikeMessage = wasDisliked ? 'Dislike removed!' : 'Post disliked!';
+      setTimeout(() => {
+        this.openPostDislikedPopup();
+      }, 10);
     }
   }
 
@@ -193,6 +237,10 @@ export class CommunityPage implements OnInit, OnDestroy {
     } else {
       this.communityService.unpublishPost(action.post.post_id, action.setPrivate ?? false);
     }
+    this.isPostDeletedPopupOpen = false;
+    setTimeout(() => {
+      this.openPostDeletedPopup();
+    }, 10);
   }
 
   onEditPost(post: Post) {
@@ -221,15 +269,31 @@ export class CommunityPage implements OnInit, OnDestroy {
         cleanedContent,
         data.parentCommentId
       );
+      this.isCommentAddedPopupOpen = false;
+      setTimeout(() => {
+        this.openCommentAddedPopup();
+      }, 10);
     }
   }
 
   onLikeComment(event: {comment: Comment, isReply: boolean}) {
+    const wasLiked = event.comment.userLiked === true;
     this.communityService.toggleLikeComment(event.comment.comment_id);
+    this.isCommentLikedPopupOpen = false;
+    this.commentLikeMessage = wasLiked ? 'Like removed!' : 'Comment liked!';
+    setTimeout(() => {
+      this.openCommentLikedPopup();
+    }, 10);
   }
 
   onDislikeComment(event: {comment: Comment, isReply: boolean}) {
+    const wasDisliked = event.comment.userDisliked === true;
     this.communityService.toggleDislikeComment(event.comment.comment_id);
+    this.isCommentDislikedPopupOpen = false;
+    this.commentDislikeMessage = wasDisliked ? 'Dislike removed!' : 'Comment disliked!';
+    setTimeout(() => {
+      this.openCommentDislikedPopup();
+    }, 10);
   }
 
   onEditComment(event: {comment: Comment, newContent: string}) {
@@ -237,13 +301,88 @@ export class CommunityPage implements OnInit, OnDestroy {
       event.comment.comment_id, 
       event.newContent
     );
+    this.openCommentEditedPopup();
   }
 
   onDeleteComment(comment: Comment) {
     this.communityService.deleteComment(comment.comment_id);
+    this.openCommentDeletedPopup();
   }
 
   getCommentsForPost(postId: string): Comment[] {
     return this.communityService.getCommentsForPost(postId);
+  }
+
+  // Popup alert methods
+  openCommentAddedPopup() {
+    this.isCommentAddedPopupOpen = true;
+  }
+
+  closeCommentAddedPopup() {
+    this.isCommentAddedPopupOpen = false;
+  }
+
+  openCommentEditedPopup() {
+    this.isCommentEditedPopupOpen = true;
+  }
+
+  closeCommentEditedPopup() {
+    this.isCommentEditedPopupOpen = false;
+  }
+
+  openCommentDeletedPopup() {
+    this.isCommentDeletedPopupOpen = true;
+  }
+
+  closeCommentDeletedPopup() {
+    this.isCommentDeletedPopupOpen = false;
+  }
+
+  openPostEditedPopup() {
+    this.isPostEditedPopupOpen = true;
+  }
+
+  closePostEditedPopup() {
+    this.isPostEditedPopupOpen = false;
+  }
+
+  openPostDeletedPopup() {
+    this.isPostDeletedPopupOpen = true;
+  }
+
+  closePostDeletedPopup() {
+    this.isPostDeletedPopupOpen = false;
+  }
+
+  openPostLikedPopup() {
+    this.isPostLikedPopupOpen = true;
+  }
+
+  closePostLikedPopup() {
+    this.isPostLikedPopupOpen = false;
+  }
+
+  openPostDislikedPopup() {
+    this.isPostDislikedPopupOpen = true;
+  }
+
+  closePostDislikedPopup() {
+    this.isPostDislikedPopupOpen = false;
+  }
+
+  openCommentLikedPopup() {
+    this.isCommentLikedPopupOpen = true;
+  }
+
+  closeCommentLikedPopup() {
+    this.isCommentLikedPopupOpen = false;
+  }
+
+  openCommentDislikedPopup() {
+    this.isCommentDislikedPopupOpen = true;
+  }
+
+  closeCommentDislikedPopup() {
+    this.isCommentDislikedPopupOpen = false;
   }
 }

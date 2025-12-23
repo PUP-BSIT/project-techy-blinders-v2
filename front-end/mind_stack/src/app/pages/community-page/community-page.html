@@ -53,4 +53,59 @@
       (deleteComment)="onDeleteComment($event)"
     />
   }
+
+  <!-- Popup Alerts -->
+  @if (isCommentAddedPopupOpen) {
+    <div class="popup-alert">
+      <p>Comment added!</p>
+    </div>
+  }
+
+  @if (isCommentEditedPopupOpen) {
+    <div class="popup-alert">
+      <p>Comment edited!</p>
+    </div>
+  }
+
+  @if (isCommentDeletedPopupOpen) {
+    <div class="popup-alert">
+      <p>Comment deleted! Refresh to see changes.</p>
+    </div>
+  }
+
+  @if (isPostEditedPopupOpen) {
+    <div class="popup-alert">
+      <p>Post edited!</p>
+    </div>
+  }
+
+  @if (isPostDeletedPopupOpen) {
+    <div class="popup-alert">
+      <p>Post deleted! Refresh to see changes.</p>
+    </div>
+  }
+
+  @if (isPostLikedPopupOpen) {
+    <div class="popup-alert">
+      <p>{{ postLikeMessage }}</p>
+    </div>
+  }
+
+  @if (isPostDislikedPopupOpen) {
+    <div class="popup-alert">
+      <p>{{ postDislikeMessage }}</p>
+    </div>
+  }
+
+  @if (isCommentLikedPopupOpen) {
+    <div class="popup-alert">
+      <p>{{ commentLikeMessage }}</p>
+    </div>
+  }
+
+  @if (isCommentDislikedPopupOpen) {
+    <div class="popup-alert">
+      <p>{{ commentDislikeMessage }}</p>
+    </div>
+  }
 </div>
