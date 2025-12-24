@@ -37,6 +37,16 @@ public class FlashcardSet {
     // Add OneToMany relationship
     @OneToMany(mappedBy = "flashcardSet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FlashCardItem> flashcards = new ArrayList<>();
+
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
+        public boolean isDeleted() {
+            return isDeleted;
+        }
+
+        public void setDeleted(boolean deleted) {
+            isDeleted = deleted;
+        }
     
     // Constructors
     public FlashcardSet() {}
