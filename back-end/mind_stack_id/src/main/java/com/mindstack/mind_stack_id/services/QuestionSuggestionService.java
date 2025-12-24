@@ -77,7 +77,7 @@ public class QuestionSuggestionService {
     private String buildPrompt(String title, String description) {
         // Optimized prompt for free tier - concise to save tokens
         return String.format(
-            "Based on the given title and description, generate 5 relevant and high-quality questions that can be used for a flashcard assessment.\n"+
+            "Based on the given title and description, generate 5 relevant and high-quality questions that can be used for a flashcard and quiz assessment.\n"+
             "Title: %s\n" +
             "Description: %s\n\n" +
             "Format: numbered list 1-5",
