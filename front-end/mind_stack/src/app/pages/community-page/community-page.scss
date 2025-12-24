@@ -35,6 +35,33 @@
   margin: 0;
 }
 
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #2D6A4F;
+  width: 100%;
+  margin: 1rem 0;
+  
+  &::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 2px solid #95D5B2;
+    border-top: 2px solid #3DAC78;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 12px;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 // Popup Alert Styles
 .popup-alert {
   position: fixed;

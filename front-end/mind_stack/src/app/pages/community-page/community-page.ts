@@ -59,6 +59,7 @@ export class CommunityPage implements OnInit, OnDestroy {
   postDislikeMessage: string = 'Post disliked!';
   commentLikeMessage: string = 'Comment liked!';
   commentDislikeMessage: string = 'Comment disliked!';
+  isLoading: boolean = true;
 
   private destroy$ = new Subject<void>();
 
@@ -110,6 +111,9 @@ export class CommunityPage implements OnInit, OnDestroy {
       .subscribe(posts => {
         this.posts = posts;
         this.applyFilter();
+        setTimeout(() => {
+          this.isLoading = false;
+        }, 500);
         
         if (this.selectedPost) {
           const updatedPost = 

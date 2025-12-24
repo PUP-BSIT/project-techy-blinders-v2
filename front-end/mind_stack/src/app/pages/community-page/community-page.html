@@ -3,8 +3,13 @@
   <div class="community-content">
     <app-search (searchChange)="onSearchChange($event)" />
 
-    <div class="posts-list">
-      @for (post of filteredPosts; track post.post_id) {
+    @if (isLoading) {
+      <div class="loading-indicator">
+        Loading Community...
+      </div>
+    } @else {
+      <div class="posts-list">
+        @for (post of filteredPosts; track post.post_id) {
         <app-post-card
           [post]="post"
           [currentUserInitial]="currentUserInitial"
@@ -21,7 +26,8 @@
           <p>No posts found. Be the first to create one!</p>
         </div>
       }
-    </div>
+      </div>
+    }
   </div>
 
   @if (showCreateModal) {
