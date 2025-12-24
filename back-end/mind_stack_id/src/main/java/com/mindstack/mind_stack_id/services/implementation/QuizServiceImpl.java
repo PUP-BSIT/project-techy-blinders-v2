@@ -94,7 +94,7 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public List<QuizSetResponse> getQuizSetsByUserId(Long userId) {
-        List<QuizSet> quizSets = quizSetRepository.findByUserIdAndIsDeletedFalse(userId);
+        List<QuizSet> quizSets = quizSetRepository.findByUserIdAndIsDeletedFalseOrderByCreatedAtDesc(userId);
         return quizSets.stream()
             .map(this::convertToResponse)
             .collect(Collectors.toList());
@@ -102,7 +102,7 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public List<QuizSetResponse> getAllPublicQuizSets() {
-        List<QuizSet> quizSets = quizSetRepository.findByIsPublicTrueAndIsDeletedFalse();
+        List<QuizSet> quizSets = quizSetRepository.findByIsPublicTrueAndIsDeletedFalseOrderByCreatedAtDesc();
         return quizSets.stream()
             .map(this::convertToResponse)
             .collect(Collectors.toList());
