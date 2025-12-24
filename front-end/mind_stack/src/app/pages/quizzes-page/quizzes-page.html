@@ -95,6 +95,22 @@
                             placeholder="Description"
                             [(ngModel)]="quizDescription"/>
                 </div>
+
+                <div class="form-group">
+                    <button class="btn-ai-suggestion"
+                            (click)="generateAiSuggestions()"
+                            [disabled]="isLoadingSuggestion || !quizTitle.trim()">
+
+                            @if (!isLoadingSuggestion) {
+                                <span>Generate Suggestion</span>
+                            }
+
+                            @if (isLoadingSuggestion) {
+                                <span>↻ Loading suggestion...</span>
+                            }
+
+                    </button>
+                </div>
             </div>
             <div class="quiz-type-wrapper">
                 <select class="quiz-type-select" 
@@ -359,6 +375,41 @@
             <div class="share-actions">
                 <button class="btn-share-save" (click)="saveShare()">Share</button>
                 <button class="btn-share-cancel" (click)="closeShareModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+   <div class="modal-overlay" [class.open]="isAiSuggestionsModalOpen">
+        <div class="modal-content ai-suggestions-modal" (click)="$event.stopPropagation()">
+            <div class="suggestions-header">
+                <h3>Generated Questions</h3>
+                <button class="btn-close-suggestion" (click)="closeSuggestions()">×</button>
+            </div>
+
+            <div class="suggestions-body">
+                @if (isLoadingSuggestion) {
+                    <div class="loading-state">
+                        <div class="spinner"></div>
+                        <p>Generating AI suggestions...</p>
+                    </div>
+                }
+
+                @if (!isLoadingSuggestion && suggestedQuestions.length > 0) {
+                    <div class="suggestions-list">
+                        @for (question of suggestedQuestions; track $index) {
+                            <div class="suggestion-item">
+                                <span class="suggestion-number">{{ $index + 1 }}</span>
+                                <span class="suggestion-text">{{ question }}</span>
+                            </div>
+                        }
+                    </div>
+                }
+
+                @if (!isLoadingSuggestion && suggestedQuestions.length === 0) {
+                    <div class="empty-suggestions">
+                        <p>No suggestions generated. Please try again.</p>
+                    </div>
+                }
             </div>
         </div>
     </div>

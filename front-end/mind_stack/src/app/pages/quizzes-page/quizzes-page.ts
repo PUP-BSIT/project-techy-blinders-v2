@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { QuizzesService, QuizType, QuizItem, QuestionType } from '../../../service/quizzes.service';
 import { AuthService } from '../../../service/auth.service';
 import { CommunityService } from '../../../service/community.service';
+import { QuestionSuggestionService } from '../../../service/question-suggestion.service';
 
 export interface QuestionItem {
   question: string;
@@ -163,8 +164,13 @@ export class QuizzesPage implements OnInit {
   private quizzesService = inject(QuizzesService);
   private authService = inject(AuthService);
   private communityService = inject(CommunityService);
+  private questionSuggestionService = inject(QuestionSuggestionService);
   isLoading: boolean = false;
   quizzesList: Quiz[] = [];
+  isShowSuggestion: boolean = false;
+  isLoadingSuggestion: boolean= false;
+  isAiSuggestionsModalOpen: boolean = false;
+  suggestedQuestions: string[] = [];
 
   constructor(
     private router: Router,
@@ -180,6 +186,40 @@ export class QuizzesPage implements OnInit {
         this.openModal();
       }
     });
+  }
+
+  generateAiSuggestions() {
+    if (!this.quizTitle.trim()) {
+      this.openWarningPopup('Please enter a title first');
+      return;
+    }
+    this.isAiSuggestionsModalOpen = true;
+    this.isLoadingSuggestion = true;
+    this.isShowSuggestion = false;
+
+    this.questionSuggestionService.generateSuggestion (
+      this.quizTitle,
+      this.quizDescription || 'A Study set that will help you learn'
+    ).subscribe ({
+      next:(response) => {
+        this.suggestedQuestions = response.questions;
+        this.isShowSuggestion = true;
+        this.isLoadingSuggestion = false;
+        console.log('AI Suggestions:', this.suggestedQuestions);
+      },
+
+      error:(error) => {
+        console.error('Error generating suggestions', error);
+        this.isLoadingSuggestion = false;
+        this.openWarningPopup('Failed to load a suggestions.')
+      }
+    });
+  }
+  
+  closeSuggestions() {
+    this.isAiSuggestionsModalOpen = false;
+    this.isShowSuggestion = false;
+    this.suggestedQuestions = [];
   }
 
   private loadQuizSetsFromBackend() {
