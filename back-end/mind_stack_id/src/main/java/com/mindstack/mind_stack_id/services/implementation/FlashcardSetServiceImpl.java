@@ -85,35 +85,32 @@ public class FlashcardSetServiceImpl implements FlashCardService {
     @Override
     public FlashcardSetResponse getFlashcardSetById(Long studySetId) {
         FlashcardSet flashcardSet = flashcardSetRepository.findById(studySetId)
-                .orElseThrow(() -> new RuntimeException("Flashcard set not found with id: " + studySetId));
-
+            .filter(set -> !set.isDeleted())
+            .orElseThrow(() -> new RuntimeException("Flashcard set not found with id: " + studySetId));
         return convertToResponse(flashcardSet);
     }
 
     @Override
     public FlashcardSetResponse getFlashcardSetBySlug(String slug) {
-        FlashcardSet flashcardSet = flashcardSetRepository.findBySlug(slug)
-                .orElseThrow(() -> new RuntimeException("Flashcard set not found with slug: " + slug));
-
+        FlashcardSet flashcardSet = flashcardSetRepository.findBySlugAndIsDeletedFalse(slug)
+            .orElseThrow(() -> new RuntimeException("Flashcard set not found with slug: " + slug));
         return convertToResponse(flashcardSet);
     }
 
     @Override
     public List<FlashcardSetResponse> getFlashcardSetsByUserId(Long userId) {
-        List<FlashcardSet> flashcardSets = flashcardSetRepository.findByUserId(userId);
-
+        List<FlashcardSet> flashcardSets = flashcardSetRepository.findByUserIdAndIsDeletedFalse(userId);
         return flashcardSets.stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
+            .map(this::convertToResponse)
+            .collect(Collectors.toList());
     }
 
     @Override
     public List<FlashcardSetResponse> getAllPublicFlashcardSets() {
-        List<FlashcardSet> flashcardSets = flashcardSetRepository.findByIsPublicTrue();
-
+        List<FlashcardSet> flashcardSets = flashcardSetRepository.findByIsPublicTrueAndIsDeletedFalse();
         return flashcardSets.stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
+            .map(this::convertToResponse)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -188,7 +185,7 @@ public class FlashcardSetServiceImpl implements FlashCardService {
     @Transactional
     public void deleteFlashcardSet(Long studySetId) {
         FlashcardSet flashcardSet = flashcardSetRepository.findById(studySetId)
-                .orElseThrow(() -> new RuntimeException("Flashcard set not found with id: " + studySetId));
+            .orElseThrow(() -> new RuntimeException("Flashcard set not found with id: " + studySetId));
 
         // Remove any community posts tied to this flashcard set via slug prefix (e.g.,
         // flashcard-{id}-...)
@@ -197,9 +194,11 @@ public class FlashcardSetServiceImpl implements FlashCardService {
             deleteCommunityPostsForSlug(flashcardSet.getSlug());
         }
 
-        flashcardSetRepository.delete(flashcardSet);
+        // SOFT DELETE
+        flashcardSet.setDeleted(true);
+        flashcardSetRepository.save(flashcardSet);
 
-        System.out.println("Deleted flashcard set with ID: " + studySetId);
+        System.out.println("Soft deleted flashcard set with ID: " + studySetId);
     }
 
     @Override

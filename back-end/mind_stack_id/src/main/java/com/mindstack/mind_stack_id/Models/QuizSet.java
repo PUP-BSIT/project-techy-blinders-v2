@@ -40,6 +40,16 @@ public class QuizSet {
     
     @OneToMany(mappedBy = "quizSet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Quiz> quizzes = new ArrayList<>();
+
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
+        public boolean isDeleted() {
+            return isDeleted;
+        }
+
+        public void setDeleted(boolean deleted) {
+            isDeleted = deleted;
+        }
     
     public QuizSet() {}
     

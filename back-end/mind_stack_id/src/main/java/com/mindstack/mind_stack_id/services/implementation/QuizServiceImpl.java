@@ -87,28 +87,25 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public QuizSetResponse getQuizSetBySlug(String slug) {
-        QuizSet quizSet = quizSetRepository.findBySlug(slug)
-                .orElseThrow(() -> new RuntimeException("Quiz set not found with slug: " + slug));
-
+        QuizSet quizSet = quizSetRepository.findBySlugAndIsDeletedFalse(slug)
+            .orElseThrow(() -> new RuntimeException("Quiz set not found with slug: " + slug));
         return convertToResponse(quizSet);
     }
 
     @Override
     public List<QuizSetResponse> getQuizSetsByUserId(Long userId) {
-        List<QuizSet> quizSets = quizSetRepository.findByUserId(userId);
-
+        List<QuizSet> quizSets = quizSetRepository.findByUserIdAndIsDeletedFalse(userId);
         return quizSets.stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
+            .map(this::convertToResponse)
+            .collect(Collectors.toList());
     }
 
     @Override
     public List<QuizSetResponse> getAllPublicQuizSets() {
-        List<QuizSet> quizSets = quizSetRepository.findByIsPublicTrue();
-
+        List<QuizSet> quizSets = quizSetRepository.findByIsPublicTrueAndIsDeletedFalse();
         return quizSets.stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
+            .map(this::convertToResponse)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -140,7 +137,7 @@ public class QuizServiceImpl implements QuizService {
     @Transactional
     public void deleteQuizSet(Long quizSetId) {
         QuizSet quizSet = quizSetRepository.findById(quizSetId)
-                .orElseThrow(() -> new RuntimeException("Quiz set not found with id: " + quizSetId));
+            .orElseThrow(() -> new RuntimeException("Quiz set not found with id: " + quizSetId));
 
         // Remove any community posts tied to this quiz set via slug prefix (e.g.,
         // quiz-{id}-...)
@@ -149,9 +146,11 @@ public class QuizServiceImpl implements QuizService {
             deleteCommunityPostsForSlug(quizSet.getSlug());
         }
 
-        quizSetRepository.delete(quizSet);
+        // SOFT DELETE
+        quizSet.setDeleted(true);
+        quizSetRepository.save(quizSet);
 
-        System.out.println("Deleted quiz set with ID: " + quizSetId);
+        System.out.println("Soft deleted quiz set with ID: " + quizSetId);
     }
 
     @Override
