@@ -10,7 +10,7 @@ import com.mindstack.mind_stack_id.models.QuizSet;
 @Repository
 public interface QuizSetRepository extends JpaRepository<QuizSet, Long> {
     Optional<QuizSet> findBySlugAndIsDeletedFalse(String slug);
-    List<QuizSet> findByUserIdAndIsDeletedFalse(Long userId);
-    List<QuizSet> findByIsPublicTrueAndIsDeletedFalse();
+    List<QuizSet> findByUserIdAndIsDeletedFalseOrderByCreatedAtDesc(Long userId);
+    List<QuizSet> findByIsPublicTrueAndIsDeletedFalseOrderByCreatedAtDesc();
     boolean existsBySlug(String slug);
 }
