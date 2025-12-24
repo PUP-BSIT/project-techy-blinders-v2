@@ -70,7 +70,7 @@ public class UserController {
         }
 
         // Count user's milestones
-        long quizzesCreated = quizSetRepository.findByUserIdAndIsDeletedFalse(userId).size();
+        long quizzesCreated = quizSetRepository.findByUserIdAndIsDeletedFalseOrderByCreatedAtDesc(userId).size();
         long flashcardSetsCreated = flashcardSetRepository.findByUserIdAndIsDeletedFalse(userId).size();
 
         // Count total likes on user's posts
