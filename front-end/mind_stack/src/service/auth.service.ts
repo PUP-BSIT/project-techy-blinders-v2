@@ -31,6 +31,14 @@ export interface UserProfile {
   providedIn: 'root'
 })
 export class AuthService {
+    // Reset password using token
+    resetPasswordWithToken(request: { token: string; newPassword: string; confirmPassword: string }): Observable<ResetPasswordResponse> {
+      return this.http.post<ResetPasswordResponse>(`${this.apiUrl}/reset-password`, request);
+    }
+    // Request password reset
+    forgotPassword(request: { email: string }): Observable<ResetPasswordResponse> {
+      return this.http.post<ResetPasswordResponse>(`${this.apiUrl}/forgot-password`, request);
+    }
   private http = inject(HttpClient);
   private apiUrl = 'https://techymindstack.site/api/users';
 
@@ -103,8 +111,13 @@ export class AuthService {
     return this.http.put<any>(`${this.apiUrl}/update-username`, body);
   }
 
-  // Reset password by email (for forgot password)
-  resetPassword(request: ResetPasswordRequest): Observable<ResetPasswordResponse> {
+  // Request OTP for password reset
+  requestOtp(request: { email: string }): Observable<ResetPasswordResponse> {
+    return this.http.post<ResetPasswordResponse>(`${this.apiUrl}/forgot-password`, request);
+  }
+
+  // Reset password using OTP
+  resetPasswordWithOtp(request: { email: string; otp: string; newPassword: string; confirmPassword: string }): Observable<ResetPasswordResponse> {
     return this.http.post<ResetPasswordResponse>(`${this.apiUrl}/reset-password`, request);
   }
 

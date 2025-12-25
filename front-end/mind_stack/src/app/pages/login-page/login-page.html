@@ -55,16 +55,10 @@
 
             <!-- Forgot password -->
                 <div class="forgot-password">
-                    <a (click)="forgotPasswordModal()" style="cursor: pointer;">
+                    <a routerLink="/forgot-password">
                         Forgot Password?
                     </a>
                 </div>
-
-                @if (showForgotPasswordModal) {
-                    <div class="modal-overlay">
-                        <app-forgot-password (onCancel)="closeModal()"></app-forgot-password>
-                    </div>
-                }
 
             <!-- Login button -->
             <div class="login-button">

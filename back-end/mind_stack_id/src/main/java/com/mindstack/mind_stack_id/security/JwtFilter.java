@@ -34,12 +34,16 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getRequestURI();
+        String method = request.getMethod();
         
         // Skip JWT validation for public endpoints
-        if (path.equals("/api/users/reset-password") || 
-            path.equals("/api/users/login") ||
-            path.equals("/api/suggestions/") ||
-            (path.equals("/api/users") && request.getMethod().equals("POST"))) {
+        if (path.contains("/forgot-password") || 
+            path.contains("/reset-password") ||
+            path.contains("/login") ||
+            path.contains("/register") ||
+            path.contains("/contact") ||
+            path.startsWith("/api/suggestions")) {
+            logger.debug("Skipping JWT validation for public endpoint: {} {}", method, path);
             chain.doFilter(request, response);
             return;
         }

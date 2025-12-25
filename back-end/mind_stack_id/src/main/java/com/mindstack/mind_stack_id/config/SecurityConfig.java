@@ -46,7 +46,8 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .requestMatchers("/api/users/login").permitAll()
             .requestMatchers("/api/users").permitAll()
-            .requestMatchers("/api/users/reset-password").permitAll()
+            .requestMatchers(HttpMethod.POST, "/api/users/forgot-password").permitAll()
+            .requestMatchers(HttpMethod.POST, "/api/users/reset-password").permitAll()
             .requestMatchers("/api/suggestions/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/suggestions/questions").permitAll()
             .requestMatchers("/api/contact").permitAll()
@@ -61,7 +62,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedOrigin("http://localhost:4200");
+        configuration.addAllowedOrigin("https://techymindstack.site");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
