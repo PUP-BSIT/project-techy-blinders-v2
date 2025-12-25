@@ -23,6 +23,9 @@ export class ForgotPassword {
   showSuccessPopup = signal(false);
   currentStep = signal(1);
 
+  confirmPasswordFocused = signal(false);
+  otpSent = signal(false);
+
   formBuilder = inject(FormBuilder);
   authService = inject(AuthService);
   forgotPasswordForm: FormGroup;
@@ -59,6 +62,7 @@ export class ForgotPassword {
         this.isLoading.set(false);
         if (response.success) {
           this.successMessage.set('OTP sent to your email.');
+          this.otpSent.set(true);
         } else {
           this.errorMessage.set(response.message);
         }
@@ -102,6 +106,7 @@ export class ForgotPassword {
     this.showSuccessPopup.set(false);
     this.forgotPasswordForm.reset();
     this.currentStep.set(1);
+    this.otpSent.set(false);
     this.onCancel.emit();
   }
 
@@ -112,6 +117,7 @@ export class ForgotPassword {
     this.errorMessage.set('');
     this.successMessage.set('');
     this.currentStep.set(1);
+    this.otpSent.set(false);
     this.router.navigate(['/login']);
     this.onCancel.emit();
   }
