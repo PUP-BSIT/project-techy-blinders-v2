@@ -20,9 +20,14 @@ import com.mindstack.mind_stack_id.repositories.FlashcardSetRepository;
 import com.mindstack.mind_stack_id.repositories.PostRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.mindstack.mind_stack_id.security.JwtUtil;
-import java.util.HashMap;
 import org.springframework.security.core.Authentication;
+import java.util.HashMap;
 
+// @Autowired
+// private PasswordResetTokenRepository passwordResetTokenRepository;
+// 
+// @Autowired
+// private com.mindstack.mind_stack_id.services.BrevoEmailService brevoEmailService;
 // @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/users")
@@ -48,6 +53,12 @@ public class UserController {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private com.mindstack.mind_stack_id.repositories.PasswordResetTokenRepository passwordResetTokenRepository;
+
+    @Autowired
+    private com.mindstack.mind_stack_id.services.BrevoEmailService brevoEmailService;
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> getUsers() {
@@ -125,6 +136,82 @@ public class UserController {
                 put("email", user.getEmail());
             }
         });
+    }
+    
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody com.mindstack.mind_stack_id.models.dto.ForgotPasswordRequest request) {
+        String email = request.getEmail();
+        User user = repo.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new HashMap<>() {{
+                        put("success", false);
+                        put("message", "Email not found");
+                    }});
+        }
+
+        // Remove any existing token for this user
+        passwordResetTokenRepository.deleteByUserId(user.getUserId());
+
+        // Generate OTP
+        String otp = String.format("%06d", new java.util.Random().nextInt(999999));
+        java.util.Date expiryDate = new java.util.Date(System.currentTimeMillis() + 1000 * 60 * 10); // 10 minutes expiry
+
+        com.mindstack.mind_stack_id.models.PasswordResetToken resetToken = new com.mindstack.mind_stack_id.models.PasswordResetToken();
+        resetToken.setUserId(user.getUserId());
+        resetToken.setOtp(otp);
+        resetToken.setExpiryDate(expiryDate);
+        passwordResetTokenRepository.save(resetToken);
+
+        // Send OTP email
+        brevoEmailService.sendOtpEmail(user.getEmail(), otp);
+
+        return ResponseEntity.ok(new HashMap<>() {{
+            put("success", true);
+            put("message", "Password reset link sent to email if it exists.");
+        }});
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody com.mindstack.mind_stack_id.models.dto.ResetPasswordWithTokenRequest request) {
+        String email = request.getEmail();
+        String otp = request.getOtp();
+        String newPassword = request.getNewPassword();
+        String confirmPassword = request.getConfirmPassword();
+        if (newPassword == null || newPassword.length() < 6 || !newPassword.equals(confirmPassword)) {
+            return ResponseEntity.badRequest().body(new HashMap<>() {{
+                put("success", false);
+                put("message", "Passwords must match and be at least 6 characters.");
+            }});
+        }
+
+        User user = repo.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new HashMap<>() {{
+                put("success", false);
+                put("message", "User not found.");
+            }});
+        }
+
+        com.mindstack.mind_stack_id.models.PasswordResetToken resetToken = passwordResetTokenRepository.findByOtp(otp).orElse(null);
+        if (resetToken == null || resetToken.getExpiryDate().before(new java.util.Date()) || !resetToken.getUserId().equals(user.getUserId())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new HashMap<>() {{
+                put("success", false);
+                put("message", "Invalid or expired OTP.");
+            }});
+        }
+
+        // Update password
+        user.setPassword(passwordEncoder.encode(newPassword));
+        repo.save(user);
+
+        // Invalidate token
+        passwordResetTokenRepository.deleteByUserId(user.getUserId());
+
+        return ResponseEntity.ok(new HashMap<>() {{
+            put("success", true);
+            put("message", "Password has been reset successfully.");
+        }});
     }
 
     @GetMapping("/me")
@@ -270,6 +357,7 @@ public class UserController {
     // newUsername; }
     // }
 
+    /*
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
         try {
@@ -308,5 +396,6 @@ public class UserController {
             });
         }
     }
+    */
 
 }

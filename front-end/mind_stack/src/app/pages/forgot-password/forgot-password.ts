@@ -20,6 +20,7 @@ export class ForgotPassword {
   errorMessage = signal('');
   successMessage = signal('');
   showSuccessPopup = signal(false);
+  currentStep = signal(1);
 
   formBuilder = inject(FormBuilder);
   authService = inject(AuthService);
@@ -29,27 +30,59 @@ export class ForgotPassword {
     this.forgotPasswordForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
+      confirmPassword: ['', Validators.required],
+      otp: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
     });
   }
 
-  forgotPassword() {
-    if (this.forgotPasswordForm.invalid) return;
+  next() {
+    if (this.forgotPasswordForm.get('email')?.invalid ||
+        this.forgotPasswordForm.get('newPassword')?.invalid ||
+        this.forgotPasswordForm.get('confirmPassword')?.invalid) {
+      return;
+    }
+    if (this.forgotPasswordForm.get('newPassword')?.value !== this.forgotPasswordForm.get('confirmPassword')?.value) {
+      this.errorMessage.set('Passwords do not match.');
+      return;
+    }
+    this.errorMessage.set('');
+    this.currentStep.set(2);
+  }
 
+  sendOtp() {
+    this.errorMessage.set('');
+    this.isLoading.set(true);
+    const email = this.forgotPasswordForm.get('email')?.value;
+    this.authService.requestOtp({ email }).subscribe({
+      next: (response) => {
+        this.isLoading.set(false);
+        if (response.success) {
+          this.successMessage.set('OTP sent to your email.');
+        } else {
+          this.errorMessage.set(response.message);
+        }
+      },
+      error: () => {
+        this.isLoading.set(false);
+        this.errorMessage.set('Failed to send OTP. Please try again.');
+      }
+    });
+  }
+
+  resetPassword() {
+    if (this.forgotPasswordForm.invalid) return;
     this.errorMessage.set('');
     this.successMessage.set('');
     this.isLoading.set(true);
-
     const formValue = this.forgotPasswordForm.value;
-
-    this.authService.resetPassword({
+    this.authService.resetPasswordWithOtp({
       email: formValue.email,
+      otp: formValue.otp,
       newPassword: formValue.newPassword,
       confirmPassword: formValue.confirmPassword
     }).subscribe({
       next: (response) => {
         this.isLoading.set(false);
-
         if (response.success) {
           this.successMessage.set(response.message);
           this.showSuccessPopup.set(true);
@@ -67,6 +100,7 @@ export class ForgotPassword {
   closeSuccessPopup() {
     this.showSuccessPopup.set(false);
     this.forgotPasswordForm.reset();
+    this.currentStep.set(1);
     this.onCancel.emit();
   }
 
@@ -74,11 +108,16 @@ export class ForgotPassword {
     this.forgotPasswordForm.reset();
     this.errorMessage.set('');
     this.successMessage.set('');
+    this.currentStep.set(1);
     this.onCancel.emit();
   }
 
   get emailControl() {
     return this.forgotPasswordForm.get('email');
+  }
+
+  get otpControl() {
+    return this.forgotPasswordForm.get('otp');
   }
 
   get newPasswordControl() {
