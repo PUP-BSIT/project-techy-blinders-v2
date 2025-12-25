@@ -25,6 +25,8 @@ export class ForgotPassword {
 
   confirmPasswordFocused = signal(false);
   otpSent = signal(false);
+  successPopupRedirect = signal(false);
+  private successPopupTimer: any;
 
   formBuilder = inject(FormBuilder);
   authService = inject(AuthService);
@@ -63,6 +65,14 @@ export class ForgotPassword {
         if (response.success) {
           this.successMessage.set('OTP sent to your email.');
           this.otpSent.set(true);
+          this.showSuccessPopup.set(true);
+          this.successPopupRedirect.set(false);
+
+          if (this.successPopupTimer) clearTimeout(this.successPopupTimer);
+          this.successPopupTimer = 
+          setTimeout(() => 
+            this.closeSuccessPopup(),
+            5000);
         } else {
           this.errorMessage.set(response.message);
         }
@@ -73,6 +83,7 @@ export class ForgotPassword {
       }
     });
   }
+
 
   resetPassword() {
     if (this.forgotPasswordForm.invalid) return;
@@ -89,8 +100,15 @@ export class ForgotPassword {
       next: (response) => {
         this.isLoading.set(false);
         if (response.success) {
-          this.successMessage.set(response.message);
+          this.successMessage.set(response.message || 'Password reset successful!');
           this.showSuccessPopup.set(true);
+          this.successPopupRedirect.set(true);
+
+          if (this.successPopupTimer) clearTimeout(this.successPopupTimer);
+          this.successPopupTimer = 
+          setTimeout(() => 
+            this.closeSuccessPopup(), 
+            5000);
         } else {
           this.errorMessage.set(response.message);
         }
@@ -103,11 +121,21 @@ export class ForgotPassword {
   }
 
   closeSuccessPopup() {
+    if (this.successPopupTimer) {
+      clearTimeout(this.successPopupTimer);
+      this.successPopupTimer = undefined;
+    }
+
     this.showSuccessPopup.set(false);
-    this.forgotPasswordForm.reset();
-    this.currentStep.set(1);
-    this.otpSent.set(false);
-    this.onCancel.emit();
+
+    if (this.successPopupRedirect()) {
+      this.forgotPasswordForm.reset();
+      this.currentStep.set(1);
+      this.otpSent.set(false);
+      this.router.navigate(['/login']);
+    } else {
+      this.successMessage.set('');
+    }
   }
 
   private router = inject(Router);
