@@ -10,7 +10,7 @@ import com.mindstack.mind_stack_id.models.FlashcardSet;
 @Repository
 public interface FlashcardSetRepository extends JpaRepository<FlashcardSet, Long> {
     Optional<FlashcardSet> findBySlugAndIsDeletedFalse(String slug);
-    List<FlashcardSet> findByUserIdAndIsDeletedFalse(Long userId);
-    List<FlashcardSet> findByIsPublicTrueAndIsDeletedFalse();
+    List<FlashcardSet> findByUserIdAndIsDeletedFalseOrderByCreatedAtDesc(Long userId);
+    List<FlashcardSet> findByIsPublicTrueAndIsDeletedFalseOrderByCreatedAtDesc();
     boolean existsBySlug(String slug);
 }
