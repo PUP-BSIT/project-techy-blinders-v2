@@ -71,7 +71,7 @@ public class UserController {
 
         // Count user's milestones
         long quizzesCreated = quizSetRepository.findByUserIdAndIsDeletedFalseOrderByCreatedAtDesc(userId).size();
-        long flashcardSetsCreated = flashcardSetRepository.findByUserIdAndIsDeletedFalse(userId).size();
+        long flashcardSetsCreated = flashcardSetRepository.findByUserIdAndIsDeletedFalseOrderByCreatedAtDesc(userId).size();
 
         // Count total likes on user's posts
         long totalLikes = postRepository.findByUserId(userId).stream()

@@ -99,7 +99,7 @@ public class FlashcardSetServiceImpl implements FlashCardService {
 
     @Override
     public List<FlashcardSetResponse> getFlashcardSetsByUserId(Long userId) {
-        List<FlashcardSet> flashcardSets = flashcardSetRepository.findByUserIdAndIsDeletedFalse(userId);
+        List<FlashcardSet> flashcardSets = flashcardSetRepository.findByUserIdAndIsDeletedFalseOrderByCreatedAtDesc(userId);
         return flashcardSets.stream()
             .map(this::convertToResponse)
             .collect(Collectors.toList());
@@ -107,7 +107,7 @@ public class FlashcardSetServiceImpl implements FlashCardService {
 
     @Override
     public List<FlashcardSetResponse> getAllPublicFlashcardSets() {
-        List<FlashcardSet> flashcardSets = flashcardSetRepository.findByIsPublicTrueAndIsDeletedFalse();
+        List<FlashcardSet> flashcardSets = flashcardSetRepository.findByIsPublicTrueAndIsDeletedFalseOrderByCreatedAtDesc();
         return flashcardSets.stream()
             .map(this::convertToResponse)
             .collect(Collectors.toList());
