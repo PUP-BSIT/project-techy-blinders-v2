@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../service/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
@@ -104,11 +105,14 @@ export class ForgotPassword {
     this.onCancel.emit();
   }
 
+  private router = inject(Router);
+
   cancel() {
     this.forgotPasswordForm.reset();
     this.errorMessage.set('');
     this.successMessage.set('');
     this.currentStep.set(1);
+    this.router.navigate(['/login']);
     this.onCancel.emit();
   }
 
