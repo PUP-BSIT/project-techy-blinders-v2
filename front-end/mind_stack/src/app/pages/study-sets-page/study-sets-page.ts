@@ -322,8 +322,13 @@ export class StudySetsPage implements OnInit, OnDestroy {
           this.closeModal();
           this.openFlashcardModal();
 
-          this.studySets.push(newStudySet);
-          this.studySets.sort((a, b) => (a.flashcard_id || 0) - (b.flashcard_id || 0));
+          // Insert at the beginning and sort by created_at descending
+          this.studySets.unshift(newStudySet);
+          this.studySets.sort((a, b) => {
+            const aDate = new Date(a.created_at).getTime();
+            const bDate = new Date(b.created_at).getTime();
+            return bDate - aDate;
+          });
 
           try { localStorage.setItem('studySetsUpdated', Date.now().toString()); } catch (e) {}
           this.isStudySetCreateSuccessPopupOpen = false;
