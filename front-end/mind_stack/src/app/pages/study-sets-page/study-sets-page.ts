@@ -167,9 +167,9 @@ export class StudySetsPage implements OnInit, OnDestroy {
     this.studySetsService.getStudySetsByUserId(currentUser.userId).subscribe({
       next: (studySets) => {
         this.studySets = (studySets || []).slice().sort((a, b) => {
-          const aId = a.flashcard_id || 0;
-          const bId = b.flashcard_id || 0;
-          return aId - bId;
+          const aDate = new Date(a.created_at).getTime();
+          const bDate = new Date(b.created_at).getTime();
+          return bDate - aDate;
         });
         this.isLoading = false;
       },
