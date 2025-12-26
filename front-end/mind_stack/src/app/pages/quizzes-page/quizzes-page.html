@@ -272,7 +272,7 @@
             </div>
 
             <div class="question-modal-footer">
-                <button class="btn-modal-cancel" (click)="openConfirmModal()" [disabled]="isLoading">Cancel</button>
+                <button class="btn-modal-cancel" (click)="confirmCancel()" [disabled]="isLoading">Cancel</button>
                 <button class="btn-modal-save" (click)="saveQuizFromQuestionModal()" [disabled]="isLoading">
                     {{ isLoading ? 'Saving...' : 'Save' }}
                 </button>
