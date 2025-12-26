@@ -7,7 +7,7 @@ import { QuestionSuggestion } from '../app/models/question-suggest.model';
   providedIn: 'root'
 })
 export class QuestionSuggestionService {
-  private apiUrl = 'http://localhost:8080/api/suggestions';
+  private apiUrl = 'https://techymindstack.site/api/suggestions';
 
   constructor(private http: HttpClient){}
 
