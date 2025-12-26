@@ -138,7 +138,15 @@
             </div>
 
             <div class="carousel-wrapper" [class.has-flashcards]="questions.length > 0">
-                <div class="flashcards-container">
+                @if (questions.length === 0) {
+                <div class="empty-state">
+                    <p class="empty-message">Create your first quiz item</p>
+                    <button class="add-item-btn" (click)="addQuestion()">
+                        + Add Item
+                    </button>
+                </div>
+                }
+                <div class="flashcards-container" *ngIf="questions.length > 0">
                     <div class="flashcard-item mc-question" 
                          *ngFor="let question of paginatedQuestions; let i = index"
                          [class.hidden]="!isMultipleChoice()">
@@ -149,14 +157,12 @@
                                 ✕
                             </button>
                         </div>
-                        
                         <div class="mc-question-body">
                             <div class="question-input-section">
                                 <input type="text" 
                                         class="flashcard-term" 
                                         placeholder="Question"
                                         [(ngModel)]="question.question"/>
-                                
                                 <div class="mc-options-left">
                                     <div class="mc-option-left">
                                         <div class="option-label">a.</div>
@@ -165,7 +171,6 @@
                                                 placeholder=""
                                                 [(ngModel)]="question.optionA"/>
                                     </div>
-                                    
                                     <div class="mc-option-left">
                                         <div class="option-label">b.</div>
                                         <input type="text" 
@@ -173,7 +178,6 @@
                                                 placeholder=""
                                                 [(ngModel)]="question.optionB"/>
                                     </div>
-                                    
                                     <div class="mc-option-left">
                                         <div class="option-label">c.</div>
                                         <input type="text" 
@@ -181,7 +185,6 @@
                                                 placeholder=""
                                                 [(ngModel)]="question.optionC"/>
                                     </div>
-                                    
                                     <div class="mc-option-left">
                                         <div class="option-label">d.</div>
                                         <input type="text" 
@@ -191,7 +194,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
                             <div class="question-right-section">
                                 <div class="select-correct-label">Select Correct Answer</div>
                                 <div class="mc-radios">
@@ -219,7 +221,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="flashcard-item identification-item" 
                          *ngFor="let question of paginatedQuestions; let i = index"
                          [class.hidden]="!isIdentification()">
@@ -241,14 +242,14 @@
                                     [(ngModel)]="question.answer"/>
                         </div>
                     </div>
+                        <div class="add-item-section">
+                            <button class="add-item-btn" (click)="addQuestion()">
+                                <span class="plus-icon">+</span> Add Item
+                            </button>
+                        </div>
                 </div>
             </div>
 
-            <div class="add-item-section">
-                <button class="add-item-btn" (click)="addQuestion()">
-                    <span class="plus-icon">+</span> Add Item
-                </button>
-            </div>
 
             <div class="pagination" [class.show]="totalPages > 1">
                 <button class="pagination-btn prev" 
