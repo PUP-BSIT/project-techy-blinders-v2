@@ -2,6 +2,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+* {
+  box-sizing: border-box;
+}
+
 :host {
   display: block;
   min-height: 100vh;
@@ -244,7 +248,7 @@
 
 .laptop-section {
   margin-top: 150px;
-  padding: 15px 0px 0px;
+  padding: 15px 0px 20px;
   background: linear-gradient(180deg, #e8f5f0 0%, #d4ebe3 30%, #c0e1d6 70%, #acd7c9 100%);
   text-align: center;
   width: 100%;
@@ -252,6 +256,7 @@
   margin-right: 0;
   position: relative;
   overflow: hidden;
+  padding-bottom: 120px;
 
   &::before {
     content: '';
@@ -280,7 +285,7 @@
   font-size: clamp(30px, 3.8vw, 44px);
   font-family: 'Roboto', sans-serif;
   font-weight: 600;
-  margin-bottom: -200px;
+  margin-bottom: 30px;
   max-width: 1000px;
   margin-left: auto;
   margin-right: auto;
@@ -295,9 +300,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: -100px;
+  margin-bottom: 0;
   position: relative;
   z-index: 1;
+  padding-bottom: 0;
+  margin-top: 30px;
 }
 
 .laptop-container img {
@@ -315,7 +322,10 @@
   background-color: #3fc28b;
   flex-wrap: wrap;
   width: 100%;
-  margin: -100;
+  margin: 0;
+  box-sizing: border-box;
+  align-items: stretch;
+  min-height: auto;
 }
 
 .testimonial-card {
@@ -324,6 +334,10 @@
   padding: 25px;
   width: 280px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .testimonial-card h4 {
@@ -352,12 +366,14 @@
   background-color: #ebebeb;
   width: 100%;
   margin: 0;
+  box-sizing: border-box;
 }
 
 .reviewers-section > * {
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
+  box-sizing: border-box;
 }
 
 .reviewers-section h3 {
@@ -377,6 +393,7 @@
   background-color: #ffffff;
   border-radius: 8px;
   gap: 20px;
+  box-sizing: border-box;
 }
 
 .review-content {
@@ -421,6 +438,7 @@
   background-color: #3fc28b;
   width: 100%;
   margin: 0;
+  box-sizing: border-box;
 }
 
 .features-section h3 {
@@ -452,6 +470,10 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .feature-card:hover {
@@ -480,12 +502,12 @@
   line-height: 1.7;
 }
 
-// About Section Styles
 .about-section {
   padding: 80px 20px;
   background: linear-gradient(180deg, #f8f8f8 0%, #ebebeb 100%);
   width: 100%;
   margin: 0;
+  box-sizing: border-box;
 }
 
 .about-container {
@@ -495,6 +517,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 60px;
   align-items: center;
+  box-sizing: border-box;
 }
 
 .about-image {
@@ -530,408 +553,241 @@
   line-height: 1.8;
 }
 
-@media (max-width: 1400px) {
-  .header-note h3 {
-    font-size: 48px;
-  }
-
-  .kid-class-design {
-    width: 450px;
-    right: 4%;
-  }
-
-  .laptop-container img {
-    max-width: 900px;
-  }
-
-  .megaphone-class {
-    left: 4%;
-  }
-
-  .arrow-two {
-    right: 12%;
-  }
-
-  .about-container {
-    gap: 50px;
-  }
-}
-
-@media (max-width: 1200px) {
-  .header-note {
-    width: 50%;
-    margin-left: 6%;
-  }
-
-  .header-note h3 {
-    font-size: 42px;
-  }
-
-  .trademark-class {
-    margin-left: 6%;
-  }
-
-  .button-class {
-    margin-left: 6%;
-  }
-
-  .kid-class-design {
-    width: 400px;
-    right: 3%;
-  }
-
-  .megaphone-class {
-    left: 3%;
-  }
-
-  .arrow-two {
-    right: 10%;
-  }
-
-  .laptop-tagline {
-    font-size: 38px;
-  }
-
-  .laptop-container img {
-    max-width: 850px;
-  }
-
-  .about-container {
-    gap: 40px;
-  }
-}
-
-@media (max-width: 1024px) {
-  .nav-quick-buttons {
-    gap: 12px;
-  }
-
-  .nav-quick-btn {
-    padding: 6px 16px;
-    font-size: 13px;
-  }
-
-  .header-note {
-    width: 55%;
-    margin-top: 100px;
-  }
-
-  .header-note h3 {
-    font-size: 38px;
-  }
-
-  .trademark-class p {
-    font-size: 16px;
-  }
-
-  .button-class {
-    gap: 15px;
-  }
-
-  .regis-button,
-  .login-button {
-    font-size: 15px;
-    padding: 10px 28px;
-  }
-
-  .kid-class-design {
-    width: 350px;
-    top: 140px;
-  }
-
-  .header-class img {
-    width: 55px;
-    height: 55px;
-  }
-
-  .header-class {
-    top: 150px;
-  }
-
-  .megaphone-class {
-    left: 3%;
-  }
-
-  .arrow-two {
-    right: 8%;
-  }
-
-  .laptop-section {
-    padding: 80px 30px 100px;
-    margin-top: 180px;
-  }
-
-  .laptop-tagline {
-    font-size: 34px;
-    margin-bottom: 50px;
-  }
-
-  .laptop-container img {
-    max-width: 800px;
-  }
-
-  .about-section {
-    padding: 60px 20px;
-  }
-
-  .about-container {
-    gap: 30px;
-  }
-}
-
 @media (max-width: 768px) {
   .nav-quick-buttons {
-    flex-direction: column;
-    gap: 8px;
-    top: 18px;
-  }
-
-  .nav-quick-btn {
-    padding: 5px 14px;
-    font-size: 12px;
+    display: none;
   }
 
   .landing-page-class {
-    padding-top: 100px;
+    padding-top: 65px;
+    overflow-x: hidden;
   }
 
   .header-note {
-    width: 90%;
-    margin-left: 5%;
-    margin-top: 60px;
+    width: 95%;
+    margin-left: 2.5%;
+    margin-top: 30px;
+    padding: 0 10px;
+    text-align: center;
   }
 
   .header-note h3 {
-    font-size: 32px;
+    font-size: clamp(20px, 6vw, 32px);
     text-align: center;
+    line-height: 1.2;
+    margin-top: 0;
   }
 
   .trademark-class {
-    margin-left: 5%;
+    margin-left: 2.5%;
     text-align: center;
+    width: 95%;
+    padding: 0 10px;
   }
 
   .trademark-class p {
-    font-size: 15px;
+    font-size: clamp(13px, 4vw, 16px);
   }
 
   .button-class {
-    margin-left: 5%;
+    margin-left: 2.5%;
+    width: 95%;
     justify-content: center;
     gap: 12px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 10px;
   }
 
   .regis-button,
   .login-button {
-    font-size: 14px;
-    padding: 10px 24px;
+    font-size: clamp(14px, 4vw, 16px);
+    padding: 14px 24px;
+    width: 100%;
+    max-width: 280px;
   }
 
   .kid-class-design {
-    position: relative;
-    right: auto;
-    top: auto;
-    width: 85%;
-    max-width: 380px;
-    margin: 40px auto 0;
-  }
-
-  .header-class img {
-    width: 50px;
-    height: 50px;
+    display: none;
   }
 
   .header-class {
-    position: relative;
-    top: auto;
-    display: flex;
-    justify-content: space-around;
-    padding: 0;
-    max-width: 400px;
-    margin: 20px auto;
+    display: none;
   }
 
   .megaphone-class {
-    position: relative;
-    left: auto;
-    top: auto;
+    display: none;
   }
 
   .arrow-two {
-    position: relative;
-    left: auto;
-    top: auto;
+    display: none;
   }
 
   .favorite-class {
-    top: 280px;
-  }
-
-  .favorite-class img {
-    width: 32px;
-    height: 32px;
-    margin-left: 8%;
+    display: none;
   }
 
   .pencil-class {
-    top: 340px;
-  }
-
-  .pencil-class img {
-    width: 32px;
-    height: 32px;
-    margin-left: 30%;
+    display: none;
   }
 
   .laptop-section {
-    margin-top: 60px;
-    padding: 50px 20px 80px;
+    margin-top: 35px;
+    padding: 35px 10px 45px;
+    width: 100%;
   }
 
   .laptop-tagline {
-    font-size: 26px;
-    margin-bottom: 30px;
+    font-size: clamp(16px, 5vw, 24px);
+    margin-bottom: 20px;
+    padding: 0 10px;
+    line-height: 1.3;
   }
 
   .laptop-container {
-    margin-bottom: 40px;
+    margin-bottom: 0;
+    padding: 0 5px;
+    margin-top: 20px;
   }
 
   .laptop-container img {
     max-width: 100%;
-    width: 95%;
+    width: 100%;
   }
 
   .testimonials-section {
-    padding: 40px 15px 60px;
-    gap: 20px;
+    flex-direction: column;
+    align-items: center;
+    padding: 35px 10px 40px;
+    gap: 15px;
+    margin-top: 0;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .testimonial-card {
     width: 100%;
-    max-width: 350px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 18px 12px;
+    text-align: center;
+    box-sizing: border-box;
+    flex-shrink: 0;
+  }
+
+  .testimonial-card h4 {
+    font-size: clamp(15px, 4vw, 18px);
+  }
+
+  .testimonial-card p {
+    font-size: clamp(12px, 3.5vw, 15px);
   }
 
   .reviewers-section {
-    padding: 40px 15px;
+    padding: 35px 10px;
+    width: 100%;
+  }
+
+  .reviewers-section h3 {
+    font-size: clamp(20px, 5vw, 28px);
+    text-align: center;
+    margin-bottom: 20px;
   }
 
   .review-item {
     flex-direction: column;
-    padding: 20px;
-    gap: 15px;
+    padding: 15px 10px;
+    gap: 12px;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .review-content h4 {
+    font-size: clamp(15px, 4vw, 18px);
+  }
+
+  .review-content p {
+    font-size: clamp(12px, 3.5vw, 15px);
   }
 
   .review-button {
     width: 100%;
+    max-width: 130px;
+    padding: 10px 15px;
+    font-size: clamp(12px, 3.5vw, 15px);
   }
 
   .features-section {
-    padding: 40px 15px 60px;
+    padding: 35px 10px 40px;
+    width: 100%;
   }
 
   .features-section h3 {
-    font-size: 26px;
-    margin-bottom: 35px;
+    font-size: clamp(20px, 5vw, 28px);
+    margin-bottom: 25px;
+    padding: 0 5px;
   }
 
   .feature-cards {
-    gap: 25px;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 0 5px;
   }
 
   .feature-card {
     width: 100%;
-    max-width: 350px;
-    padding: 35px 25px;
+    max-width: 100%;
+    padding: 25px 15px;
+    margin: 0 auto;
+  }
+
+  .feature-card h4 {
+    font-size: clamp(16px, 4.5vw, 20px);
+  }
+
+  .feature-card p {
+    font-size: clamp(13px, 3.5vw, 16px);
+  }
+
+  .feature-icon {
+    font-size: clamp(35px, 8vw, 45px);
   }
 
   .about-section {
-    padding: 50px 20px;
+    padding: 35px 10px;
+    width: 100%;
   }
 
   .about-container {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 25px;
+    max-width: 100%;
   }
 
   .about-image {
     order: 2;
+    padding: 0 5px;
+  }
+
+  .about-image img {
+    width: 100%;
+    max-width: 280px;
   }
 
   .about-content {
     order: 1;
     text-align: center;
-    padding: 0;
+    padding: 0 5px;
   }
 
   .about-content h2 {
-    margin-bottom: 25px;
-  }
-}
-
-@media (max-width: 480px) {
-  .nav-quick-btn {
-    padding: 4px 12px;
-    font-size: 11px;
-  }
-
-  .header-note h3 {
-    font-size: 26px;
-  }
-
-  .trademark-class p {
-    font-size: 14px;
-  }
-
-  .button-class {
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .regis-button,
-  .login-button {
-    width: 80%;
-    max-width: 250px;
-  }
-
-  .kid-class-design {
-    width: 90%;
-    max-width: 320px;
-  }
-
-  .laptop-tagline {
-    font-size: 22px;
-    margin-bottom: 25px;
-  }
-
-  .laptop-container img {
-    width: 98%;
-  }
-
-  .testimonial-card {
-    max-width: 100%;
-  }
-
-  .laptop-section {
-    margin-top: 50px;
-    padding: 40px 20px 70px;
-  }
-
-  .feature-card {
-    max-width: 100%;
-  }
-
-  .about-section {
-    padding: 40px 15px;
-  }
-
-  .about-image img {
-    max-width: 100%;
+    margin-bottom: 15px;
+    font-size: clamp(24px, 6vw, 32px);
   }
 
   .about-content p {
-    font-size: 16px;
+    font-size: clamp(14px, 3.8vw, 18px);
+    line-height: 1.5;
   }
 }
