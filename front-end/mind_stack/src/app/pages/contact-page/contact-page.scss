@@ -218,14 +218,27 @@
   }
 
   &.success {
-    h2 { color: #28a745; }
-    button { background: #28a745; }
+    h2 {
+      color: #28a745;
+    }
+
+    button {
+      background: #28a745;
+    }
   }
 
   &.warning {
-    h2 { color: #ff9900; }
-    button { background: #ff9900; }
-    button:hover { background: #e88b00; }
+    h2 {
+      color: #ff9900;
+    }
+
+    button {
+      background: #ff9900;
+    }
+
+    button:hover {
+      background: #e88b00;
+    }
   }
 }
 

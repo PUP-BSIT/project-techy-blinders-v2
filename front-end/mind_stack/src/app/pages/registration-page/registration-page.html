@@ -75,20 +75,14 @@
                 </div>
             </div>
 
-            @if (isLoading()) {
-                <div class="loading-message">
-                    <span>Registering...</span>
-                </div>
-            }
-
-            @if (errorMessage()) {
-                <div class="error-message">
-                    <span>{{ errorMessage() }}</span>
-                </div>
-            }
-
             <div class="submit-class">
-                <button type="submit" [disabled]="!isFormValid() || isLoading()">Register</button>
+                <button
+                  type="submit"
+                  [disabled]="!isFormValid() || isLoading()"
+                  [style.cursor]="isLoading() || !isFormValid() ? 'not-allowed' : 'pointer'"
+                >
+                  {{ isLoading() ? 'Registering...' : 'Register' }}
+                </button>
             </div>
             <div class="cancel-button">
                 <button type="reset">Cancel</button>
