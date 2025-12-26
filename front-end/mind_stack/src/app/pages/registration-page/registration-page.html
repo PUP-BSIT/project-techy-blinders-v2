@@ -95,27 +95,16 @@
             </div>
         </form>
     </div>
-</div>
 
-@if (successMessage() && registeredUserId() !== null) {
-    <div class="modal-backdrop">
-        <div class="modal-content">
-            <h2>Registration Successful!</h2>
-            <p>{{ successMessage() }}</p>
-
-            <div class="user-id-section">
-                <p class="user-id-instruction">Please save your User ID for login:</p>
-                <div class="user-id-row">
-                    <span class="user-id-label">User ID:</span>
-                    <div class="user-id-pill">
-                        <span class="user-id-value">{{ registeredUserId() }}</span>
-                    </div>
+    @if (successMessage() || errorMessage()) {
+        @if (showSubmitPopup()) {
+            <div class="popup-overlay" (click)="closeSubmitPopup()">
+                <div class="popup" [class.success]="!!successMessage()" [class.warning]="!successMessage()" (click)="$event.stopPropagation()">
+                    <h2>{{ successMessage() ? 'Success!' : 'Error' }}</h2>
+                    <p>{{ successMessage() || errorMessage() }}</p>
+                    <button (click)="closeSubmitPopup()">OK</button>
                 </div>
             </div>
-            
-            <button type="button" class="login-redirect-button" (click)="goToLoginPage()">
-                Go to Login Page
-            </button>
-        </div>
-    </div>
-}
+        }
+    }
+</div>

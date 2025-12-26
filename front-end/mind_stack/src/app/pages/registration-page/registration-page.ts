@@ -28,6 +28,24 @@ export class RegistrationPage {
   errorMessage = signal('');
   registeredUserId = signal<number | null>(null);
 
+  submitPopupVisible = signal(false);
+
+  showSubmitPopup() {
+    return this.submitPopupVisible();
+  }
+
+  openSubmitPopup() {
+    this.submitPopupVisible.set(true);
+  }
+
+  closeSubmitPopup() {
+    this.submitPopupVisible.set(false);
+
+    if (this.successMessage()) {
+      this.router.navigate(['/login']);
+    }
+  }
+
   constructor() {
     this.registrationForm = this.fb.group({
       email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
@@ -71,24 +89,16 @@ export class RegistrationPage {
         if (response.account_successfully_created) {
           this.registeredUserId.set(response.user_id);
           this.successMessage.set('Registration successful!');
-
-          // Auto login
-          this.authService.login({
-            email: this.emailControl?.value,
-            password: this.passwordControl?.value
-          }).subscribe({
-            next: () => this.router.navigate(['/app/dashboard']),
-            error: (loginError: HttpErrorResponse) => {
-              this.errorMessage.set('Registration succeeded, but login failed. Please login manually.');
-            }
-          });
+          this.openSubmitPopup();
         } else {
           this.errorMessage.set('Registration failed. Try again.');
+          this.openSubmitPopup();
         }
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);
         this.errorMessage.set(err.error?.message || 'Registration failed. Try again.');
+        this.openSubmitPopup();
       }
     });
   }
