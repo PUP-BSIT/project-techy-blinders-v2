@@ -1,13 +1,33 @@
-$color-primary: #3DAC78;
 $color-primary-dark: #2D6A4F;
+$color-primary: #3DAC78;
+// Centered empty state for quiz item note
+.empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    gap: 1.5rem;
+    padding: 2rem;
+}
+
+.empty-message {
+    color: $color-primary-dark;
+    margin-top: 250px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    opacity: 0.7;
+}
 $color-primary-darker: #1F4A3A;
 $color-primary-light: #95D5B2;
 $color-primary-lighter: #a7d5ae;
 $color-background: #D8F3DC;
 $color-card: #52B788;
-$color-accent: #16DC81;
+$color-accent: #287C55;
 $color-accent-dark: #15965a;
-$color-delete: #287C55;
+$color-delete: #16DC81;
 $color-delete-dark: #226646;
 $color-danger: #B7094C;
 $color-danger-dark: #8A0738;
@@ -20,10 +40,9 @@ $shadow-medium: 0 5px 5px rgba(0, 0, 0, 0.25);
 $shadow-heavy: 0 10px 40px rgba(0, 0, 0, 0.3);
 $shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.2);
 
+
 $transition-fast: 0.2s ease;
 $transition-normal: 0.3s ease;
-
-@use 'sass:color';
 
 .hidden {
     display: none !important;
@@ -280,7 +299,7 @@ $transition-normal: 0.3s ease;
     margin-top: 0.25rem;
 
     &:hover {
-        background: color.adjust(#2C9969, $lightness: -5%);
+        background: darken(#2C9969, 5%);
         transform: translateY(-1px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
@@ -424,7 +443,7 @@ $transition-normal: 0.3s ease;
     }
 
     &.private:hover {
-        background: color.adjust($color-primary, $lightness: -5%);
+        background: darken($color-primary, 5%);
     }
 
     &:active {
@@ -542,7 +561,7 @@ $transition-normal: 0.3s ease;
     }
 
     &.private:hover {
-        background: color.adjust($color-primary, $lightness: -5%);
+        background: darken($color-primary, 5%);
     }
 
     &:active {
@@ -558,7 +577,7 @@ $transition-normal: 0.3s ease;
 }
 
 .edit-btn {
-    background: #287C55;
+    background: $color-accent;
     color: $color-text-white;
     border: none;
     border-radius: 8px;
@@ -568,6 +587,8 @@ $transition-normal: 0.3s ease;
     cursor: pointer;
     transition: all $transition-normal;
     flex-shrink: 0;
+
+    min-width: 120px;
 
     &:hover {
         background: #15b96d;
@@ -577,7 +598,7 @@ $transition-normal: 0.3s ease;
 }
 
 .delete-btn {
-    background: #16DC81;
+    background: $color-delete;
     color: $color-text-white;
     border: none;
     border-radius: 8px;
@@ -587,9 +608,10 @@ $transition-normal: 0.3s ease;
     cursor: pointer;
     transition: all $transition-normal;
     flex-shrink: 0;
+    min-width: 120px;
 
     &:hover {
-        background: #216746;
+        background: #27ca7e;
         transform: translateY(-2px);
         box-shadow: $shadow-hover;
     }
@@ -1612,8 +1634,9 @@ $transition-normal: 0.3s ease;
     }
 }
 
-// Compact Question Editor Modal
 .question-editor-modal {
+    width: 650px;
+    min-height: 790px;
     max-width: 650px;
     max-height: 98vh;
     overflow: hidden;
@@ -1627,7 +1650,7 @@ $transition-normal: 0.3s ease;
         background: transparent;
         padding: 0 0 0.75rem 0;
         display: flex;
-        justify-content: flex-end;
+        justify-content: flex-start;
         align-items: center;
         border-bottom: none;
         margin: 0;
@@ -1639,6 +1662,7 @@ $transition-normal: 0.3s ease;
         color: #1F4A3A;
         font-size: 0.95rem;
         font-weight: 600;
+        text-align: left;
     }
 
     .carousel-wrapper {
@@ -1749,7 +1773,7 @@ $transition-normal: 0.3s ease;
         color: $color-text-white;
 
         &:hover {
-            background: color.adjust(#2D6A4F, $lightness: -5%);
+            background: darken(#2D6A4F, 5%);
             transform: translateY(-2px);
             box-shadow: $shadow-medium;
         }
