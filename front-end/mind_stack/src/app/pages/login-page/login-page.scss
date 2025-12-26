@@ -118,12 +118,16 @@
 }
 
 .email-class {
+    position: relative;
     margin-bottom: 20px;
+    padding-bottom: 20px;
 }
 
 .password-class {
+    position: relative;
     margin-bottom: 15px;
-}
+    padding-bottom: 20px;
+}   
 
 .login-form span {
     display: flex;
@@ -137,8 +141,11 @@
     color: #d32f2f;
     font-size: 12px;
     font-weight: 500;
-    margin: 5px 0 0 0;
     font-family: "Roboto", sans-serif;
+    position: absolute;
+    margin-top: 2%;
+    left: 0;
+    right: 0;
 }
 
 .forgot-password {
@@ -148,7 +155,7 @@
 .forgot-password a {
     text-decoration: none;
     color: #02542d;
-    font-weight: 500;
+    font-weight: bolder;
     font-size: 14px;
     font-family: "Roboto", sans-serif;
     
@@ -170,7 +177,7 @@
 .register-class a {
     text-decoration: none;
     color: #285846;
-    font-weight: 600;
+    font-weight: bolder;
     
     &:hover {
         text-decoration: underline;

@@ -16,14 +16,13 @@
 
         <div class="login-form">
         <form [formGroup]="loginForm" (ngSubmit)="login()">
-            <!-- Email -->
             <div class="email-class">
                 <div><label>Email</label></div>
-                <input formControlName="email" type="text" placeholder="Enter email...">
+                <input formControlName="email" type="text" placeholder="Enter your email">
 
                 @if (emailControl?.touched) {
                     @if(emailControl?.errors?.['required']) {
-                        <p class="validators-message">Enter your email</p>
+                        <p class="validators-message">Email is Required</p>
                     } @else if (emailControl?.errors?.['email']) {
                         <p class="validators-message">Invalid email format</p>
                     }
@@ -34,7 +33,7 @@
             <div class="password-class">
                 <div><label>Password</label></div>
                 <div class="password-input-container">
-                    <input formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="Enter password...">
+                    <input formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="Enter your password">
                     <button type="button" class="show-password-btn" (click)="togglePasswordVisibility()">
                         <img [src]="showPassword ? 'assets/unshow-password-icon.png' : 'assets/show-password-icon.png'"
                               [alt]="showPassword ? 'Hide password' : 'Show password'">
@@ -43,7 +42,7 @@
 
                 @if (passwordControl?.touched) {
                     @if(passwordControl?.errors?.['required']) {
-                        <p class="validators-message">Input a password</p>
+                        <p class="validators-message">Password is Required</p>
                     }
                 }
             </div>
@@ -51,6 +50,16 @@
             <!-- Error -->
             @if (errorMessage) {
                 <div class="error-message"><span>{{ errorMessage }}</span></div>
+            }
+
+            @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+                <div class="error-message"><span>{{ getEmailError() }}</span></div>
+
+            }
+
+            @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+                <div class="error-message"><span>{{ getPasswordError() }}</span></div>
+
             }
 
             <!-- Forgot password -->
