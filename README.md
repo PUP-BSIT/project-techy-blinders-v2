@@ -25,8 +25,8 @@ Visit our live application: [https://techymindstack.site](https://techymindstack
 
 ## 👨🏻‍💻 Sample User
 
-email: kirbytest@gmail.com
-password: kirbytest
+email: testaccount@gmail.com
+password: thenumber123
 
 ## 🌱 Git Workflow
 
