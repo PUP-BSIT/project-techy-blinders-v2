@@ -4,13 +4,6 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../service/auth.service';
 import { DashboardService } from '../../../service/dashboard.service';
 
-interface StudyItem {
-  id: string;
-  name: string;
-  type: 'flashcard' | 'quiz';
-  flashcardCount?: number;
-}
-
 interface Activity {
   id: string;
   type: 'flashcard' | 'quiz';
@@ -39,8 +32,6 @@ export class DashboardPage implements OnInit {
   userEmail: string = '';
   isLoading: boolean = true;
 
-  studyLibrary: StudyItem[] = [];
-
   recentActivities: Activity[] = [];
 
   constructor(private router: Router) {}
@@ -64,7 +55,6 @@ export class DashboardPage implements OnInit {
         this.userEmail = data.userEmail;
         this.flashcardCount = data.flashcardCount;
         this.quizCount = data.quizCount;
-        this.studyLibrary = [];
         this.recentActivities = [];
         this.isLoading = false;
       },
@@ -74,7 +64,6 @@ export class DashboardPage implements OnInit {
         this.userEmail = currentUser.email;
         this.flashcardCount = 0;
         this.quizCount = 0;
-        this.studyLibrary = [];
         this.recentActivities = [];
         this.isLoading = false;
       }
@@ -94,15 +83,6 @@ export class DashboardPage implements OnInit {
   createQuiz() {
     console.log('Navigate to create quiz');
     this.router.navigate(['/app/quizzes'], { queryParams: { create: 'true' } });
-  }
-
-  viewStudyItem(item: StudyItem) {
-    console.log('Viewing study item:', item.name);
-    if (item.type === 'flashcard') {
-      this.router.navigate(['/study-sets', item.id]);
-    } else {
-      this.router.navigate(['/quizzes', item.id]);
-    }
   }
 
   getActivityIcon(type: string): string {
