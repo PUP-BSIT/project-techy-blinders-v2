@@ -25,6 +25,8 @@
                         <p class="validators-message">Email is Required</p>
                     } @else if (emailControl?.errors?.['email']) {
                         <p class="validators-message">Invalid email format</p>
+                    } @else if (emailControl?.errors?.['maxLength']) {
+                        <p class="validators-message">Email Exceed</p>
                     }
                 }
             </div>
@@ -51,17 +53,6 @@
             @if (errorMessage) {
                 <div class="error-message"><span>{{ errorMessage }}</span></div>
             }
-
-            @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
-                <div class="error-message"><span>{{ getEmailError() }}</span></div>
-
-            }
-
-            @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-                <div class="error-message"><span>{{ getPasswordError() }}</span></div>
-
-            }
-
             <!-- Forgot password -->
                 <div class="forgot-password">
                     <a routerLink="/forgot-password">
