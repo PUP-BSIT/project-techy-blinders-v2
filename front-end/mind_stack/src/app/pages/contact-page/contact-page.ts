@@ -24,6 +24,33 @@ export class ContactPage {
   isSubmitting = false;
   submitMessage = '';
   isSubmitSuccess = true;
+  submitPopupVisible = false;
+  private submitPopupTimeout: any;
+
+  showSubmitPopup() {
+    return this.submitPopupVisible;
+  }
+
+  openSubmitPopup() {
+    if (this.submitPopupTimeout) {
+      clearTimeout(this.submitPopupTimeout);
+      this.submitPopupTimeout = null;
+    }
+
+    this.submitPopupVisible = true;
+
+    this.submitPopupTimeout = window.setTimeout(() => {
+      this.closeSubmitPopup();
+    }, 5000);
+  }
+
+  closeSubmitPopup() {
+    this.submitPopupVisible = false;
+    if (this.submitPopupTimeout) {
+      clearTimeout(this.submitPopupTimeout);
+      this.submitPopupTimeout = null;
+    }
+  }
 
   constructor() {
     this.contactForm = this.formBuilder.group ({
@@ -54,12 +81,14 @@ export class ContactPage {
           this.isSubmitSuccess = true;
           this.submitMessage = response.message;
           this.contactForm.reset();
+          this.openSubmitPopup();
           this.isSubmitting = false;
         },
 
         error: (error) => {
           this.isSubmitSuccess = false;
           this.submitMessage = 'Failed to send message';
+          this.openSubmitPopup();
           this.isSubmitting = false;
         }
       });
