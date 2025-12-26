@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { QuestionItem, Quiz } from '../quizzes-page';
 import { FormsModule } from '@angular/forms';
 import { QuizzesService, QuizType, QuestionType } from '../../../../service/quizzes.service';
+import { ActivityService } from '../../../../service/activity.service';
 
 @Component({
   selector: 'app-open-quiz',
@@ -27,6 +28,7 @@ export class OpenQuiz implements OnInit {
   isLoading = signal(false);
 
   private quizzesService = inject(QuizzesService);
+  private activityService = inject(ActivityService);
 
   constructor(
     private route: ActivatedRoute,
@@ -167,6 +169,15 @@ export class OpenQuiz implements OnInit {
 
   openScoreModal() {
     this.scoreModalOpen.set(true);
+    
+    const quiz = this.quiz();
+    if (quiz) {
+      this.activityService.addActivity({
+        type: 'quiz',
+        title: quiz.title,
+        quizSetId: quiz.quiz_id
+      });
+    }
   }
 
   closeScoreModal() {
