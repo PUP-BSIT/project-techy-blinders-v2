@@ -64,14 +64,20 @@
                     }
             </div>
             <div class="submit-class">
-                <button type="submit">Submit</button>
+                <button type="submit" [disabled]="isSubmitting" [style.cursor]="isSubmitting ? 'not-allowed' : 'pointer'">{{ isSubmitting ? 'Sending...' : 'Submit' }}</button>
             </div>
         </form>
     </div>
 
     @if (submitMessage) {
-    <div [class]="isSubmitSuccess? 'success-message' : 'error-message'">
-        {{ submitMessage }}
-    </div>
+        @if (showSubmitPopup()) {
+            <div class="popup-overlay" (click)="closeSubmitPopup()">
+                <div class="popup" [class.success]="isSubmitSuccess" [class.warning]="!isSubmitSuccess" (click)="$event.stopPropagation()">
+                    <h2>{{ isSubmitSuccess ? 'Success!' : 'Error' }}</h2>
+                    <p>{{ submitMessage }}</p>
+                    <button (click)="closeSubmitPopup()">Close</button>
+                </div>
+            </div>
+        }
     }
 </div>
