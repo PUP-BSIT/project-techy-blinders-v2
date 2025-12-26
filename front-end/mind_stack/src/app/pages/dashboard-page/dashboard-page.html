@@ -23,69 +23,40 @@
         </div>
       </section>
 
-      <div class="content-grid">
-        <div class="left-column">
-
-          <section class="quick-actions-section">
-            <div class="action-row">
-              <h2 class="action-title">Create a Flashcard Set</h2>
-              <button class="create-btn" (click)="createFlashcards()">Create</button>
-            </div>
-            
-            <div class="divider"></div>
-            
-            <div class="action-row">
-              <h2 class="action-title">Create a Quiz Set</h2>
-              <button class="create-btn" (click)="createQuiz()">Create</button>
-            </div>
-          </section>
-
-          <section class="recent-activity-section">
-            <div class="section-header">
-              <h2 class="section-title">Recent Activities</h2>
-              <span class="count-badge">{{ recentActivities.length }}</span>
-            </div>
-            <div class="activity-list">
-              @if (recentActivities.length === 0) {
-                <p class="empty-message">No recent activities</p>
-              }
-              @for (activity of recentActivities; track activity.id) {
-                <div class="activity-item">
-                  <div class="activity-icon">▶</div>
-                  <div class="activity-content">
-                    <span class="activity-title">{{ activity.title }}</span>
-                    <span class="activity-subtitle">Short Description About the Reviews</span>
-                  </div>
-                </div>
-              }
-            </div>
-          </section>
+      <section class="quick-actions-section">
+        <div class="action-row">
+          <h2 class="action-title">Create a Flashcard Set</h2>
+          <button class="create-btn" (click)="createFlashcards()">Create</button>
         </div>
-
-        <div class="right-column">
-
-          <section class="bookmarks-section">
-            <div class="section-header">
-              <h2 class="section-title">Bookmarks</h2>
-              <span class="count-badge">{{ studyLibrary.length }}</span>
-            </div>
-            <div class="bookmarks-list">
-              @if (studyLibrary.length === 0) {
-                <p class="empty-message">No bookmarks yet</p>
-              }
-              @for (item of studyLibrary; track item.id) {
-                <div class="bookmark-item" (click)="viewStudyItem(item)">
-                  <div class="activity-icon">▶</div>
-                  <div class="activity-content">
-                    <span class="activity-title">{{ item.name }}</span>
-                    <span class="activity-subtitle">Short Description About the Reviews</span>
-                  </div>
-                </div>
-              }
-            </div>
-          </section>
+        
+        <div class="divider"></div>
+        
+        <div class="action-row">
+          <h2 class="action-title">Create a Quiz Set</h2>
+          <button class="create-btn" (click)="createQuiz()">Create</button>
         </div>
-      </div>
+      </section>
+
+      <section class="recent-activity-section">
+        <div class="section-header">
+          <h2 class="section-title">Recent Activities</h2>
+          <span class="count-badge">{{ recentActivities.length }}</span>
+        </div>
+        <div class="activity-list">
+          @if (recentActivities.length === 0) {
+            <p class="empty-message">No recent activities</p>
+          }
+          @for (activity of recentActivities; track activity.id) {
+            <div class="activity-item">
+              <div class="activity-icon">▶</div>
+              <div class="activity-content">
+                <span class="activity-title">{{ activity.title }}</span>
+                <span class="activity-subtitle">Short Description About the Reviews</span>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
     }
   </div>
 </div>
