@@ -68,10 +68,6 @@ export class LoginPage {
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
-        if (this.loginForm.invalid) {
-          this.errorMessage = this.getEmailError() || this.getPasswordError();
-          return;
-        }
         if (err.status === 404) this.errorMessage = 'Email not found';
         else this.errorMessage = 'Login failed. Try again.';
       }
@@ -93,28 +89,5 @@ export class LoginPage {
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
-
-    getEmailError(): string {
-    const emailControl = this.loginForm.get('email');
-    
-    if (emailControl?.hasError('required')) {
-      return 'Email is required';
-    }
-    if (emailControl?.hasError('email')) {
-      return 'Please enter a valid email address';
-    }
-    if (emailControl?.hasError('maxLength')) {
-      return 'Email must not exceed 254 characters';
-    }
-    return '';
-  }
-
-  getPasswordError(): string {
-    const passwordControl = this.loginForm.get('password');
-    
-    if (passwordControl?.hasError('required')) {
-      return 'Password is required';
-    }
-    return '';
-  }
+  
 }
