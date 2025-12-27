@@ -432,7 +432,7 @@ export class QuizzesPage implements OnInit {
   }
 
   saveQuiz() {
-    if (this.quizTitle.trim() && this.selectedQuestionType !== '') {
+    if (this.quizTitle.trim() && this.quizDescription.trim() && this.selectedQuestionType !== '') {
       this.isModalOpen = false;
       this.isQuestionModalOpen = true;
       this.isQuizSetCreateSuccessPopupOpen = false;
