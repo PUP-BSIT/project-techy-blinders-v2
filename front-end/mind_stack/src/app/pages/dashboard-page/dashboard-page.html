@@ -40,18 +40,24 @@
       <section class="recent-activity-section">
         <div class="section-header">
           <h2 class="section-title">Recent Activities</h2>
-          <span class="count-badge">{{ recentActivities.length }}</span>
+          <div class="header-actions">
+            <span class="count-badge">{{ recentActivities.length }}</span>
+            @if (recentActivities.length > 0) {
+              <button class="reset-btn" (click)="resetActivities()" title="Clear all activities">
+                Clear All
+              </button>
+            }
+          </div>
         </div>
         <div class="activity-list">
           @if (recentActivities.length === 0) {
             <p class="empty-message">No recent activities</p>
           }
           @for (activity of recentActivities; track activity.id) {
-            <div class="activity-item">
-              <div class="activity-icon">▶</div>
+            <div class="activity-item" (click)="navigateToActivity(activity)">
               <div class="activity-content">
                 <span class="activity-title">{{ activity.title }}</span>
-                <span class="activity-subtitle">Short Description About the Reviews</span>
+                <span class="activity-subtitle">{{ getActivityDescription(activity) }}</span>
               </div>
             </div>
           }

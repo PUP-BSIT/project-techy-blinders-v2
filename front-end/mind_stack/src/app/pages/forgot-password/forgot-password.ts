@@ -22,6 +22,8 @@ export class ForgotPassword {
   successMessage = signal('');
   showSuccessPopup = signal(false);
   currentStep = signal(1);
+  showNewPassword = false;
+  showConfirmPassword = false;
 
   confirmPasswordFocused = signal(false);
   otpSent = signal(false);
@@ -164,5 +166,13 @@ export class ForgotPassword {
 
   get confirmPasswordControl() {
     return this.forgotPasswordForm.get('confirmPassword');
+  }
+
+  toggleNewPasswordVisibility() {
+    this.showNewPassword = !this.showNewPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 }

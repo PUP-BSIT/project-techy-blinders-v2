@@ -21,6 +21,8 @@ export class RegistrationPage {
   private router = inject(Router);
 
   registrationForm: FormGroup;
+  showPassword = false;
+  showConfirmPassword = false;
 
   // Signals
   isLoading = signal(false);
@@ -105,5 +107,13 @@ export class RegistrationPage {
 
   goToLoginPage() {
     this.router.navigate(['/login']);
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 }

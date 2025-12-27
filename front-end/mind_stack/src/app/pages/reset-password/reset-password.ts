@@ -16,6 +16,8 @@ export class ResetPassword {
   errorMessage = signal('');
   successMessage = signal('');
   showSuccessPopup = signal(false);
+  showNewPassword = false;
+  showConfirmPassword = false;
 
   formBuilder = inject(FormBuilder);
   authService = inject(AuthService);
@@ -73,5 +75,13 @@ export class ResetPassword {
   }
   get confirmPasswordControl() {
     return this.resetPasswordForm.get('confirmPassword');
+  }
+
+  toggleNewPasswordVisibility() {
+    this.showNewPassword = !this.showNewPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 }

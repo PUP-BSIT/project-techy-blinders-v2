@@ -118,6 +118,50 @@
     }
 }
 
+.password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-container input {
+    padding-right: 45px;
+}
+
+.show-password-btn {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    &:focus {
+        outline: none;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    img {
+        width: 20px;
+        height: 20px;
+        opacity: 0.6;
+        transition: opacity 0.2s ease;
+    }
+
+    &:hover img {
+        opacity: 0.8;
+    }
+}
+
 .validation-message {
     min-height: 16px;
     margin-top: 3px;
@@ -513,6 +557,20 @@
                 max-width: 100%;
             }
         }
+
+        .password-input-container input {
+            padding-right: 45px;
+        }
+
+        .show-password-btn {
+            right: 14px;
+            padding: 5px;
+
+            img {
+                width: 20px;
+                height: 20px;
+            }
+        }
         
         label {
             font-size: 13px;
@@ -651,6 +709,20 @@
                 width: 100%;
                 box-sizing: border-box;
                 max-width: 100%;
+            }
+        }
+
+        .password-input-container input {
+            padding-right: 40px;
+        }
+
+        .show-password-btn {
+            right: 12px;
+            padding: 4px;
+
+            img {
+                width: 18px;
+                height: 18px;
             }
         }
         

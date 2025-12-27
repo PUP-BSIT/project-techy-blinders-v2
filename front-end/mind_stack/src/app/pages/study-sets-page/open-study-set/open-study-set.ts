@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StudySet, StudySetsService } from '../../../../service/study-sets.service';
+import { ActivityService } from '../../../../service/activity.service';
 
 @Component({
   selector: 'app-open-study-set',
@@ -16,8 +17,10 @@ export class OpenStudySet implements OnInit {
   isDefinitionRevealed: boolean = false;
   isLoading: boolean = false;
   errorMessage: string = '';
+  private hasTrackedActivity: boolean = false;
 
   private studySetsService = inject(StudySetsService);
+  private activityService = inject(ActivityService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -71,6 +74,18 @@ export class OpenStudySet implements OnInit {
   toggleDefinition() {
     if (this.hasFlashcards) {
       this.isDefinitionRevealed = !this.isDefinitionRevealed;
+      this.trackFlashcardActivity();
+    }
+  }
+
+  private trackFlashcardActivity() {
+    if (!this.hasTrackedActivity && this.studySet) {
+      this.hasTrackedActivity = true;
+      this.activityService.addActivity({
+        type: 'flashcard',
+        title: this.studySet.title,
+        studySetId: this.studySet.flashcard_id
+      });
     }
   }
 

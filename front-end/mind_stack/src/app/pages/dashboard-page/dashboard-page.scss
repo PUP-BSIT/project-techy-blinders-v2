@@ -231,6 +231,12 @@ $transition-normal: 0.3s ease;
   }
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .count-badge {
   background: transparent;
   color: $color-text-primary;
@@ -238,6 +244,28 @@ $transition-normal: 0.3s ease;
   font-weight: 700;
   padding: 0;
   font-family: "Poppins";
+}
+
+.reset-btn {
+  padding: 8px 16px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all $transition-normal;
+  font-family: "Poppins";
+
+  &:hover {
+    background: #c82333;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
 }
 
 .activity-list {
@@ -260,19 +288,6 @@ $transition-normal: 0.3s ease;
     transform: scale(1.02);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
-}
-
-.activity-icon {
-  width: 32px;
-  height: 32px;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 14px;
-  flex-shrink: 0;
 }
 
 .activity-content {
@@ -490,20 +505,23 @@ $transition-normal: 0.3s ease;
     margin-bottom: 16px;
   }
 
+  .header-actions {
+    gap: 8px;
+  }
+
   .count-badge {
     font-size: 28px;
+  }
+
+  .reset-btn {
+    padding: 6px 12px;
+    font-size: 13px;
   }
 
   .activity-item {
     padding: 16px;
     border-radius: 16px;
     gap: 12px;
-  }
-
-  .activity-icon {
-    width: 28px;
-    height: 28px;
-    font-size: 12px;
   }
 
   .activity-title {
@@ -578,6 +596,11 @@ $transition-normal: 0.3s ease;
 
   .count-badge {
     font-size: 24px;
+  }
+
+  .reset-btn {
+    padding: 5px 10px;
+    font-size: 12px;
   }
 
   .activity-item {
