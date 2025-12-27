@@ -123,7 +123,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn-cancel" (click)="closeModal()" [disabled]="isLoading">Cancel</button>
-                <button class="btn-continue" (click)="saveQuiz()" [disabled]="isLoading || !quizTitle.trim() || !selectedQuestionType">
+                <button class="btn-continue" (click)="saveQuiz()" [disabled]="isLoading || !quizTitle.trim() || !quizDescription.trim() || !selectedQuestionType">
                     {{ isLoading ? 'Loading...' : 'Continue' }}
                 </button>
             </div>
