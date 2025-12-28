@@ -21,7 +21,7 @@
                 <div>
                     <label>Name </label>
                 </div>
-                <input type="text" formControlName="name" placeholder="Enter name...">
+                <input type="text" formControlName="name" placeholder="Enter your name">
                     @if (nameControl?.touched) {
                         @if(nameControl?.errors?.['required']) {
                             <div>
@@ -34,7 +34,7 @@
                 <div>
                     <label>Email </label>
                 </div>
-                <input type="text" formControlName="email" placeholder="Enter email...">
+                <input type="text" formControlName="email" placeholder="Enter your email">
                     @if (emailControl?.touched) {
                         @if(emailControl?.errors?.['required']) {
                             <div>
@@ -43,7 +43,7 @@
                             
                         }@else if (emailControl?.errors?.['email']) {
                             <div>
-                                <span>Invalid Email Format</span>
+                                <p class="validators-message">Invalid Email Format</p>
                             </div>
                             
                         }
@@ -53,18 +53,27 @@
                 <div>
                     <label>Message </label>
                 </div>
-                <textarea rows="4" formControlName="message" placeholder="Enter message..."></textarea>
+                <textarea rows="4" formControlName="message" placeholder="Enter your concern"></textarea>
                     @if (messageControl?.touched) {
                         @if (messageControl?.errors?.['required']) {
                             <div>
                                 <p class="validators-message">Add message</p>
                             </div>
                             
+                        }@else if (messageControl?.errors?.['minlength']) {
+                            <div>
+                                <p class="validators-message">Message is too short</p>
+                            </div>
                         }
                     }
             </div>
             <div class="submit-class">
-                <button type="submit" [disabled]="isSubmitting" [style.cursor]="isSubmitting ? 'not-allowed' : 'pointer'">{{ isSubmitting ? 'Sending...' : 'Submit' }}</button>
+                <button
+                    type="submit"
+                    [disabled]="contactForm.invalid || isSubmitting"
+                    [style.cursor]="(contactForm.invalid || isSubmitting) ? 'not-allowed' : 'pointer'">
+                    {{ isSubmitting ? 'Sending...' : 'Submit' }}
+                </button>
             </div>
         </form>
     </div>

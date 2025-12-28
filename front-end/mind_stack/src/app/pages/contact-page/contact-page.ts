@@ -23,7 +23,7 @@ export class ContactPage {
   contactForm: FormGroup;
   isSubmitting = false;
   submitMessage = '';
-  isSubmitSuccess = true;
+  isSubmitSuccess = false;
   submitPopupVisible = false;
   private submitPopupTimeout: any;
 
@@ -65,7 +65,7 @@ export class ContactPage {
       }],
 
       message: ['', {
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.minLength(30)],
         updateOn: 'change'
       }]
     })
