@@ -310,17 +310,8 @@ export class QuizzesPage implements OnInit {
     }
   }
 
-  isPageNumber(page: number | string): boolean {
-    return typeof page === 'number';
-  }
 
-  getPageNumber(page: number | string): number {
-    return page as number;
-  }
 
-  getPageDisplay(page: number | string): string {
-    return typeof page === 'number' ? String((page as number) + 1) : page as string;
-  }
 
   openModal() {
     this.isModalOpen = true;
@@ -407,8 +398,38 @@ export class QuizzesPage implements OnInit {
     return Math.ceil(this.questions.length / this.itemsPerPage);
   }
 
-  get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i);
+  get questionPages(): (number | string)[] {
+    const totalPages = this.totalPages;
+    const currentPage = this.currentPage;
+    const pages: (number | string)[] = [];
+
+    if (totalPages <= 6) {
+      return Array.from({ length: totalPages }, (_, i) => i);
+    }
+
+    pages.push(0, 1, 2);
+
+    if (totalPages > 4) {
+      pages.push('...');
+    }
+
+    if (totalPages > 3) {
+      pages.push(totalPages - 1);
+    }
+
+    return pages;
+  }
+
+  isPageNumber(page: number | string): boolean {
+    return typeof page === 'number';
+  }
+
+  getPageNumber(page: number | string): number {
+    return page as number;
+  }
+
+  getPageDisplay(page: number | string): string {
+    return typeof page === 'number' ? String((page as number) + 1) : page as string;
   }
 
   goToPage(page: number) {
