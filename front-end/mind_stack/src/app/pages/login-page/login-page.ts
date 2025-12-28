@@ -68,8 +68,22 @@ export class LoginPage {
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
-        if (err.status === 404) this.errorMessage = 'Email not found';
-        else this.errorMessage = 'Login failed. Try again.';
+        switch(err.status) {
+          case 404:
+            this.errorMessage = "Account not found";
+            break;
+          case 401:
+            this.errorMessage = "Invalid email or password";
+            break;
+          case 403:
+            this.errorMessage = "You don't have a permission on this action";
+            break;
+          case 500:
+            this.errorMessage  = "Something went wrong on our end. Please try again";
+            break;
+          default:
+            this.errorMessage = "Login failed. Please try again";
+        }
       }
     });
   }

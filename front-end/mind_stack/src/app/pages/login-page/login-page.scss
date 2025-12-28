@@ -271,11 +271,9 @@
     text-align: center;
     min-height: 20px;
     position: absolute;
-    width: 100%;
+    width: 96%;
     position: static;
-    left: auto;
-    top: auto;
-    
+
     span {
         font-size: 12px;
         margin: 0;
@@ -297,6 +295,7 @@
     margin: 10px 0;
     
     span {
+        font-weight: 400;
         color: #c62828;
     }
 }
