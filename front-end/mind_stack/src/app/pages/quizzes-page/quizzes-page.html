@@ -225,7 +225,7 @@
                          *ngFor="let question of paginatedQuestions; let i = index"
                          [class.hidden]="!isIdentification()">
                         <div class="identification-header">
-                            <div class="question-number">{{ getActualIndex(i) + 1 }}.</div>
+                            <div class="question-number">{{ getActualIndex(i) + 1 }}</div>
                             <button class="btn-delete-icon" 
                                     (click)="deleteQuestion(getActualIndex(i))">
                                 ✕
