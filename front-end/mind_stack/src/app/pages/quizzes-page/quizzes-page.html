@@ -151,7 +151,7 @@
                          *ngFor="let question of paginatedQuestions; let i = index"
                          [class.hidden]="!isMultipleChoice()">
                         <div class="mc-question-header">
-                            <div class="question-number">{{ getActualIndex(i) + 1 }}.</div>
+                            <div class="question-number">{{ getActualIndex(i) + 1 }}</div>
                             <button class="btn-delete-icon" 
                                     (click)="deleteQuestion(getActualIndex(i))">
                                 ✕
@@ -225,7 +225,7 @@
                          *ngFor="let question of paginatedQuestions; let i = index"
                          [class.hidden]="!isIdentification()">
                         <div class="identification-header">
-                            <div class="question-number">{{ getActualIndex(i) + 1 }}.</div>
+                            <div class="question-number">{{ getActualIndex(i) + 1 }}</div>
                             <button class="btn-delete-icon" 
                                     (click)="deleteQuestion(getActualIndex(i))">
                                 ✕
@@ -251,24 +251,34 @@
             </div>
 
 
-            <div class="pagination" [class.show]="totalPages > 1">
+            <div class="study-sets-pagination" [class.show]="totalPages > 1">
+                <button class="pagination-btn prev" 
+                            (click)="goToPage(0)" 
+                            [disabled]="currentPage === 0">
+                    ‹‹
+                </button>
                 <button class="pagination-btn prev" 
                             (click)="previousPage()" 
                             [disabled]="currentPage === 0">
                     ‹
                 </button>
                 <div class="pagination-dots">
-                    <span *ngFor="let page of pages" 
-                            class="pagination-dot" 
-                            [class.active]="currentPage === page"
-                            (click)="goToPage(page)">
-                        {{ page + 1 }}
+                    <span *ngFor="let page of questionPages" 
+                          [class]="page === '...' ? 'pagination-ellipsis' : 'pagination-dot'"
+                          [class.active]="isPageNumber(page) && currentPage === page"
+                          (click)="isPageNumber(page) && goToPage(getPageNumber(page))">
+                        {{ getPageDisplay(page) }}
                     </span>
                 </div>
                 <button class="pagination-btn next" 
                             (click)="nextPage()" 
                             [disabled]="currentPage === totalPages - 1">
                     ›
+                </button>
+                <button class="pagination-btn next" 
+                            (click)="goToPage(totalPages - 1)" 
+                            [disabled]="currentPage === totalPages - 1">
+                    ››
                 </button>
             </div>
 

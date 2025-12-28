@@ -135,9 +135,9 @@ $transition-normal: 0.3s ease;
         border: none;
         border-radius: 0;
         width: auto;
-        height: 40px;
-        padding: 0 0.5rem;
-        font-size: 1.2rem;
+        height: 28px;
+        padding: 0 0.25rem;
+        font-size: 0.9rem;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -162,9 +162,9 @@ $transition-normal: 0.3s ease;
     }
 
     .pagination-dot {
-        width: 46px;
-        height: 46px;
-        border-radius: 8px;
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
         background: $color-text-white;
         color: $color-primary-dark;
         cursor: pointer;
@@ -172,27 +172,27 @@ $transition-normal: 0.3s ease;
         align-items: center;
         justify-content: center;
         font-weight: 600;
-        font-size: 1.1rem;
+        font-size: 0.85rem;
         transition: all $transition-normal;
         border: none;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 
         &:hover {
             background: rgba(255, 255, 255, 0.9);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.12);
         }
 
         &.active {
             background: $color-primary;
             color: $color-text-white;
-            box-shadow: 0 4px 8px rgba(61, 172, 120, 0.3);
+            box-shadow: 0 2px 4px rgba(61, 172, 120, 0.22);
         }
     }
 
     .pagination-ellipsis {
-        width: 46px;
-        height: 46px;
+        width: 28px;
+        height: 28px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -714,7 +714,6 @@ $transition-normal: 0.3s ease;
     }
 }
 
-// Quiz Creation Modal (matches study-set style)
 .quiz-modal {
     max-width: 700px;
     padding: 2rem;
@@ -995,6 +994,7 @@ $transition-normal: 0.3s ease;
 .flashcard-definition {
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     font-size: 0.9rem;
+    margin-bottom: 5px;
 
     &::placeholder {
         color: rgba(255, 255, 255, 0.6);
@@ -1098,7 +1098,7 @@ $transition-normal: 0.3s ease;
 .flashcard-item {
     background: $color-card;
     border-radius: 12px;
-    padding: 1rem;
+    padding: 0.5rem;
     box-shadow: $shadow-medium;
 }
 
@@ -1128,25 +1128,28 @@ $transition-normal: 0.3s ease;
     gap: 0.5rem;
 }
 
-// Identification Item Styles
 .identification-item {
     .identification-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 0 0.5rem 0;
+        padding: 0 0 0.1rem 0;
 
         .question-number {
+            background: rgba(255, 255, 255, 0.25);
             color: $color-text-white;
-            font-size: 1.1rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
             font-weight: 600;
+            line-height: 1.2;
         }
     }
 
     .identification-content {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.3rem;
     }
 }
 
@@ -1441,7 +1444,6 @@ $transition-normal: 0.3s ease;
     }
 }
 
-// Multiple Choice Question Styling
 .mc-question {
     border-radius: 18px;
     padding: 0;
@@ -1449,7 +1451,7 @@ $transition-normal: 0.3s ease;
     
     .mc-question-header {
         position: relative;
-        padding: 0.3rem 1rem;
+        padding: 0.5rem 1rem;
         display: flex;
         align-items: flex-start;
         gap: 0.5rem;
@@ -1457,10 +1459,14 @@ $transition-normal: 0.3s ease;
     }
 
     .question-number {
-        color: #fff;
-        font-weight: 400;
-        font-size: 1rem;
-        flex-shrink: 0;
+        background: rgba(255, 255, 255, 0.25);
+        color: $color-text-white;
+        padding: 0.1rem 0.4rem;
+        margin-left: -5px;
+        border-radius: 10px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        line-height: 1.2;
     }
 
     .question-title {
@@ -1475,27 +1481,24 @@ $transition-normal: 0.3s ease;
         background: transparent;
         border: none;
         color: $color-text-white;
-        width: 30px;
-        height: 30px;
-        border-radius: 4px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        padding: 0;
+        width: 20px;
+        height: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer;
-        font-size: 1.4rem;
+        line-height: 1;
         transition: all $transition-fast;
-        font-weight: 600;
-        flex-shrink: 0;
-        margin-left: auto;
 
         &:hover {
-            background: rgba(0, 0, 0, 0.2);
-            transform: scale(1.1);
+            transform: scale(1.2);
+            opacity: 0.8;
         }
     }
 
     .mc-question-body {
-        background: rgba(255, 255, 255, 0.15);
         padding: 0.8rem;
         display: flex;
         align-items: flex-start;
@@ -1512,7 +1515,7 @@ $transition-normal: 0.3s ease;
         border: none;
         border-bottom: 2px solid rgba(255, 255, 255, 0.5);
         color: $color-text-white;
-        padding: 0.6rem 0;
+        padding: 0.3rem 0;
         margin-bottom: 1.5rem;
         outline: none;
         font-size: 1rem;
@@ -1531,8 +1534,9 @@ $transition-normal: 0.3s ease;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.75rem;
+        gap: 0.55rem;
         padding-top: 0.25rem;
+        margin-top: -12px;
     }
 }
 
@@ -1561,8 +1565,9 @@ $transition-normal: 0.3s ease;
     background: transparent;
     border: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    margin-top: -3px;
     color: $color-text-white;
-    padding: 0.4rem 0.5rem;
+    padding: 0.3rem 0.5rem;
     outline: none;
     font-size: 0.9rem;
     transition: all $transition-fast;
@@ -1579,8 +1584,8 @@ $transition-normal: 0.3s ease;
 .mc-radios {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    padding-top: 0.2rem;
+    gap: 0.4rem;
+    margin-top: 30px;
 }
 
 .option-radio-wrapper {
@@ -1590,8 +1595,8 @@ $transition-normal: 0.3s ease;
 }
 
 .option-radio {
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     border: 2.5px solid rgba(255, 255, 255, 0.8);
     border-radius: 50%;
     display: flex;
@@ -1607,8 +1612,8 @@ $transition-normal: 0.3s ease;
 }
 
 .radio-dot {
-    width: 14px;
-    height: 14px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: transparent;
     transition: all $transition-fast;
@@ -1631,28 +1636,29 @@ $transition-normal: 0.3s ease;
     background: transparent;
     border: none;
     color: $color-text-white;
-    width: 30px;
-    height: 30px;
-    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    font-size: 1.4rem;
+    line-height: 1;
     transition: all $transition-fast;
-    font-weight: 600;
 
     &:hover {
-        background: rgba(0, 0, 0, 0.2);
-        transform: scale(1.1);
+        transform: scale(1.2);
+        opacity: 0.8;
     }
 }
 
 .question-editor-modal {
     width: 650px;
-    min-height: 790px;
+    min-height: 680px;
     max-width: 650px;
-    max-height: 98vh;
+    max-height: 80vh;
     overflow: hidden;
     background: #b8d9c8;
     padding: 1.5rem 1.5rem 1rem 1.5rem;
@@ -1717,6 +1723,7 @@ $transition-normal: 0.3s ease;
         gap: 0.5rem;
         transition: all $transition-fast;
         box-shadow: $shadow-light;
+        margin-top: -10px;
 
         .plus-icon {
             font-size: 1.1rem;
