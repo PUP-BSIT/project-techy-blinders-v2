@@ -34,9 +34,13 @@ public class UserImplementation implements UserService {
 
     @Override
     public User createUser(User user) {
-        // check if email already exists
+        // Check if email already exists
         if (repo.findByEmail(user.getEmail()) != null) {
             throw new RuntimeException("Email already in use");
+        }
+        // Check if username already exists
+        if (repo.findByUsername(user.getUsername()) != null) {
+            throw new RuntimeException("Username already in use");
         }
         long randomDigits = ThreadLocalRandom.current().nextLong(10000000000L, 99999999999L);
         user.setUserId(randomDigits);

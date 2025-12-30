@@ -99,9 +99,11 @@ export class RegistrationPage {
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);
-        // Check for email already in use error
+        // Check for email or username already in use
         if (err.status === 409 && err.error?.error === 'Email already in use') {
           this.errorMessage.set('This email is already registered. Please use a different email.');
+        } else if (err.status === 409 && err.error?.error === 'Username already in use') {
+          this.errorMessage.set('This username is already taken. Please choose another username.');
         } else {
           this.errorMessage.set(err.error?.error || err.error?.message || 'Registration failed. Try again.');
         }
