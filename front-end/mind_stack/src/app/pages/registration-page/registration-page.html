@@ -23,9 +23,9 @@
                 <div class="validation-message">
                     @if (emailControl?.touched) {
                         @if (emailControl?.errors?.['required']) {
-                            <span>Input Email</span>
+                            <span>Email is required</span>
                         }@else if(emailControl?.errors?.['email']) {
-                            <span>Invalid Email</span>
+                            <span>Invalid email format</span>
                         }@else if (emailControl?.errors?.['maxlength']) {
                             <span>Email can only contain up to 50 characters</span>
                         }
@@ -39,7 +39,7 @@
                 <div class="validation-message">
                     @if (usernameControl?.touched) {
                         @if(usernameControl?.errors?.['required']) {
-                            <span>Input Username</span>
+                            <span>Username is required</span>
                         }@else if (usernameControl?.errors?.['maxlength']) {
                             <span>Username can only contain up to 20 characters</span>
                         }
@@ -59,7 +59,7 @@
                 <div class="validation-message">
                     @if(passwordControl?.touched) {
                         @if(passwordControl?.errors?.['required']){
-                            <span>Input password</span>
+                            <span>Password is required</span>
                         }@else if(passwordControl?.errors?.['minlength']) {
                             <span>Password must be at least 6 characters</span>
                         }
@@ -81,7 +81,7 @@
                         @if(confirmPasswordControl?.errors?.['required']) {
                             <span>Confirm your password</span>
                         }@else if(confirmPasswordControl?.value !== passwordControl?.value) {
-                            <span>Password is not match</span>
+                            <span>Passwords do not match</span>
                         }
                     }
                 </div>

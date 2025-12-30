@@ -102,14 +102,18 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(new HashMap<>() {
-            {
+        try {
+            User createdUser = userService.createUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new HashMap<>() {{
                 put("account_successfully_created", true);
                 put("user_id", createdUser.getUserId());
-            }
-        });
+            }});
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new HashMap<>() {{
+                put("account_successfully_created", false);
+                put("error", e.getMessage());
+            }});
+        }
     }
 
     @PostMapping("/login")

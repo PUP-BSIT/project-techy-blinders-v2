@@ -6,4 +6,5 @@ import com.mindstack.mind_stack_id.models.User;
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUserId(long userId);
     User findByEmail(String email);
+    User findByUsername(String username);
 }
