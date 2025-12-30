@@ -31,6 +31,12 @@ export class DashboardPage implements OnInit, OnDestroy {
   isLoading: boolean = true;
 
   recentActivities: Activity[] = [];
+  
+  activitiesCurrentPage: number = 0;
+  activitiesItemsPerPage: number = 3;
+  activitiesTotalPages: number = 0;
+  activitiesPages: (number | string)[] = [];
+  paginatedActivities: Activity[] = [];
 
   constructor(private router: Router) {}
 
@@ -49,6 +55,7 @@ export class DashboardPage implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(activities => {
         this.recentActivities = activities;
+        this.updateActivitiesPagination();
       });
 
     this.authService.currentUser$
@@ -59,6 +66,7 @@ export class DashboardPage implements OnInit, OnDestroy {
         } else {
           this.recentActivities = [];
           this.activityService.clearActivities();
+          this.updateActivitiesPagination();
         }
       });
   }
@@ -122,6 +130,99 @@ export class DashboardPage implements OnInit, OnDestroy {
 
   resetActivities(): void {
     this.activityService.resetActivities();
+  }
+
+  // Pagination methods for recent activities
+  private updateActivitiesPagination() {
+    this.activitiesTotalPages = Math.ceil(this.recentActivities.length / this.activitiesItemsPerPage);
+    
+    // Ensure we have at least 1 page if there are activities
+    if (this.recentActivities.length > 0 && this.activitiesTotalPages === 0) {
+      this.activitiesTotalPages = 1;
+    }
+    
+    if (this.activitiesCurrentPage >= this.activitiesTotalPages && this.activitiesTotalPages > 0) {
+      this.activitiesCurrentPage = this.activitiesTotalPages - 1;
+    }
+    
+    this.updatePaginatedActivities();
+    this.updateActivitiesPages();
+  }
+
+  private updatePaginatedActivities() {
+    const startIndex = this.activitiesCurrentPage * this.activitiesItemsPerPage;
+    const endIndex = startIndex + this.activitiesItemsPerPage;
+    this.paginatedActivities = this.recentActivities.slice(startIndex, endIndex);
+  }
+
+  private updateActivitiesPages() {
+    this.activitiesPages = [];
+    
+    // Always show at least one page if there are activities
+    if (this.activitiesTotalPages === 0 && this.recentActivities.length > 0) {
+      this.activitiesPages.push(0);
+      return;
+    }
+    
+    if (this.activitiesTotalPages <= 7) {
+      for (let i = 0; i < this.activitiesTotalPages; i++) {
+        this.activitiesPages.push(i);
+      }
+    } else {
+      if (this.activitiesCurrentPage <= 3) {
+        for (let i = 0; i < 5; i++) {
+          this.activitiesPages.push(i);
+        }
+        this.activitiesPages.push('...');
+        this.activitiesPages.push(this.activitiesTotalPages - 1);
+      } else if (this.activitiesCurrentPage >= this.activitiesTotalPages - 4) {
+        this.activitiesPages.push(0);
+        this.activitiesPages.push('...');
+        for (let i = this.activitiesTotalPages - 5; i < this.activitiesTotalPages; i++) {
+          this.activitiesPages.push(i);
+        }
+      } else {
+        this.activitiesPages.push(0);
+        this.activitiesPages.push('...');
+        for (let i = this.activitiesCurrentPage - 1; i <= this.activitiesCurrentPage + 1; i++) {
+          this.activitiesPages.push(i);
+        }
+        this.activitiesPages.push('...');
+        this.activitiesPages.push(this.activitiesTotalPages - 1);
+      }
+    }
+  }
+
+  goToActivitiesPage(page: number) {
+    if (page >= 0 && page < this.activitiesTotalPages) {
+      this.activitiesCurrentPage = page;
+      this.updatePaginatedActivities();
+      this.updateActivitiesPages();
+    }
+  }
+
+  previousActivitiesPage() {
+    if (this.activitiesCurrentPage > 0) {
+      this.goToActivitiesPage(this.activitiesCurrentPage - 1);
+    }
+  }
+
+  nextActivitiesPage() {
+    if (this.activitiesCurrentPage < this.activitiesTotalPages - 1) {
+      this.goToActivitiesPage(this.activitiesCurrentPage + 1);
+    }
+  }
+
+  isPageNumber(page: number | string): boolean {
+    return typeof page === 'number';
+  }
+
+  getPageNumber(page: number | string): number {
+    return typeof page === 'number' ? page : 0;
+  }
+
+  getPageDisplay(page: number | string): string {
+    return typeof page === 'number' ? String((page as number) + 1) : page as string;
   }
 
   navigateToQuizzes() {

@@ -52,15 +52,48 @@
         <div class="activity-list">
           @if (recentActivities.length === 0) {
             <p class="empty-message">No recent activities</p>
-          }
-          @for (activity of recentActivities; track activity.id) {
-            <div class="activity-item" (click)="navigateToActivity(activity)">
-              <div class="activity-content">
-                <span class="activity-title">{{ activity.title }}</span>
-                <span class="activity-subtitle">{{ getActivityDescription(activity) }}</span>
+          } @else {
+            @for (activity of paginatedActivities; track activity.id) {
+              <div class="activity-item" (click)="navigateToActivity(activity)">
+                <div class="activity-content">
+                  <span class="activity-title">{{ activity.title }}</span>
+                  <span class="activity-subtitle">{{ getActivityDescription(activity) }}</span>
+                </div>
               </div>
-            </div>
+            }
           }
+        </div>
+        
+        <div class="activities-pagination" [class.show]="activitiesTotalPages > 1">
+          <button class="pagination-btn prev" 
+                  (click)="goToActivitiesPage(0)" 
+                  [disabled]="activitiesCurrentPage === 0">
+            ‹‹
+          </button>
+          <button class="pagination-btn prev" 
+                  (click)="previousActivitiesPage()" 
+                  [disabled]="activitiesCurrentPage === 0">
+            ‹
+          </button>
+          <div class="pagination-dots">
+            @for (page of activitiesPages; track page) {
+              <span [class]="page === '...' ? 'pagination-ellipsis' : 'pagination-dot'"
+                    [class.active]="isPageNumber(page) && activitiesCurrentPage === page"
+                    (click)="isPageNumber(page) && goToActivitiesPage(getPageNumber(page))">
+                {{ getPageDisplay(page) }}
+              </span>
+            }
+          </div>
+          <button class="pagination-btn next" 
+                  (click)="nextActivitiesPage()" 
+                  [disabled]="activitiesCurrentPage === activitiesTotalPages - 1">
+            ›
+          </button>
+          <button class="pagination-btn next" 
+                  (click)="goToActivitiesPage(activitiesTotalPages - 1)" 
+                  [disabled]="activitiesCurrentPage === activitiesTotalPages - 1">
+            ››
+          </button>
         </div>
       </section>
     }
