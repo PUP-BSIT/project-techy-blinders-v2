@@ -99,7 +99,12 @@ export class RegistrationPage {
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err.error?.message || 'Registration failed. Try again.');
+        // Check for email already in use error
+        if (err.status === 409 && err.error?.error === 'Email already in use') {
+          this.errorMessage.set('This email is already registered. Please use a different email.');
+        } else {
+          this.errorMessage.set(err.error?.error || err.error?.message || 'Registration failed. Try again.');
+        }
         this.openSubmitPopup();
       }
     });
