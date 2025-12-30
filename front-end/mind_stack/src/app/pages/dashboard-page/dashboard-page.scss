@@ -383,7 +383,7 @@ $transition-normal: 0.3s ease;
   }
 
   .activities-pagination {
-    padding: 0.75rem 0.50rem;
+    padding: 0.75rem 0;
     gap: 0.45rem;
 
     .pagination-btn {
@@ -420,14 +420,12 @@ $transition-normal: 0.3s ease;
   font-size: 16px;
 }
 
-// Activities pagination styles (copied from quiz set page)
 .activities-pagination {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   padding: 0.5rem 0.5rem;
-  margin-top: 0.75rem;
   opacity: 0;
   pointer-events: none;
   transition: opacity $transition-normal;
