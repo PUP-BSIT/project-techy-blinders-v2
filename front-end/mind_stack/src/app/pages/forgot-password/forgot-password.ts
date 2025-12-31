@@ -104,7 +104,36 @@ export class ForgotPassword {
       return;
     }
     this.errorMessage.set('');
-    this.currentStep.set(2);
+    // check email if registered for OTP request
+    this.isLoading.set(true);
+    const email = this.forgotPasswordForm.get('email')?.value;
+    this.authService.requestOtp({ email }).subscribe({
+      next: (response) => {
+        this.isLoading.set(false);
+        if (response.success) {
+          this.successMessage.set('OTP sent to your email.');
+          this.otpSent.set(true);
+          this.currentStep.set(2);
+        } else {
+          const msg = (response.message || '').toLowerCase();
+          if (msg.includes('not found') || msg.includes('unregistered') || msg.includes('no account')) {
+            this.errorPopupMessage = 'Email not registered.';
+            this.showErrorPopup.set(true);
+          } else {
+            this.errorMessage.set(response.message);
+          }
+        }
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        if (err && err.status === 404) {
+          this.errorPopupMessage = 'Email not registered.';
+          this.showErrorPopup.set(true);
+        } else {
+          this.errorMessage.set('Failed to send OTP. Please try again.');
+        }
+      }
+    });
   }
 
   sendOtp() {
@@ -126,12 +155,25 @@ export class ForgotPassword {
             this.closeSuccessPopup(),
             5000);
         } else {
-          this.errorMessage.set(response.message);
+          // check email is not registered
+          const msg = (response.message || '').toLowerCase();
+          if (msg.includes('not found') || msg.includes('unregistered') || msg.includes('no account')) {
+            this.errorPopupMessage = 'Email not registered.';
+            this.showErrorPopup.set(true);
+          } else {
+            this.errorMessage.set(response.message);
+          }
         }
       },
-      error: () => {
+      error: (err) => {
         this.isLoading.set(false);
-        this.errorMessage.set('Failed to send OTP. Please try again.');
+        // of 404 or similar for unregistered email
+        if (err && err.status === 404) {
+          this.errorPopupMessage = 'Email not registered.';
+          this.showErrorPopup.set(true);
+        } else {
+          this.errorMessage.set('Failed to send OTP. Please try again.');
+        }
       }
     });
   }
