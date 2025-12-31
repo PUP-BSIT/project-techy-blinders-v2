@@ -57,21 +57,21 @@
                     </button>
                 </div>
                 <div class="validation-message">
-                        @if(passwordControl?.touched) {
-                            @if(passwordControl?.errors?.['required']){
-                                <span>Password is required</span>
-                            } @else if(passwordControl?.errors?.['minlength']) {
-                                <span>Password must be at least 8 characters</span>
-                            } @else if(passwordControl?.errors?.['uppercase']) {
-                                <span>Password must contain at least one uppercase letter</span>
-                            } @else if(passwordControl?.errors?.['lowercase']) {
-                                <span>Password must contain at least one lowercase letter</span>
-                            } @else if(passwordControl?.errors?.['number']) {
-                                <span>Password must contain at least one number</span>
-                            } @else if(passwordControl?.errors?.['special']) {
-                                <span>Password must contain at least one special character (e.g. !@#$%^&*)</span>
-                            }
+                    @if(passwordControl?.touched) {
+                        @if(passwordControl?.errors?.['required']){
+                            <span>Password is required</span>
+                        } @else if(passwordControl?.errors?.['minlength']) {
+                            <span>Password must be at least 8 characters</span>
+                        } @else if(passwordControl?.errors?.['uppercase']) {
+                            <span>Password must contain at least one uppercase letter</span>
+                        } @else if(passwordControl?.errors?.['lowercase']) {
+                            <span>Password must contain at least one lowercase letter</span>
+                        } @else if(passwordControl?.errors?.['number']) {
+                            <span>Password must contain at least one number</span>
+                        } @else if(passwordControl?.errors?.['special']) {
+                            <span>Password must contain at least one special character (e.g. !@#$%^&*)</span>
                         }
+                    }
                 </div>
             </div>
 

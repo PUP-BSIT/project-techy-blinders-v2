@@ -37,16 +37,47 @@ export class ForgotPassword {
   constructor() {
     this.forgotPasswordForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      newPassword: ['', [Validators.required, Validators.minLength(8), this.strongPasswordValidator]],
       confirmPassword: ['', Validators.required],
       otp: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
     });
 
-    this.forgotPasswordForm.get('confirmPassword')?.setValidators([Validators.required, this.matchPasswordsValidator.bind(this)]);
+    this.forgotPasswordForm.get('confirmPassword')?.setValidators([
+      Validators.required,
+      this.matchPasswordsValidator.bind(this)
+    ]);
     this.forgotPasswordForm.get('confirmPassword')?.updateValueAndValidity();
     this.forgotPasswordForm.get('newPassword')?.valueChanges.subscribe(() => {
       this.forgotPasswordForm.get('confirmPassword')?.updateValueAndValidity({ emitEvent: false });
     });
+
+  }
+
+  strongPasswordValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value || '';
+    const errors: any = {};
+
+    if (value.length < 8) {
+      errors['minlength'] = true;
+    }
+
+    if (!/[A-Z]/.test(value)) {
+      errors['uppercase'] = true;
+    }
+
+    if (!/[a-z]/.test(value)) {
+      errors['lowercase'] = true;
+    }
+
+    if (!/[0-9]/.test(value)) {
+      errors['number'] = true;
+    }
+
+    if (!/[!@#$%^&*(),.?{}|<>\[\]\\/;_+=-]/.test(value)) {
+      errors['special'] = true;
+    }
+    
+    return Object.keys(errors).length ? errors : null;
   }
 
   matchPasswordsValidator(control: AbstractControl): ValidationErrors | null {
