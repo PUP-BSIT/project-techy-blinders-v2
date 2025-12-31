@@ -69,6 +69,14 @@
   padding: 10px;
   resize: none;
   border: solid 0px;
+  font-family: "Roboto", sans-serif;
+}
+
+.contact-form textarea::placeholder {
+  font-family: "Roboto", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #888;
 }
 
 .contact-form textarea:focus {
