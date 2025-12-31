@@ -21,11 +21,14 @@
                 <div>
                     <label>Name </label>
                 </div>
-                <input type="text" formControlName="name" placeholder="Enter your name">
+                <input type="text" formControlName="name" 
+                       placeholder="Enter your name">
                     @if (nameControl?.touched) {
                         @if(nameControl?.errors?.['required']) {
                             <div>
-                               <p class="validators-message">Input name</p> 
+                               <p class="validators-message">
+                                Name is required
+                            </p> 
                             </div>
                         }
                     }
@@ -34,16 +37,22 @@
                 <div>
                     <label>Email </label>
                 </div>
-                <input type="text" formControlName="email" placeholder="Enter your email">
+                <input type="text" 
+                       formControlName="email" 
+                       placeholder="Enter your email">
                     @if (emailControl?.touched) {
                         @if(emailControl?.errors?.['required']) {
                             <div>
-                                <p class="validators-message">Input email</p> 
+                                <p class="validators-message">
+                                    Email is required
+                                </p> 
                             </div>
                             
                         }@else if (emailControl?.errors?.['email']) {
                             <div>
-                                <p class="validators-message">Invalid Email Format</p>
+                                <p class="validators-message">
+                                    Invalid email format
+                                </p>
                             </div>
                             
                         }
@@ -53,16 +62,23 @@
                 <div>
                     <label>Message </label>
                 </div>
-                <textarea rows="4" formControlName="message" placeholder="Enter your concern"></textarea>
+                <textarea rows="4" 
+                          formControlName="message" 
+                          placeholder="Enter your concern">
+                </textarea>
                     @if (messageControl?.touched) {
                         @if (messageControl?.errors?.['required']) {
                             <div>
-                                <p class="validators-message">Add message</p>
+                                <p class="validators-message">
+                                    Message is required
+                                </p>
                             </div>
                             
                         }@else if (messageControl?.errors?.['minlength']) {
                             <div>
-                                <p class="validators-message">Message is too short</p>
+                                <p class="validators-message">
+                                    Message is too short
+                                </p>
                             </div>
                         }
                     }
@@ -81,7 +97,10 @@
     @if (submitMessage) {
         @if (showSubmitPopup()) {
             <div class="popup-overlay" (click)="closeSubmitPopup()">
-                <div class="popup" [class.success]="isSubmitSuccess" [class.warning]="!isSubmitSuccess" (click)="$event.stopPropagation()">
+                <div class="popup" 
+                    [class.success]="isSubmitSuccess" 
+                    [class.warning]="!isSubmitSuccess" 
+                    (click)="$event.stopPropagation()">
                     <h2>{{ isSubmitSuccess ? 'Success!' : 'Error' }}</h2>
                     <p>{{ submitMessage }}</p>
                     <button (click)="closeSubmitPopup()">Close</button>
