@@ -465,6 +465,27 @@ export class QuizzesPage implements OnInit {
 
   saveQuizFromQuestionModal() {
     if (this.quizTitle.trim()) {
+      const hasEmpty = this.questions.some(q => {
+        if (!q.question || !q.question.trim()) return true;
+        if (this.selectedQuestionType === QuestionType.IDENTIFICATION) {
+          return !q.answer || !q.answer.trim();
+        } else if (this.selectedQuestionType === QuestionType.MULTIPLE_CHOICE) {
+          if (!q.optionA || !q.optionA.trim()) return true;
+          if (!q.optionB || !q.optionB.trim()) return true;
+          if (!q.optionC || !q.optionC.trim()) return true;
+          if (!q.optionD || !q.optionD.trim()) return true;
+          if (!q.correctAnswer || !q.correctAnswer.trim()) return true;
+        }
+        return false;
+      });
+      if (hasEmpty) {
+        this.isWarningPopupOpen = false;
+        setTimeout(() => {
+          this.openWarningPopup('Please fill in all questions, inputs, and correct answers before saving.');
+        }, 0);
+        return;
+      }
+
       const currentUser = this.authService.getCurrentUser();
       if (!currentUser || !currentUser.userId) {
         this.isWarningPopupOpen = false;
