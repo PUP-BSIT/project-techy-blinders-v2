@@ -470,14 +470,18 @@ export class QuizzesPage implements OnInit {
         if (this.selectedQuestionType === QuestionType.IDENTIFICATION) {
           return !q.answer || !q.answer.trim();
         } else if (this.selectedQuestionType === QuestionType.MULTIPLE_CHOICE) {
-          return false;
+          if (!q.optionA || !q.optionA.trim()) return true;
+          if (!q.optionB || !q.optionB.trim()) return true;
+          if (!q.optionC || !q.optionC.trim()) return true;
+          if (!q.optionD || !q.optionD.trim()) return true;
+          if (!q.correctAnswer || !q.correctAnswer.trim()) return true;
         }
         return false;
       });
       if (hasEmpty) {
         this.isWarningPopupOpen = false;
         setTimeout(() => {
-          this.openWarningPopup('Please fill in all questions and answers before saving.');
+          this.openWarningPopup('Please fill in all questions, inputs, and correct answers before saving.');
         }, 0);
         return;
       }
