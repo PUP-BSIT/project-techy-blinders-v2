@@ -204,13 +204,17 @@ export class ForgotPassword {
             this.closeSuccessPopup(), 
             5000);
         } else {
-          this.errorPopupMessage = response.message || 'Invalid or wrong OTP. Please try again.';
+          this.errorPopupMessage = 'Invalid or wrong OTP. Please try again.';
           this.showErrorPopup.set(true);
         }
       },
-      error: () => {
+      error: (err) => {
         this.isLoading.set(false);
-        this.errorPopupMessage = 'An error occurred. Please try again.';
+        if (err && err.status === 400) {
+          this.errorPopupMessage = 'Invalid or wrong OTP. Please try again.';
+        } else {
+          this.errorPopupMessage = 'An error occurred. Please try again.';
+        }
         this.showErrorPopup.set(true);
       }
     });
