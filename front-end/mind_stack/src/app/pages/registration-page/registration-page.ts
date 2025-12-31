@@ -52,9 +52,37 @@ export class RegistrationPage {
     this.registrationForm = this.fb.group({
       email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
       username: ['', [Validators.required, Validators.maxLength(20)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(8), this.strongPasswordValidator]],
       confirmPassword: ['', [Validators.required]]
     });
+
+  }
+
+  strongPasswordValidator(control: any) {
+    const value = control.value || '';
+    const errors: any = {};
+
+    if (value.length < 8) {
+      errors['minlength'] = true;
+    }
+
+    if (!/[A-Z]/.test(value)) {
+      errors['uppercase'] = true;
+    }
+
+    if (!/[a-z]/.test(value)) {
+      errors['lowercase'] = true;
+    }
+
+    if (!/[0-9]/.test(value)) {
+      errors['number'] = true;
+    }
+
+    if (!/[!@#$%^&*(),.?{}|<>\[\]\\/;_+=-]/.test(value)) {
+      errors['special'] = true;
+    }
+    
+    return Object.keys(errors).length ? errors : null;
   }
 
   get emailControl() { return this.registrationForm.get('email'); }
