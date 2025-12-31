@@ -432,9 +432,17 @@
     }
 
     &.warning {
-        h2 { color: #ff9900; }
-        button { background: #ff9900; }
-        button:hover { background: #e88b00; }
+        h2 { 
+            color: red; 
+        }
+
+        button { 
+            background: red; 
+        }
+
+        button:hover { 
+            background: #b71c1c !important; 
+        }
     }
 }
 
