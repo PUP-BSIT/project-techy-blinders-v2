@@ -21,6 +21,8 @@ export class ForgotPassword {
   errorMessage = signal('');
   successMessage = signal('');
   showSuccessPopup = signal(false);
+  showErrorPopup = signal(false);
+  errorPopupMessage = '';
   currentStep = signal(1);
   showNewPassword = false;
   showConfirmPassword = false;
@@ -37,16 +39,47 @@ export class ForgotPassword {
   constructor() {
     this.forgotPasswordForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      newPassword: ['', [Validators.required, Validators.minLength(8), this.strongPasswordValidator]],
       confirmPassword: ['', Validators.required],
       otp: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
     });
 
-    this.forgotPasswordForm.get('confirmPassword')?.setValidators([Validators.required, this.matchPasswordsValidator.bind(this)]);
+    this.forgotPasswordForm.get('confirmPassword')?.setValidators([
+      Validators.required,
+      this.matchPasswordsValidator.bind(this)
+    ]);
     this.forgotPasswordForm.get('confirmPassword')?.updateValueAndValidity();
     this.forgotPasswordForm.get('newPassword')?.valueChanges.subscribe(() => {
       this.forgotPasswordForm.get('confirmPassword')?.updateValueAndValidity({ emitEvent: false });
     });
+
+  }
+
+  strongPasswordValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value || '';
+    const errors: any = {};
+
+    if (value.length < 8) {
+      errors['minlength'] = true;
+    }
+
+    if (!/[A-Z]/.test(value)) {
+      errors['uppercase'] = true;
+    }
+
+    if (!/[a-z]/.test(value)) {
+      errors['lowercase'] = true;
+    }
+
+    if (!/[0-9]/.test(value)) {
+      errors['number'] = true;
+    }
+
+    if (!/[!@#$%^&*(),.?{}|<>\[\]\\/;_+=-]/.test(value)) {
+      errors['special'] = true;
+    }
+    
+    return Object.keys(errors).length ? errors : null;
   }
 
   matchPasswordsValidator(control: AbstractControl): ValidationErrors | null {
@@ -71,7 +104,36 @@ export class ForgotPassword {
       return;
     }
     this.errorMessage.set('');
-    this.currentStep.set(2);
+    // check email if registered for OTP request
+    this.isLoading.set(true);
+    const email = this.forgotPasswordForm.get('email')?.value;
+    this.authService.requestOtp({ email }).subscribe({
+      next: (response) => {
+        this.isLoading.set(false);
+        if (response.success) {
+          this.successMessage.set('OTP sent to your email.');
+          this.otpSent.set(true);
+          this.currentStep.set(2);
+        } else {
+          const msg = (response.message || '').toLowerCase();
+          if (msg.includes('not found') || msg.includes('unregistered') || msg.includes('no account')) {
+            this.errorPopupMessage = 'Email not registered.';
+            this.showErrorPopup.set(true);
+          } else {
+            this.errorMessage.set(response.message);
+          }
+        }
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        if (err && err.status === 404) {
+          this.errorPopupMessage = 'Email not registered.';
+          this.showErrorPopup.set(true);
+        } else {
+          this.errorMessage.set('Failed to send OTP. Please try again.');
+        }
+      }
+    });
   }
 
   sendOtp() {
@@ -93,12 +155,25 @@ export class ForgotPassword {
             this.closeSuccessPopup(),
             5000);
         } else {
-          this.errorMessage.set(response.message);
+          // check email is not registered
+          const msg = (response.message || '').toLowerCase();
+          if (msg.includes('not found') || msg.includes('unregistered') || msg.includes('no account')) {
+            this.errorPopupMessage = 'Email not registered.';
+            this.showErrorPopup.set(true);
+          } else {
+            this.errorMessage.set(response.message);
+          }
         }
       },
-      error: () => {
+      error: (err) => {
         this.isLoading.set(false);
-        this.errorMessage.set('Failed to send OTP. Please try again.');
+        // of 404 or similar for unregistered email
+        if (err && err.status === 404) {
+          this.errorPopupMessage = 'Email not registered.';
+          this.showErrorPopup.set(true);
+        } else {
+          this.errorMessage.set('Failed to send OTP. Please try again.');
+        }
       }
     });
   }
@@ -129,14 +204,20 @@ export class ForgotPassword {
             this.closeSuccessPopup(), 
             5000);
         } else {
-          this.errorMessage.set(response.message);
+          this.errorPopupMessage = response.message || 'Invalid or wrong OTP. Please try again.';
+          this.showErrorPopup.set(true);
         }
       },
       error: () => {
         this.isLoading.set(false);
-        this.errorMessage.set('An error occurred. Please try again.');
+        this.errorPopupMessage = 'An error occurred. Please try again.';
+        this.showErrorPopup.set(true);
       }
     });
+  }
+  closeErrorPopup() {
+    this.showErrorPopup.set(false);
+    this.errorPopupMessage = '';
   }
 
   closeSuccessPopup() {
