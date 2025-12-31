@@ -21,6 +21,8 @@ export class ForgotPassword {
   errorMessage = signal('');
   successMessage = signal('');
   showSuccessPopup = signal(false);
+  showErrorPopup = signal(false);
+  errorPopupMessage = '';
   currentStep = signal(1);
   showNewPassword = false;
   showConfirmPassword = false;
@@ -160,14 +162,20 @@ export class ForgotPassword {
             this.closeSuccessPopup(), 
             5000);
         } else {
-          this.errorMessage.set(response.message);
+          this.errorPopupMessage = response.message || 'Invalid or wrong OTP. Please try again.';
+          this.showErrorPopup.set(true);
         }
       },
       error: () => {
         this.isLoading.set(false);
-        this.errorMessage.set('An error occurred. Please try again.');
+        this.errorPopupMessage = 'An error occurred. Please try again.';
+        this.showErrorPopup.set(true);
       }
     });
+  }
+  closeErrorPopup() {
+    this.showErrorPopup.set(false);
+    this.errorPopupMessage = '';
   }
 
   closeSuccessPopup() {
