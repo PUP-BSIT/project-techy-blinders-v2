@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { AuthService } from '../../../service/auth.service';
 import { Router } from '@angular/router';
 
@@ -41,6 +41,23 @@ export class ForgotPassword {
       confirmPassword: ['', Validators.required],
       otp: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
     });
+
+    this.forgotPasswordForm.get('confirmPassword')?.setValidators([Validators.required, this.matchPasswordsValidator.bind(this)]);
+    this.forgotPasswordForm.get('confirmPassword')?.updateValueAndValidity();
+    this.forgotPasswordForm.get('newPassword')?.valueChanges.subscribe(() => {
+      this.forgotPasswordForm.get('confirmPassword')?.updateValueAndValidity({ emitEvent: false });
+    });
+  }
+
+  matchPasswordsValidator(control: AbstractControl): ValidationErrors | null {
+    const confirmPassword = control.value;
+    const newPassword = this.forgotPasswordForm.get('newPassword')?.value;
+
+    if (!confirmPassword || !newPassword) {
+      return null;
+    }
+
+    return confirmPassword === newPassword ? null : { mustMatch: true };
   }
 
   next() {

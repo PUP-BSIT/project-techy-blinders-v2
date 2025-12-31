@@ -19,7 +19,7 @@
         <form [formGroup]="registrationForm" (ngSubmit)="register()">
             <div class="form-group">
                 <label>Email</label>
-                <input type="text" formControlName="email" placeholder="Email">
+                <input type="text" formControlName="email" placeholder="Enter your email">
                 <div class="validation-message">
                     @if (emailControl?.touched) {
                         @if (emailControl?.errors?.['required']) {
@@ -35,7 +35,7 @@
 
             <div class="form-group">
                 <label>Username</label>
-                <input type="text" formControlName="username" placeholder="Username">
+                <input type="text" formControlName="username" placeholder="Enter your username">
                 <div class="validation-message">
                     @if (usernameControl?.touched) {
                         @if(usernameControl?.errors?.['required']) {
@@ -50,7 +50,7 @@
             <div class="form-group">
                 <label>Password</label>
                 <div class="password-input-container">
-                    <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Password">
+                    <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Enter your password">
                     <button type="button" class="show-password-btn" (click)="togglePasswordVisibility()">
                         <img [src]="showPassword ? 'assets/unshow-password-icon.png' : 'assets/show-password-icon.png'"
                               [alt]="showPassword ? 'Hide password' : 'Show password'">
@@ -78,7 +78,7 @@
             <div class="form-group">
                 <label>Confirm Password</label>
                 <div class="password-input-container">
-                    <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword" placeholder="Confirm password">
+                    <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword" placeholder="Confirm your password">
                     <button type="button" class="show-password-btn" (click)="toggleConfirmPasswordVisibility()">
                         <img [src]="showConfirmPassword ? 'assets/unshow-password-icon.png' : 'assets/show-password-icon.png'"
                               [alt]="showConfirmPassword ? 'Hide password' : 'Show password'">
@@ -88,8 +88,8 @@
                     @if (confirmPasswordControl?.touched) {
                         @if(confirmPasswordControl?.errors?.['required']) {
                             <span>Confirm your password</span>
-                        }@else if(confirmPasswordControl?.value !== passwordControl?.value) {
-                            <span>Passwords do not match</span>
+                        } @else if(confirmPasswordControl?.value !== passwordControl?.value) {
+                            <span>Passwords must match</span>
                         }
                     }
                 </div>
