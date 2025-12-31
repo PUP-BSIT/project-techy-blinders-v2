@@ -88,8 +88,8 @@
                     @if (confirmPasswordControl?.touched) {
                         @if(confirmPasswordControl?.errors?.['required']) {
                             <span>Confirm your password</span>
-                        }@else if(confirmPasswordControl?.value !== passwordControl?.value) {
-                            <span>Passwords do not match</span>
+                        } @else if(confirmPasswordControl?.value !== passwordControl?.value) {
+                            <span>Passwords must match</span>
                         }
                     }
                 </div>
