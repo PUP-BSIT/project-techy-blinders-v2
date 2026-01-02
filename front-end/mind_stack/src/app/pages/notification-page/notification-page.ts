@@ -71,8 +71,10 @@ export class NotificationPage implements OnInit {
   getTimeAgo(date: Date): string {
     // Always show: Mon DD, HH:MM AM/PM (e.g., Dec 16, 9:59 PM)
     const d = new Date(date);
-    const datePart = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    const timePart = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    const datePart = 
+        d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const timePart = 
+        d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     return `${datePart}, ${timePart}`;
   }
 
