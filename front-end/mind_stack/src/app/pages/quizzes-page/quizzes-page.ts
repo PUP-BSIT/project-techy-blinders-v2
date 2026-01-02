@@ -6,8 +6,10 @@ import { QuizzesService, QuizType, QuizItem, QuestionType } from '../../../servi
 import { AuthService } from '../../../service/auth.service';
 import { CommunityService } from '../../../service/community.service';
 import { QuestionSuggestionService } from '../../../service/question-suggestion.service';
+import { QuizAttemptResponse } from '../../models/attempt.model';
 
 export interface QuestionItem {
+  quizId?: number;
   question: string;
   optionA?: string;
   optionB?: string;
@@ -45,7 +47,6 @@ export class QuizzesPage implements OnInit {
   get isPrivateDisabledForSelectedQuiz(): boolean {
     if (this.selectedQuizIdForPrivacy === null) return false;
     const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizIdForPrivacy);
-    // Disable if already private
     return quiz?.is_public === false;
   }
 
@@ -167,6 +168,7 @@ export class QuizzesPage implements OnInit {
   private questionSuggestionService = inject(QuestionSuggestionService);
   isLoading: boolean = false;
   quizzesList: Quiz[] = [];
+  latestAttempts: Map<number, QuizAttemptResponse> = new Map();
   isShowSuggestion: boolean = false;
   isLoadingSuggestion: boolean= false;
   isAiSuggestionsModalOpen: boolean = false;
@@ -180,6 +182,7 @@ export class QuizzesPage implements OnInit {
 
   ngOnInit() {
     this.loadQuizSetsFromBackend();
+    this.loadLatestAttempts();
     
     this.route.queryParams.subscribe(params => {
       if (params['create'] === 'true') {
@@ -253,11 +256,36 @@ export class QuizzesPage implements OnInit {
 
         this.quizzesList = localQuizzes;
         this.isLoading = false;
+        this.loadLatestAttempts();
       },
       error: (error) => {
         this.isLoading = false;
       }
     });
+  }
+
+  loadLatestAttempts() {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || !currentUser.userId) {
+      return;
+    }
+
+    this.quizzesList.forEach(quiz => {
+      this.quizzesService.getLatestQuizAttempt(currentUser.userId, quiz.quiz_id).subscribe({
+        next: (attempt) => {
+          if (attempt) {
+            this.latestAttempts.set(quiz.quiz_id, attempt);
+          }
+        },
+        error: (error) => {
+          console.error(`Error loading attempt for quiz ${quiz.quiz_id}:`, error);
+        }
+      });
+    });
+  }
+
+  getLatestAttempt(quizId: number): QuizAttemptResponse | undefined {
+    return this.latestAttempts.get(quizId);
   }
 
   get quizzes(): Quiz[] {
@@ -309,9 +337,6 @@ export class QuizzesPage implements OnInit {
       this.quizzesCurrentPage--;
     }
   }
-
-
-
 
   openModal() {
     this.isModalOpen = true;
@@ -564,8 +589,6 @@ export class QuizzesPage implements OnInit {
       }
     }
   }
-
-
 
   private updateQuizSetAndAddQuizzes(userId: number, quizType: QuizType, quizItems: QuizItem[]) {
     this.quizzesService.updateQuizSet(

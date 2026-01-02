@@ -5,6 +5,8 @@ import { QuestionItem, Quiz } from '../quizzes-page';
 import { FormsModule } from '@angular/forms';
 import { QuizzesService, QuizType, QuestionType } from '../../../../service/quizzes.service';
 import { ActivityService } from '../../../../service/activity.service';
+import { AuthService } from '../../../../service/auth.service';
+import { QuizAttemptResponse } from '../../../models/attempt.model';
 
 @Component({
   selector: 'app-open-quiz',
@@ -23,12 +25,15 @@ export class OpenQuiz implements OnInit {
   scoreVisible = signal(false);
   answersCorrectness = signal<boolean[]>([]);
   showScoreButton = signal(false);
+  userAnswers = signal<Map<number, string>>(new Map());
 
   scoreModalOpen = signal(false);
   isLoading = signal(false);
+  latestAttempt = signal<QuizAttemptResponse | null>(null);
 
   private quizzesService = inject(QuizzesService);
   private activityService = inject(ActivityService);
+  private authService = inject(AuthService);
 
   constructor(
     private route: ActivatedRoute,
@@ -49,6 +54,7 @@ export class OpenQuiz implements OnInit {
           title: quizSet.title,
           description: quizSet.description,
           questions: quizSet.quizzes.map(q => ({
+            quizId: q.quizId,
             question: q.question,
             optionA: q.optionA,
             optionB: q.optionB,
@@ -71,11 +77,29 @@ export class OpenQuiz implements OnInit {
           this.answersCorrectness.set(new Array(quiz.questions.length).fill(false));
           this.showScoreButton.set(false);
           this.scoreVisible.set(false);
+          this.loadLatestAttempt(id);
         }
       },
       error: (error) => {
         this.isLoading.set(false);
         this.quiz.set(null);
+      }
+    });
+  }
+
+  loadLatestAttempt(quizSetId: number) {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || !currentUser.userId) {
+      return;
+    }
+
+    this.quizzesService.getLatestQuizAttempt(currentUser.userId, quizSetId).subscribe({
+      next: (attempt) => {
+        this.latestAttempt.set(attempt);
+      },
+      error: (error) => {
+        console.error('Error loading latest attempt:', error);
+        this.latestAttempt.set(null);
       }
     });
   }
@@ -154,6 +178,14 @@ export class OpenQuiz implements OnInit {
     updated[index] = isCorrect;
     this.answersCorrectness.set(updated);
 
+    const quiz = this.quiz();
+    if (quiz && quiz.questions[index]) {
+      const userAnswer = this.isMultipleChoice() ? this.selectedAnswer() : this.userTypedAnswer();
+      const answers = new Map(this.userAnswers());
+      answers.set(index, userAnswer);
+      this.userAnswers.set(answers);
+    }
+
     if (index === this.totalQuestions() - 1) {
       this.showScoreButton.set(true);
     }
@@ -168,6 +200,7 @@ export class OpenQuiz implements OnInit {
   }
 
   openScoreModal() {
+    this.submitQuizAttempt();
     this.scoreModalOpen.set(true);
     
     const quiz = this.quiz();
@@ -180,6 +213,48 @@ export class OpenQuiz implements OnInit {
     }
   }
 
+  submitQuizAttempt() {
+    const currentUser = this.authService.getCurrentUser();
+    const quiz = this.quiz();
+    
+    if (!currentUser || !currentUser.userId || !quiz) {
+      return;
+    }
+
+    const answers = [];
+    for (let i = 0; i < quiz.questions.length; i++) {
+      const question = quiz.questions[i];
+      const quizId = question.quizId;
+      
+      if (!quizId) {
+        console.error(`Quiz ID not found for question at index ${i}`);
+        continue;
+      }
+      
+      const userAnswer = this.userAnswers().get(i) || '';
+      answers.push({
+        quizId: quizId,
+        userAnswer: userAnswer
+      });
+    }
+
+    const request = {
+      userId: currentUser.userId,
+      quizSetId: quiz.quiz_id,
+      answers: answers
+    };
+
+    this.quizzesService.submitQuizAttempt(request).subscribe({
+      next: (response) => {
+        console.log('Quiz attempt submitted successfully:', response);
+        this.latestAttempt.set(response);
+      },
+      error: (error) => {
+        console.error('Error submitting quiz attempt:', error);
+      }
+    });
+  }
+
   closeScoreModal() {
     this.scoreModalOpen.set(false);
   }
@@ -189,6 +264,7 @@ retakeQuiz() {
 
   const total = this.totalQuestions();
   this.answersCorrectness.set(new Array(total).fill(false));
+  this.userAnswers.set(new Map());
 
   this.isAnswerRevealed.set(false);
   this.selectedAnswer.set('');
