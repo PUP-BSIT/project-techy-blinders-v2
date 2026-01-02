@@ -101,7 +101,8 @@ $transition-normal: 0.3s ease;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 1rem 0.5rem;
+    padding: 1rem 0;
+    flex-shrink: 0;
     opacity: 0;
     pointer-events: none;
     transition: opacity $transition-normal;
@@ -117,9 +118,9 @@ $transition-normal: 0.3s ease;
         border: none;
         border-radius: 0;
         width: auto;
-        height: 40px;
-        padding: 0 0.5rem;
-        font-size: 1.2rem;
+        height: 28px;
+        padding: 0 0.25rem;
+        font-size: 0.9rem;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -144,9 +145,9 @@ $transition-normal: 0.3s ease;
     }
 
     .pagination-dot {
-        width: 46px;
-        height: 46px;
-        border-radius: 8px;
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
         background: $color-text-white;
         color: $color-primary-dark;
         cursor: pointer;
@@ -154,27 +155,27 @@ $transition-normal: 0.3s ease;
         align-items: center;
         justify-content: center;
         font-weight: 600;
-        font-size: 1.1rem;
+        font-size: 0.85rem;
         transition: all $transition-normal;
         border: none;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 
         &:hover {
             background: rgba(255, 255, 255, 0.9);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.12);
         }
 
         &.active {
             background: $color-primary;
             color: $color-text-white;
-            box-shadow: 0 4px 8px rgba(61, 172, 120, 0.3);
+            box-shadow: 0 2px 4px rgba(61, 172, 120, 0.22);
         }
     }
 
     .pagination-ellipsis {
-        width: 46px;
-        height: 46px;
+        width: 28px;
+        height: 28px;
         display: flex;
         align-items: center;
         justify-content: center;
