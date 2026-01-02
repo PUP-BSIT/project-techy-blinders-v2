@@ -20,7 +20,8 @@ export class CreatePost {
 
   @Output() closeModalEvent = new EventEmitter<void>();
   @Output() createPost = new EventEmitter<Partial<Post>>();
-  @Output() updatePost = new EventEmitter<{postId: string, updates: Partial<Post>}>();
+  @Output() updatePost = 
+  new EventEmitter<{postId: string, updates: Partial<Post>}>();
 
   ngOnInit() {
     if (this.editPost) {
@@ -48,9 +49,8 @@ export class CreatePost {
           content: this.content
         };
         
-        // Only update slug if it's not a flashcard or quiz post
-        // (flashcard/quiz posts have special slug format: flashcard-{id}-... or quiz-{id}-...)
-        if (!this.editPost.slug.startsWith('flashcard-') && !this.editPost.slug.startsWith('quiz-')) {
+        if (!this.editPost.slug.startsWith('flashcard-') && 
+          !this.editPost.slug.startsWith('quiz-')) {
           updates.slug = this.title.toLowerCase().replace(/\s+/g, '-');
         }
         
