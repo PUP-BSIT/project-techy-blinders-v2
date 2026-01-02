@@ -110,18 +110,6 @@
                 </div>
 
                 <div class="form-group">
-                    <div class="quiz-type-wrapper">
-                        <select class="quiz-type-select" 
-                                [(ngModel)]="selectedQuestionType"
-                                (ngModelChange)="onQuestionTypeChange()">
-                            <option value="" disabled selected>Choose quiz type</option>
-                            <option [value]="QuestionType.IDENTIFICATION">Identification</option>
-                            <option [value]="QuestionType.MULTIPLE_CHOICE">Multiple Choice</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
                     <button class="btn-ai-suggestion"
                             (click)="generateAiSuggestions()"
                             [disabled]="isLoadingSuggestion || !quizTitle.trim()">
@@ -136,6 +124,15 @@
 
                     </button>
                 </div>
+            </div>
+            <div class="quiz-type-wrapper">
+                <select class="quiz-type-select" 
+                        [(ngModel)]="selectedQuestionType"
+                        (ngModelChange)="onQuestionTypeChange()">
+                    <option value="" disabled selected>Choose quiz type</option>
+                    <option [value]="QuestionType.IDENTIFICATION">Identification</option>
+                    <option [value]="QuestionType.MULTIPLE_CHOICE">Multiple Choice</option>
+                </select>
             </div>
             <div class="modal-footer">
                 <button class="btn-cancel" (click)="closeModal()" [disabled]="isLoading">Cancel</button>
