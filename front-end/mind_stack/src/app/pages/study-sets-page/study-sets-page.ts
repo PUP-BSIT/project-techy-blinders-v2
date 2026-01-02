@@ -364,10 +364,17 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
   saveFlashcards() {
     this.isFlashcardSaveSuccessPopupOpen = false;
+    // warning if any flashcard is missing a term or definition
+    const hasEmpty = this.flashcards.some(f => !f.term.trim() || !f.definition.trim());
+    if (hasEmpty) {
+      this.openWarningPopup('Please fill in both the term and definition for all flashcards.');
+      return;
+    }
+
     console.log('=== SAVE FLASHCARDS CALLED ===');
     console.log('Current Study Set ID:', this.currentStudySetId);
     console.log('Total Flashcards:', this.flashcards.length);
-    
+
     if (this.currentStudySetId !== null) {
       const currentUser = this.authService.getCurrentUser();
       if (!currentUser) {
@@ -376,7 +383,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
       }
 
       let studySet = this.studySets.find(s => s.flashcard_id === this.currentStudySetId);
-      
+
       if (!studySet) {
         this.isLoading = true;
         this.studySetsService.getStudySetById(this.currentStudySetId).subscribe({
