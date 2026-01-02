@@ -1,6 +1,6 @@
 $color-primary-dark: #2D6A4F;
 $color-primary: #3DAC78;
-// Centered empty state for quiz item note
+
 .empty-state {
     flex: 1;
     display: flex;
@@ -86,6 +86,21 @@ $transition-normal: 0.3s ease;
         animation: spin 1s linear infinite;
         margin-right: 12px;
     }
+}
+
+:host {
+    display: block;
+    overflow: hidden;
+    height: 100vh;
+}
+
+:host ::-webkit-scrollbar {
+    display: none;
+}
+
+:host {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 @keyframes spin {

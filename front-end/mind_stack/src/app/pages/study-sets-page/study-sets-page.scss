@@ -26,6 +26,21 @@ $shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.2);
 $transition-fast: 0.2s ease;
 $transition-normal: 0.3s ease;
 
+:host {
+    display: block;
+    overflow: hidden;
+    height: 100vh;
+}
+
+:host ::-webkit-scrollbar {
+    display: none;
+}
+
+:host {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
 .hidden {
     display: none !important;
 }
@@ -36,6 +51,8 @@ $transition-normal: 0.3s ease;
     display: flex;
     padding: 2rem;
     overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 .content-wrapper {
