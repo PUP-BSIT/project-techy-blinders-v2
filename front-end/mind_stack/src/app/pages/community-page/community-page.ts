@@ -1,4 +1,4 @@
-import { Component, ViewChildren, QueryList, AfterViewInit, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, ViewChildren, QueryList, AfterViewInit, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommunityService } from '../../../service/community.service';
@@ -27,6 +27,7 @@ import { ProfanityFilterService } from '../../../service/profanity-filter.servic
 export class CommunityPage implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
   
   posts: Post[] = [];
   allComments: Comment[] = [];
@@ -109,8 +110,10 @@ export class CommunityPage implements OnInit, OnDestroy {
     this.communityService.posts$
       .pipe(takeUntil(this.destroy$))
       .subscribe(posts => {
+        console.log('Posts updated, count:', posts.length);
         this.posts = posts;
         this.applyFilter();
+        this.cdr.detectChanges();
         setTimeout(() => {
           this.isLoading = false;
         }, 500);
@@ -120,6 +123,10 @@ export class CommunityPage implements OnInit, OnDestroy {
           posts.find(p => p.post_id === this.selectedPost!.post_id);
           if (updatedPost) {
             this.selectedPost = updatedPost;
+          } else {
+            // Post was deleted, close the modal
+            console.log('Selected post was deleted, closing modal');
+            this.closePostModal();
           }
         }
 
@@ -137,7 +144,9 @@ export class CommunityPage implements OnInit, OnDestroy {
     this.communityService.comments$
       .pipe(takeUntil(this.destroy$))
       .subscribe(comments => {
+        console.log('Comments updated, count:', comments.length);
         this.allComments = comments;
+        this.cdr.detectChanges();
       });
   }
 
@@ -241,6 +250,8 @@ export class CommunityPage implements OnInit, OnDestroy {
     } else {
       this.communityService.unpublishPost(action.post.post_id, action.setPrivate ?? false);
     }
+    // Close the modal immediately when post is deleted
+    this.closePostModal();
     this.isPostDeletedPopupOpen = false;
     setTimeout(() => {
       this.openPostDeletedPopup();

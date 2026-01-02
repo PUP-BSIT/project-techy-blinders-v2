@@ -170,7 +170,7 @@ export class CommunityService {
 
   unpublishPost(postId: string, setPrivate: boolean): void {
     const params = setPrivate ? { setPrivate: 'true' } : undefined;
-    const options = params ? { params } : {};
+    const options = params ? { params, responseType: 'text' as 'json' } : { responseType: 'text' as 'json' };
     this.http.put<any>(`${this.apiUrl}/posts/${postId}/unpublish`, {}, options).subscribe({
       next: updated => {
         // Remove from feed; keep comments removed from view to match unpublish
@@ -182,12 +182,17 @@ export class CommunityService {
   }
 
   deletePostPermanently(postId: string, setPrivate: boolean = true): void {
+    console.log('Deleting post permanently:', postId);
     const params = setPrivate ? { setPrivate: 'true' } : undefined;
-    const options = params ? { params } : {};
+    const options = params ? { params, responseType: 'text' as 'json' } : { responseType: 'text' as 'json' };
     this.http.delete(`${this.apiUrl}/posts/${postId}`, options).subscribe({
       next: () => {
-        this.postsSubject.next(this.postsSubject.value.filter(p => p.post_id !== postId));
-        this.commentsSubject.next(this.commentsSubject.value.filter(c => c.post_id !== postId));
+        console.log('Post deleted successfully, updating state');
+        const newPosts = this.postsSubject.value.filter(p => p.post_id !== postId);
+        const newComments = this.commentsSubject.value.filter(c => c.post_id !== postId);
+        console.log('Posts before:', this.postsSubject.value.length, 'after:', newPosts.length);
+        this.postsSubject.next(newPosts);
+        this.commentsSubject.next(newComments);
         this.notificationService.removeNotificationsByPostId(postId);
       },
       error: err => console.error('Failed to delete post permanently', err)
@@ -476,15 +481,27 @@ export class CommunityService {
   }
 
   deleteComment(commentId: string): void {
-    this.http.delete(`${this.apiUrl}/comments/${commentId}`).subscribe({
+    console.log('Deleting comment:', commentId);
+    this.http.delete(`${this.apiUrl}/comments/${commentId}`, { responseType: 'text' as 'json' }).subscribe({
       next: () => {
+        console.log('Comment deleted successfully, updating state');
         const comments = this.commentsSubject.value;
         const target = comments.find(c => c.comment_id === commentId);
-        this.commentsSubject.next(comments.filter(c => c.comment_id !== commentId));
+        
+        // Filter out the deleted comment and all its replies
+        const remainingComments = comments.filter(c => 
+          c.comment_id !== commentId && c.parent_comment_id !== commentId
+        );
+        
+        // Count how many comments (including replies) were removed
+        const removedCount = comments.length - remainingComments.length;
+        console.log('Comments before:', comments.length, 'after:', remainingComments.length, 'removed:', removedCount);
+        
+        this.commentsSubject.next(remainingComments);
 
         if (target) {
           const posts = this.postsSubject.value.map(p =>
-            p.post_id === target.post_id ? { ...p, commentcount: Math.max(0, p.commentcount - 1) } : p
+            p.post_id === target.post_id ? { ...p, commentcount: Math.max(0, p.commentcount - removedCount) } : p
           );
           this.postsSubject.next(posts);
         }
