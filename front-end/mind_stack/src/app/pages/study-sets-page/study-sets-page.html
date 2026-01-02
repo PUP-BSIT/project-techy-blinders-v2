@@ -113,8 +113,17 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn-cancel" (click)="closeModal()">Cancel</button>
-                <button class="btn-continue" (click)="saveStudySet()">Continue</button>
+                <button 
+                    class="btn-cancel" 
+                    (click)="closeModal()">
+                    Cancel
+                </button>
+                <button 
+                    class="btn-continue" 
+                    (click)="saveStudySet()" 
+                    [disabled]="isLoading || !studySetTitle.trim() || !studySetDescription.trim()">
+                    Continue
+                </button>
             </div>
         </div>
     </div>
