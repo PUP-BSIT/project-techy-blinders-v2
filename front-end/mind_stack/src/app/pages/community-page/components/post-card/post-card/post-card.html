@@ -1,20 +1,32 @@
 <div class="post-card-wrapper">
   <div class="user-header">
     <div class="user-avatar" 
-         (click)="goToUserProfile($event, post.user_id)">{{ getInitial(post.username) }}</div>
+         (click)="goToUserProfile($event, post.user_id)">
+         {{ getInitial(post.username) }}
+    </div>
     <div class="user-info">
-      <div class="username" (click)="goToUserProfile($event, post.user_id)">{{ post.username }}</div>
-      <div class="timestamp">Posted {{ getTimeAgo(post.created_at) }}@if (post.edited) { <span class="edited-label"> · Edited</span>}</div>
+      <div class="username" 
+           (click)="goToUserProfile($event, post.user_id)">
+           {{ post.username }}
+      </div>
+      <div class="timestamp">Posted {{ getTimeAgo(post.created_at) }}
+        @if (post.edited) { <span class="edited-label"> · Edited</span>}
+      </div>
     </div>
   </div>
 
-  <div class="post-card" (click)="onCardClick()">
+  <div class="post-card" 
+       (click)="onCardClick()">
     <div class="post-header">
       <span class="post-label">Caption:</span>
       <span class="post-category">{{ post.title }}</span>
       @if (isPostOwner()) {
-      <button class="menu-btn" (click)="toggleMenu($event)">
-        <svg width="4" height="16" viewBox="0 0 4 16" fill="currentColor">
+      <button class="menu-btn" 
+              (click)="toggleMenu($event)">
+        <svg width="4" 
+             height="16" 
+             viewBox="0 0 4 16" 
+             fill="currentColor">
           <circle cx="2" cy="2" r="2"/>
           <circle cx="2" cy="8" r="2"/>
           <circle cx="2" cy="14" r="2"/>
@@ -22,7 +34,8 @@
       </button>
       @if (showMenu) {
         <div class="dropdown-menu">
-          <button class="dropdown-item" (click)="onEdit($event)">
+          <button class="dropdown-item" 
+                  (click)="onEdit($event)">
             <svg width="14" height="14" 
                  viewBox="0 0 14 14" 
                  fill="none" 
@@ -34,7 +47,8 @@
             </svg>
             Edit
           </button>
-          <button class="dropdown-item delete" (click)="onDelete($event)">
+          <button class="dropdown-item delete" 
+                  (click)="onDelete($event)">
             <svg width="14" 
                  height="14" 
                  viewBox="0 0 14 14" 
@@ -52,15 +66,25 @@
 
 
     @if (showDeleteConfirm) {
-      <div class="confirm-overlay" (click)="cancelDelete($event)">
-        <div class="confirm-modal" (click)="$event.stopPropagation()">
+      <div class="confirm-overlay" 
+           (click)="cancelDelete($event)">
+        <div class="confirm-modal" 
+             (click)="$event.stopPropagation()">
           <div class="confirm-title">Delete this post?</div>
           <div class="confirm-subtext">
-            This will permanently delete the post from Community and set the linked flashcard/quiz to Private. This action cannot be undone.
+            This will permanently delete the post from Community and 
+            set the linked flashcard/quiz to Private. This action 
+            cannot be undone.
           </div>
           <div class="confirm-actions">
-            <button class="btn-cancel" (click)="cancelDelete($event)">Cancel</button>
-            <button class="btn-danger" (click)="confirmDelete($event)">Delete</button>
+            <button class="btn-cancel" 
+                    (click)="cancelDelete($event)">
+                    Cancel
+            </button>
+            <button class="btn-danger" 
+                    (click)="confirmDelete($event)">
+                    Delete
+            </button>
           </div>
         </div>
       </div>
@@ -71,7 +95,8 @@
     </div>
 
     <div class="post-content-card">
-      <button class="play-btn" (click)="onPlayClick($event)">
+      <button class="play-btn" 
+              (click)="onPlayClick($event)">
         ▶
       </button>
       <div class="post-info">
@@ -81,16 +106,27 @@
     </div>
 
     <div class="action-buttons">
-      <button class="action-btn" [class.active]="post.userLiked" (click)="onLike($event)">
-        <img src="assets/arrow-up.png" alt="like" class="action-icon">
+      <button class="action-btn" 
+              [class.active]="post.userLiked" 
+              (click)="onLike($event)">
+        <img src="assets/arrow-up.png" 
+             alt="like" 
+             class="action-icon">
         <span>{{ post.likes }}</span>
       </button>
-      <button class="action-btn" [class.active]="post.userDisliked" (click)="onDislike($event)">
-        <img src="assets/arrow-down.png" alt="dislike" class="action-icon">
+      <button class="action-btn" 
+              [class.active]="post.userDisliked" 
+              (click)="onDislike($event)">
+        <img src="assets/arrow-down.png" 
+             alt="dislike" 
+             class="action-icon">
         <span>{{ post.dislikes }}</span>
       </button>
-      <button class="action-btn" (click)="onCommentClick($event)">
-        <img src="assets/comment-circle.png" alt="comment" class="action-icon">
+      <button class="action-btn" 
+              (click)="onCommentClick($event)">
+        <img src="assets/comment-circle.png" 
+             alt="comment" 
+             class="action-icon">
         <span>{{ post.commentcount }}</span>
       </button>
     </div>

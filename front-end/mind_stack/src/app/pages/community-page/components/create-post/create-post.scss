@@ -36,7 +36,6 @@
       gap: 8px;
     }
 
-    /* Match label styling used in Share Study Set modal */
     .form-label {
       font-size: 14px;
       font-weight: 600;
@@ -57,7 +56,7 @@
       outline: none;
       font-family: inherit;
       color: #374151;
-      box-sizing: border-box; /* ensure consistent width including padding */
+      box-sizing: border-box; 
     }
 
     .form-input::placeholder,
@@ -78,9 +77,9 @@
 
     .form-select {
       appearance: none;
-      padding-right: 40px; /* space for the arrow */
+      padding-right: 40px;
       cursor: pointer;
-      width: 100%; /* match other inputs exactly */
+      width: 100%;
     }
 
     .select-arrow {

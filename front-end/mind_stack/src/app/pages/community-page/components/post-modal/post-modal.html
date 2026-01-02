@@ -1,13 +1,23 @@
-<div class="modal-overlay" (click)="closeModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
+<div class="modal-overlay" 
+     (click)="closeModal()">
+    <div class="modal-content" 
+         (click)="$event.stopPropagation()">
     
     <div class="scrollable-content">
         <div class="post-section">
         <div class="user-header">
-            <div class="user-avatar" (click)="goToUserProfile(post.user_id, $event)">{{ getInitial(post.username) }}</div>
+            <div class="user-avatar" 
+                 (click)="goToUserProfile(post.user_id, $event)">
+                 {{ getInitial(post.username) }}
+            </div>
             <div class="user-info">
-            <span class="username" (click)="goToUserProfile(post.user_id, $event)">{{ post.username }}</span>
-            <span class="timestamp">Posted {{ getTimeAgo(post.created_at) }}@if (post.edited) { <span class="edited-label"> · Edited</span>}</span>
+            <span class="username" 
+                  (click)="goToUserProfile(post.user_id, $event)">
+                  {{ post.username }}
+                </span>
+            <span class="timestamp">Posted {{ getTimeAgo(post.created_at) }}
+                @if (post.edited) 
+                { <span class="edited-label"> · Edited</span>}</span>
             </div>
         </div>
 
@@ -16,8 +26,12 @@
             <span class="post-label">Caption:</span>
             <span class="post-category">{{ post.title }}</span>
             @if (isPostOwner()) {
-            <button class="menu-btn" (click)="togglePostMenu($event)">
-                <svg width="4" height="16" viewBox="0 0 4 16" fill="currentColor">
+            <button class="menu-btn" 
+                    (click)="togglePostMenu($event)">
+                <svg width="4" 
+                     height="16" 
+                     viewBox="0 0 4 16" 
+                     fill="currentColor">
                 <circle cx="2" cy="2" r="2"/>
                 <circle cx="2" cy="8" r="2"/>
                 <circle cx="2" cy="14" r="2"/>
@@ -37,7 +51,8 @@
                     </svg>
                     Edit
                 </button>
-                <button class="dropdown-item delete" (click)="onDeletePost($event)">
+                <button class="dropdown-item delete" 
+                        (click)="onDeletePost($event)">
                     <svg width="14" 
                          height="14" 
                          viewBox="0 0 14 14" 
@@ -59,7 +74,10 @@
                                         Delete this post?
                                     </div>
                                     <div class="confirm-subtext">
-                                        This will permanently delete the post from Community and set the linked flashcard/quiz to Private. This action cannot be undone.
+                                        This will permanently delete the 
+                                        post from Community and set the 
+                                        linked flashcard/quiz to Private. 
+                                        This action cannot be undone.
                                     </div>
                                     <div class="confirm-actions">
                                         <button class="btn-cancel" 
@@ -122,21 +140,30 @@
         <div class="comments-section">
         @for (comment of comments; track comment.comment_id) {
         <div class="comment-thread">
-            <div class="comment-item" [attr.data-comment-id]="comment.comment_id">
+            <div class="comment-item" 
+                 [attr.data-comment-id]="comment.comment_id">
             <div class="comment-header">
-                <div class="user-avatar-small" (click)="goToUserProfile(comment.user_id, $event)">
+                <div class="user-avatar-small" 
+                     (click)="goToUserProfile(comment.user_id, $event)">
                     {{ getInitial(comment.username) }}
                 </div>
                 <div class="comment-info">
-                <span class="username" (click)="goToUserProfile(comment.user_id, $event)">{{ comment.username }}</span>
+                <span class="username" 
+                      (click)="goToUserProfile(comment.user_id, $event)">
+                      {{ comment.username }}
+                </span>
                  <span class="timestamp">
-                     · {{ getTimeAgo(comment.created_at) }}@if (comment.edited) { · Edited}
+                     · {{ getTimeAgo(comment.created_at) }}
+                     @if (comment.edited) { · Edited}
                  </span>
                 </div>
                 @if (isCommentOwner(comment)) {
                 <button class="comment-menu-btn" 
-                        (click)="toggleCommentMenu($event, comment.comment_id)">
-                    <svg width="4" height="16" viewBox="0 0 4 16" fill="currentColor">
+                    (click)="toggleCommentMenu($event, comment.comment_id)">
+                    <svg width="4" 
+                         height="16" 
+                         viewBox="0 0 4 16" 
+                         fill="currentColor">
                     <circle cx="2" cy="2" r="2"/>
                     <circle cx="2" cy="8" r="2"/>
                     <circle cx="2" cy="14" r="2"/>
@@ -180,14 +207,18 @@
                                     Delete this comment?
                                 </div>
                                 <div class="confirm-subtext">
-                                    This will permanently delete the comment. This action cannot be undone.
+                                    This will permanently delete the comment. 
+                                    This action cannot be undone.
                                 </div>
                                 <div class="confirm-actions">
                                     <button class="btn-cancel" 
-                                            (click)="cancelDeleteComment($event)">Cancel
+                                        (click)="cancelDeleteComment($event)">
+                                        Cancel
                                     </button>
                                     <button class="btn-danger" 
-                                            (click)="confirmDeleteComment($event, comment)">Delete
+                                    (click)="confirmDeleteComment($event, 
+                                    comment)">
+                                     Delete
                                     </button>
                                 </div>
                             </div>
@@ -205,8 +236,10 @@
                     rows="3"
                 ></textarea>
                 <div class="edit-comment-actions">
-                    <button class="btn-cancel" (click)="onCancelEdit()">Cancel</button>
-                    <button class="btn-save" (click)="onSaveEdit(comment)">Save</button>
+                    <button class="btn-cancel" 
+                            (click)="onCancelEdit()">Cancel</button>
+                    <button class="btn-save" 
+                            (click)="onSaveEdit(comment)">Save</button>
                 </div>
                 </div>
             } @else {
@@ -249,21 +282,30 @@
             @if (comment.replies && comment.replies.length > 0) {
             <div class="replies-container">
                 @for (reply of comment.replies; track reply.comment_id) {
-                <div class="comment-item reply" [attr.data-comment-id]="reply.comment_id">
+                <div class="comment-item reply" 
+                     [attr.data-comment-id]="reply.comment_id">
                     <div class="comment-header">
-                        <div class="user-avatar-small" (click)="goToUserProfile(reply.user_id, $event)">
+                        <div class="user-avatar-small" 
+                             (click)="goToUserProfile(reply.user_id, $event)">
                             {{ getInitial(reply.username) }}
                         </div>
                         <div class="comment-info">
-                            <span class="username" (click)="goToUserProfile(reply.user_id, $event)">{{ reply.username }}</span>
+                            <span class="username" 
+                                  (click)="goToUserProfile(reply.user_id, 
+                                  $event)">{{ reply.username }}</span>
                                <span class="timestamp">
-                                   · {{ getTimeAgo(reply.created_at) }}@if (reply.edited) { · Edited}
+                                   · {{ getTimeAgo(reply.created_at) }}
+                                   @if (reply.edited) { · Edited}
                                </span>
                         </div>
                         @if (isCommentOwner(reply)) {
                         <button class="comment-menu-btn" 
-                                (click)="toggleCommentMenu($event, reply.comment_id)">
-                            <svg width="4" height="16" viewBox="0 0 4 16" fill="currentColor">
+                                (click)="toggleCommentMenu($event, 
+                                reply.comment_id)">
+                            <svg width="4" 
+                                 height="16" 
+                                 viewBox="0 0 4 16" 
+                                 fill="currentColor">
                             <circle cx="2" cy="2" r="2"/>
                             <circle cx="2" cy="8" r="2"/>
                             <circle cx="2" cy="14" r="2"/>
@@ -298,7 +340,9 @@
                                 </svg>
                                 Delete
                             </button>
-                            @if (showDeleteConfirmForComment === reply.comment_id) {
+                            @if 
+                            (showDeleteConfirmForComment === reply.comment_id) 
+                            {
                                 <div class="confirm-overlay" 
                                      (click)="cancelDeleteComment($event)">
                                     <div class="confirm-modal" 
@@ -307,14 +351,21 @@
                                             Delete this comment?
                                         </div>
                                         <div class="confirm-subtext">
-                                            This will permanently delete the comment. This action cannot be undone.
+                                            This will permanently delete the 
+                                            comment. This action cannot be 
+                                            undone.
                                         </div>
                                         <div class="confirm-actions">
-                                            <button class="btn-cancel" 
-                                                    (click)="cancelDeleteComment($event)">Cancel
+                                            <button 
+                                            class="btn-cancel" 
+                                            (click)="cancelDeleteComment(
+                                                $event)">
+                                                    Cancel
                                             </button>
-                                            <button class="btn-danger" 
-                                                    (click)="confirmDeleteComment($event, reply)">Delete
+                                            <button 
+                                            class="btn-danger" 
+                                            (click)="confirmDeleteComment(
+                                                $event, reply)">Delete
                                             </button>
                                         </div>
                                     </div>
@@ -333,8 +384,13 @@
                             rows="3"
                         ></textarea>
                         <div class="edit-comment-actions">
-                            <button class="btn-cancel" (click)="onCancelEdit()">Cancel</button>
-                            <button class="btn-save" (click)="onSaveEdit(reply)">Save</button>
+                            <button class="btn-cancel" 
+                                    (click)="onCancelEdit()">Cancel
+                            </button>
+                            <button class="btn-save" 
+                                    (click)="onSaveEdit(reply)">
+                                    Save
+                            </button>
                         </div>
                         </div>
                     } @else {
@@ -386,8 +442,11 @@
     <div class="add-comment">
         @if (replyingTo) {
             <div class="replying-to-indicator">
-                <span>Replying to <strong>@{{ replyingTo.comment.username }}</strong></span>
-                <button class="cancel-reply-btn" (click)="replyingTo = undefined; newCommentText = ''">✕</button>
+                <span>Replying to <strong>@{{ replyingTo.comment.username }}
+                </strong></span>
+                <button class="cancel-reply-btn" 
+                        (click)="replyingTo = undefined; 
+                        newCommentText = ''">✕</button>
             </div>
         }
         <div class="comment-input-wrapper">

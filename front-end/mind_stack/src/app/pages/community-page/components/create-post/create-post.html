@@ -1,5 +1,7 @@
-<div class="modal-overlay" (click)="closeModal()">
-<div class="modal-content" (click)="$event.stopPropagation()">
+<div class="modal-overlay" 
+     (click)="closeModal()">
+<div class="modal-content" 
+     (click)="$event.stopPropagation()">
 <div class="modal-header">
     <h2>{{ editMode ? 'Edit Post' : 'Create Post' }}</h2>
 </div>
@@ -32,8 +34,16 @@
             <option [value]="cat">{{ cat }}</option>
         }
         </select>
-        <svg class="select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-        <path d="M1 1L6 6L11 1" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg class="select-arrow" 
+             width="12" 
+             height="8" 
+             viewBox="0 0 12 8" 
+             fill="none">
+        <path d="M1 1L6 6L11 1" 
+              stroke="#059669" 
+              stroke-width="2" 
+              stroke-linecap="round" 
+              stroke-linejoin="round"/>
         </svg>
     </div>
     </div>
