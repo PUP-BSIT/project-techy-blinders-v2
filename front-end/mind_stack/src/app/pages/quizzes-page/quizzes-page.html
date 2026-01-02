@@ -1,7 +1,8 @@
 <div class="container">
     <div class="content-wrapper">
-        <button (click)="openModal()" class="add" [disabled]="isLoading">
-            + Create New Quiz Set
+        <button (click)="openModal()" class="add add-desktop" [disabled]="isLoading">
+            <span class="add-text">+ Create New Quiz Set</span>
+            <span class="add-icon">+</span>
         </button>
 
         @if (isLoading) {
@@ -11,6 +12,11 @@
         }
 
         <div class="study-sets-wrapper" [class.hidden]="quizzes.length === 0 || isLoading">
+            <button (click)="openModal()" class="add add-mobile" [disabled]="isLoading">
+                <span class="add-text">+ Create New Quiz Set</span>
+                <span class="add-icon">+</span>
+            </button>
+
             <div class="study-sets-list">
                 <div class="study-set-card" *ngFor="let quiz of paginatedQuizzes; let i = index">
                     <div class="card-left">
@@ -104,6 +110,18 @@
                 </div>
 
                 <div class="form-group">
+                    <div class="quiz-type-wrapper">
+                        <select class="quiz-type-select" 
+                                [(ngModel)]="selectedQuestionType"
+                                (ngModelChange)="onQuestionTypeChange()">
+                            <option value="" disabled selected>Choose quiz type</option>
+                            <option [value]="QuestionType.IDENTIFICATION">Identification</option>
+                            <option [value]="QuestionType.MULTIPLE_CHOICE">Multiple Choice</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <button class="btn-ai-suggestion"
                             (click)="generateAiSuggestions()"
                             [disabled]="isLoadingSuggestion || !quizTitle.trim()">
@@ -118,15 +136,6 @@
 
                     </button>
                 </div>
-            </div>
-            <div class="quiz-type-wrapper">
-                <select class="quiz-type-select" 
-                        [(ngModel)]="selectedQuestionType"
-                        (ngModelChange)="onQuestionTypeChange()">
-                    <option value="" disabled selected>Choose quiz type</option>
-                    <option [value]="QuestionType.IDENTIFICATION">Identification</option>
-                    <option [value]="QuestionType.MULTIPLE_CHOICE">Multiple Choice</option>
-                </select>
             </div>
             <div class="modal-footer">
                 <button class="btn-cancel" (click)="closeModal()" [disabled]="isLoading">Cancel</button>
