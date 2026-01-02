@@ -12,7 +12,8 @@
 
         <div class="study-sets-wrapper" [class.hidden]="studySets.length === 0">
             <div class="study-sets-list">
-                <div class="study-set-card" *ngFor="let studySet of paginatedStudySets; let i = index">
+                @for (studySet of paginatedStudySets; track $index) {
+                <div class="study-set-card">
                     <div class="card-left">
                         <button class="play-btn" (click)="playStudySet(studySet.flashcard_id)">
                             ▶
@@ -20,7 +21,7 @@
                     </div>
                     <div class="study-set-info">
                         <h3 class="study-set-title">{{ studySet.title }}</h3>
-                        <p class="study-set-description">{{ studySet.description || 'Short Description About the Reviewer' }}</p>
+                        <p class="study-set-description">{{ studySet.description || 'Short Description About the Reviewer' }} • Flashcards</p>
                         <button class="privacy-badge" (click)="openPrivacyModal(studySet.flashcard_id)">
                             @if (studySet.is_public) {
                                 <img src="assets/globe-icon.png" alt="Public" class="privacy-icon">
@@ -41,6 +42,7 @@
                         </button>
                     </div>
                 </div>
+                }
             </div>
 
             <div class="study-sets-pagination" [class.show]="studySetsTotalPages > 1">
@@ -55,12 +57,14 @@
                     ‹
                 </button>
                 <div class="pagination-dots">
-                    <span *ngFor="let page of studySetsPages" 
-                          [class]="page === '...' ? 'pagination-ellipsis' : 'pagination-dot'"
-                          [class.active]="isPageNumber(page) && studySetsCurrentPage === page"
-                          (click)="isPageNumber(page) && goToStudySetsPage(getPageNumber(page))">
-                        {{ getPageDisplay(page) }}
-                    </span>
+                    @for (page of studySetsPages; track $index) {
+                        <span 
+                            [class]="page === '...' ? 'pagination-ellipsis' : 'pagination-dot'"
+                            [class.active]="isPageNumber(page) && studySetsCurrentPage === page"
+                            (click)="isPageNumber(page) && goToStudySetsPage(getPageNumber(page))">
+                            {{ getPageDisplay(page) }}
+                        </span>
+                    }
                 </div>
                 <button class="pagination-btn next" 
                             (click)="nextStudySetsPage()" 
@@ -138,36 +142,40 @@
             </div>
 
             <div class="carousel-wrapper" [class.has-flashcards]="flashcards.length > 0">
-                <div class="flashcards-container" *ngIf="flashcards.length > 0">
-                    <div class="flashcard-item" *ngFor="let flashcard of paginatedFlashcards; let i = index">
-                        <div class="flashcard-header">
-                            <span class="flashcard-number">{{ getActualIndex(i) + 1 }}</span>
-                            <button class="btn-delete-icon" 
-                                        (click)="deleteFlashcard(getActualIndex(i))">
-                                    ×
-                            </button>
-                        </div>
-                        <div class="flashcard-content">
-                            <div class="flashcard-left">
-                                <label class="flashcard-label">Key Term</label>
-                                <input type="text" 
-                                        class="flashcard-term" 
-                                        placeholder="Enter term/question"
-                                        [(ngModel)]="flashcard.term"/>
+                @if (flashcards.length > 0) {
+                    <div class="flashcards-container">
+                        @for (flashcard of paginatedFlashcards; track $index) {
+                        <div class="flashcard-item">
+                            <div class="flashcard-header">
+                                <span class="flashcard-number">{{ getActualIndex($index) + 1 }}</span>
+                                <button class="btn-delete-icon" 
+                                            (click)="deleteFlashcard(getActualIndex($index))">
+                                        ×
+                                </button>
                             </div>
-                            <div class="flashcard-right">
-                                <label class="flashcard-label">Description</label>
-                                <input type="text" 
-                                        class="flashcard-definition" 
-                                        placeholder="Enter definition/answer"
-                                        [(ngModel)]="flashcard.definition"/>
+                            <div class="flashcard-content">
+                                <div class="flashcard-left">
+                                    <label class="flashcard-label">Key Term</label>
+                                    <input type="text" 
+                                            class="flashcard-term" 
+                                            placeholder="Enter term/question"
+                                            [(ngModel)]="flashcard.term"/>
+                                </div>
+                                <div class="flashcard-right">
+                                    <label class="flashcard-label">Description</label>
+                                    <input type="text" 
+                                            class="flashcard-definition" 
+                                            placeholder="Enter definition/answer"
+                                            [(ngModel)]="flashcard.definition"/>
+                                </div>
                             </div>
                         </div>
+                        }
+                        <button class="add-flashcard-btn" (click)="addFlashcard()">
+                            + Add Flashcard
+                        </button>
                     </div>
-                    <button class="add-flashcard-btn" (click)="addFlashcard()">
-                        + Add Flashcard
-                    </button>
-                </div>
+                }
 
                 @if (flashcards.length === 0) {
                 <div class="empty-state">
@@ -185,12 +193,14 @@
                         ‹
                     </button>
                     <div class="pagination-dots">
-                        <span *ngFor="let page of pages" 
+                        @for (page of pages; track $index) {
+                            <span 
                                 class="pagination-dot" 
                                 [class.active]="currentPage === page"
                                 (click)="goToPage(page)">
-                            {{ page + 1 }}
-                        </span>
+                                {{ page + 1 }}
+                            </span>
+                        }
                     </div>
                     <button class="pagination-btn next" 
                                 (click)="nextPage()" 
