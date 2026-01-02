@@ -48,11 +48,11 @@
             <div class="play-card-content">
                 <div class="question-section" [class.hidden]="isDefinitionRevealed">
                     <h2 class="question-text">{{ currentCard?.keyTerm }}</h2>
-                    <h6>Click to reveal the definition</h6>
+                    <h6>Click to reveal the definition/answer</h6>
                 </div>
                 <div class="answer-section" [class.hidden]="!isDefinitionRevealed">
                     <h2 class="answer-text">{{ currentCard?.definition }}</h2>
-                    <h6>Click to see the term</h6>
+                    <h6>Click to see the term/question</h6>
                 </div>
             </div>
             
