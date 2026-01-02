@@ -21,6 +21,13 @@
                     <div class="study-set-info">
                         <h3 class="study-set-title">{{ quiz.title }}</h3>
                         <p class="study-set-description">{{ quiz.description || 'About the Quiz' }} • {{ getQuestionTypeLabel(quiz.questionType) }}</p>
+                        @if (getLatestAttempt(quiz.quiz_id)) {
+                        <div class="latest-attempt-info">
+                            <span class="attempt-label">Score:</span>
+                            <span class="attempt-score">{{ getLatestAttempt(quiz.quiz_id)!.totalScore }}/{{ getLatestAttempt(quiz.quiz_id)!.maxScore }}</span>
+                            <span class="attempt-percentage">({{ getLatestAttempt(quiz.quiz_id)!.percentage.toFixed(1) }}%)</span>
+                        </div>
+                        }
                         <button class="privacy-badge" (click)="openPrivacyModal(quiz.quiz_id)">
                             @if (quiz.is_public) {
                                 <img src="assets/globe-icon.png" alt="Public" class="privacy-icon">

@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { QuizAttemptResponse, SubmitQuizAttemptRequest } from '../app/models/attempt.model';
 
 export enum QuizType {
   MULTIPLE_CHOICE = 'multiple_choice',
@@ -43,10 +44,6 @@ interface CreateQuizSetRequest {
   userId: number;
   title: string;
   description: string;
-  /**
-   * Frontend uses `isPublic`, but backend historically exposed `public` for this flag.
-   * We keep `isPublic` for type-safety and also send a `public` field for compatibility.
-   */
   isPublic: boolean;
   quizzes: {
     quizType: QuizType;
@@ -59,7 +56,6 @@ interface CreateQuizSetRequest {
     identificationAnswer?: string;
     points?: number;
   }[];
-  // Optional `public` field for backends that expect this name instead of `isPublic`
   public?: boolean;
   quizType: QuizType;
 }
@@ -69,10 +65,6 @@ interface QuizSetResponse {
   userId: number;
   title: string;
   description: string;
-  /**
-   * Some backends expose this flag as `public`, others as `isPublic`.
-   * Support both to make the mapping resilient.
-   */
   isPublic?: boolean;
   public?: boolean;
   slug: string;
@@ -111,6 +103,7 @@ interface QuizItemRequest {
 export class QuizzesService {
   private http = inject(HttpClient);
   private apiUrl = '/api/quizzes';
+  private attemptApiUrl = '/api/quiz-attempts';
 
   createQuizSet(userId: number, title: string, description: string, isPublic: boolean, quizType: QuizType, quizzes: QuizItem[]): Observable<QuizSet> {
     const request: CreateQuizSetRequest = {
@@ -131,7 +124,6 @@ export class QuizzesService {
         points: q.points || 1
       }))
     };
-    // Ensure compatibility with backends that expect `public` instead of `isPublic`
     (request as any).public = isPublic;
 
     return this.http.post<QuizSetResponse>(this.apiUrl, request).pipe(
@@ -182,7 +174,6 @@ export class QuizzesService {
         points: q.points || 1
       }))
     };
-    // Ensure compatibility with backends that expect `public` instead of `isPublic`
     (request as any).public = isPublic;
 
     return this.http.put<QuizSetResponse>(`${this.apiUrl}/${id}`, request).pipe(
@@ -247,6 +238,37 @@ export class QuizzesService {
         points: 1
       }))
     };
+  }
+
+  submitQuizAttempt(request: SubmitQuizAttemptRequest): Observable<QuizAttemptResponse> {
+    return this.http.post<QuizAttemptResponse>(this.attemptApiUrl, request);
+  }
+
+  getQuizAttemptById(attemptId: number): Observable<QuizAttemptResponse> {
+    return this.http.get<QuizAttemptResponse>(`${this.attemptApiUrl}/id/${attemptId}`);
+  }
+
+  getQuizAttemptsByUserId(userId: number): Observable<QuizAttemptResponse[]> {
+    return this.http.get<QuizAttemptResponse[]>(`${this.attemptApiUrl}/user/${userId}`);
+  }
+
+  getQuizAttemptsByQuizSetId(quizSetId: number): Observable<QuizAttemptResponse[]> {
+    return this.http.get<QuizAttemptResponse[]>(`${this.attemptApiUrl}/quiz-set/${quizSetId}`);
+  }
+
+  getQuizAttemptsByUserAndQuizSet(userId: number, quizSetId: number): Observable<QuizAttemptResponse[]> {
+    return this.http.get<QuizAttemptResponse[]>(`${this.attemptApiUrl}/user/${userId}/quiz-set/${quizSetId}`);
+  }
+
+  getLatestQuizAttempt(userId: number, quizSetId: number): Observable<QuizAttemptResponse | null> {
+    return this.getQuizAttemptsByUserAndQuizSet(userId, quizSetId).pipe(
+      map(attempts => {
+        if (!attempts || attempts.length === 0) return null;
+        return attempts.sort((a, b) => 
+          new Date(b.attemptedDate).getTime() - new Date(a.attemptedDate).getTime()
+        )[0];
+      })
+    );
   }
 }
 

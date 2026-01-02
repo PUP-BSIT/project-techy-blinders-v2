@@ -1,29 +1,31 @@
-export interface QuizAttempt {
-    attempt_id: number;
-    quiz_id: number;
-    user_id: number;
-    selected_answer: string;
-    is_correct: boolean;
-    attempt_date: Date;
-    total_score: number;
-    study_streak: number;
-}
-
-export interface QuizAttemptRequest {
-    quiz_id: string;
-    flashcard_id: string;
-    user_id: string;
-    selected_answer?: string;
+export interface QuizResult {
+    quizId: number;
+    question: string;
+    userAnswer: string;
+    correctAnswer: string;
+    isCorrect: boolean;
+    points: number;
 }
 
 export interface QuizAttemptResponse {
-  selected_answer: string;
-  is_correct: boolean;
-  attempt_date: Date;
-  total_score: number;
-  attempt_streak: number;
+    attemptId: number;
+    quizSetId: number;
+    userId: number;
+    quizSetTitle: string;
+    attemptedDate: Date;
+    totalScore: number;
+    maxScore: number;
+    percentage: number;
+    results: QuizResult[];
 }
 
-export interface QuizAttemptError {
-  error_message: string;
+export interface SubmitQuizAnswer {
+    quizId: number;
+    userAnswer: string;
+}
+
+export interface SubmitQuizAttemptRequest {
+    userId: number;
+    quizSetId: number;
+    answers: SubmitQuizAnswer[];
 }
