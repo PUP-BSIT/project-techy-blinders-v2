@@ -1931,6 +1931,14 @@ $mobile-breakpoint: 768px;
       color: #ffa500;
     }
   }
+
+  @media (max-width: 768px) {
+    top: 70px;
+    right: 12px;
+    left: 12px;
+    min-width: auto;
+    max-width: none;
+  }
 }
 
 @keyframes toastSlide {
