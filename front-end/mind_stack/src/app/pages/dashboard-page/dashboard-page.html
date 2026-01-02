@@ -120,3 +120,17 @@
     </div>
   </div>
 </div>
+
+<!-- Clear All Confirmation Modal -->
+<div class="confirm-overlay" [class.open]="isClearAllModalOpen" (click)="closeClearAllModal()">
+  <div class="confirm-modal" (click)="$event.stopPropagation()">
+    <p class="confirm-message">
+      Are you sure you want to clear all recent activities?<br>
+      This action cannot be undone.
+    </p>
+    <div class="confirm-actions">
+      <button class="btn-confirm-no" (click)="cancelClearAll()">No</button>
+      <button class="btn-confirm-yes" (click)="confirmClearAll()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
