@@ -9,7 +9,7 @@
         <span></span>
     </button>
     <ul [class.active]="isMenuOpen">
-        <li><a routerLink=" " (click)="closeMenu()">Home</a></li>
+        <li><a (click)="scrollToSection('home'); closeMenu()">Home</a></li>
         <li><a (click)="scrollToSection('about'); closeMenu()">About us</a></li>
         <li><a routerLink="/contact" (click)="closeMenu()">Contact us</a></li>
         <li><a routerLink="/login" (click)="closeMenu()">Login</a></li>
