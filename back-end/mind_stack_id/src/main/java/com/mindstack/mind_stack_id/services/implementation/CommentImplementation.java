@@ -154,7 +154,6 @@ public class CommentImplementation implements CommentService {
 
         Comment existing = getCommentById(id);
 
-        // Set edited flag when content changes
         if (!existing.getContent().equals(content)) {
             existing.setEdited(true);
         }
@@ -268,6 +267,18 @@ public class CommentImplementation implements CommentService {
             commentRepo.save(c);
 
             System.out.println("Soft deleted comment with ID: " + id);
+
+            // Delete notifications based on comment type
+            if (c.getParentCommentId() == null) {
+                // Top-level comment - delete POST_COMMENT notifications
+                notificationService.deletePostCommentNotifications(c.getUserId(), c.getPostId());
+            } else {
+                // Reply to comment - delete COMMENT_REPLY notifications
+                notificationService.deleteCommentReplyNotifications(c.getUserId(), c.getParentCommentId());
+            }
+
+            // Also delete any notifications related to this specific comment (likes,
+            // dislikes, replies to it)
             notificationService.deleteNotificationsForComment(id);
         }
     }
