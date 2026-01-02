@@ -39,7 +39,9 @@
                             <p class="notification-text">
                                 {{ n.message }}
                             </p>
-                            <p class="timestamp">{{ getTimeAgo(n.createdAt) }}</p>
+                            <p class="timestamp">
+                                {{ getTimeAgo(n.createdAt) }}
+                            </p>
                         </div>
                         <span class="read-status">
                             {{ n.isRead ? 'Read' : 'Unread' }}
