@@ -110,4 +110,17 @@ export class ActivityService {
     const storageKey = `activities_${currentUser.userId}`;
     localStorage.removeItem(storageKey);
   }
+
+  deleteActivity(activityId: string): void {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) return;
+
+    this.ensureActivitiesLoaded();
+    
+    const currentActivities = this.activitiesSubject.value;
+    const updatedActivities = currentActivities.filter(activity => activity.id !== activityId);
+    
+    this.activitiesSubject.next(updatedActivities);
+    this.saveActivities(updatedActivities);
+  }
 }

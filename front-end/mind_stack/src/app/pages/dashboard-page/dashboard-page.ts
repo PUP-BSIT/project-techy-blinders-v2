@@ -38,6 +38,11 @@ export class DashboardPage implements OnInit, OnDestroy {
   activitiesPages: (number | string)[] = [];
   paginatedActivities: Activity[] = [];
 
+  // Delete modal properties
+  isDeleteModalOpen: boolean = false;
+  activityToDelete: Activity | null = null;
+  hoveredActivityId: string | null = null;
+
   constructor(private router: Router) {}
 
   ngOnInit() {
@@ -130,6 +135,39 @@ export class DashboardPage implements OnInit, OnDestroy {
 
   resetActivities(): void {
     this.activityService.resetActivities();
+  }
+
+  openDeleteModal(activity: Activity, event: Event): void {
+    event.stopPropagation(); // Prevent navigation when clicking delete
+    this.activityToDelete = activity;
+    this.isDeleteModalOpen = true;
+    this.hoveredActivityId = null; // Clear hover state when modal opens
+  }
+
+  closeDeleteModal(): void {
+    this.isDeleteModalOpen = false;
+    this.activityToDelete = null;
+  }
+
+  cancelDelete(): void {
+    this.closeDeleteModal();
+  }
+
+  confirmDelete(): void {
+    if (this.activityToDelete) {
+      this.activityService.deleteActivity(this.activityToDelete.id);
+    }
+    this.closeDeleteModal();
+  }
+
+  setHoverState(activityId: string, isHovered: boolean): void {
+    this.hoveredActivityId = isHovered ? activityId : null;
+  }
+
+  getDeleteIconSrc(activityId: string): string {
+    return this.hoveredActivityId === activityId 
+      ? 'assets/delete-icon-hover.png' 
+      : 'assets/delete-icon.png';
   }
 
   // Pagination methods for recent activities

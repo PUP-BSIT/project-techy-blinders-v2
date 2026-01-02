@@ -59,6 +59,13 @@
                   <span class="activity-title">{{ activity.title }}</span>
                   <span class="activity-subtitle">{{ getActivityDescription(activity) }}</span>
                 </div>
+                <button class="delete-btn" 
+                        (click)="openDeleteModal(activity, $event)"
+                        (mouseenter)="setHoverState(activity.id, true)"
+                        (mouseleave)="setHoverState(activity.id, false)"
+                        title="Delete activity">
+                  <img [src]="getDeleteIconSrc(activity.id)" alt="Delete" class="delete-icon">
+                </button>
               </div>
             }
           }
@@ -97,5 +104,19 @@
         </div>
       </section>
     }
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="confirm-overlay" [class.open]="isDeleteModalOpen" (click)="closeDeleteModal()">
+  <div class="confirm-modal" (click)="$event.stopPropagation()">
+    <p class="confirm-message">
+      Are you sure to delete this item?<br>
+      This action cannot be undone.
+    </p>
+    <div class="confirm-actions">
+      <button class="btn-confirm-no" (click)="cancelDelete()">No</button>
+      <button class="btn-confirm-yes" (click)="confirmDelete()">Yes, Delete</button>
+    </div>
   </div>
 </div>
