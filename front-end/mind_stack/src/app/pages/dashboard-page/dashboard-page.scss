@@ -276,6 +276,7 @@ $transition-normal: 0.3s ease;
 .activity-item {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
   padding: 16px 20px;
   background: #52B788;
@@ -308,6 +309,35 @@ $transition-normal: 0.3s ease;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.85);
   font-family: "Poppins";
+}
+
+.delete-btn {
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  margin-left: 12px;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  .delete-icon {
+    width: 25px;
+    height: 25px;
+    transition: all 0.2s ease;
+  }
 }
 
 @media (max-width: 1024px) and (min-width: 769px) {
@@ -652,6 +682,17 @@ $transition-normal: 0.3s ease;
     gap: 12px;
   }
 
+  .delete-btn {
+    min-width: 26px;
+    height: 26px;
+    padding: 5px;
+
+    .delete-icon {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
   .activity-title {
     font-size: 15px;
   }
@@ -763,6 +804,17 @@ $transition-normal: 0.3s ease;
     border-radius: 12px;
   }
 
+  .delete-btn {
+    min-width: 24px;
+    height: 24px;
+    padding: 4px;
+
+    .delete-icon {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
   .activity-title {
     font-size: 14px;
   }
@@ -787,5 +839,81 @@ $transition-normal: 0.3s ease;
       height: 20px;
       font-size: 0.65rem;
     }
+  }
+}
+
+// Delete Confirmation Modal
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity $transition-normal;
+
+  &.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+.confirm-modal {
+  background: $color-text-white;
+  border-radius: 15px;
+  padding: 1rem;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.confirm-message {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0 0 2rem 0;
+  font-family: "Poppins";
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn-confirm-no,
+.btn-confirm-yes {
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-width: 100px;
+  transition: all $transition-normal;
+  font-family: "Poppins";
+}
+
+.btn-confirm-no {
+  background: $color-primary-light;
+  color: $color-text-dark;
+
+  &:hover {
+    background: #74C69D;
+  }
+}
+
+.btn-confirm-yes {
+  background: #D32F2F;
+  color: $color-text-white;
+
+  &:hover {
+    background: #B71C1C;
+    transform: translateY(-2px);
+    box-shadow: $shadow-medium;
   }
 }
