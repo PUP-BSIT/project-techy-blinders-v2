@@ -42,9 +42,10 @@ $transition-normal: 0.3s ease;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 2rem;
+    gap: 1rem;
     width: 100%;
     overflow: hidden;
+    height: 100%;
 }
 
 .loading-indicator {
@@ -190,15 +191,16 @@ $transition-normal: 0.3s ease;
 .study-set-card {
     background: #65C497;
     border-radius: 15px;
-    padding: 1rem 2rem;
+    padding: 0.5rem 1.5rem;
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
     box-shadow: 0 4px 5px rgba(0, 0, 0, 0.25);
     transition: all $transition-normal;
     max-width: 90%;
     min-width: 0;
     width: 80%;
+    min-height: 140px;
 
     &:hover {
         box-shadow: $shadow-medium;
@@ -217,9 +219,9 @@ $transition-normal: 0.3s ease;
     color: #ffff;
     border: none;
     border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    font-size: 1.5rem;
+    width: 60px;
+    height: 60px;
+    font-size: 1.3rem;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -789,10 +791,14 @@ $transition-normal: 0.3s ease;
 .flashcards-container {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 1rem;
     transition: opacity $transition-normal;
     padding-right: 0.5rem;
     padding-bottom: 1rem;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
 
     &::-webkit-scrollbar {
         width: 6px;
@@ -895,8 +901,21 @@ $transition-normal: 0.3s ease;
 .flashcard-item {
     background: $color-card;
     border-radius: 12px;
-    padding: 1rem 1.25rem;
+    padding: 0.5rem;
     box-shadow: $shadow-medium;
+    max-width: 90%;
+    min-width: 0;
+    width: 80%;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    transition: all $transition-normal;
+    gap: 1rem;
+
+    &:hover {
+        box-shadow: $shadow-medium;
+    }
 }
 
 .flashcard-header {
