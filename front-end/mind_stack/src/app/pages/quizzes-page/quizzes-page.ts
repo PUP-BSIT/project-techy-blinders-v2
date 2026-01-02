@@ -479,12 +479,46 @@ export class QuizzesPage implements OnInit {
 
   saveQuiz() {
     if (this.quizTitle.trim() && this.quizDescription.trim() && this.selectedQuestionType !== '') {
-      this.isModalOpen = false;
-      this.isQuestionModalOpen = true;
-      this.isQuizSetCreateSuccessPopupOpen = false;
-      setTimeout(() => {
-        this.openQuizSetCreateSuccessPopup();
-      }, 0);
+      const currentUser = this.authService.getCurrentUser();
+      if (!currentUser || !currentUser.userId) {
+        this.openWarningPopup('Please log in to create quiz sets.');
+        return;
+      }
+
+      let quizType: QuizType = QuizType.MULTIPLE_CHOICE;
+      if (this.selectedQuestionType === QuestionType.IDENTIFICATION) {
+        quizType = QuizType.IDENTIFICATION_ANSWER;
+      }
+
+      this.isLoading = true;
+      this.quizzesService.createQuizSet(
+        currentUser.userId,
+        this.quizTitle,
+        this.quizDescription || '',
+        false,
+        quizType,
+        [] 
+      ).subscribe({
+        next: (response) => {
+          this.editingQuizId = response.quiz_set_id ?? null;
+          this.questions = [];
+          this.currentPage = 0;
+          this.isLoading = false;
+          this.isModalOpen = false;
+          this.isQuestionModalOpen = true;
+          
+          this.loadQuizSetsFromBackend();
+          
+          this.isQuizSetCreateSuccessPopupOpen = false;
+          setTimeout(() => {
+            this.openQuizSetCreateSuccessPopup();
+          }, 10);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.openWarningPopup('Failed to create quiz set. Please try again.');
+        }
+      });
     }
   }
 
@@ -541,6 +575,8 @@ export class QuizzesPage implements OnInit {
         this.openQuizItemSaveSuccessPopup();
       }
 
+      // Since quiz set is already created when Continue was clicked,
+      // we always update the existing quiz set
       if (this.editingQuizId !== null) {
         this.quizzesService.getQuizSetById(this.editingQuizId).subscribe({
           next: (existingQuizSet) => {
@@ -565,25 +601,6 @@ export class QuizzesPage implements OnInit {
           },
           error: (error) => {
             this.isLoading = false;
-          }
-        });
-      } else {
-        this.quizzesService.createQuizSet(
-          currentUser.userId,
-          this.quizTitle,
-          this.quizDescription || '',
-          false,
-          quizType,
-          quizItems
-        ).subscribe({
-          next: (response) => {
-            this.loadQuizSetsFromBackend();
-            this.closeModal();
-            this.openQuizSetCreateSuccessPopup();
-          },
-          error: (error) => {
-            this.isLoading = false;
-            this.showNotification('Save Failed', 'Unable to save your quiz set. Please try again.', 'error');
           }
         });
       }
