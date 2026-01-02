@@ -1,7 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Comment } from '../../../../../models/post.model';
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, 
+         Input, 
+         Output, 
+         EventEmitter, 
+         OnInit, 
+         OnDestroy, 
+         OnChanges, 
+         SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-comment-section',
@@ -50,16 +57,21 @@ export class CommentSection implements OnInit, OnDestroy, OnChanges {
   }
 
   getTimeAgo(date: Date): string {
-    const diffMs = Math.max(0, this.currentTime.getTime() - new Date(date).getTime());
+    const diffMs = 
+      Math.max(0, this.currentTime.getTime() - new Date(date).getTime());
     const seconds = Math.floor(diffMs / 1000);
     const minutes = Math.floor(diffMs / (1000 * 60));
     const hours = Math.floor(diffMs / (1000 * 60 * 60));
     const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     
-    if (seconds < 60) return 'Just Now';
-    if (minutes < 60) return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
-    if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
-    if (days === 1) return '1 day ago';
+    if (seconds < 60) 
+      return 'Just Now';
+    if (minutes < 60) 
+      return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+    if (hours < 24) 
+      return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+    if (days === 1) 
+      return '1 day ago';
     return `${days} days ago`;
   }
 
