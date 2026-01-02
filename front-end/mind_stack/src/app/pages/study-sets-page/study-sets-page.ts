@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, Observable } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../service/auth.service';
 import { StudySet, StudySetsService } from '../../../service/study-sets.service';
@@ -68,6 +68,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
   studySetTitle: string = '';
   studySetDescription: string = '';
   flashcards: { flashcardId?: number; term: string; definition: string; isNew?: boolean }[] = [];
+  deletedFlashcardIds: number[] = [];
   currentPage: number = 0;
   itemsPerPage: number = 3;
   studySetsCurrentPage: number = 0;
@@ -360,14 +361,22 @@ export class StudySetsPage implements OnInit, OnDestroy {
     this.flashcards = [];
     this.currentPage = 0;
     this.currentStudySetId = null;
+    this.deletedFlashcardIds = [];
   }
 
   saveFlashcards() {
     this.isFlashcardSaveSuccessPopupOpen = false;
+    // warning if any flashcard is missing a term or definition
+    const hasEmpty = this.flashcards.some(f => !f.term.trim() || !f.definition.trim());
+    if (hasEmpty) {
+      this.openWarningPopup('Please fill in both the term and definition for all flashcards.');
+      return;
+    }
+
     console.log('=== SAVE FLASHCARDS CALLED ===');
     console.log('Current Study Set ID:', this.currentStudySetId);
     console.log('Total Flashcards:', this.flashcards.length);
-    
+
     if (this.currentStudySetId !== null) {
       const currentUser = this.authService.getCurrentUser();
       if (!currentUser) {
@@ -376,7 +385,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
       }
 
       let studySet = this.studySets.find(s => s.flashcard_id === this.currentStudySetId);
-      
+
       if (!studySet) {
         this.isLoading = true;
         this.studySetsService.getStudySetById(this.currentStudySetId).subscribe({
@@ -410,14 +419,15 @@ export class StudySetsPage implements OnInit, OnDestroy {
       .map(f => ({ keyTerm: f.term.trim(), definition: f.definition.trim(), flashcardId: f.flashcardId, isNew: f.isNew }))
       .filter(f => f.keyTerm && f.definition);
 
-    // If no valid flashcards, do not show the success popup
-    if (prepared.length === 0) {
+    // If no valid flashcards and no deletions, do not show the success popup
+    if (prepared.length === 0 && this.deletedFlashcardIds.length === 0) {
       this.isLoading = false;
       this.closeFlashcardModal();
       return;
     }
 
     console.log('Saving flashcards (individual):', prepared);
+    console.log('Deleting flashcards:', this.deletedFlashcardIds);
 
     const studySetIdToRefresh = this.currentStudySetId as number;
 
@@ -426,13 +436,16 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
     const createObs = toCreate.map(f => this.studySetsService.addFlashcardToSet(studySetIdToRefresh, f.keyTerm, f.definition));
     const updateObs = toUpdate.map(f => this.studySetsService.updateFlashcard(f.flashcardId as number, f.keyTerm, f.definition));
+    const deleteObs = this.deletedFlashcardIds.length > 0 
+      ? this.deletedFlashcardIds.map(id => this.studySetsService.deleteFlashcard(id))
+      : [];
 
-    const allObs = [...createObs, ...updateObs];
+    const allObs = [...createObs, ...updateObs, ...deleteObs];
     const batch$ = allObs.length ? forkJoin(allObs) : of([]);
 
     batch$.subscribe({
       next: (results) => {
-        console.log('Flashcards saved/updated individually:', results);
+        console.log('Flashcards saved/updated/deleted:', results);
 
         const createdIds: number[] = [];
         try {
@@ -461,15 +474,19 @@ export class StudySetsPage implements OnInit, OnDestroy {
         }
 
         this.isLoading = false;
-        if (prepared.length > 0) {
+        if (prepared.length > 0 || this.deletedFlashcardIds.length > 0) {
           this.openFlashcardSaveSuccessPopup();
         }
+        
+        this.deletedFlashcardIds = [];
+        
         this.closeFlashcardModal();
         this.refreshStudySetFromBackend(studySetIdToRefresh, createdIds);
       },
       error: (error) => {
-        console.error('Error saving individual flashcards:', error);
+        console.error('Error saving/updating/deleting flashcards:', error);
         this.isLoading = false;
+        this.deletedFlashcardIds = [];
         alert('Failed to save flashcards. Please check the console for details.');
       }
     });
@@ -496,35 +513,29 @@ export class StudySetsPage implements OnInit, OnDestroy {
     const flashcardToDelete = this.flashcards[index];
     
     if (flashcardToDelete.flashcardId) {
-      this.isLoading = true;
-      this.studySetsService.deleteFlashcard(flashcardToDelete.flashcardId).subscribe({
-        next: () => {
-          console.log('Flashcard deleted from backend with ID:', flashcardToDelete.flashcardId);
-          this.flashcards.splice(index, 1);
-          const maxPage = Math.max(0, Math.ceil(this.flashcards.length / this.itemsPerPage) - 1);
-          if (this.currentPage > maxPage) {
-            this.currentPage = maxPage;
-          }
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error deleting flashcard:', error);
-          this.isLoading = false;
-          alert('Failed to delete flashcard. Please try again.');
-        }
-      });
-    } else {
-      this.flashcards.splice(index, 1);
-      const maxPage = Math.max(0, Math.ceil(this.flashcards.length / this.itemsPerPage) - 1);
-      if (this.currentPage > maxPage) {
-        this.currentPage = maxPage;
-      }
+      this.deletedFlashcardIds.push(flashcardToDelete.flashcardId);
     }
+    
+    this.flashcards.splice(index, 1);
+    const maxPage = Math.max(0, Math.ceil(this.flashcards.length / this.itemsPerPage) - 1);
+    if (this.currentPage > maxPage) {
+      this.currentPage = maxPage;
+    }
+    console.log('Flashcard removed from local list. Will be deleted on Save if it has an ID.');
+  }
+
+  private deleteFlashcardsFromBackend(flashcardIds: number[]): Observable<any> {
+    if (flashcardIds.length === 0) {
+      return of([]);
+    }
+    const deleteObs = flashcardIds.map(id => this.studySetsService.deleteFlashcard(id));
+    return forkJoin(deleteObs);
   }
 
   ngOnDestroy() {
     try { window.removeEventListener('storage', this.onStorageEvent); } catch (e) {}
   }
+
   get paginatedFlashcards() {
     const startIndex = this.currentPage * this.itemsPerPage;
     return this.flashcards.slice(startIndex, startIndex + this.itemsPerPage);

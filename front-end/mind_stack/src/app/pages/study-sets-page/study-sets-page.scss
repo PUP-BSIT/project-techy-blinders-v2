@@ -544,7 +544,7 @@ $transition-normal: 0.3s ease;
     cursor: pointer;
     transition: all $transition-fast;
     width: 30%;
-    margin: 1rem auto 0 auto;
+    margin-top: 10px;
     display: block;
 
     &:hover {
@@ -558,7 +558,8 @@ $transition-normal: 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
+    margin-top: -1rem;
 }
 
 .flashcard-count {
@@ -766,6 +767,7 @@ $transition-normal: 0.3s ease;
     color: $color-text-white;
     padding: 0.5rem 0;
     outline: none;
+    margin-top: -0.5rem;
 
     &::placeholder {
         color: rgba(255, 255, 255, 0.7);
@@ -920,10 +922,10 @@ $transition-normal: 0.3s ease;
     border-radius: 12px;
     padding: 0.5rem;
     box-shadow: $shadow-medium;
-    max-width: 90%;
+    max-width: 97%;
     min-width: 0;
-    width: 80%;
-    min-height: 140px;
+    width: 97%;
+    min-height: 120px;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -1019,6 +1021,7 @@ $transition-normal: 0.3s ease;
     font-weight: 600;
     text-align: center;
     opacity: 0.7;
+    margin-top: 125px;
 }
 
 .modal-footer {
