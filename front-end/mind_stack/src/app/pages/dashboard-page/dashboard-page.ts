@@ -42,6 +42,7 @@ export class DashboardPage implements OnInit, OnDestroy {
   isDeleteModalOpen: boolean = false;
   activityToDelete: Activity | null = null;
   hoveredActivityId: string | null = null;
+  isClearAllModalOpen: boolean = false;
 
   constructor(private router: Router) {}
 
@@ -134,7 +135,24 @@ export class DashboardPage implements OnInit, OnDestroy {
   }
 
   resetActivities(): void {
+    this.openClearAllModal();
+  }
+
+  openClearAllModal(): void {
+    this.isClearAllModalOpen = true;
+  }
+
+  closeClearAllModal(): void {
+    this.isClearAllModalOpen = false;
+  }
+
+  cancelClearAll(): void {
+    this.closeClearAllModal();
+  }
+
+  confirmClearAll(): void {
     this.activityService.resetActivities();
+    this.closeClearAllModal();
   }
 
   openDeleteModal(activity: Activity, event: Event): void {

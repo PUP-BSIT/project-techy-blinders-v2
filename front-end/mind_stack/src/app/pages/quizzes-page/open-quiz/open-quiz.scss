@@ -9,6 +9,8 @@ $shadow-heavy: 0 10px 40px rgba(0, 0, 0, 0.3);
 $shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.2);
 $transition-normal: 0.3s ease;
 
+$mobile-breakpoint: 768px;
+
 .hidden { display: none !important; }
 
 .indicator {
@@ -245,6 +247,7 @@ $transition-normal: 0.3s ease;
   box-shadow: $shadow-medium;
   transition: all $transition-normal;
   z-index: 10;
+
   &:hover {
     background: $color-primary-light;
     transform: translateY(-2px);
@@ -277,7 +280,10 @@ $transition-normal: 0.3s ease;
   cursor: pointer;
   transition: all $transition-normal;
   position: relative;
-  &:hover { box-shadow: 0 15px 50px rgba(0,0,0,0.35); }
+
+  &:hover { 
+    box-shadow: 0 15px 50px rgba(0,0,0,0.35); 
+  }
 }
 
 .grad-cap-icon {
@@ -695,4 +701,158 @@ $transition-normal: 0.3s ease;
 
 #score_text {
   font-size: 36px;
+}
+
+@media (max-width: $mobile-breakpoint) {
+  .indicator {
+    font-size: 12px;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+  }
+
+  .choices {
+    width: 100%;
+    max-width: 100%;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin: 40px auto auto auto;
+  }
+
+  .choice {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .reveal-btn {
+    width: 100%;
+    max-width: 250px;
+    margin: 1rem auto 0 auto;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .question-text,
+  .answer-text {
+    font-size: 1.5rem;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+  }
+
+  .identification-input {
+    width: 100%;
+    max-width: 100%;
+
+    .answer-input {
+      margin-top: 40px;
+      padding: 0.8rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  #correct, #incorrect {
+    font-size: 1.3rem;
+  }
+
+  .answer-section {
+    .result-badge {
+      width: 120px;
+      height: 40px;
+      padding: 0.4rem 1rem;
+      margin: auto auto 2rem auto;
+    }
+
+    .user-answer {
+      font-size: 1.2rem;
+      margin: 0.8rem 0;
+    }
+
+    .answer-text {
+      font-size: 1.3rem;
+      margin: 0.8rem 0;
+    }
+
+    .full-answer {
+      font-size: 1rem;
+      padding: 0.6rem;
+      margin: 0.4rem 0 0.8rem 0;
+    }
+  }
+
+  .container {
+    padding: 1rem;
+    min-height: 100vh;
+  }
+
+  .back-btn {
+    top: 1rem;
+    left: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 20px;
+  }
+
+  .play-wrapper {
+    transform: translateY(-1rem);
+  }
+
+  .play-card {
+    height: auto;
+    min-height: 70vh;
+    max-height: 85vh;
+    padding: 1.5rem;
+    border-radius: 15px;
+    overflow-y: auto;
+  }
+
+  .grad-cap-icon {
+    top: 1rem;
+    left: 1.5rem;
+
+    img {
+      height: 60px;
+    }
+  }
+
+  .page-indicator {
+    bottom: 1rem;
+    font-size: 1rem;
+    position: relative;
+    transform: none;
+    left: auto;
+    margin-top: 1rem;
+  }
+
+  .score-btn, .next_item_btn {
+    width: 100%;
+    max-width: 250px;
+    margin: 1rem auto 0 auto;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .score-modal {
+    width: 95%;
+    max-width: 350px;
+  }
+
+  .modal-content {
+    padding: 20px 15px;
+    border-radius: 15px;
+  }
+
+  .score-circle {
+    width: 120px;
+    height: 120px;
+    font-size: 32px;
+    margin: 15px auto;
+  }
+
+  .feedback-text {
+    font-size: 18px;
+    margin-top: 10px;
+  }
+
+  #score_text {
+    font-size: 28px;
+  }
 }

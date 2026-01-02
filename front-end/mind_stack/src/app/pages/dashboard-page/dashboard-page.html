@@ -111,12 +111,24 @@
 <div class="confirm-overlay" [class.open]="isDeleteModalOpen" (click)="closeDeleteModal()">
   <div class="confirm-modal" (click)="$event.stopPropagation()">
     <p class="confirm-message">
-      Are you sure to delete this item?<br>
-      This action cannot be undone.
+      Are you sure to delete this item?
     </p>
     <div class="confirm-actions">
       <button class="btn-confirm-no" (click)="cancelDelete()">No</button>
       <button class="btn-confirm-yes" (click)="confirmDelete()">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Clear All Confirmation Modal -->
+<div class="confirm-overlay" [class.open]="isClearAllModalOpen" (click)="closeClearAllModal()">
+  <div class="confirm-modal" (click)="$event.stopPropagation()">
+    <p class="confirm-message">
+      Are you sure you want to clear all recent activities?
+    </p>
+    <div class="confirm-actions">
+      <button class="btn-confirm-no" (click)="cancelClearAll()">No</button>
+      <button class="btn-confirm-yes" (click)="confirmClearAll()">Yes, Clear All</button>
     </div>
   </div>
 </div>
