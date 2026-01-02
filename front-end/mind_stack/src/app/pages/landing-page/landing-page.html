@@ -27,18 +27,13 @@
   </div>
 
   <div class="button-class">
-    <button type="button" 
-            (click)="onStartNow()" 
-            class="regis-button">Start now</button>
-    <button type="button" 
-            (click)="onLogin()" 
-            class="login-button">Log in</button>
+    <button type="button" (click)="onStartNow()" class="regis-button">Start now</button>
+    <button type="button" (click)="onLogin()" class="login-button">Log in</button>
   </div>
 
   <div class="laptop-section">
     <h2 class="laptop-tagline">
-      "Turning late-night cramming into organized, effective, 
-        and stress-free studying"
+      "Turning late-night cramming into organized, effective, and stress-free studying"
     </h2>
     <div class="laptop-container">
       <img src="assets/laptop-dashboard.png" alt="Dashboard Preview" />
@@ -50,63 +45,83 @@
       <h4>John Doe</h4>
       <div class="stars">★ ★ ★ ★ ★</div>
       <p>
-        This system makes studying short and sweet. 
-        Reviewing was stressful, helping me prepare
+        This system makes studying short and sweet. Reviewing was stressful, helping me prepare
         faster for exams.
       </p>
     </div>
     <div class="testimonial-card">
       <h4>Sarah Wilson</h4>
       <div class="stars">★ ★ ★ ★ ★</div>
-      <p>
-        A very helpful tool that keeps 
-        my study sessions focused and effective.
-      </p>
+      <p>A very helpful tool that keeps my study sessions focused and effective.</p>
     </div>
     <div class="testimonial-card">
       <h4>Michael Smith</h4>
       <div class="stars">★ ★ ★ ★ ★</div>
-      <p>
-        It keeps me on track and motivated 
-        me to stay consistent with my studies.
-      </p>
+      <p>It keeps me on track and motivated me to stay consistent with my studies.</p>
     </div>
   </div>
 
   <div class="reviewers-section" id="reviewers">
-    <h3>Reviewers</h3>
-    <div class="review-item">
-      <div class="review-content">
-        <h4>Title</h4>
-        <p>
-          Body text for whatever you'd like to say. 
-          Add main takeaway points, quotes, anecdotes, or
-          even a very very short story.
-        </p>
+    <h3>Card Design Preview</h3>
+    <div class="review-item study-set-card">
+      <div class="card-left">
+        <button class="play-btn">
+          ▶
+        </button>
       </div>
-      <button class="review-button">Review</button>
+      <div class="study-set-info">
+        <h3 class="study-set-title">Title</h3>
+        <p class="study-set-description">Body text for whatever you'd like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.</p>
+        <button class="privacy-badge">
+          <img src="assets/globe-icon.png" alt="Public" class="privacy-icon">
+          <span class="privacy-text">Public</span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+      </div>
+      <div class="action-buttons">
+        <button class="edit-btn">Edit</button>
+        <button class="delete-btn">Delete</button>
+      </div>
     </div>
-    <div class="review-item">
-      <div class="review-content">
-        <h4>Title</h4>
-        <p>
-          Body text for whatever you'd like to say. 
-          Add main takeaway points, quotes, anecdotes, or
-          even a very very short story.
-        </p>
+    <div class="review-item study-set-card">
+      <div class="card-left">
+        <button class="play-btn">
+          ▶
+        </button>
       </div>
-      <button class="review-button">Review</button>
+      <div class="study-set-info">
+        <h3 class="study-set-title">Title</h3>
+        <p class="study-set-description">Body text for whatever you'd like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.</p>
+        <button class="privacy-badge">
+          <img src="assets/lock.png" alt="Private" class="privacy-icon">
+          <span class="privacy-text">Private</span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+      </div>
+      <div class="action-buttons">
+        <button class="edit-btn">Edit</button>
+        <button class="delete-btn">Delete</button>
+      </div>
     </div>
-    <div class="review-item">
-      <div class="review-content">
-        <h4>Title</h4>
-        <p>
-          Body text for whatever you'd like to say. 
-          Add main takeaway points, quotes, anecdotes, or
-          even a very very short story.
-        </p>
+    <div class="review-item study-set-card">
+      <div class="card-left">
+        <button class="play-btn">
+          ▶
+        </button>
       </div>
-      <button class="review-button">Review</button>
+      <div class="study-set-info">
+        <h3 class="study-set-title">Title</h3>
+        <p class="study-set-description">Body text for whatever you'd like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.</p>
+        <button class="privacy-badge">
+          <img src="assets/globe-icon.png" alt="Public" class="privacy-icon">
+          <span class="privacy-text">Public</span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+      </div>
+      <div class="action-buttons">
+        <button class="edit-btn">Edit</button>
+        <button class="delete-btn">Delete</button>
+      </div>
     </div>
   </div>
 
@@ -116,24 +131,17 @@
       <div class="feature-card">
         <div class="feature-icon">📚</div>
        <h4>Smart Flashcards</h4>
-       <p>
-        Create custom flashcards from your notes 
-        with questions and answers you design
-      </p>
+       <p>Create custom flashcards from your notes with questions and answers you design</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">🎯</div>
         <h4>Focused Learning</h4>
-        <p>Personalized study sessions that adapt 
-          to your learning pace and style</p>
+        <p>Personalized study sessions that adapt to your learning pace and style</p>
       </div>
       <div class="feature-card">
       <div class="feature-icon">🌐</div>        
       <h4>Community Learning</h4>
-        <p>
-          Connect with fellow students and share 
-          flashcards to help each other succeed
-        </p>
+        <p>Connect with fellow students and share flashcards to help each other succeed</p>
       </div>
     </div>
   </div>
@@ -144,22 +152,19 @@
         <img src="assets/about-us-image.png" alt="About MindStack" />
       </div>
       <div class="about-content">
-        <h2>Mindstack</h2>
+        <h2>MindStack</h2>
         <p>
           We are passionate about transforming 
           the way students learn. Our mission is 
           to simplify studying and make it more 
           engaging by turning your notes into dynamic, 
           interactive flashcards and quizzes. 
-          We believe that studying should be an enjoyable 
-          and effective experience, 
+          We believe that studying should be an enjoyable and effective experience, 
           not a chore. By offering personalized learning tools, 
           we empower students to take control of their education, 
-          strengthen their understanding, 
-          and retain information with confidence.
+          strengthen their understanding, and retain information with confidence.
         </p>
       </div>
     </div>
   </div>
-  
 </div>
