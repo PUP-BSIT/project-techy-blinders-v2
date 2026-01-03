@@ -296,4 +296,16 @@ export class ForgotPassword {
   toggleConfirmPasswordVisibility() {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
+
+  filterNumericInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/[^0-9]/g, '');
+    
+    if (value.length > 6) {
+      value = value.substring(0, 6);
+    }
+    
+    input.value = value;
+    this.forgotPasswordForm.get('otp')?.setValue(value, { emitEvent: false });
+  }
 }
