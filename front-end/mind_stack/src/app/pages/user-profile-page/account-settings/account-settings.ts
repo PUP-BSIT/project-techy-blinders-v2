@@ -23,6 +23,10 @@ export class AccountSettings {
   errorModalOpen = signal(false);
   accountSettingForm: FormGroup;
 
+  showCurrentPassword = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
+
   constructor() {
     this.accountSettingForm = this.formBuilder.group({
       current_password: ['', Validators.required],
@@ -113,5 +117,15 @@ export class AccountSettings {
 
   get confirmPasswordControl() {
     return this.accountSettingForm.get('confirm_password');
+  }
+
+  toggleCurrentPasswordVisibility() {
+    this.showCurrentPassword = !this.showCurrentPassword;
+  }
+  toggleNewPasswordVisibility() {
+    this.showNewPassword = !this.showNewPassword;
+  }
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 }

@@ -10,7 +10,13 @@
                 <div class="current-password-label">
                     <label>Current Password</label>
                 </div>
-                <input type="password" formControlName="current_password" placeholder="Enter your current password">
+                <div class="password-input-container">
+                    <input [type]="showCurrentPassword ? 'text' : 'password'" formControlName="current_password" placeholder="Enter your current password">
+                    <button type="button" class="show-password-btn" (click)="toggleCurrentPasswordVisibility()">
+                        <img [src]="showCurrentPassword ? 'assets/unshow-password-icon.png' : 'assets/show-password-icon.png'"
+                              [alt]="showCurrentPassword ? 'Hide password' : 'Show password'">
+                    </button>
+                </div>
                 <div class="error-message">
                     @if(passwordControl?.touched) {
                         @if (passwordControl?.errors?.['required']) {
@@ -25,7 +31,11 @@
                     <label>New Password</label>
                 </div>
                 <div class="password-input-container">
-                    <input type="password" formControlName="new_password" placeholder="Enter your new password">
+                    <input [type]="showNewPassword ? 'text' : 'password'" formControlName="new_password" placeholder="Enter your new password">
+                    <button type="button" class="show-password-btn" (click)="toggleNewPasswordVisibility()">
+                        <img [src]="showNewPassword ? 'assets/unshow-password-icon.png' : 'assets/show-password-icon.png'"
+                              [alt]="showNewPassword ? 'Hide password' : 'Show password'">
+                    </button>
                 </div>
                 <div class="error-message">
                     @if (newPasswordControl?.dirty || newPasswordControl?.touched) {
@@ -50,7 +60,13 @@
                 <div class="confirm-password-label">
                     <label>Confirm Password</label>
                 </div>
-                <input type="password" formControlName="confirm_password" placeholder="Confirm your new password">
+                <div class="password-input-container">
+                    <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirm_password" placeholder="Confirm your new password">
+                    <button type="button" class="show-password-btn" (click)="toggleConfirmPasswordVisibility()">
+                        <img [src]="showConfirmPassword ? 'assets/unshow-password-icon.png' : 'assets/show-password-icon.png'"
+                              [alt]="showConfirmPassword ? 'Hide password' : 'Show password'">
+                    </button>
+                </div>
             </div>
 
             <div class="error-message password-match-error">
