@@ -54,7 +54,8 @@
 
        <div class="button-class">
             <button type="button" id="cancel_button_password" (click)="cancel()">Cancel</button>
-            <button type="submit" id="submit_button_password" [disabled]="accountSettingForm.invalid || loading">
+            <button type="submit" id="submit_button_password"
+                [disabled]="accountSettingForm.invalid || loading || (confirmPasswordControl?.dirty || confirmPasswordControl?.touched) && (confirmPasswordControl?.errors?.['required'] || (confirmPasswordControl?.value && newPasswordControl?.value && confirmPasswordControl?.value !== newPasswordControl?.value))">
                 @if(loading) { 
                     <span>Saving...</span> 
                 } @else { 
