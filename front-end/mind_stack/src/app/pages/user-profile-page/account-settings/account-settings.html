@@ -1,19 +1,26 @@
-<div class="account-setting-class">
-    <div class="account-setting-label">
-        <h1>Change Password</h1>
-    </div>
+<div class="modal-overlay-account">
+    <div class="account-setting-class" (click)="$event.stopPropagation()">
+        <div class="account-setting-label">
+            <h1>Change Password</h1>
+        </div>
 
-    <form [formGroup]="accountSettingForm" (ngSubmit)="accountSettingInformation()">
+        <form [formGroup]="accountSettingForm" (ngSubmit)="accountSettingInformation()">
         <div class="form-group">
             <div class="current-password-class">
                 <div class="current-password-label">
                     <label>Current Password</label>
                 </div>
-                <input type="password" formControlName="current_password" placeholder="Input current password...">
+                <div class="password-input-container">
+                    <input [type]="showCurrentPassword ? 'text' : 'password'" formControlName="current_password" placeholder="Enter your current password">
+                    <button type="button" class="show-password-btn" (click)="toggleCurrentPasswordVisibility()">
+                        <img [src]="showCurrentPassword ? 'assets/unshow-password-icon.png' : 'assets/show-password-icon.png'"
+                              [alt]="showCurrentPassword ? 'Hide password' : 'Show password'">
+                    </button>
+                </div>
                 <div class="error-message">
                     @if(passwordControl?.touched) {
                         @if (passwordControl?.errors?.['required']) {
-                            <span>Input Password</span>
+                            <span>Current password is required</span>
                         }
                     }
                 </div>
@@ -23,11 +30,27 @@
                 <div class="new-password-label">
                     <label>New Password</label>
                 </div>
-                <input type="password" formControlName="new_password" placeholder="Input new password...">
+                <div class="password-input-container">
+                    <input [type]="showNewPassword ? 'text' : 'password'" formControlName="new_password" placeholder="Enter your new password">
+                    <button type="button" class="show-password-btn" (click)="toggleNewPasswordVisibility()">
+                        <img [src]="showNewPassword ? 'assets/unshow-password-icon.png' : 'assets/show-password-icon.png'"
+                              [alt]="showNewPassword ? 'Hide password' : 'Show password'">
+                    </button>
+                </div>
                 <div class="error-message">
-                    @if (newPasswordControl?.touched) {
+                    @if (newPasswordControl?.dirty || newPasswordControl?.touched) {
                         @if(newPasswordControl?.errors?.['required']) {
-                            <span>Input New Password</span>
+                            <span>New password is required</span>
+                        } @else if(newPasswordControl?.errors?.['minlength']) {
+                            <span>Password must be at least 8 characters</span>
+                        } @else if(newPasswordControl?.errors?.['uppercase']) {
+                            <span>Password must contain at least one uppercase letter</span>
+                        } @else if(newPasswordControl?.errors?.['lowercase']) {
+                            <span>Password must contain at least one lowercase letter</span>
+                        } @else if(newPasswordControl?.errors?.['number']) {
+                            <span>Password must contain at least one number</span>
+                        } @else if(newPasswordControl?.errors?.['special']) {
+                            <span>Password must contain at least one special character (e.g. !@#$%^&*)</span>
                         }
                     }
                 </div>
@@ -37,40 +60,39 @@
                 <div class="confirm-password-label">
                     <label>Confirm Password</label>
                 </div>
-                <input type="password" formControlName="confirm_password" placeholder="Confirm password...">
-                <div class="error-message">
-                    @if (confirmPasswordControl?.touched) {
-                        @if(confirmPasswordControl?.errors?.['required']) {
-                            <span>Input Confirm Password</span>
-                        }
-                    }
+                <div class="password-input-container">
+                    <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirm_password" placeholder="Confirm your new password">
+                    <button type="button" class="show-password-btn" (click)="toggleConfirmPasswordVisibility()">
+                        <img [src]="showConfirmPassword ? 'assets/unshow-password-icon.png' : 'assets/show-password-icon.png'"
+                              [alt]="showConfirmPassword ? 'Hide password' : 'Show password'">
+                    </button>
                 </div>
             </div>
 
             <div class="error-message password-match-error">
-                @if(newPasswordControl?.value !== confirmPasswordControl?.value) {
-                    <span>Password is not match</span>
-                }
-            </div>
-
-            <div class="api-messages">
-                @if(errorMessage) {
-                    <div class="error-message"><span>{{errorMessage}}</span></div>
+                @if(confirmPasswordControl?.dirty || confirmPasswordControl?.touched) {
+                    @if(confirmPasswordControl?.errors?.['required']) {
+                        <span>Confirm password is required</span>
+                    } @else if(confirmPasswordControl?.value && newPasswordControl?.value && confirmPasswordControl?.value !== newPasswordControl?.value) {
+                        <span>Passwords must match</span>
+                    }
                 }
             </div>
         </div>
 
        <div class="button-class">
-            <button type="submit" id="submit_button_password" [disabled]="accountSettingForm.invalid || loading">
+            <button type="button" id="cancel_button_password" (click)="cancel()">Cancel</button>
+            <button type="submit" id="submit_button_password"
+                [disabled]="accountSettingForm.invalid || loading || (confirmPasswordControl?.dirty || confirmPasswordControl?.touched) && (confirmPasswordControl?.errors?.['required'] || (confirmPasswordControl?.value && newPasswordControl?.value && confirmPasswordControl?.value !== newPasswordControl?.value))">
                 @if(loading) { 
                     <span>Saving...</span> 
                 } @else { 
                     <span>Save</span> 
                 }
             </button>
-            <button type="button" id="cancel_button_password" (click)="cancel()">Cancel</button>
         </div> 
     </form>
+    </div>
 </div>
 
 @if (showSuccessPopup) {
@@ -79,6 +101,16 @@
             <h2>Success!</h2>
             <p>Your password has been updated successfully.</p>
             <button (click)="closeSuccessPopup()">OK</button>
+        </div>
+    </div>
+}
+
+@if (errorModalOpen() && errorMessage) {
+    <div class="popup-overlay" (click)="closeErrorModal()">
+        <div class="popup warning" (click)="$event.stopPropagation()">
+            <h2>Error</h2>
+            <p>{{ errorMessage }}</p>
+            <button (click)="closeErrorModal()">Close</button>
         </div>
     </div>
 }
