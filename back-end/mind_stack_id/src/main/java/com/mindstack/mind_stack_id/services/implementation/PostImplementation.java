@@ -116,10 +116,10 @@ public class PostImplementation implements PostService {
     }
 
     @Override
-    public List<PostDTO> getPublishedPosts() {
+    public List<PostDTO> getPublishedPosts(Long userId) {
         return postRepository.findPublishedAndNotDeleted()
                 .stream()
-                .map(p -> mapToDto(p, null))
+                .map(p -> mapToDto(p, userId))
                 .toList();
     }
 

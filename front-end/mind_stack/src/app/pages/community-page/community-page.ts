@@ -204,6 +204,8 @@ export class CommunityPage implements OnInit, OnDestroy {
     const wasLiked = post.userLiked === true;
     this.communityService.toggleLikePost(post.post_id);
     this.isPostLikedPopupOpen = false;
+    // If wasLiked is true, user is UNLIKING, show 'Like removed!'
+    // If wasLiked is false, user is LIKING, show 'Post liked!'
     this.postLikeMessage = wasLiked ? 'Like removed!' : 'Post liked!';
     setTimeout(() => {
       this.openPostLikedPopup();
@@ -214,6 +216,8 @@ export class CommunityPage implements OnInit, OnDestroy {
     const wasDisliked = post.userDisliked === true;
     this.communityService.toggleDislikePost(post.post_id);
     this.isPostDislikedPopupOpen = false;
+    // If wasDisliked is true, user is UNDISLIKING, show 'Dislike removed!'
+    // If wasDisliked is false, user is DISLIKING, show 'Post disliked!'
     this.postDislikeMessage = wasDisliked ? 'Dislike removed!' : 'Post disliked!';
     setTimeout(() => {
       this.openPostDislikedPopup();
@@ -225,6 +229,8 @@ export class CommunityPage implements OnInit, OnDestroy {
       const wasLiked = this.selectedPost.userLiked === true;
       this.communityService.toggleLikePost(this.selectedPost.post_id);
       this.isPostLikedPopupOpen = false;
+      // If wasLiked is true, user is UNLIKING, show 'Like removed!'
+      // If wasLiked is false, user is LIKING, show 'Post liked!'
       this.postLikeMessage = wasLiked ? 'Like removed!' : 'Post liked!';
       setTimeout(() => {
         this.openPostLikedPopup();
@@ -237,6 +243,8 @@ export class CommunityPage implements OnInit, OnDestroy {
       const wasDisliked = this.selectedPost.userDisliked === true;
       this.communityService.toggleDislikePost(this.selectedPost.post_id);
       this.isPostDislikedPopupOpen = false;
+      // If wasDisliked is true, user is UNDISLIKING, show 'Dislike removed!'
+      // If wasDisliked is false, user is DISLIKING, show 'Post disliked!'
       this.postDislikeMessage = wasDisliked ? 'Dislike removed!' : 'Post disliked!';
       setTimeout(() => {
         this.openPostDislikedPopup();
