@@ -3,6 +3,7 @@ import { SideBar } from '../../../shared/components/side-bar/side-bar';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../../service/auth.service';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-account-settings',
@@ -19,6 +20,7 @@ export class AccountSettings {
   loading: boolean = false;
   showSuccessPopup: boolean = false;
   errorMessage: string | null = null;
+  errorModalOpen = signal(false);
   accountSettingForm: FormGroup;
 
   constructor() {
@@ -63,6 +65,7 @@ export class AccountSettings {
 
     if (new_password !== confirm_password) {
       this.errorMessage = 'Passwords do not match';
+      this.errorModalOpen.set(true);
       return;
     }
 
@@ -75,11 +78,20 @@ export class AccountSettings {
         this.loading = false;
         this.showSuccessPopup = true;
       },
-      error: (err: any) => {
-        this.errorMessage = err?.error?.message || err?.error || err?.message || 'Failed to update password';
+      error: (err: HttpErrorResponse) => {
         this.loading = false;
+        if (err.status === 401) {
+          this.errorMessage = 'Your current password is incorrect';
+        } else {
+          this.errorMessage = err?.error?.message || err?.error || err?.message || 'Failed to update password';
+        }
+        this.errorModalOpen.set(true);
       }
     });
+  }
+
+  closeErrorModal() {
+    this.errorModalOpen.set(false);
   }
 
   closeSuccessPopup() {

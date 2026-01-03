@@ -88,3 +88,13 @@
         </div>
     </div>
 }
+
+@if (errorModalOpen() && errorMessage) {
+    <div class="popup-overlay" (click)="closeErrorModal()">
+        <div class="popup warning" (click)="$event.stopPropagation()">
+            <h2>Error</h2>
+            <p>{{ errorMessage }}</p>
+            <button (click)="closeErrorModal()">Close</button>
+        </div>
+    </div>
+}
