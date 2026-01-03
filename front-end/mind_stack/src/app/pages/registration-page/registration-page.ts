@@ -151,4 +151,8 @@ export class RegistrationPage {
   toggleConfirmPasswordVisibility() {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
+
+  goToLandingPage() {
+    this.router.navigate(['/']);
+  }
 }
