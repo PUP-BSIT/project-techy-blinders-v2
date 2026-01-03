@@ -24,11 +24,23 @@
                 <div class="new-password-label">
                     <label>New Password</label>
                 </div>
-                <input type="password" formControlName="new_password" placeholder="Enter your new password">
+                <div class="password-input-container">
+                    <input type="password" formControlName="new_password" placeholder="Enter your new password">
+                </div>
                 <div class="error-message">
-                    @if (newPasswordControl?.touched) {
+                    @if (newPasswordControl?.dirty || newPasswordControl?.touched) {
                         @if(newPasswordControl?.errors?.['required']) {
                             <span>New password is required</span>
+                        } @else if(newPasswordControl?.errors?.['minlength']) {
+                            <span>Password must be at least 8 characters</span>
+                        } @else if(newPasswordControl?.errors?.['uppercase']) {
+                            <span>Password must contain at least one uppercase letter</span>
+                        } @else if(newPasswordControl?.errors?.['lowercase']) {
+                            <span>Password must contain at least one lowercase letter</span>
+                        } @else if(newPasswordControl?.errors?.['number']) {
+                            <span>Password must contain at least one number</span>
+                        } @else if(newPasswordControl?.errors?.['special']) {
+                            <span>Password must contain at least one special character (e.g. !@#$%^&*)</span>
                         }
                     }
                 </div>

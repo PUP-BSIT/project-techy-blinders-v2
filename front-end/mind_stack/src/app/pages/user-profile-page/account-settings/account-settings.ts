@@ -24,9 +24,36 @@ export class AccountSettings {
   constructor() {
     this.accountSettingForm = this.formBuilder.group({
       current_password: ['', Validators.required],
-      new_password: ['', Validators.required],
+      new_password: ['', [Validators.required, Validators.minLength(8), this.strongPasswordValidator]],
       confirm_password: ['', Validators.required]
     });
+  }
+
+  strongPasswordValidator(control: any) {
+    const value = control.value || '';
+    const errors: any = {};
+
+    if (value.length < 8) {
+      errors['minlength'] = true;
+    }
+
+    if (!/[A-Z]/.test(value)) {
+      errors['uppercase'] = true;
+    }
+
+    if (!/[a-z]/.test(value)) {
+      errors['lowercase'] = true;
+    }
+
+    if (!/[0-9]/.test(value)) {
+      errors['number'] = true;
+    }
+
+    if (!/[!@#$%^&*(),.?{}|<>\[\]\/;_+=-]/.test(value)) {
+      errors['special'] = true;
+    }
+    
+    return Object.keys(errors).length ? errors : null;
   }
 
   accountSettingInformation() {
