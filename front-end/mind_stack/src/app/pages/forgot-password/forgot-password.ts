@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, AsyncValidatorFn } from '@angular/forms';
 import { AuthService } from '../../../service/auth.service';
 import { Router } from '@angular/router';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-forgot-password',
@@ -38,7 +39,7 @@ export class ForgotPassword {
 
   constructor() {
     this.forgotPasswordForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email], [this.emailRegisteredValidator()]],
       newPassword: ['', [Validators.required, Validators.minLength(8), this.strongPasswordValidator]],
       confirmPassword: ['', Validators.required],
       otp: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
@@ -53,6 +54,24 @@ export class ForgotPassword {
       this.forgotPasswordForm.get('confirmPassword')?.updateValueAndValidity({ emitEvent: false });
     });
 
+  }
+
+  emailRegisteredValidator(): AsyncValidatorFn {
+    return (control: AbstractControl) => {
+      if (!control.value || control.hasError('email')) {
+        return Promise.resolve(null);
+      }
+      return this.authService.checkEmailExists(control.value).pipe(
+        map((exists: boolean) => {
+          if (!exists) {
+            // error popup for unregistered email
+            this.errorPopupMessage = 'Email not registered.';
+            this.showErrorPopup.set(true);
+          }
+          return exists ? null : { emailNotRegistered: true };
+        })
+      );
+    };
   }
 
   strongPasswordValidator(control: AbstractControl): ValidationErrors | null {

@@ -126,6 +126,12 @@ export class AuthService {
     return this.http.get<UserProfile>(`${this.apiUrl}/${userId}`);
   }
 
+  // Check if email exists (forgot password)
+  checkEmailExists(email: string): Observable<boolean> {
+    return this.http.get<{ exists: boolean }>(`${this.apiUrl}/check-email?email=${encodeURIComponent(email)}`)
+      .pipe(map(res => res.exists));
+  }
+
   // Check if user is logged in and token is valid
   isLoggedIn(): boolean {
     const token = this.getToken();
