@@ -57,7 +57,7 @@
                     </button>
                 </div>
                 <div class="validation-message">
-                    @if(passwordControl?.touched) {
+                    @if(passwordControl?.dirty || passwordControl?.touched) {
                         @if(passwordControl?.errors?.['required']){
                             <span>Password is required</span>
                         } @else if(passwordControl?.errors?.['minlength']) {
@@ -85,7 +85,7 @@
                     </button>
                 </div>
                 <div class="validation-message">
-                    @if (confirmPasswordControl?.touched) {
+                    @if (confirmPasswordControl?.dirty || confirmPasswordControl?.touched) {
                         @if(confirmPasswordControl?.errors?.['required']) {
                             <span>Confirm your password</span>
                         } @else if(confirmPasswordControl?.value !== passwordControl?.value) {
@@ -105,7 +105,7 @@
                 </button>
             </div>
             <div class="cancel-button">
-                <button type="reset">Cancel</button>
+                <button type="button" (click)="goToLandingPage()">Cancel</button>
             </div>
         </form>
     </div>
