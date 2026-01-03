@@ -5,6 +5,11 @@ export interface Activity {
   timestamp: Date;
   studySetId?: number;
   quizSetId?: number;
+  score?: {
+    totalScore: number;
+    maxScore: number;
+    percentage: number;
+  };
 }
 
 export interface ActivityRequest {
@@ -12,4 +17,9 @@ export interface ActivityRequest {
   title: string;
   studySetId?: number;
   quizSetId?: number;
+  score?: {
+    totalScore: number;
+    maxScore: number;
+    percentage: number;
+  };
 }
