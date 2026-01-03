@@ -58,6 +58,11 @@
                 <div class="activity-content">
                   <span class="activity-title">{{ activity.title }}</span>
                   <span class="activity-subtitle">{{ getActivityDescription(activity) }}</span>
+                  @if (activity.type === 'quiz' && activity.score) {
+                    <span class="activity-score">
+                      Score: {{ activity.score.totalScore }}/{{ activity.score.maxScore }} ({{ activity.score.percentage.toFixed(1) }}%)
+                    </span>
+                  }
                 </div>
                 <button class="delete-btn" 
                         (click)="openDeleteModal(activity, $event)"

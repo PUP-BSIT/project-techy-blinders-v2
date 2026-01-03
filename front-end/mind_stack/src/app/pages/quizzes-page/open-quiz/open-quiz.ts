@@ -200,17 +200,8 @@ export class OpenQuiz implements OnInit {
   }
 
   openScoreModal() {
-    this.submitQuizAttempt();
     this.scoreModalOpen.set(true);
-    
-    const quiz = this.quiz();
-    if (quiz) {
-      this.activityService.addActivity({
-        type: 'quiz',
-        title: quiz.title,
-        quizSetId: quiz.quiz_id
-      });
-    }
+    this.submitQuizAttempt();
   }
 
   submitQuizAttempt() {
@@ -248,6 +239,20 @@ export class OpenQuiz implements OnInit {
       next: (response) => {
         console.log('Quiz attempt submitted successfully:', response);
         this.latestAttempt.set(response);
+        
+        // Add activity after successful submission
+        if (quiz) {
+          this.activityService.addActivity({
+            type: 'quiz',
+            title: quiz.title,
+            quizSetId: quiz.quiz_id,
+            score: {
+              totalScore: response.totalScore,
+              maxScore: response.maxScore,
+              percentage: response.percentage
+            }
+          });
+        }
       },
       error: (error) => {
         console.error('Error submitting quiz attempt:', error);

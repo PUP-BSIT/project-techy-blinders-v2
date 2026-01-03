@@ -30,7 +30,8 @@ export class ActivityService {
       title: activityRequest.title,
       timestamp: new Date(),
       studySetId: activityRequest.studySetId,
-      quizSetId: activityRequest.quizSetId
+      quizSetId: activityRequest.quizSetId,
+      score: activityRequest.score
     };
 
     const currentActivities = this.activitiesSubject.value;
