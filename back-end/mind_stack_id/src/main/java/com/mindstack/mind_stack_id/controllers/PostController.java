@@ -66,8 +66,8 @@ public class PostController {
     }
 
     @GetMapping("/published")
-    public ResponseEntity<List<PostDTO>> getPublishedPosts() {
-        List<PostDTO> posts = postService.getPublishedPosts();
+    public ResponseEntity<List<PostDTO>> getPublishedPosts(@RequestParam(required = false) Long userId) {
+        List<PostDTO> posts = postService.getPublishedPosts(userId);
         return ResponseEntity.ok(posts);
     }
 

@@ -17,7 +17,7 @@ public interface PostService {
 
     List<PostDTO> getPostsByCategory(String category);
 
-    List<PostDTO> getPublishedPosts();
+    List<PostDTO> getPublishedPosts(Long userId);
 
     PostCreation updatePost(long id, PostCreation post);
 
