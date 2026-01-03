@@ -14,7 +14,7 @@
                 <div class="error-message">
                     @if(passwordControl?.touched) {
                         @if (passwordControl?.errors?.['required']) {
-                            <span>Input Password</span>
+                            <span>Current password is required</span>
                         }
                     }
                 </div>
@@ -28,7 +28,7 @@
                 <div class="error-message">
                     @if (newPasswordControl?.touched) {
                         @if(newPasswordControl?.errors?.['required']) {
-                            <span>Input New Password</span>
+                            <span>New password is required</span>
                         }
                     }
                 </div>
@@ -39,24 +39,15 @@
                     <label>Confirm Password</label>
                 </div>
                 <input type="password" formControlName="confirm_password" placeholder="Confirm your new password">
-                <div class="error-message">
-                    @if (confirmPasswordControl?.touched) {
-                        @if(confirmPasswordControl?.errors?.['required']) {
-                            <span>Input Confirm Password</span>
-                        }
-                    }
-                </div>
             </div>
 
             <div class="error-message password-match-error">
-                @if(newPasswordControl?.value !== confirmPasswordControl?.value) {
-                    <span>Password is not match</span>
-                }
-            </div>
-
-            <div class="api-messages">
-                @if(errorMessage) {
-                    <div class="error-message"><span>{{errorMessage}}</span></div>
+                @if(confirmPasswordControl?.dirty || confirmPasswordControl?.touched) {
+                    @if(confirmPasswordControl?.errors?.['required']) {
+                        <span>Confirm password is required</span>
+                    } @else if(confirmPasswordControl?.value && newPasswordControl?.value && confirmPasswordControl?.value !== newPasswordControl?.value) {
+                        <span>Passwords must match</span>
+                    }
                 }
             </div>
         </div>

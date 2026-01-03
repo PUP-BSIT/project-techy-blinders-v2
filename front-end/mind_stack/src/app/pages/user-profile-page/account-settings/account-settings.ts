@@ -2,10 +2,11 @@ import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
 import { SideBar } from '../../../shared/components/side-bar/side-bar';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../../service/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-account-settings',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './account-settings.html',
   styleUrl: './account-settings.scss'
 })
@@ -22,20 +23,9 @@ export class AccountSettings {
 
   constructor() {
     this.accountSettingForm = this.formBuilder.group({
-      current_password: ['', {
-        validators: [Validators.required],
-        updateOn: 'change'
-      }],
-
-      new_password: ['', {
-        validators: [Validators.required],
-        updateOn: 'change'
-      }],
-
-      confirm_password: ['', {
-        validators: [Validators.required],
-        updateOn: 'change'
-      }]
+      current_password: ['', Validators.required],
+      new_password: ['', Validators.required],
+      confirm_password: ['', Validators.required]
     });
   }
 
