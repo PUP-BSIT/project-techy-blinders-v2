@@ -8,8 +8,7 @@ It allows students to:
 - Create personalized digital flashcards and customizable quizzes.
 - Choose to keep their reviewers private or share them publicly.
 - Collaborate by commenting, asking, and answering questions on shared reviewers.
-- Rate responses to ensure credible and reliable answers.
-- Track individual progress through scores linked to their profile.
+- Track individual progress through scores linked to the specific sets.
 
 ## 🚀 Tech Stack
 
@@ -19,7 +18,11 @@ It allows students to:
 - **Version Control:** GitHub
 - **Deployment:** VPS Hostinger
 
-## 🌐 Live Demo / Web hosting
+## 🌐 API specification and documentation
+API Specification and documentation: [https://techymindstack.site/swagger-ui/index.html](https://techymindstack.site/swagger-ui/index.html)
+
+
+## 🗎 Live Demo / Web hosting
 
 Visit our live application: [https://techymindstack.site](https://techymindstack.site)
 
