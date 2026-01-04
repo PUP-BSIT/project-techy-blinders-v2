@@ -58,12 +58,22 @@
                 <div class="activity-content">
                   <span class="activity-title">{{ activity.title }}</span>
                   <span class="activity-subtitle">{{ getActivityDescription(activity) }}</span>
-                  @if (activity.type === 'quiz' && activity.score) {
-                    <span class="activity-score">
-                      Score: {{ activity.score.totalScore }}/{{ activity.score.maxScore }} ({{ activity.score.percentage.toFixed(1) }}%)
-                    </span>
-                  }
                 </div>
+                
+                @if (activity.type === 'quiz' && activity.score) {
+                  <div class="activity-score-section">
+                    <div class="score-display">
+                      <span class="score-value">{{ activity.score.totalScore }}/{{ activity.score.maxScore }}</span>
+                    </div>
+                  </div>
+                } @else {
+                  <div class="activity-score-section">
+                    <div class="activity-type-badge">
+                      <span class="type-label">{{ activity.type === 'flashcard' ? 'Flashcard' : 'Quiz' }}</span>
+                    </div>
+                  </div>
+                }
+                
                 <button class="delete-btn" 
                         (click)="openDeleteModal(activity, $event)"
                         (mouseenter)="setHoverState(activity.id, true)"
