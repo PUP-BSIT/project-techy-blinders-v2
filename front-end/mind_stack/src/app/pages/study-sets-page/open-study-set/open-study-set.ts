@@ -82,6 +82,7 @@ export class OpenStudySet implements OnInit {
       this.activityService.addActivity({
         type: 'flashcard',
         title: this.studySet.title,
+        description: this.studySet.description,
         studySetId: this.studySet.flashcard_id
       });
     }

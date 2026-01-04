@@ -36,6 +36,7 @@ export class ActivityService {
       id: this.generateId(),
       type: activityRequest.type,
       title: activityRequest.title,
+      description: activityRequest.description,
       timestamp: new Date(),
       studySetId: activityRequest.studySetId,
       quizSetId: activityRequest.quizSetId,
@@ -147,6 +148,11 @@ export class ActivityService {
       
       // Update timestamp to current time
       existingActivity.timestamp = new Date();
+      
+      // Update description if provided
+      if (activityRequest.description) {
+        existingActivity.description = activityRequest.description;
+      }
       
       // Update score if it's a quiz with new score data
       if (activityRequest.type === 'quiz' && activityRequest.score) {

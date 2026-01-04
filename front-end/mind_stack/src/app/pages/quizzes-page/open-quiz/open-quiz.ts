@@ -245,6 +245,7 @@ export class OpenQuiz implements OnInit {
           this.activityService.addActivity({
             type: 'quiz',
             title: quiz.title,
+            description: quiz.description,
             quizSetId: quiz.quiz_id,
             score: {
               totalScore: response.totalScore,
