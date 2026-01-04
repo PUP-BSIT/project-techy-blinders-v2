@@ -19,7 +19,11 @@ It allows students to:
 - **Version Control:** GitHub
 - **Deployment:** VPS Hostinger
 
-## 🌐 Live Demo / Web hosting
+## 🌐 API specification and documentation
+[https://techymindstack.site/swagger-ui/index.html](https://techymindstack.site/swagger-ui/index.html)
+
+
+## 🗎 Live Demo / Web hosting
 
 Visit our live application: [https://techymindstack.site](https://techymindstack.site)
 
