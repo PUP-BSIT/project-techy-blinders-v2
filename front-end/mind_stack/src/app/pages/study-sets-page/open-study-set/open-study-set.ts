@@ -17,7 +17,6 @@ export class OpenStudySet implements OnInit {
   isDefinitionRevealed: boolean = false;
   isLoading: boolean = false;
   errorMessage: string = '';
-  private hasTrackedActivity: boolean = false;
 
   private studySetsService = inject(StudySetsService);
   private activityService = inject(ActivityService);
@@ -79,8 +78,7 @@ export class OpenStudySet implements OnInit {
   }
 
   private trackFlashcardActivity() {
-    if (!this.hasTrackedActivity && this.studySet) {
-      this.hasTrackedActivity = true;
+    if (this.studySet) {
       this.activityService.addActivity({
         type: 'flashcard',
         title: this.studySet.title,
