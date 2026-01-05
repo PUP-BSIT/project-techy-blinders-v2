@@ -2,6 +2,7 @@ export interface Activity {
   id: string;
   type: 'quiz' | 'flashcard';
   title: string;
+  description?: string;
   timestamp: Date;
   studySetId?: number;
   quizSetId?: number;
@@ -15,6 +16,7 @@ export interface Activity {
 export interface ActivityRequest {
   type: 'quiz' | 'flashcard';
   title: string;
+  description?: string;
   studySetId?: number;
   quizSetId?: number;
   score?: {

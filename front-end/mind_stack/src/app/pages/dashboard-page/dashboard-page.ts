@@ -131,6 +131,11 @@ export class DashboardPage implements OnInit, OnDestroy {
   }
 
   getActivityDescription(activity: Activity): string {
+    if (activity.description) {
+      return activity.description.length > 50 
+        ? activity.description.substring(0, 50) + '...'
+        : activity.description;
+    }
     return activity.type === 'quiz' ? 'Quiz Set' : 'Flashcard Set';
   }
 

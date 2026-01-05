@@ -24,17 +24,25 @@ export class ActivityService {
     // Ensure activities are loaded for current user first
     this.ensureActivitiesLoaded();
 
+    const currentActivities = this.activitiesSubject.value;
+    
+    const isDuplicate = this.isDuplicateActivity(activityRequest, currentActivities);
+    if (isDuplicate) {
+      this.updateExistingActivity(activityRequest, currentActivities);
+      return;
+    }
+
     const activity: Activity = {
       id: this.generateId(),
       type: activityRequest.type,
       title: activityRequest.title,
+      description: activityRequest.description,
       timestamp: new Date(),
       studySetId: activityRequest.studySetId,
       quizSetId: activityRequest.quizSetId,
       score: activityRequest.score
     };
 
-    const currentActivities = this.activitiesSubject.value;
     const updatedActivities = [activity, ...currentActivities].slice(0, 10); // Keep only last 10 activities
     
     this.activitiesSubject.next(updatedActivities);
@@ -91,6 +99,73 @@ export class ActivityService {
 
   private generateId(): string {
     return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+  }
+
+  private isDuplicateActivity(activityRequest: ActivityRequest, currentActivities: Activity[]): boolean {
+    return currentActivities.some(activity => {
+      // Check if it's the same type and title
+      if (activity.type !== activityRequest.type || activity.title !== activityRequest.title) {
+        return false;
+      }
+
+      // For flashcards, check studySetId
+      if (activityRequest.type === 'flashcard' && activityRequest.studySetId) {
+        return activity.studySetId === activityRequest.studySetId;
+      }
+
+      // For quizzes, check quizSetId
+      if (activityRequest.type === 'quiz' && activityRequest.quizSetId) {
+        return activity.quizSetId === activityRequest.quizSetId;
+      }
+
+      // If no specific ID to match, consider it duplicate if type and title match
+      return true;
+    });
+  }
+
+  private updateExistingActivity(activityRequest: ActivityRequest, currentActivities: Activity[]): void {
+    const existingActivityIndex = currentActivities.findIndex(activity => {
+      // Find the matching activity using same logic as isDuplicateActivity
+      if (activity.type !== activityRequest.type || activity.title !== activityRequest.title) {
+        return false;
+      }
+
+      if (activityRequest.type === 'flashcard' && activityRequest.studySetId) {
+        return activity.studySetId === activityRequest.studySetId;
+      }
+
+      if (activityRequest.type === 'quiz' && activityRequest.quizSetId) {
+        return activity.quizSetId === activityRequest.quizSetId;
+      }
+
+      return true;
+    });
+
+    if (existingActivityIndex !== -1) {
+      // Update the existing activity's timestamp and score (for quizzes)
+      const updatedActivities = [...currentActivities];
+      const existingActivity = updatedActivities[existingActivityIndex];
+      
+      // Update timestamp to current time
+      existingActivity.timestamp = new Date();
+      
+      // Update description if provided
+      if (activityRequest.description) {
+        existingActivity.description = activityRequest.description;
+      }
+      
+      // Update score if it's a quiz with new score data
+      if (activityRequest.type === 'quiz' && activityRequest.score) {
+        existingActivity.score = activityRequest.score;
+      }
+
+      // Move the updated activity to the front of the list
+      updatedActivities.splice(existingActivityIndex, 1);
+      updatedActivities.unshift(existingActivity);
+
+      this.activitiesSubject.next(updatedActivities);
+      this.saveActivities(updatedActivities);
+    }
   }
 
   // Method to clear activities when user logs out
