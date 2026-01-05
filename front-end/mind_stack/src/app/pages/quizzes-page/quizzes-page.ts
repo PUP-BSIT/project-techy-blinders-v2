@@ -410,6 +410,41 @@ export class QuizzesPage implements OnInit {
     question.correctAnswer = answer;
   }
 
+  enforceQuestionLimit(question: QuestionItem) {
+    if (question.question && question.question.length > 150) {
+      question.question = question.question.substring(0, 150);
+      this.openWarningPopup('Questions can only take up to 150 characters.');
+    }
+  }
+
+  enforceAnswerLimit(question: QuestionItem) {
+    if (question.answer && question.answer.length > 100) {
+      question.answer = question.answer.substring(0, 100);
+      this.openWarningPopup('Answers can only take up to 100 characters.');
+    }
+  }
+
+  enforceOptionLimit(question: QuestionItem, optionKey: 'optionA' | 'optionB' | 'optionC' | 'optionD') {
+    if (question[optionKey] && question[optionKey]!.length > 100) {
+      question[optionKey] = question[optionKey]!.substring(0, 100);
+      this.openWarningPopup('Answer options can only take up to 100 characters.');
+    }
+  }
+
+  enforceTitleLimit() {
+    if (this.quizTitle && this.quizTitle.length > 50) {
+      this.quizTitle = this.quizTitle.substring(0, 50);
+      this.openWarningPopup('Title can only take up to 50 characters.');
+    }
+  }
+
+  enforceDescriptionLimit() {
+    if (this.quizDescription && this.quizDescription.length > 50) {
+      this.quizDescription = this.quizDescription.substring(0, 50);
+      this.openWarningPopup('Description can only take up to 50 characters.');
+    }
+  }
+
   get itemsPerPage(): number {
     return this.selectedQuestionType === QuestionType.IDENTIFICATION ? 3 : 2;
   }

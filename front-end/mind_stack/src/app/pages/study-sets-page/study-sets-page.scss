@@ -266,14 +266,17 @@ $transition-normal: 0.3s ease;
 
 .study-set-title {
     color: $color-text-white;
-    font-size: 2.25rem;
+    font-size: 1.5rem;
     font-weight: 700;
     margin: 0;
-    overflow: visible;
-    text-overflow: clip;
-    white-space: normal;
-    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
     line-height: 1.2;
+    min-width: 0;
+    display: block;
+    padding-right: 2px;
 }
 
 .study-set-description {
@@ -601,7 +604,6 @@ $transition-normal: 0.3s ease;
     box-shadow: $shadow-heavy;
 }
 
-// Study Set Creation Modal
 .study-set-modal {
     max-width: 700px;
     padding: 2rem;
@@ -625,6 +627,13 @@ $transition-normal: 0.3s ease;
 
         &:first-child {
             margin-bottom: 1rem;
+        }
+
+        & .char-indicator {
+            font-size: 0.70rem;
+            color: #ffffffaa;
+            text-align: right;
+            margin-right: 4px;
         }
     }
 
@@ -651,7 +660,7 @@ $transition-normal: 0.3s ease;
     }
 
     .description-input {
-        border-bottom: none;
+        border-bottom: 2px solid $color-text-white;
         font-size: 1rem;
         font-weight: 400;
         padding-top: 0.5rem;
@@ -722,7 +731,6 @@ $transition-normal: 0.3s ease;
     }
 }
 
-// Flashcard Modal
 .flashcard-modal {
     max-width: 700px;
     height: 85vh;
@@ -765,7 +773,7 @@ $transition-normal: 0.3s ease;
     background: transparent;
     border: none;
     color: $color-text-white;
-    padding: 0.5rem 0;
+    padding: 0.3rem 0;
     outline: none;
     margin-top: -0.5rem;
 
@@ -779,7 +787,8 @@ $transition-normal: 0.3s ease;
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 0.75rem;
-    padding: 0.5rem 0;
+    margin-top: -15px;
+    padding: 0.3rem 0;
 
     &::placeholder {
         color: rgba(255, 255, 255, 0.9);
@@ -788,7 +797,7 @@ $transition-normal: 0.3s ease;
 }
 
 .flashcard-definition {
-    border-bottom: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     font-size: 1rem;
     font-weight: 400;
     padding: 0.25rem 0;
@@ -941,7 +950,6 @@ $transition-normal: 0.3s ease;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
 }
 
 .flashcard-number {
@@ -986,6 +994,13 @@ $transition-normal: 0.3s ease;
     display: flex;
     flex-direction: column;
     gap: 0;
+
+    .char-indicator {
+        font-size: 0.70rem;
+        color: #ffffffaa;
+        text-align: right;
+        margin-right: 4px;
+    }
 }
 
 .flashcard-label {
@@ -1301,7 +1316,7 @@ $transition-normal: 0.3s ease;
     margin-top: 4px;
 }
 
-// pop up modals
+
 .popup-alert {
   position: fixed;
   top: 16px;
