@@ -773,7 +773,7 @@ $transition-normal: 0.3s ease;
     background: transparent;
     border: none;
     color: $color-text-white;
-    padding: 0.5rem 0;
+    padding: 0.3rem 0;
     outline: none;
     margin-top: -0.5rem;
 
@@ -787,7 +787,8 @@ $transition-normal: 0.3s ease;
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 0.75rem;
-    padding: 0.5rem 0;
+    margin-top: -15px;
+    padding: 0.3rem 0;
 
     &::placeholder {
         color: rgba(255, 255, 255, 0.9);
@@ -796,7 +797,7 @@ $transition-normal: 0.3s ease;
 }
 
 .flashcard-definition {
-    border-bottom: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     font-size: 1rem;
     font-weight: 400;
     padding: 0.25rem 0;
@@ -949,7 +950,6 @@ $transition-normal: 0.3s ease;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
 }
 
 .flashcard-number {
@@ -994,6 +994,13 @@ $transition-normal: 0.3s ease;
     display: flex;
     flex-direction: column;
     gap: 0;
+
+    .char-indicator {
+        font-size: 0.70rem;
+        color: #ffffffaa;
+        text-align: right;
+        margin-right: 4px;
+    }
 }
 
 .flashcard-label {

@@ -165,14 +165,20 @@
                                     <input type="text" 
                                             class="flashcard-term" 
                                             placeholder="Enter term/question"
-                                            [(ngModel)]="flashcard.term"/>
+                                            [(ngModel)]="flashcard.term"
+                                            maxlength="150"
+                                            (input)="enforceFlashcardTermLimit(getActualIndex($index))"/>
+                                    <div class="char-indicator">{{ flashcard.term?.length || 0 }}/150</div>
                                 </div>
                                 <div class="flashcard-right">
                                     <label class="flashcard-label">Description</label>
                                     <input type="text" 
                                             class="flashcard-definition" 
                                             placeholder="Enter definition/answer"
-                                            [(ngModel)]="flashcard.definition"/>
+                                            [(ngModel)]="flashcard.definition"
+                                            maxlength="150"
+                                            (input)="enforceFlashcardDefinitionLimit(getActualIndex($index))"/>
+                                    <div class="char-indicator">{{ flashcard.definition?.length || 0 }}/150</div>
                                 </div>
                             </div>
                         </div>

@@ -970,4 +970,20 @@ export class StudySetsPage implements OnInit, OnDestroy {
       this.openWarningPopup('Description can only take up to 50 characters.');
     }
   }
+
+  enforceFlashcardTermLimit(index: number) {
+    const flashcard = this.flashcards[index];
+    if (flashcard && flashcard.term && flashcard.term.length > 150) {
+      flashcard.term = flashcard.term.substring(0, 150);
+      this.openWarningPopup('Key Term can only take up to 150 characters.');
+    }
+  }
+
+  enforceFlashcardDefinitionLimit(index: number) {
+    const flashcard = this.flashcards[index];
+    if (flashcard && flashcard.definition && flashcard.definition.length > 150) {
+      flashcard.definition = flashcard.definition.substring(0, 150);
+      this.openWarningPopup('Description can only take up to 150 characters.');
+    }
+  }
 }
