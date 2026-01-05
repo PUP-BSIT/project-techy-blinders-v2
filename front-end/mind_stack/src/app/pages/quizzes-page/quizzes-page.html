@@ -176,35 +176,48 @@
                                 <input type="text" 
                                         class="flashcard-term" 
                                         placeholder="Question"
-                                        [(ngModel)]="question.question"/>
+                                        [(ngModel)]="question.question"
+                                        maxlength="150"
+                                        (input)="enforceQuestionLimit(question)"/>
+                                <div class="char-indicator">
+                                  {{ question.question?.length || 0 }}/150
+                                </div>
                                 <div class="mc-options-left">
                                     <div class="mc-option-left">
                                         <div class="option-label">a.</div>
                                         <input type="text" 
                                                 class="option-input-left" 
                                                 placeholder=""
-                                                [(ngModel)]="question.optionA"/>
+                                                [(ngModel)]="question.optionA"
+                                                maxlength="100"
+                                                (input)="enforceOptionLimit(question, 'optionA')"/>
                                     </div>
                                     <div class="mc-option-left">
                                         <div class="option-label">b.</div>
                                         <input type="text" 
                                                 class="option-input-left" 
                                                 placeholder=""
-                                                [(ngModel)]="question.optionB"/>
+                                                [(ngModel)]="question.optionB"
+                                                maxlength="100"
+                                                (input)="enforceOptionLimit(question, 'optionB')"/>
                                     </div>
                                     <div class="mc-option-left">
                                         <div class="option-label">c.</div>
                                         <input type="text" 
                                                 class="option-input-left" 
                                                 placeholder=""
-                                                [(ngModel)]="question.optionC"/>
+                                                [(ngModel)]="question.optionC"
+                                                maxlength="100"
+                                                (input)="enforceOptionLimit(question, 'optionC')"/>
                                     </div>
                                     <div class="mc-option-left">
                                         <div class="option-label">d.</div>
                                         <input type="text" 
                                                 class="option-input-left" 
                                                 placeholder=""
-                                                [(ngModel)]="question.optionD"/>
+                                                [(ngModel)]="question.optionD"
+                                                maxlength="100"
+                                                (input)="enforceOptionLimit(question, 'optionD')"/>
                                     </div>
                                 </div>
                             </div>
@@ -249,11 +262,21 @@
                             <input type="text" 
                                     class="flashcard-term" 
                                     placeholder="Question"
-                                    [(ngModel)]="question.question"/>
+                                    [(ngModel)]="question.question"
+                                    maxlength="150"
+                                    (input)="enforceQuestionLimit(question)"/>
+                            <div class="char-indicator">
+                              {{ question.question?.length || 0 }}/150
+                            </div>
                             <input type="text" 
                                     class="flashcard-definition" 
                                     placeholder="Answer"
-                                    [(ngModel)]="question.answer"/>
+                                    [(ngModel)]="question.answer"
+                                    maxlength="100"
+                                    (input)="enforceAnswerLimit(question)"/>
+                            <div class="char-indicator">
+                              {{ question.answer?.length || 0 }}/100
+                            </div>
                         </div>
                     </div>
                         <div class="add-item-section">
