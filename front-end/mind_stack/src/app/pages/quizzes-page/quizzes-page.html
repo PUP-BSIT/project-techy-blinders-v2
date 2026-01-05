@@ -100,13 +100,19 @@
                     <input type="text" 
                             class="title-input" 
                             placeholder="Add Title"
-                            [(ngModel)]="quizTitle"/>
+                            [(ngModel)]="quizTitle"
+                            maxlength="50"
+                            (input)="enforceTitleLimit()"/>
+                    <div class="char-indicator">{{ quizTitle?.length || 0 }}/50</div>
                 </div>
                 <div class="form-group">
                     <input type="text" 
                             class="description-input" 
                             placeholder="Description"
-                            [(ngModel)]="quizDescription"/>
+                            [(ngModel)]="quizDescription"
+                            maxlength="50"
+                            (input)="enforceDescriptionLimit()"/>
+                    <div class="char-indicator">{{ quizDescription?.length || 0 }}/50</div>
                 </div>
 
                 <div class="form-group">

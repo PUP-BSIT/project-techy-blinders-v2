@@ -308,14 +308,19 @@ $mobile-breakpoint: 768px;
 
 .study-set-title {
     color: $color-text-white;
-    font-size: 2.25rem;
+    font-size: 2rem;
     font-weight: 700;
     margin: 0;
-    overflow: visible;
-    text-overflow: clip;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: normal;
     word-wrap: break-word;
     line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    max-height: 2.7em;
+    min-height: 1.2em;
 }
 
 .study-set-description {
@@ -855,7 +860,7 @@ $mobile-breakpoint: 768px;
     }
 
     .description-input {
-        border-bottom: none;
+        border-bottom: 2px solid #ffffff;
         font-size: 0.95rem;
         font-weight: 400;
         padding-top: 0.25rem;
@@ -1043,7 +1048,6 @@ $mobile-breakpoint: 768px;
     border-bottom: 2px solid $color-text-white;
     font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: 1rem;
 
     &::placeholder {
         color: rgba(255, 255, 255, 0.8);
@@ -1053,7 +1057,6 @@ $mobile-breakpoint: 768px;
 .description-input {
     border-bottom: 1px solid rgba(255, 255, 255, 0.6);
     font-size: 1rem;
-    margin-bottom: 1rem;
 }
 
 .question-type-select {
@@ -1462,7 +1465,7 @@ $mobile-breakpoint: 768px;
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 3px;
 }
 
 .form-label {

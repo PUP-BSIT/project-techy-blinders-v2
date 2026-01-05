@@ -431,6 +431,20 @@ export class QuizzesPage implements OnInit {
     }
   }
 
+  enforceTitleLimit() {
+    if (this.quizTitle && this.quizTitle.length > 50) {
+      this.quizTitle = this.quizTitle.substring(0, 50);
+      this.openWarningPopup('Title can only take up to 50 characters.');
+    }
+  }
+
+  enforceDescriptionLimit() {
+    if (this.quizDescription && this.quizDescription.length > 50) {
+      this.quizDescription = this.quizDescription.substring(0, 50);
+      this.openWarningPopup('Description can only take up to 50 characters.');
+    }
+  }
+
   get itemsPerPage(): number {
     return this.selectedQuestionType === QuestionType.IDENTIFICATION ? 3 : 2;
   }
