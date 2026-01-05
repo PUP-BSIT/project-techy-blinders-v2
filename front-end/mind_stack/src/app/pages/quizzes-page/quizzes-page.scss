@@ -1721,6 +1721,12 @@ $mobile-breakpoint: 768px;
     }
 }
 
+.validator-message {
+    color: red;
+    font-size: 0.95em;
+    margin-top: 4px;
+}
+
 .radio-dot {
     width: 10px;
     height: 10px;
