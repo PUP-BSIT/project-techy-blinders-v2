@@ -278,6 +278,11 @@
                             class="form-input" 
                             placeholder="Please enter the caption"
                             [(ngModel)]="shareTitle"/>
+                                @if (shareTitle && shareTitle.length > 50) {
+                                    <div class="validator-message">
+                                        Caption must not exceed 50 characters
+                                    </div>
+                                }
                 </div>
 
                 <div class="form-group">
@@ -296,7 +301,10 @@
             </div>
 
             <div class="share-actions">
-                <button class="btn-share-save" (click)="saveShare()">Share</button>
+                <button class="btn-share-save" (click)="saveShare()"
+                    [disabled]="!shareTitle || !shareCategory || shareTitle.length > 50">
+                    Share
+                </button>
                 <button class="btn-share-cancel" (click)="closeShareModal()">Cancel</button>
             </div>
         </div>
