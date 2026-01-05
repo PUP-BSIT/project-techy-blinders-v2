@@ -1448,7 +1448,7 @@ $mobile-breakpoint: 768px;
     font-weight: 700;
     color: #2E7D5E;
     margin: 0 0 24px 0;
-    text-align: left;
+    text-align: center;
 }
 
 .share-form {
@@ -2250,8 +2250,8 @@ select {
 }
 
 select option {
-    background-color: $color-primary-dark !important;
-    color: $color-text-white !important;
+    background-color: white !important;
+    color: #333 !important;
     padding: 0.5rem 1rem !important;
     font-size: 0.9rem !important;
     border: none !important;
@@ -2259,8 +2259,8 @@ select option {
     &:hover,
     &:focus,
     &:checked {
-        background-color: $color-primary-darker !important;
-        color: $color-text-white !important;
+        background-color: #f0f0f0 !important;
+        color: #333 !important;
     }
 }
 
