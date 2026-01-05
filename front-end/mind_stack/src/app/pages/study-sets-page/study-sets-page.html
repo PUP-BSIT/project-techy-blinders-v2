@@ -92,13 +92,19 @@
                     <input type="text" 
                             class="title-input" 
                             placeholder="Add Title"
-                            [(ngModel)]="studySetTitle"/>
+                            [(ngModel)]="studySetTitle"
+                            maxlength="50"
+                            (input)="enforceTitleLimit()"/>
+                    <div class="char-indicator">{{ studySetTitle?.length || 0 }}/50</div>
                 </div>
                 <div class="form-group">
                     <input type="text" 
                             class="description-input" 
                             placeholder="Description"
-                            [(ngModel)]="studySetDescription"/>
+                            [(ngModel)]="studySetDescription"
+                            maxlength="50"
+                            (input)="enforceDescriptionLimit()"/>
+                    <div class="char-indicator">{{ studySetDescription?.length || 0 }}/50</div>
                 </div>
                 <div class="form-group">
                     <button class="btn-ai-suggestion"

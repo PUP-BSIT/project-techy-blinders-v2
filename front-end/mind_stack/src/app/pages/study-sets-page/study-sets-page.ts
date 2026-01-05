@@ -41,14 +41,14 @@ export class StudySetsPage implements OnInit, OnDestroy {
   get isShareDisabledForSelectedSet(): boolean {
     if (this.selectedStudySetId == null) return false;
     const set = this.studySets?.find((s: any) => s.flashcard_id === this.selectedStudySetId);
-    // Disable if already public OR if less than 3 flashcards
+
     return !!set?.is_public || (set?.flashcards?.length ?? 0) < 3;
   }
 
   get isPrivateDisabledForSelectedSet(): boolean {
     if (this.selectedStudySetId == null) return false;
     const set = this.studySets?.find((s: any) => s.flashcard_id === this.selectedStudySetId);
-    // Disable if already private (is_public is false)
+
     return set?.is_public === false;
   }
 
@@ -273,7 +273,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
     this.isModalOpen = false;
   }
 
-  // Deletion confirmation for study sets
+
   pendingDeleteStudySetId: number | null = null;
 
   openDeleteConfirm(id: number) {
@@ -323,7 +323,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
           this.closeModal();
           this.openFlashcardModal();
 
-          // Insert at the beginning and sort by created_at descending
+
           this.studySets.unshift(newStudySet);
           this.studySets.sort((a, b) => {
             const aDate = new Date(a.created_at).getTime();
@@ -366,7 +366,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
   saveFlashcards() {
     this.isFlashcardSaveSuccessPopupOpen = false;
-    // warning if any flashcard is missing a term or definition
+
     const hasEmpty = this.flashcards.some(f => !f.term.trim() || !f.definition.trim());
     if (hasEmpty) {
       this.openWarningPopup('Please fill in both the term and definition for all flashcards.');
@@ -419,7 +419,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
       .map(f => ({ keyTerm: f.term.trim(), definition: f.definition.trim(), flashcardId: f.flashcardId, isNew: f.isNew }))
       .filter(f => f.keyTerm && f.definition);
 
-    // If no valid flashcards and no deletions, do not show the success popup
+
     if (prepared.length === 0 && this.deletedFlashcardIds.length === 0) {
       this.isLoading = false;
       this.closeFlashcardModal();
@@ -730,7 +730,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
 
   selectShareOption() {
     if (this.selectedStudySetId !== null) {
-      // Check if the study set has at least 3 flashcards
+
       const studySet = this.studySets.find(s => s.flashcard_id === this.selectedStudySetId);
       if (studySet && studySet.flashcards.length < 3) {
         this.openWarningPopup('You need at least 3 flashcards in this set before you can share it publicly.');
@@ -825,7 +825,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
         return;
       }
 
-      // Final validation check before sharing
+
       if (studySet.flashcards.length < 3) {
         this.isWarningPopupOpen = false;
         setTimeout(() => {
@@ -955,5 +955,19 @@ export class StudySetsPage implements OnInit, OnDestroy {
     posts
       .filter(post => post.slug && post.slug.startsWith(slugPrefix))
       .forEach(post => this.communityService.deletePostPermanently(post.post_id));
+  }
+
+  enforceTitleLimit() {
+    if (this.studySetTitle && this.studySetTitle.length > 50) {
+      this.studySetTitle = this.studySetTitle.substring(0, 50);
+      this.openWarningPopup('Title can only take up to 50 characters.');
+    }
+  }
+
+  enforceDescriptionLimit() {
+    if (this.studySetDescription && this.studySetDescription.length > 50) {
+      this.studySetDescription = this.studySetDescription.substring(0, 50);
+      this.openWarningPopup('Description can only take up to 50 characters.');
+    }
   }
 }

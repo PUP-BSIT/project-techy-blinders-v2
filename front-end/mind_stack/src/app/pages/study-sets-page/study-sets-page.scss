@@ -266,14 +266,17 @@ $transition-normal: 0.3s ease;
 
 .study-set-title {
     color: $color-text-white;
-    font-size: 2.25rem;
+    font-size: 1.5rem;
     font-weight: 700;
     margin: 0;
-    overflow: visible;
-    text-overflow: clip;
-    white-space: normal;
-    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
     line-height: 1.2;
+    min-width: 0;
+    display: block;
+    padding-right: 2px;
 }
 
 .study-set-description {
@@ -601,7 +604,6 @@ $transition-normal: 0.3s ease;
     box-shadow: $shadow-heavy;
 }
 
-// Study Set Creation Modal
 .study-set-modal {
     max-width: 700px;
     padding: 2rem;
@@ -625,6 +627,13 @@ $transition-normal: 0.3s ease;
 
         &:first-child {
             margin-bottom: 1rem;
+        }
+
+        & .char-indicator {
+            font-size: 0.70rem;
+            color: #ffffffaa;
+            text-align: right;
+            margin-right: 4px;
         }
     }
 
@@ -651,7 +660,7 @@ $transition-normal: 0.3s ease;
     }
 
     .description-input {
-        border-bottom: none;
+        border-bottom: 2px solid $color-text-white;
         font-size: 1rem;
         font-weight: 400;
         padding-top: 0.5rem;
@@ -722,7 +731,6 @@ $transition-normal: 0.3s ease;
     }
 }
 
-// Flashcard Modal
 .flashcard-modal {
     max-width: 700px;
     height: 85vh;
@@ -1301,7 +1309,7 @@ $transition-normal: 0.3s ease;
     margin-top: 4px;
 }
 
-// pop up modals
+
 .popup-alert {
   position: fixed;
   top: 16px;
