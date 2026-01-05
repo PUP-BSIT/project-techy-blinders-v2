@@ -1554,6 +1554,25 @@ $mobile-breakpoint: 768px;
     }
 }
 
+// validator message for share caption
+.validator-message {
+    color: red;
+    font-size: 0.95em;
+    margin-top: 4px; 
+}
+
+.btn-share-save:disabled {
+    background-color: #9aaea0;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.btn-share-save:hover:disabled {
+    background-color: #9aaea0;
+    box-shadow: none;
+    transform: none;
+}
+
 .mc-question {
     border-radius: 18px;
     padding: 0;
@@ -1719,6 +1738,12 @@ $mobile-breakpoint: 768px;
         border-color: rgba(255, 255, 255, 1);
         transform: scale(1.1);
     }
+}
+
+.validator-message {
+    color: red;
+    font-size: 0.95em;
+    margin-top: 4px;
 }
 
 .radio-dot {
