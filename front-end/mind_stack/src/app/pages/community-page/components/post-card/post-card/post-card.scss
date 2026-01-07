@@ -1,6 +1,8 @@
 .post-card-wrapper {
-  width: 700px;
+  width: 100%;
+  max-width: 700px;
   margin: 0 auto 20px auto;
+  box-sizing: border-box;
 }
 
 .user-header {
@@ -392,4 +394,32 @@
   width: 14px;
   height: 14px;
   object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .post-card-wrapper {
+    max-width: 100%;
+  }
+
+  .post-header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .post-category {
+    flex: 1 1 100%;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .post-content-card {
+    padding: 16px;
+    gap: 14px;
+  }
+
+  .play-btn {
+    width: 44px;
+    height: 44px;
+  }
 }
