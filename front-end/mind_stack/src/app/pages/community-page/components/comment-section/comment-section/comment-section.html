@@ -5,7 +5,9 @@
         <div class="user-avatar">{{ getInitial(comment.username) }}</div>
         <div class="comment-info">
           <span class="username">{{ comment.username }}</span>
-          <span class="timestamp"> · {{ getTimeAgo(comment.created_at) }}</span>
+          <span class="timestamp"> 
+            · {{ getTimeAgo(comment.created_at) }}
+          </span>
         </div>
       </div>
       <p class="comment-content">{{ comment.content }}</p>
@@ -16,9 +18,9 @@
           (click)="onLikeComment(comment)"
         >
           <svg width="16" 
-              height="16" 
-              viewBox="0 0 16 16" 
-              fill="none">
+               height="16" 
+               viewBox="0 0 16 16" 
+               fill="none">
             <circle cx="8" 
                     cy="8" 
                     r="7" 
@@ -30,10 +32,9 @@
           </svg>
           <span>{{ comment.likes }}</span>
         </button>
-        <button 
-          class="action-btn"
-          [class.active]="comment.userDisliked"
-          (click)="onDislikeComment(comment)"
+        <button class="action-btn"
+                [class.active]="comment.userDisliked"
+                (click)="onDislikeComment(comment)"
         >
           <svg width="16" 
                height="16" 
@@ -68,18 +69,14 @@
 
   <div class="add-comment">
     <div class="user-avatar-small">{{ currentUserInitial }}</div>
-    <input 
-      type="text"
-      class="comment-input"
-      placeholder="Add your Reply"
-      [(ngModel)]="newCommentText"
-      (keyup.enter)="onAddComment()"
-    />
-    <button 
-      class="send-btn"
-      [disabled]="!newCommentText.trim()"
-      (click)="onAddComment()"
-    >
+    <input type="text"
+           class="comment-input"
+           placeholder="Add your Reply"
+           [(ngModel)]="newCommentText"
+           (keyup.enter)="onAddComment()"/>
+    <button class="send-btn"
+            [disabled]="!newCommentText.trim()"
+            (click)="onAddComment()">
       <svg width="16" 
            height="16" 
            viewBox="0 0 16 16" 

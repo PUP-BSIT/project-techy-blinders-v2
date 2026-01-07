@@ -12,13 +12,14 @@
         troke-width="2" 
         stroke-linecap="round"/>
 </svg>
-<select 
-  class="search-input"
-  [(ngModel)]="searchQuery"
-  (change)="onSearchChange()">
+<select class="search-input"
+        [(ngModel)]="searchQuery"
+        (change)="onSearchChange()">
   <option value="" disabled selected hidden>Search by category...</option>
-  <option *ngFor="let category of categories" [value]="category">
-    {{ category }}
-  </option>
+  @for (category of categories; track category) {
+    <option [value]="category">
+      {{ category }}
+    </option>
+  }
 </select>
 </div>

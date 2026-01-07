@@ -25,8 +25,10 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
   @Output() likePost = new EventEmitter<void>();
   @Output() dislikePost = new EventEmitter<void>();
   @Output() editPost = new EventEmitter<Post>();
-  @Output() deletePost = new EventEmitter<{ post: Post; setPrivate: boolean; permanent: boolean }>();
-  @Output() addComment = new EventEmitter<{content: string, parentCommentId?: string}>();
+  @Output() deletePost = new EventEmitter<{ post: Post; setPrivate: boolean; 
+      permanent: boolean }>();
+  @Output() addComment = new EventEmitter<{content: string, 
+      parentCommentId?: string}>();
   @Output() likeComment = 
     new EventEmitter<{comment: Comment, isReply: boolean}>();
   @Output() dislikeComment = 
@@ -58,7 +60,8 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
     if (changes['now'] && this.now) {
       this.currentTime = this.now;
     }
-    const shouldFocusComment = (changes['focusCommentId'] && this.focusCommentId) || (changes['comments'] && this.focusCommentId);
+    const shouldFocusComment = (changes['focusCommentId'] && this.focusCommentId) 
+        || (changes['comments'] && this.focusCommentId);
     if (shouldFocusComment) {
       const targetId = this.focusCommentId!;
       setTimeout(() => this.scrollToComment(targetId), 0);
@@ -90,10 +93,14 @@ export class PostModal implements OnInit, OnDestroy, OnChanges {
     const hours = Math.floor(diffMs / (1000 * 60 * 60));
     const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     
-    if (seconds < 60) return 'Just Now';
-    if (minutes < 60) return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
-    if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
-    if (days === 1) return '1 day ago';
+    if (seconds < 60) 
+      return 'Just Now';
+    if (minutes < 60) 
+      return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+    if (hours < 24) 
+      return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+    if (days === 1) 
+      return '1 day ago';
     return `${days} days ago`;
   }
 
