@@ -65,7 +65,7 @@ export class ContactPage {
       }],
 
       message: ['', {
-        validators: [Validators.required, Validators.minLength(30)],
+        validators: [Validators.required],
         updateOn: 'change'
       }]
     })
