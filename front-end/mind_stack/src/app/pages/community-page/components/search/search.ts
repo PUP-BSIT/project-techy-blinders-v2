@@ -15,7 +15,8 @@ export class Search {
   @Output() searchChange = new EventEmitter<string>();
 
   onSearchChange() {
-    const query = this.searchQuery === 'All Categories' ? '' : this.searchQuery;
+    const query = 
+      this.searchQuery === 'All Categories' ? '' : this.searchQuery;
     this.searchChange.emit(query);
   }
 }
