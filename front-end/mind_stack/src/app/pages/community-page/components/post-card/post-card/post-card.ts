@@ -12,7 +12,7 @@ import { Post } from '../../../../../models/post.model';
   styleUrl: './post-card.scss'
 })
 export class PostCard implements OnInit, OnDestroy, OnChanges {
-   @Input() post!: Post;
+  @Input() post!: Post;
   @Input() currentUserInitial: string = 'J';
   @Input() currentUserId: string = '';
   @Input() now?: Date;
@@ -24,7 +24,8 @@ export class PostCard implements OnInit, OnDestroy, OnChanges {
   @Output() openModal = new EventEmitter<Post>();
   @Output() likePost = new EventEmitter<Post>();
   @Output() dislikePost = new EventEmitter<Post>();
-  @Output() deletePost = new EventEmitter<{ post: Post; setPrivate: boolean; permanent: boolean }>();
+  @Output() deletePost = new EventEmitter<{ post: Post; setPrivate: boolean;
+      permanent: boolean }>();
   @Output() editPost = new EventEmitter<Post>();
 
   showMenu = false;
@@ -75,10 +76,14 @@ export class PostCard implements OnInit, OnDestroy, OnChanges {
     const hours = Math.floor(diffMs / (1000 * 60 * 60));
     const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     
-    if (seconds < 60) return 'Just now';
-    if (minutes < 60) return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
-    if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
-    if (days === 1) return '1 day ago';
+    if (seconds < 60) 
+      return 'Just now';
+    if (minutes < 60) 
+      return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+    if (hours < 24) 
+      return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+    if (days === 1) 
+      return '1 day ago';
     return `${days} days ago`;
   }
 
@@ -113,7 +118,8 @@ export class PostCard implements OnInit, OnDestroy, OnChanges {
     event.stopPropagation();
     this.showMenu = false;
     this.showDeleteConfirm = false;
-    this.deletePost.emit({ post: this.post, setPrivate: true, permanent: true });
+    this.deletePost.emit({ post: this.post, setPrivate: true, 
+      permanent: true });
   }
 
   cancelDelete(event: Event) {
