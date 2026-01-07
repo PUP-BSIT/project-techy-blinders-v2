@@ -82,7 +82,8 @@ export class ContactPage {
           if (error.status === 400 && error.error?.message) {
             this.submitMessage = error.error.message;
           } else if (error.error?.errors && error.error.errors.length > 0) {
-            this.submitMessage = error.error.errors[0].defaultMessage || 'Failed to send message';
+            this.submitMessage = 
+              error.error.errors[0].defaultMessage || 'Failed to send message';
           } else {
             this.submitMessage = 'Failed to send message. Please try again.';
           }
