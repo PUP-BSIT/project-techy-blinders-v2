@@ -30,7 +30,14 @@ export class AccountSettings {
   constructor() {
     this.accountSettingForm = this.formBuilder.group({
       current_password: ['', Validators.required],
-      new_password: ['', [Validators.required, Validators.minLength(8), this.strongPasswordValidator]],
+      new_password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          this.strongPasswordValidator
+        ]
+      ],
       confirm_password: ['', Validators.required]
     });
   }
@@ -65,7 +72,8 @@ export class AccountSettings {
   accountSettingInformation() {
     if (this.accountSettingForm.invalid) return;
 
-    const { current_password, new_password, confirm_password } = this.accountSettingForm.value;
+    const { current_password, new_password, confirm_password } = 
+              this.accountSettingForm.value;
 
     if (new_password !== confirm_password) {
       this.errorMessage = 'Passwords do not match';
@@ -87,7 +95,9 @@ export class AccountSettings {
         if (err.status === 401) {
           this.errorMessage = 'Your current password is incorrect';
         } else {
-          this.errorMessage = err?.error?.message || err?.error || err?.message || 'Failed to update password';
+          this.errorMessage = err?.error?.message || 
+                              err?.error || 
+                              err?.message || 'Failed to update password';
         }
         this.errorModalOpen.set(true);
       }

@@ -8,7 +8,9 @@
                 <div class="username-label">
                     <label>Username</label>
                 </div>
-                <input type="text" formControlName="username" placeholder="John Doe">   
+                <input type="text" 
+                        formControlName="username" 
+                        placeholder="John Doe">
                 <div class="error-message">
                     @if(usernameControl?.touched)  {
                         @if(usernameControl?.errors?.['required']) {
@@ -23,7 +25,9 @@
                     <label>Email</label>
                 </div>
                 
-                <input type="text" formControlName="email" placeholder="johndoe@gmail.com">
+                <input type="text" 
+                        formControlName="email" 
+                        placeholder="johndoe@gmail.com">
                 <div class="error-message">
                     @if(emailControl?.touched) {
                         @if(emailControl?.errors?.['required']) {
@@ -37,9 +41,16 @@
         </div>
 
         <div class="button-class">
-            <button type="submit" id="submit_button" [disabled]="editInformationForm.invalid">Save</button>
-            <button type="button" id="cancel_button" (click)="cancel()">Cancel</button>
+            <button type="submit" 
+                    id="submit_button" 
+                    [disabled]="editInformationForm.invalid">
+                Save
+            </button>
+            <button type="button" 
+                    id="cancel_button" 
+                    (click)="cancel()">
+                Cancel
+            </button>
         </div>
-
     </form>
 </div>
