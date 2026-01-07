@@ -1,14 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Comment } from '../../../../../models/post.model';
-import { Component, 
-         Input, 
-         Output, 
-         EventEmitter, 
-         OnInit, 
-         OnDestroy, 
-         OnChanges, 
-         SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-comment-section',
