@@ -14,8 +14,16 @@
 
     @if (isOwnProfile) {
         <div class="button-class">
-            <button type="button" class="edit-profile-btn" (click)="editProfile()">Change Email</button>
-            <button type="button" class="change-password-btn" (click)="accountSetting()">Change Password</button>
+            <button type="button" 
+                    class="edit-profile-btn" 
+                    (click)="editProfile()">
+                Change Email
+            </button>
+            <button type="button"
+                    class="change-password-btn"
+                    (click)="accountSetting()">
+                Change Password
+            </button>
         </div>
     } @else {
         <div class="view-only">Viewing public profile</div>
@@ -56,11 +64,22 @@
                     <label class="field-label">Email</label>
                     <div class="field-content">
                         @if (!editingEmail) {
-                            <span class="field-value">{{ displayUser?.email }}</span>
-                            <button class="edit-btn" (click)="startEdit('email')" [disabled]="isLoading">Edit</button>
+                            <span class="field-value">
+                                {{ displayUser?.email }}
+                            </span>
+                            <button class="edit-btn"
+                                    (click)="startEdit('email')"
+                                    [disabled]="isLoading">
+                                Edit
+                            </button>
                         } @else {
-                            <input [(ngModel)]="editEmailValue" type="email" class="field-input" [disabled]="isLoading" />
-                            <button class="save-btn" (click)="saveEdit('email')" [disabled]="isLoading">
+                            <input [(ngModel)]="editEmailValue"
+                                    type="email" 
+                                    class="field-input" 
+                                    [disabled]="isLoading"/>
+                            <button class="save-btn" 
+                                    (click)="saveEdit('email')" 
+                                    [disabled]="isLoading">
                                 {{ isLoading ? 'Saving...' : 'Save' }}
                             </button>
                         }
@@ -74,7 +93,8 @@
 @if (showAccountSettingsModal) {
     <div class="modal-overlay" (click)="closeModal()">
         <div (click)="$event.stopPropagation()">
-            <app-account-settings (onCancel)="closeModal()"></app-account-settings>
+            <app-account-settings 
+                    (onCancel)="closeModal()"></app-account-settings>
         </div>
     </div>
 }
