@@ -11,9 +11,7 @@
         </div>
     </div>
 
-    <div class="seperator-class">
-
-    </div>
+    <div class="seperator-class"></div>
 
     <div class="contact-form">
         <form [formGroup]="contactForm" (ngSubmit)="contactValidation()">
@@ -27,8 +25,8 @@
                         @if(nameControl?.errors?.['required']) {
                             <div>
                                <p class="validators-message">
-                                Name is required
-                            </p> 
+                                    Name is required
+                                </p> 
                             </div>
                         }
                     }
@@ -87,7 +85,8 @@
                 <button
                     type="submit"
                     [disabled]="contactForm.invalid || isSubmitting"
-                    [style.cursor]="(contactForm.invalid || isSubmitting) ? 'not-allowed' : 'pointer'">
+                    [style.cursor]="(contactForm.invalid 
+                        || isSubmitting) ? 'not-allowed' : 'pointer'">
                     {{ isSubmitting ? 'Sending...' : 'Submit' }}
                 </button>
             </div>
@@ -98,9 +97,9 @@
         @if (showSubmitPopup()) {
             <div class="popup-overlay" (click)="closeSubmitPopup()">
                 <div class="popup" 
-                    [class.success]="isSubmitSuccess" 
-                    [class.warning]="!isSubmitSuccess" 
-                    (click)="$event.stopPropagation()">
+                     [class.success]="isSubmitSuccess" 
+                     [class.warning]="!isSubmitSuccess" 
+                     (click)="$event.stopPropagation()">
                     <h2>{{ isSubmitSuccess ? 'Success!' : 'Error' }}</h2>
                     <p>{{ submitMessage }}</p>
                     <button (click)="closeSubmitPopup()">Close</button>
