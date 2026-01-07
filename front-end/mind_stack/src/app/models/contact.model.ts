@@ -1,5 +1,9 @@
 export interface ContactRequest {
     name: string;
-    emai: string;
+    email: string;
+    message: string;
+}
+
+export interface ContactResponse {
     message: string;
 }

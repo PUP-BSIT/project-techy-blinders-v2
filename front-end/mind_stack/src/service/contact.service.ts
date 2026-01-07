@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { ContactRequest } from '../app/models/contact.model';
+import { ContactRequest, ContactResponse } from '../app/models/contact.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -11,7 +11,7 @@ export class ContactService {
 
   constructor(private http: HttpClient){}
 
-  sendContactForm(contact: ContactRequest): Observable<ContactRequest> {
-    return this.http.post<ContactRequest>(this.apiUrl, contact);
+  sendContactForm(contact: ContactRequest): Observable<ContactResponse> {
+    return this.http.post<ContactResponse>(this.apiUrl, contact);
   }
 }

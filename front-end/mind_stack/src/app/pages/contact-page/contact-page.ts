@@ -2,14 +2,6 @@ import { Component, inject } from '@angular/core';
 import { NavBar } from '../../shared/components/nav-bar/nav-bar';
 import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
 import { ContactService } from '../../../service/contact.service';
-import { response } from 'express';
-import { error } from 'console';
-
-interface Contact {
-  name: string;
-  email: string;
-  message: string;
-}
 
 @Component({
   selector: 'app-contact-page',
@@ -87,7 +79,13 @@ export class ContactPage {
 
         error: (error) => {
           this.isSubmitSuccess = false;
-          this.submitMessage = 'Failed to send message';
+          if (error.status === 400 && error.error?.message) {
+            this.submitMessage = error.error.message;
+          } else if (error.error?.errors && error.error.errors.length > 0) {
+            this.submitMessage = error.error.errors[0].defaultMessage || 'Failed to send message';
+          } else {
+            this.submitMessage = 'Failed to send message. Please try again.';
+          }
           this.openSubmitPopup();
           this.isSubmitting = false;
         }
