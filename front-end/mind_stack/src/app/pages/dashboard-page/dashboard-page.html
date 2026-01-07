@@ -26,7 +26,9 @@
       <section class="quick-actions-section">
         <div class="action-row">
           <h2 class="action-title">Create a Flashcard Set</h2>
-          <button class="create-btn" (click)="createFlashcards()">Create</button>
+          <button class="create-btn" 
+                  (click)="createFlashcards()">
+              Create</button>
         </div>
         
         <div class="divider"></div>
@@ -43,8 +45,10 @@
           <div class="header-actions">
             <span class="count-badge">{{ recentActivities.length }}</span>
             @if (recentActivities.length > 0) {
-              <button class="reset-btn" (click)="resetActivities()" title="Clear all activities">
-                Clear All
+              <button class="reset-btn" 
+                      (click)="resetActivities()" 
+                      title="Clear all activities">
+                  Clear All
               </button>
             }
           </div>
@@ -54,22 +58,32 @@
             <p class="empty-message">No recent activities</p>
           } @else {
             @for (activity of paginatedActivities; track activity.id) {
-              <div class="activity-item" (click)="navigateToActivity(activity)">
+              <div class="activity-item" 
+                    (click)="navigateToActivity(activity)">
                 <div class="activity-content">
                   <span class="activity-title">{{ activity.title }}</span>
-                  <span class="activity-subtitle">{{ getActivityDescription(activity) }}</span>
+                  <span class="activity-subtitle">
+                      {{ getActivityDescription(activity) }}
+                  </span>
                 </div>
                 
                 @if (activity.type === 'quiz' && activity.score) {
                   <div class="activity-score-section">
                     <div class="score-display">
-                      <span class="score-value">{{ activity.score.totalScore }}/{{ activity.score.maxScore }}</span>
+                        <span class="score-value">
+                            {{ activity.score.totalScore }} /
+                            {{ activity.score.maxScore }}
+                        </span>
                     </div>
                   </div>
                 } @else {
                   <div class="activity-score-section">
                     <div class="activity-type-badge">
-                      <span class="type-label">{{ activity.type === 'flashcard' ? 'Flashcard' : 'Quiz' }}</span>
+                      <span class="type-label">
+                          {{ activity.type === 'flashcard' 
+                                  ? 'Flashcard'
+                                  : 'Quiz' }}
+                      </span>
                     </div>
                   </div>
                 }
@@ -79,14 +93,17 @@
                         (mouseenter)="setHoverState(activity.id, true)"
                         (mouseleave)="setHoverState(activity.id, false)"
                         title="Delete activity">
-                  <img [src]="getDeleteIconSrc(activity.id)" alt="Delete" class="delete-icon">
+                  <img [src]="getDeleteIconSrc(activity.id)" 
+                        alt="Delete" 
+                        class="delete-icon">
                 </button>
               </div>
             }
           }
         </div>
         
-        <div class="activities-pagination" [class.show]="activitiesTotalPages > 1">
+        <div class="activities-pagination" 
+              [class.show]="activitiesTotalPages > 1">
           <button class="pagination-btn prev" 
                   (click)="goToActivitiesPage(0)" 
                   [disabled]="activitiesCurrentPage === 0">
@@ -99,21 +116,27 @@
           </button>
           <div class="pagination-dots">
             @for (page of activitiesPages; track page) {
-              <span [class]="page === '...' ? 'pagination-ellipsis' : 'pagination-dot'"
-                    [class.active]="isPageNumber(page) && activitiesCurrentPage === page"
-                    (click)="isPageNumber(page) && goToActivitiesPage(getPageNumber(page))">
+              <span [class]="page === '...' 
+                          ? 'pagination-ellipsis' 
+                          : 'pagination-dot'"
+                    [class.active]="isPageNumber(page) && 
+                        activitiesCurrentPage === page"
+                    (click)="isPageNumber(page) && 
+                        goToActivitiesPage(getPageNumber(page))">
                 {{ getPageDisplay(page) }}
               </span>
             }
           </div>
           <button class="pagination-btn next" 
                   (click)="nextActivitiesPage()" 
-                  [disabled]="activitiesCurrentPage === activitiesTotalPages - 1">
+                  [disabled]="activitiesCurrentPage === 
+                      activitiesTotalPages - 1">
             ›
           </button>
           <button class="pagination-btn next" 
-                  (click)="goToActivitiesPage(activitiesTotalPages - 1)" 
-                  [disabled]="activitiesCurrentPage === activitiesTotalPages - 1">
+                  (click)="goToActivitiesPage(activitiesTotalPages - 1)"
+                  [disabled]="activitiesCurrentPage === 
+                      activitiesTotalPages - 1">
             ››
           </button>
         </div>
@@ -122,28 +145,42 @@
   </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
-<div class="confirm-overlay" [class.open]="isDeleteModalOpen" (click)="closeDeleteModal()">
+<div class="confirm-overlay" 
+      [class.open]="isDeleteModalOpen" 
+      (click)="closeDeleteModal()">
   <div class="confirm-modal" (click)="$event.stopPropagation()">
     <p class="confirm-message">
       Are you sure to delete this item?
     </p>
     <div class="confirm-actions">
-      <button class="btn-confirm-no" (click)="cancelDelete()">No</button>
-      <button class="btn-confirm-yes" (click)="confirmDelete()">Yes, Delete</button>
+      <button class="btn-confirm-no" 
+              (click)="cancelDelete()">
+          No
+      </button>
+      <button class="btn-confirm-yes"
+              (click)="confirmDelete()">
+          Yes, Delete
+      </button>
     </div>
   </div>
 </div>
 
-<!-- Clear All Confirmation Modal -->
-<div class="confirm-overlay" [class.open]="isClearAllModalOpen" (click)="closeClearAllModal()">
+<div class="confirm-overlay"
+      [class.open]="isClearAllModalOpen" 
+      (click)="closeClearAllModal()">
   <div class="confirm-modal" (click)="$event.stopPropagation()">
     <p class="confirm-message">
       Are you sure you want to clear all recent activities?
     </p>
     <div class="confirm-actions">
-      <button class="btn-confirm-no" (click)="cancelClearAll()">No</button>
-      <button class="btn-confirm-yes" (click)="confirmClearAll()">Yes, Clear All</button>
+      <button class="btn-confirm-no"
+              (click)="cancelClearAll()">
+          No
+      </button>
+      <button class="btn-confirm-yes"
+              (click)="confirmClearAll()">
+          Yes, Clear All
+      </button>
     </div>
   </div>
 </div>

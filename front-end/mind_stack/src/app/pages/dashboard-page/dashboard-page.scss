@@ -166,6 +166,7 @@ $transition-normal: 0.3s ease;
     font-family: "Poppins";
   }
 }
+
 .quick-actions-section {
   background: $color-card-white;
   border-radius: 16px;
@@ -631,7 +632,6 @@ $transition-normal: 0.3s ease;
   }
 }
 
-// Mobile responsive
 @media (max-width: 768px) {
   :host {
     height: 100vh;
@@ -792,7 +792,6 @@ $transition-normal: 0.3s ease;
     font-size: 12px;
   }
   
-  // Mobile responsive styles for score section
   .activity-score-section {
     min-width: 80px;
     max-width: 100px;
@@ -834,7 +833,7 @@ $transition-normal: 0.3s ease;
     }
   }
 }
-// Delete Confirmation Modal
+
 .confirm-overlay {
   position: fixed;
   inset: 0;
