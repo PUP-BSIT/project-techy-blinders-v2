@@ -1,89 +1,91 @@
 <app-nav-bar></app-nav-bar>
 
 <div class="container">
-    <div class="logo-class">
-        <div class="header-class">
-            <h1>Reach out anytime with your questions or feedback.</h1>
+    <div class="contact-card">
+        <div class="logo-class">
+            <div class="header-class">
+                <h1>Reach out anytime with your questions or feedback.</h1>
+            </div>
+
+                <img class="image-class" 
+                     src="assets/customer-service.png" 
+                     alt="Customer Service">
         </div>
 
-        <div class="image-class">
-            <img src="assets/customer-service.png">
+        <div class="seperator-class"></div>
+
+        <div class="contact-form">
+            <form [formGroup]="contactForm" (ngSubmit)="contactValidation()">
+                <div class="field">
+                    <div>
+                        <label>Name </label>
+                    </div>
+                    <input type="text" formControlName="name" 
+                           placeholder="Enter your name">
+                        @if (nameControl?.touched) {
+                            @if(nameControl?.errors?.['required']) {
+                                <div>
+                                   <p class="validators-message">
+                                        Name is required
+                                    </p> 
+                                </div>
+                            }
+                        }
+                </div>
+                <div class="field">
+                    <div>
+                        <label>Email </label>
+                    </div>
+                    <input type="text" 
+                           formControlName="email" 
+                           placeholder="Enter your email">
+                        @if (emailControl?.touched) {
+                            @if(emailControl?.errors?.['required']) {
+                                <div>
+                                    <p class="validators-message">
+                                        Email is required
+                                    </p> 
+                                </div>
+                                
+                            }@else if (emailControl?.errors?.['email']) {
+                                <div>
+                                    <p class="validators-message">
+                                        Invalid email format
+                                    </p>
+                                </div>
+                                
+                            }
+                        }
+                </div>
+                <div class="field">
+                    <div>
+                        <label>Message </label>
+                    </div>
+                    <textarea rows="4" 
+                              formControlName="message" 
+                              placeholder="Enter your concern">
+                    </textarea>
+                        @if (messageControl?.touched) {
+                            @if (messageControl?.errors?.['required']) {
+                                <div>
+                                    <p class="validators-message">
+                                        Message is required
+                                    </p>
+                                </div>
+                            }
+                        }
+                </div>
+                <div class="submit-class">
+                    <button
+                        type="submit"
+                        [disabled]="contactForm.invalid || isSubmitting"
+                        [style.cursor]="(contactForm.invalid 
+                            || isSubmitting) ? 'not-allowed' : 'pointer'">
+                        {{ isSubmitting ? 'Sending...' : 'Submit' }}
+                    </button>
+                </div>
+            </form>
         </div>
-    </div>
-
-    <div class="seperator-class"></div>
-
-    <div class="contact-form">
-        <form [formGroup]="contactForm" (ngSubmit)="contactValidation()">
-            <div class="field">
-                <div>
-                    <label>Name </label>
-                </div>
-                <input type="text" formControlName="name" 
-                       placeholder="Enter your name">
-                    @if (nameControl?.touched) {
-                        @if(nameControl?.errors?.['required']) {
-                            <div>
-                               <p class="validators-message">
-                                    Name is required
-                                </p> 
-                            </div>
-                        }
-                    }
-            </div>
-            <div class="field">
-                <div>
-                    <label>Email </label>
-                </div>
-                <input type="text" 
-                       formControlName="email" 
-                       placeholder="Enter your email">
-                    @if (emailControl?.touched) {
-                        @if(emailControl?.errors?.['required']) {
-                            <div>
-                                <p class="validators-message">
-                                    Email is required
-                                </p> 
-                            </div>
-                            
-                        }@else if (emailControl?.errors?.['email']) {
-                            <div>
-                                <p class="validators-message">
-                                    Invalid email format
-                                </p>
-                            </div>
-                            
-                        }
-                    }
-            </div>
-            <div class="field">
-                <div>
-                    <label>Message </label>
-                </div>
-                <textarea rows="4" 
-                          formControlName="message" 
-                          placeholder="Enter your concern">
-                </textarea>
-                    @if (messageControl?.touched) {
-                        @if (messageControl?.errors?.['required']) {
-                            <div>
-                                <p class="validators-message">
-                                    Message is required
-                                </p>
-                            </div>
-                        }
-                    }
-            </div>
-            <div class="submit-class">
-                <button
-                    type="submit"
-                    [disabled]="contactForm.invalid || isSubmitting"
-                    [style.cursor]="(contactForm.invalid 
-                        || isSubmitting) ? 'not-allowed' : 'pointer'">
-                    {{ isSubmitting ? 'Sending...' : 'Submit' }}
-                </button>
-            </div>
-        </form>
     </div>
 
     @if (submitMessage) {
