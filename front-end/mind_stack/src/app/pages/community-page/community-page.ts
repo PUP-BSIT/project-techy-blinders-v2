@@ -64,7 +64,8 @@ export class CommunityPage implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  constructor(private communityService: CommunityService, private profanityService: ProfanityFilterService) {}
+  constructor(private communityService: CommunityService, 
+              private profanityService: ProfanityFilterService) {}
 
   ngOnInit() {
     this.setCurrentUserInitial();
@@ -252,11 +253,14 @@ export class CommunityPage implements OnInit, OnDestroy {
     }
   }
 
-  onDeletePost(action: { post: Post; setPrivate?: boolean; permanent?: boolean }) {
+  onDeletePost(action: { post: Post; setPrivate?: 
+                boolean; permanent?: boolean }) {
     if (action.permanent) {
-      this.communityService.deletePostPermanently(action.post.post_id, action.setPrivate ?? true);
+      this.communityService.deletePostPermanently(action.post.post_id, 
+              action.setPrivate ?? true);
     } else {
-      this.communityService.unpublishPost(action.post.post_id, action.setPrivate ?? false);
+      this.communityService.unpublishPost(action.post.post_id, 
+              action.setPrivate ?? false);
     }
     // Close the modal immediately when post is deleted
     this.closePostModal();
@@ -313,7 +317,8 @@ export class CommunityPage implements OnInit, OnDestroy {
     const wasDisliked = event.comment.userDisliked === true;
     this.communityService.toggleDislikeComment(event.comment.comment_id);
     this.isCommentDislikedPopupOpen = false;
-    this.commentDislikeMessage = wasDisliked ? 'Dislike removed!' : 'Comment disliked!';
+    this.commentDislikeMessage = 
+      wasDisliked ? 'Dislike removed!' : 'Comment disliked!';
     setTimeout(() => {
       this.openCommentDislikedPopup();
     }, 10);
