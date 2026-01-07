@@ -31,14 +31,24 @@
                 }
             </div>
 
-            <!-- Password -->
             <div class="password-class">
                 <div><label>Password</label></div>
                 <div class="password-input-container">
-                    <input formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="Enter your password">
-                    <button type="button" class="show-password-btn" (click)="togglePasswordVisibility()">
-                        <img [src]="showPassword ? 'assets/unshow-password-icon.png' : 'assets/show-password-icon.png'"
-                              [alt]="showPassword ? 'Hide password' : 'Show password'">
+                    <input 
+                        formControlName="password" 
+                        [type]="showPassword ? 'text' : 'password'" 
+                        placeholder="Enter your password">
+                    <button 
+                        type="button" 
+                        class="show-password-btn" 
+                        (click)="togglePasswordVisibility()">
+                        <img 
+                            [src]="showPassword 
+                                ? 'assets/unshow-password-icon.png' 
+                                : 'assets/show-password-icon.png'"
+                            [alt]="showPassword 
+                                ? 'Hide password' 
+                                : 'Show password'">
                     </button>
                 </div>
 
@@ -49,29 +59,33 @@
                 }
             </div>
 
-            <!-- Forgot password -->
-                <div class="forgot-password">
-                    <a routerLink="/forgot-password">
-                        Forgot Password?
-                    </a>
-                </div>
-
-            <!-- Login button -->
-            <div class="login-button">
-                <button type="submit" [disabled]="!loginForm.valid || isLoading">Login</button>
+            <div class="forgot-password">
+                <a routerLink="/forgot-password">
+                    Forgot Password?
+                </a>
             </div>
 
-            <p class="register-class">Don't have an account? <a routerLink="/register"> Register</a></p>
+            <div class="login-button">
+                <button 
+                    type="submit" 
+                    [disabled]="!loginForm.valid || isLoading()"
+                >
+                    Login
+                </button>
+            </div>
+
+            <p class="register-class">
+                Don't have an account?
+                <a routerLink="/register"> Register</a>
+            </p>
         </form>
         </div>
     </div>
 
     @if (successModalOpen()) {
         <div class="modal-backdrop"></div>
-
         <div class="success-modal">
             <div class="modal-content">
-                <!-- Spinner -->
                 <div class="spinner"></div>
                 <h2>Logging In...</h2>
                 <p>Please wait</p>
@@ -79,11 +93,11 @@
         </div>
     }
 
-    @if (errorModalOpen() && errorMessage) {
+    @if (errorModalOpen() && errorMessage()) {
         <div class="popup-overlay" (click)="closeErrorModal()">
             <div class="popup warning" (click)="$event.stopPropagation()">
                 <h2>Error</h2>
-                <p>{{ errorMessage }}</p>
+                <p>{{ errorMessage() }}</p>
                 <button (click)="closeErrorModal()">Close</button>
             </div>
         </div>
