@@ -38,7 +38,6 @@ export class DashboardPage implements OnInit, OnDestroy {
   activitiesPages: (number | string)[] = [];
   paginatedActivities: Activity[] = [];
 
-  // Delete modal properties
   isDeleteModalOpen: boolean = false;
   activityToDelete: Activity | null = null;
   hoveredActivityId: string | null = null;
@@ -114,12 +113,26 @@ export class DashboardPage implements OnInit, OnDestroy {
 
   createFlashcards() {
     console.log('Navigate to create flashcards');
-    this.router.navigate(['/app/study-sets'], { queryParams: { create: 'true' } });
+    this.router.navigate(
+      ['/app/study-sets'],
+      {
+        queryParams: {
+          create: 'true'
+        }
+      }
+    );
   }
 
   createQuiz() {
     console.log('Navigate to create quiz');
-    this.router.navigate(['/app/quizzes'], { queryParams: { create: 'true' } });
+    this.router.navigate(
+      ['/app/quizzes'],
+      {
+        queryParams: {
+          create: 'true'
+        }
+      }
+    );
   }
 
   navigateToActivity(activity: Activity) {
@@ -161,10 +174,10 @@ export class DashboardPage implements OnInit, OnDestroy {
   }
 
   openDeleteModal(activity: Activity, event: Event): void {
-    event.stopPropagation(); // Prevent navigation when clicking delete
+    event.stopPropagation();
     this.activityToDelete = activity;
     this.isDeleteModalOpen = true;
-    this.hoveredActivityId = null; // Clear hover state when modal opens
+    this.hoveredActivityId = null;
   }
 
   closeDeleteModal(): void {
@@ -193,16 +206,19 @@ export class DashboardPage implements OnInit, OnDestroy {
       : 'assets/delete-icon.png';
   }
 
-  // Pagination methods for recent activities
   private updateActivitiesPagination() {
-    this.activitiesTotalPages = Math.ceil(this.recentActivities.length / this.activitiesItemsPerPage);
+    this.activitiesTotalPages = Math.ceil(
+      this.recentActivities.length /
+      this.activitiesItemsPerPage
+    );
     
-    // Ensure we have at least 1 page if there are activities
     if (this.recentActivities.length > 0 && this.activitiesTotalPages === 0) {
-      this.activitiesTotalPages = 1;
+            this.activitiesTotalPages = 1;
     }
     
-    if (this.activitiesCurrentPage >= this.activitiesTotalPages && this.activitiesTotalPages > 0) {
+    if (this.activitiesCurrentPage >= this.activitiesTotalPages &&
+            this.activitiesTotalPages > 0
+    ) {
       this.activitiesCurrentPage = this.activitiesTotalPages - 1;
     }
     
@@ -211,15 +227,19 @@ export class DashboardPage implements OnInit, OnDestroy {
   }
 
   private updatePaginatedActivities() {
-    const startIndex = this.activitiesCurrentPage * this.activitiesItemsPerPage;
-    const endIndex = startIndex + this.activitiesItemsPerPage;
-    this.paginatedActivities = this.recentActivities.slice(startIndex, endIndex);
+    const startIndex =
+            this.activitiesCurrentPage *
+            this.activitiesItemsPerPage;
+    const endIndex =
+            startIndex +
+            this.activitiesItemsPerPage;
+    this.paginatedActivities =
+            this.recentActivities.slice(startIndex, endIndex);
   }
 
   private updateActivitiesPages() {
     this.activitiesPages = [];
     
-    // Always show at least one page if there are activities
     if (this.activitiesTotalPages === 0 && this.recentActivities.length > 0) {
       this.activitiesPages.push(0);
       return;
@@ -239,14 +259,18 @@ export class DashboardPage implements OnInit, OnDestroy {
       } else if (this.activitiesCurrentPage >= this.activitiesTotalPages - 4) {
         this.activitiesPages.push(0);
         this.activitiesPages.push('...');
-        for (let i = this.activitiesTotalPages - 5; i < this.activitiesTotalPages; i++) {
-          this.activitiesPages.push(i);
+        for (let i = this.activitiesTotalPages - 5;
+                i < this.activitiesTotalPages;
+                i++) {
+            this.activitiesPages.push(i);
         }
       } else {
         this.activitiesPages.push(0);
         this.activitiesPages.push('...');
-        for (let i = this.activitiesCurrentPage - 1; i <= this.activitiesCurrentPage + 1; i++) {
-          this.activitiesPages.push(i);
+        for (let i = this.activitiesCurrentPage - 1;
+                i <= this.activitiesCurrentPage + 1;
+                i++) {
+            this.activitiesPages.push(i);
         }
         this.activitiesPages.push('...');
         this.activitiesPages.push(this.activitiesTotalPages - 1);
@@ -283,7 +307,9 @@ export class DashboardPage implements OnInit, OnDestroy {
   }
 
   getPageDisplay(page: number | string): string {
-    return typeof page === 'number' ? String((page as number) + 1) : page as string;
+    return typeof page === 'number'
+          ? String((page as number) + 1)
+          : page as string;
   }
 
   navigateToQuizzes() {
@@ -293,6 +319,4 @@ export class DashboardPage implements OnInit, OnDestroy {
   navigateToFlashcards() {
     this.router.navigate(['/app/study-sets']);
   }
-
-
 }
