@@ -18,7 +18,8 @@
             </button>
 
             <div class="study-sets-list">
-                <div class="study-set-card" *ngFor="let quiz of paginatedQuizzes; let i = index">
+                @for (quiz of paginatedQuizzes; track quiz.quiz_id; let i = $index) {
+                <div class="study-set-card">
                     <div class="card-left">
                         <button class="play-btn" (click)="playQuiz(quiz.quiz_id)">
                             ▶
@@ -54,6 +55,7 @@
                         </button>
                     </div>
                 </div>
+                }
             </div>
 
             <div class="study-sets-pagination" [class.show]="quizzesTotalPages > 1">
@@ -68,12 +70,13 @@
                     ‹
                 </button>
                 <div class="pagination-dots">
-                    <span *ngFor="let page of quizzesPages" 
-                          [class]="page === '...' ? 'pagination-ellipsis' : 'pagination-dot'"
+                    @for (page of quizzesPages; track page) {
+                    <span [class]="page === '...' ? 'pagination-ellipsis' : 'pagination-dot'"
                           [class.active]="isPageNumber(page) && quizzesCurrentPage === page"
                           (click)="isPageNumber(page) && goToQuizzesPage(getPageNumber(page))">
                         {{ getPageDisplay(page) }}
                     </span>
+                    }
                 </div>
                 <button class="pagination-btn next" 
                             (click)="nextQuizzesPage()" 
@@ -166,9 +169,10 @@
                     </button>
                 </div>
                 }
-                <div class="flashcards-container" *ngIf="questions.length > 0">
+                @if (questions.length > 0) {
+                <div class="flashcards-container">
+                    @for (question of paginatedQuestions; track $index; let i = $index) {
                     <div class="flashcard-item mc-question" 
-                         *ngFor="let question of paginatedQuestions; let i = index"
                          [class.hidden]="!isMultipleChoice()">
                         <div class="mc-question-header">
                             <div class="question-number">{{ getActualIndex(i) + 1 }}</div>
@@ -254,8 +258,9 @@
                             </div>
                         </div>
                     </div>
+                    }
+                    @for (question of paginatedQuestions; track $index; let i = $index) {
                     <div class="flashcard-item identification-item" 
-                         *ngFor="let question of paginatedQuestions; let i = index"
                          [class.hidden]="!isIdentification()">
                         <div class="identification-header">
                             <div class="question-number">{{ getActualIndex(i) + 1 }}</div>
@@ -285,12 +290,14 @@
                             </div>
                         </div>
                     </div>
+                    }
                         <div class="add-item-section">
                             <button class="add-item-btn" (click)="addQuestion()">
                                 <span class="plus-icon">+</span> Add Item
                             </button>
                         </div>
                 </div>
+                }
             </div>
 
 
@@ -306,12 +313,13 @@
                     ‹
                 </button>
                 <div class="pagination-dots">
-                    <span *ngFor="let page of questionPages" 
-                          [class]="page === '...' ? 'pagination-ellipsis' : 'pagination-dot'"
+                    @for (page of questionPages; track page) {
+                    <span [class]="page === '...' ? 'pagination-ellipsis' : 'pagination-dot'"
                           [class.active]="isPageNumber(page) && currentPage === page"
                           (click)="isPageNumber(page) && goToPage(getPageNumber(page))">
                         {{ getPageDisplay(page) }}
                     </span>
+                    }
                 </div>
                 <button class="pagination-btn next" 
                             (click)="nextPage()" 
