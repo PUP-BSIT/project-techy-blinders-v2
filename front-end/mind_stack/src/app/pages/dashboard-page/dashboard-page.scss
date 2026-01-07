@@ -122,6 +122,14 @@ $transition-normal: 0.3s ease;
   align-items: stretch;
 }
 
+.empty-message {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+  font-family: "Roboto";
+  font-size: 16px;
+}
+
 .stat-badge {
   background: rgba(40, 124, 85, 0.8);
   backdrop-filter: blur(10px);
