@@ -9,14 +9,12 @@
 <form (ngSubmit)="onSubmit()">
     <div class="form-group">
     <label class="form-label">Caption</label>
-    <input 
-        type="text" 
-        class="form-input"
-        placeholder="Caption"
-        [(ngModel)]="title"
-        name="title"
-        required
-    />
+    <input type="text" 
+           class="form-input"
+            placeholder="Caption"
+            [(ngModel)]="title"
+            name="title"
+            required/>
     @if (title && title.length > 50) {
         <span class="error-message">
             Caption must not exceed 50 characters
@@ -27,12 +25,11 @@
     <div class="form-group">
     <label class="form-label">Category</label>
     <div class="select-wrapper">
-        <select 
-        class="form-select"
-        [(ngModel)]="category"
-        name="category"
-        required
-        [class.has-value]="category"
+        <select class="form-select"
+                [(ngModel)]="category"
+                name="category"
+                required
+                [class.has-value]="category"
         >
         <option value="" disabled>Category</option>
         @for (cat of categories; track cat) {
