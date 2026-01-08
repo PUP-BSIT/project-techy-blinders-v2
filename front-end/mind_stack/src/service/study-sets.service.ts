@@ -192,11 +192,13 @@ export class StudySetsService {
       flashcard_id: response.studySetId || 0,
       title: response.title || '',
       description: response.description || '',
-      flashcards: (response.flashcards || []).map(f => ({
-        flashcardId: f.flashcardId,
-        keyTerm: f.title || '',
-        definition: f.description || ''
-      })),
+      flashcards: (response.flashcards || [])
+        .sort((a, b) => (a.flashcardId || 0) - (b.flashcardId || 0))
+        .map(f => ({
+          flashcardId: f.flashcardId,
+          keyTerm: f.title || '',
+          definition: f.description || ''
+        })),
       created_at: new Date(),
       is_public: resolvedIsPublic
     };

@@ -139,16 +139,19 @@ public class QuizServiceImpl implements QuizService {
         QuizSet quizSet = quizSetRepository.findById(quizSetId)
             .orElseThrow(() -> new RuntimeException("Quiz set not found with id: " + quizSetId));
 
-        // Remove any community posts tied to this quiz set via slug prefix (e.g.,
-        // quiz-{id}-...)
-        deleteCommunityPostsForSlug("quiz-" + quizSetId);
-        if (quizSet.getSlug() != null) {
-            deleteCommunityPostsForSlug(quizSet.getSlug());
-        }
-
-        // SOFT DELETE
         quizSet.setDeleted(true);
         quizSetRepository.save(quizSet);
+
+        // Remove any community posts tied to this quiz set via slug prefix (e.g.,
+        // quiz-{id}-...)
+        try {
+            deleteCommunityPostsForSlug("quiz-" + quizSetId);
+            if (quizSet.getSlug() != null) {
+                deleteCommunityPostsForSlug(quizSet.getSlug());
+            }
+        } catch (Exception e) {
+            System.out.println("Warning: Could not delete community posts for quiz set " + quizSetId + ": " + e.getMessage());
+        }
 
         System.out.println("Soft deleted quiz set with ID: " + quizSetId);
     }
@@ -204,8 +207,14 @@ public class QuizServiceImpl implements QuizService {
     }
 
     private void deleteCommunityPostsForSlug(String slugPrefix) {
-        postRepository.deleteBySlugStartingWith(slugPrefix);
-        System.out.println("Deleted community posts with slug prefix: " + slugPrefix);
+        try {
+            postRepository.deleteBySlugStartingWith(slugPrefix);
+            postRepository.flush(); // Ensure changes are committed
+            System.out.println("Deleted community posts with slug prefix: " + slugPrefix);
+        } catch (Exception e) {
+            System.out.println("Error deleting community posts with slug prefix: " + slugPrefix + " - " + e.getMessage());
+            throw e;
+        }
     }
 
     public int calculateTotalScore(QuizSet quizSet) {
@@ -251,18 +260,19 @@ public class QuizServiceImpl implements QuizService {
         response.setQuizType(quizSet.getQuizType());
 
         List<QuizResponseDTO> quizzes = quizSet.getQuizzes().stream()
-                .map(q -> new QuizResponseDTO(
-                        q.getQuizId(),
-                        quizSet.getQuizSetId(),
-                        q.getQuizType(),
-                        q.getQuestion(),
-                        q.getOptionA(),
-                        q.getOptionB(),
-                        q.getOptionC(),
-                        q.getOptionD(),
-                        q.getCorrectAnswer(),
-                        q.getIdentificationAnswer()))
-                .collect(Collectors.toList());
+            .sorted((q1, q2) -> Long.compare(q1.getQuizId(), q2.getQuizId()))
+            .map(q -> new QuizResponseDTO(
+                q.getQuizId(),
+                quizSet.getQuizSetId(),
+                q.getQuizType(),
+                q.getQuestion(),
+                q.getOptionA(),
+                q.getOptionB(),
+                q.getOptionC(),
+                q.getOptionD(),
+                q.getCorrectAnswer(),
+                q.getIdentificationAnswer()))
+            .collect(Collectors.toList());
 
         response.setQuizzes(quizzes);
 
