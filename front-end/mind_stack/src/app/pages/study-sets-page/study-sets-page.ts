@@ -641,34 +641,13 @@ export class StudySetsPage implements OnInit, OnDestroy {
         }
 
         if (this.currentStudySetId === id) {
-          const createdSet = new Set(createdIds.map(id => Number(id)));
-          
-          const existingFlashcards = freshStudySet.flashcards.filter(f => 
-            !createdSet.has(Number(f.flashcardId))
-          );
-          
-          const newlyCreatedFlashcards = freshStudySet.flashcards.filter(f => 
-            createdSet.has(Number(f.flashcardId))
-          );
-          
-          existingFlashcards.sort((a, b) => {
+          const sorted = [...freshStudySet.flashcards].sort((a, b) => {
             const aId = a.flashcardId || 0;
             const bId = b.flashcardId || 0;
             return aId - bId;
           });
           
-          const orderedNewFlashcards = createdIds
-            .map(id =>
-              newlyCreatedFlashcards.find(
-                f => Number(f.flashcardId) === Number(id)
-              )
-            )
-            .filter((f): f is NonNullable<typeof f> => f !== undefined);
-          
-          this.flashcards = [
-            ...existingFlashcards,
-            ...orderedNewFlashcards
-          ].map(f => ({
+          this.flashcards = sorted.map(f => ({
             flashcardId: f.flashcardId,
             term: f.keyTerm,
             definition: f.definition || '',

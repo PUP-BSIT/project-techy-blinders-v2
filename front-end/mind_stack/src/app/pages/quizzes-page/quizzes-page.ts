@@ -242,6 +242,7 @@ export class QuizzesPage implements OnInit {
           title: qs.title,
           description: qs.description,
           questions: qs.quizzes.map(q => ({
+            quizId: q.quizId,
             question: q.question,
             optionA: q.optionA,
             optionB: q.optionB,

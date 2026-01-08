@@ -50,8 +50,9 @@ public class QuizServiceImpl implements QuizService {
         quizSet.setUpdatedAt(now);
 
         if (request.getQuizzes() != null && !request.getQuizzes().isEmpty()) {
+            int counter = 0;
             for (QuizItemDTO quizDTO : request.getQuizzes()) {
-                long quizId = ThreadLocalRandom.current().nextLong(1000000000L, 10000000000L);
+                long quizId = System.currentTimeMillis() * 1000 + counter++;
 
                 Quiz quiz = new Quiz();
                 quiz.setQuizId(quizId);
@@ -162,7 +163,7 @@ public class QuizServiceImpl implements QuizService {
         QuizSet quizSet = quizSetRepository.findById(quizSetId)
                 .orElseThrow(() -> new RuntimeException("Quiz set not found with id: " + quizSetId));
 
-        long quizId = ThreadLocalRandom.current().nextLong(1000000000L, 10000000000L);
+        long quizId = System.currentTimeMillis() * 1000 + System.nanoTime() % 1000;
 
         Quiz quiz = new Quiz();
         quiz.setQuizId(quizId);

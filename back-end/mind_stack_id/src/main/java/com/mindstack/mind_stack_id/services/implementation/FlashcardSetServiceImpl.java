@@ -52,10 +52,11 @@ public class FlashcardSetServiceImpl implements FlashCardService {
         // Create flashcards if provided
         if (request.getFlashcards() != null && !request.getFlashcards().isEmpty()) {
             LocalDateTime now = LocalDateTime.now();
+            int counter = 0;
             for (FlashcardItemDTO flashcardDTO : request.getFlashcards()) {
                 long flashcardId = flashcardDTO.getFlashcardId() != null
                         ? flashcardDTO.getFlashcardId()
-                        : ThreadLocalRandom.current().nextLong(1000000000L, 10000000000L);
+                        : System.currentTimeMillis() * 1000 + counter++;
 
                 FlashCardItem flashcard = new FlashCardItem();
                 flashcard.setFlashcardId(flashcardId);
@@ -148,10 +149,11 @@ public class FlashcardSetServiceImpl implements FlashCardService {
 
             System.out.println("Cleared all flashcards, now adding from request...");
 
+            int counter = 0;
             for (FlashcardItemDTO dto : request.getFlashcards()) {
                 long flashcardId = dto.getFlashcardId() != null
                         ? dto.getFlashcardId()
-                        : ThreadLocalRandom.current().nextLong(1000000000L, 10000000000L);
+                        : System.currentTimeMillis() * 1000 + counter++;
 
                 FlashCardItem flashcard = new FlashCardItem();
                 flashcard.setFlashcardId(flashcardId);
@@ -207,7 +209,7 @@ public class FlashcardSetServiceImpl implements FlashCardService {
         FlashcardSet flashcardSet = flashcardSetRepository.findById(studySetId)
                 .orElseThrow(() -> new RuntimeException("Flashcard set not found with id: " + studySetId));
 
-        long flashcardId = ThreadLocalRandom.current().nextLong(1000000000L, 10000000000L);
+        long flashcardId = System.currentTimeMillis() * 1000 + System.nanoTime() % 1000;
 
         FlashCardItem flashcard = new FlashCardItem();
         flashcard.setFlashcardId(flashcardId);
@@ -316,7 +318,12 @@ public class FlashcardSetServiceImpl implements FlashCardService {
         response.setSlug(flashcardSet.getSlug());
 
         List<FlashcardResponseDTO> flashcards = flashcardSet.getFlashcards().stream()
-                .sorted((f1, f2) -> Long.compare(f1.getFlashcardId(), f2.getFlashcardId()))
+                .sorted((f1, f2) -> {
+                    if (f1.getCreatedAt() == null && f2.getCreatedAt() == null) return 0;
+                    if (f1.getCreatedAt() == null) return 1;
+                    if (f2.getCreatedAt() == null) return -1;
+                    return f1.getCreatedAt().compareTo(f2.getCreatedAt());
+                })
                 .map(f -> new FlashcardResponseDTO(
                         f.getFlashcardId(),
                         flashcardSet.getStudySetId(),
