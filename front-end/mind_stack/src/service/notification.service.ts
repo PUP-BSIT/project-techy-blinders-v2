@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { AuthService } from './auth.service';
 
 export interface NotificationItem {
@@ -24,8 +24,20 @@ export class NotificationService {
   private notificationsSubject = new BehaviorSubject<NotificationItem[]>([]);
   public notifications$ = this.notificationsSubject.asObservable();
 
+  // Automatically calculate unread count from notifications
+  public unreadCount$ = this.notifications$.pipe(
+    map(notifications => notifications.filter(n => !n.isRead).length)
+  );
+
+  private lastRefreshTime = 0;
+  private readonly REFRESH_COOLDOWN = 2000; // 2 seconds cooldown
+
   constructor() {
     this.refresh();
+  }
+
+  getNotificationsSnapshot(): NotificationItem[] {
+    return this.notificationsSubject.value;
   }
 
   refresh(): void {
@@ -48,20 +60,23 @@ export class NotificationService {
   }
 
   markAsRead(notificationId: string): void {
-    // Optimistic update
+    // Optimistic update - immediately update UI
     const prev = this.notificationsSubject.value;
     const optimistic = prev.map(n =>
       n.notificationId === notificationId ? { ...n, isRead: true } : n
     );
     this.notificationsSubject.next(optimistic);
 
-    this.http.patch(`${this.apiUrl}/${notificationId}/read`, {}).subscribe({
+    // Persist to backend in background - expect text response, not JSON
+    this.http.patch(`${this.apiUrl}/${notificationId}/read`, {}, { 
+      responseType: 'text' 
+    }).subscribe({
       next: () => {
-        // Re-sync from backend to ensure persistence/state stays accurate
-        this.refresh();
+        // Successfully persisted
       },
       error: err => {
         console.error('Failed to mark notification as read', err);
+        // Revert optimistic update on error
         this.notificationsSubject.next(prev);
       }
     });

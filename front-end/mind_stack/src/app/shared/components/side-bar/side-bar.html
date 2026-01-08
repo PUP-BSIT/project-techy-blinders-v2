@@ -109,6 +109,12 @@
                         <img src="assets/notification-hover-icon.png" 
                               alt="Notification hover icon" 
                               class="icon icon-hover">
+                        @if (unreadNotificationCount() > 0) {
+                            <span class="notification-badge">
+                                {{ unreadNotificationCount() > 99 
+                                    ? '99+' : unreadNotificationCount() }}
+                            </span>
+                        }
                     </div>
                     <span class="text-content">Notification</span>
                 </a>

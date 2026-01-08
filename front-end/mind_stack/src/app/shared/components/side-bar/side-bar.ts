@@ -3,6 +3,7 @@ import { Component, EventEmitter, Output, OnInit, inject, signal, HostListener }
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { AuthService } from '../../../../service/auth.service';
+import { NotificationService } from '../../../../service/notification.service';
 import { LoginResponse } from '../../../models/user.model';
 
 @Component({
@@ -23,11 +24,20 @@ export class SideBar implements OnInit {
   userName: string = 'User';
   userEmail: string = '';
   userInitial: string = 'U';
+  unreadNotificationCount = signal<number>(0);
   
   logoutModalOpen = signal(false);
 
   private authService = inject(AuthService);
+  private notificationService = inject(NotificationService);
   private router = inject(Router);
+
+  constructor() {
+    // Subscribe to unread count after injection
+    this.notificationService.unreadCount$.subscribe(count => {
+      this.unreadNotificationCount.set(count);
+    });
+  }
 
   ngOnInit() {
     this.loadUserData();

@@ -43,9 +43,14 @@ export class NotificationPage implements OnInit {
     // Mark as read if unread
     if (!notification.isRead) {
       this.notificationsService.markAsRead(notification.notificationId);
+      // Small delay to ensure optimistic update propagates before navigation
+      setTimeout(() => {
+        this.navigateToTarget(notification);
+      }, 50);
+    } else {
+      // Already read, navigate immediately
+      this.navigateToTarget(notification);
     }
-    // Navigate to target content based on type & ids
-    this.navigateToTarget(notification);
   }
 
   private navigateToTarget(n: NotificationItem) {
