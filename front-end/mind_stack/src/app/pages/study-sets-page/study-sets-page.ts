@@ -422,13 +422,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
     const toCreate = prepared.filter(f => !f.flashcardId);
     const toUpdate = prepared.filter(f => !!f.flashcardId);
 
-    const createObs = toCreate.map(f =>
-      this.studySetsService.addFlashcardToSet(
-        studySetIdToRefresh,
-        f.keyTerm,
-        f.definition
-      )
-    );
     const updateObs = toUpdate.map(f =>
       this.studySetsService.updateFlashcard(
         f.flashcardId as number,
@@ -442,52 +435,52 @@ export class StudySetsPage implements OnInit, OnDestroy {
         )
       : [];
 
-    const allObs = [...createObs, ...updateObs, ...deleteObs];
-    const batch$ = allObs.length ? forkJoin(allObs) : of([]);
+    const updateDeleteObs = [...updateObs, ...deleteObs];
+    const updateDeleteBatch$ = 
+            updateDeleteObs.length ? forkJoin(updateDeleteObs) : of([]);
 
-    batch$.subscribe({
-      next: (results) => {
-        console.log('Flashcards saved/updated/deleted:', results);
-
-        const createdIds: number[] = [];
-        try {
-          for (let i = 0; i < createObs.length; i++) {
-            const res = results[i];
-            if (res && typeof res === 'object' && res.flashcardId) {
-              createdIds.push(Number(res.flashcardId));
-              continue;
+    updateDeleteBatch$.subscribe({
+      next: () => {
+        const addFlashcardsSequentially = (index: number = 0): void => {
+          if (index >= toCreate.length) {
+            this.isLoading = false;
+            if (prepared.length > 0 || this.deletedFlashcardIds.length > 0) {
+              this.openFlashcardSaveSuccessPopup();
             }
-
-            if (typeof res === 'string') {
-              const m = res.match(/"flashcardId"\s*:\s*(\d+)/);
-              if (m && m[1]) {
-                createdIds.push(Number(m[1]));
-                continue;
-              }
-              try {
-                const parsed = JSON.parse(res);
-                if (parsed && parsed.flashcardId) {
-                  createdIds.push(Number(parsed.flashcardId));
-                }
-              } catch (err) {
-              }
-            }
+            this.deletedFlashcardIds = [];
+            this.closeFlashcardModal();
+            this.refreshStudySetFromBackend(studySetIdToRefresh, []);
+            return;
           }
-        } catch (e) {
-          console.warn(
-            'Failed parsing individual responses for created IDs', e
-          );
-        }
 
-        this.isLoading = false;
-        if (prepared.length > 0 || this.deletedFlashcardIds.length > 0) {
-          this.openFlashcardSaveSuccessPopup();
+          const f = toCreate[index];
+          this.studySetsService.addFlashcardToSet(
+            studySetIdToRefresh,
+            f.keyTerm,
+            f.definition
+          ).subscribe({
+            next: () => {
+              setTimeout(() => addFlashcardsSequentially(index + 1), 10);
+            },
+            error: (error) => {
+              console.error('Error adding flashcard:', error);
+              this.isLoading = false;
+              this.deletedFlashcardIds = [];
+            }
+          });
+        };
+
+        if (toCreate.length > 0) {
+          addFlashcardsSequentially();
+        } else {
+          this.isLoading = false;
+          if (prepared.length > 0 || this.deletedFlashcardIds.length > 0) {
+            this.openFlashcardSaveSuccessPopup();
+          }
+          this.deletedFlashcardIds = [];
+          this.closeFlashcardModal();
+          this.refreshStudySetFromBackend(studySetIdToRefresh, []);
         }
-        
-        this.deletedFlashcardIds = [];
-        
-        this.closeFlashcardModal();
-        this.refreshStudySetFromBackend(studySetIdToRefresh, createdIds);
       },
       error: (error) => {
         console.error('Error saving/updating/deleting flashcards:', error);
