@@ -19,45 +19,6 @@ import { error } from 'console';
 })
 export class StudySetsPage implements OnInit, OnDestroy {
   isStudySetDeleteSuccessPopupOpen: boolean = false;
-
-  openStudySetDeleteSuccessPopup() {
-    this.isStudySetDeleteSuccessPopupOpen = true;
-  }
-
-  closeStudySetDeleteSuccessPopup() {
-    this.isStudySetDeleteSuccessPopupOpen = false;
-  }
-
-  isStudySetCreateSuccessPopupOpen: boolean = false;
-
-  openStudySetCreateSuccessPopup() {
-    this.isStudySetCreateSuccessPopupOpen = true;
-  }
-
-  closeStudySetCreateSuccessPopup() {
-    this.isStudySetCreateSuccessPopupOpen = false;
-  }
-
-  get isShareDisabledForSelectedSet(): boolean {
-    if (this.selectedStudySetId == null) return false;
-    const set = this.studySets?.find((s: any) => s.flashcard_id === this.selectedStudySetId);
-
-    return !!set?.is_public || (set?.flashcards?.length ?? 0) < 3;
-  }
-
-  get isPrivateDisabledForSelectedSet(): boolean {
-    if (this.selectedStudySetId == null) return false;
-    const set = this.studySets?.find((s: any) => s.flashcard_id === this.selectedStudySetId);
-
-    return set?.is_public === false;
-  }
-
-  get canShareSelectedSet(): boolean {
-    if (this.selectedStudySetId == null) return false;
-    const set = this.studySets?.find((s: any) => s.flashcard_id === this.selectedStudySetId);
-    return (set?.flashcards?.length ?? 0) >= 3;
-  }
-
   isModalOpen: boolean = false;
   isFlashcardModalOpen: boolean = false;
   isConfirmModalOpen: boolean = false;
@@ -67,7 +28,12 @@ export class StudySetsPage implements OnInit, OnDestroy {
   warningMessage: string = '';
   studySetTitle: string = '';
   studySetDescription: string = '';
-  flashcards: { flashcardId?: number; term: string; definition: string; isNew?: boolean }[] = [];
+  flashcards: {
+    flashcardId?: number;
+    term: string;
+    definition: string;
+    isNew?: boolean;
+  }[] = [];
   deletedFlashcardIds: number[] = [];
   currentPage: number = 0;
   itemsPerPage: number = 3;
@@ -183,7 +149,9 @@ export class StudySetsPage implements OnInit, OnDestroy {
           error: error?.error
         });
         this.isLoading = false;
-        alert('Failed to load study sets. Please check the console for details.');
+        // alert(
+        //   'Failed to load study sets. Please check the console for details.'
+        // );
       }
     });
   }
@@ -232,7 +200,9 @@ export class StudySetsPage implements OnInit, OnDestroy {
   }
 
   getPageDisplay(page: number | string): string {
-    return typeof page === 'number' ? String((page as number) + 1) : page as string;
+    return typeof page === 'number'
+      ? String((page as number) + 1)
+      : (page as string);
   }
 
   nextStudySetsPage() {
@@ -331,7 +301,12 @@ export class StudySetsPage implements OnInit, OnDestroy {
             return bDate - aDate;
           });
 
-          try { localStorage.setItem('studySetsUpdated', Date.now().toString()); } catch (e) {}
+          try {
+            localStorage.setItem(
+              'studySetsUpdated',
+              Date.now().toString()
+            );
+          } catch (e) {}
           this.isStudySetCreateSuccessPopupOpen = false;
           setTimeout(() => {
             this.openStudySetCreateSuccessPopup();
@@ -346,7 +321,9 @@ export class StudySetsPage implements OnInit, OnDestroy {
             error: error?.error
           });
           this.isLoading = false;
-          alert('Failed to create study set. Please check the console for details.');
+          // alert(
+          //   'Failed to create study set. Please check the console for details.'
+          // );
         }
       });
     }
@@ -367,9 +344,13 @@ export class StudySetsPage implements OnInit, OnDestroy {
   saveFlashcards() {
     this.isFlashcardSaveSuccessPopupOpen = false;
 
-    const hasEmpty = this.flashcards.some(f => !f.term.trim() || !f.definition.trim());
+    const hasEmpty = this.flashcards.some(
+      f => !f.term.trim() || !f.definition.trim()
+    );
     if (hasEmpty) {
-      this.openWarningPopup('Please fill in both the term and definition for all flashcards.');
+      this.openWarningPopup(
+        'Please fill in both the term and definition for all flashcards.'
+      );
       return;
     }
 
@@ -384,7 +365,9 @@ export class StudySetsPage implements OnInit, OnDestroy {
         return;
       }
 
-      let studySet = this.studySets.find(s => s.flashcard_id === this.currentStudySetId);
+      let studySet = this.studySets.find(
+        s => s.flashcard_id === this.currentStudySetId
+      );
 
       if (!studySet) {
         this.isLoading = true;
@@ -395,7 +378,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
           error: (error) => {
             console.error('Error fetching study set:', error);
             this.isLoading = false;
-            alert('Failed to fetch study set. Please try again.');
+            // alert('Failed to fetch study set. Please try again.');
           }
         });
       } else {
@@ -416,7 +399,12 @@ export class StudySetsPage implements OnInit, OnDestroy {
     this.isLoading = true;
 
     const prepared = this.flashcards
-      .map(f => ({ keyTerm: f.term.trim(), definition: f.definition.trim(), flashcardId: f.flashcardId, isNew: f.isNew }))
+      .map(f => ({
+        keyTerm: f.term.trim(),
+        definition: f.definition.trim(),
+        flashcardId: f.flashcardId,
+        isNew: f.isNew
+      }))
       .filter(f => f.keyTerm && f.definition);
 
 
@@ -434,10 +422,24 @@ export class StudySetsPage implements OnInit, OnDestroy {
     const toCreate = prepared.filter(f => !f.flashcardId);
     const toUpdate = prepared.filter(f => !!f.flashcardId);
 
-    const createObs = toCreate.map(f => this.studySetsService.addFlashcardToSet(studySetIdToRefresh, f.keyTerm, f.definition));
-    const updateObs = toUpdate.map(f => this.studySetsService.updateFlashcard(f.flashcardId as number, f.keyTerm, f.definition));
-    const deleteObs = this.deletedFlashcardIds.length > 0 
-      ? this.deletedFlashcardIds.map(id => this.studySetsService.deleteFlashcard(id))
+    const createObs = toCreate.map(f =>
+      this.studySetsService.addFlashcardToSet(
+        studySetIdToRefresh,
+        f.keyTerm,
+        f.definition
+      )
+    );
+    const updateObs = toUpdate.map(f =>
+      this.studySetsService.updateFlashcard(
+        f.flashcardId as number,
+        f.keyTerm,
+        f.definition
+      )
+    );
+    const deleteObs = this.deletedFlashcardIds.length > 0
+      ? this.deletedFlashcardIds.map(id =>
+          this.studySetsService.deleteFlashcard(id)
+        )
       : [];
 
     const allObs = [...createObs, ...updateObs, ...deleteObs];
@@ -464,13 +466,17 @@ export class StudySetsPage implements OnInit, OnDestroy {
               }
               try {
                 const parsed = JSON.parse(res);
-                if (parsed && parsed.flashcardId) createdIds.push(Number(parsed.flashcardId));
+                if (parsed && parsed.flashcardId) {
+                  createdIds.push(Number(parsed.flashcardId));
+                }
               } catch (err) {
               }
             }
           }
         } catch (e) {
-          console.warn('Failed parsing individual responses for created IDs', e);
+          console.warn(
+            'Failed parsing individual responses for created IDs', e
+          );
         }
 
         this.isLoading = false;
@@ -487,17 +493,28 @@ export class StudySetsPage implements OnInit, OnDestroy {
         console.error('Error saving/updating/deleting flashcards:', error);
         this.isLoading = false;
         this.deletedFlashcardIds = [];
-        alert('Failed to save flashcards. Please check the console for details.');
+        // alert(
+        //   'Failed to save flashcards. Please check the console for details.'
+        // );
       }
     });
   }
 
   addFlashcard() {
-    const newFlashcard = { term: '', definition: '', isNew: true };
+    const newFlashcard = {
+      term: '',
+      definition: '',
+      isNew: true
+    };
     this.flashcards.push(newFlashcard);
-    console.log('Added new flashcard. Total count:', this.flashcards.length);
+    console.log(
+      'Added new flashcard. Total count:',
+      this.flashcards.length
+    );
 
-    this.currentPage = Math.floor((this.flashcards.length - 1) / this.itemsPerPage);
+    this.currentPage = Math.floor(
+      (this.flashcards.length - 1) / this.itemsPerPage
+    );
     console.log('Navigated to page:', this.currentPage);
   }
 
@@ -517,23 +534,34 @@ export class StudySetsPage implements OnInit, OnDestroy {
     }
     
     this.flashcards.splice(index, 1);
-    const maxPage = Math.max(0, Math.ceil(this.flashcards.length / this.itemsPerPage) - 1);
+    const maxPage = Math.max(
+      0,
+      Math.ceil(this.flashcards.length / this.itemsPerPage) - 1
+    );
     if (this.currentPage > maxPage) {
       this.currentPage = maxPage;
     }
-    console.log('Flashcard removed from local list. Will be deleted on Save if it has an ID.');
+    console.log(
+      'Flashcard removed from local list. Will be deleted on Save if it has ' +
+      'an ID.'
+    );
   }
 
-  private deleteFlashcardsFromBackend(flashcardIds: number[]): Observable<any> {
-    if (flashcardIds.length === 0) {
-      return of([]);
-    }
-    const deleteObs = flashcardIds.map(id => this.studySetsService.deleteFlashcard(id));
-    return forkJoin(deleteObs);
-  }
+  // private deleteFlashcardsFromBackend(flashcardIds: number[]): Observable<any> {
+  //   if (flashcardIds.length === 0) {
+  //     return of([]);
+  //   }
+  //   const deleteObs = flashcardIds.map(id => this.studySetsService.deleteFlashcard(id));
+  //   return forkJoin(deleteObs);
+  // }
 
   ngOnDestroy() {
-    try { window.removeEventListener('storage', this.onStorageEvent); } catch (e) {}
+    try {
+      window.removeEventListener(
+        'storage',
+        this.onStorageEvent
+      );
+    } catch (e) {}
   }
 
   get paginatedFlashcards() {
@@ -604,7 +632,9 @@ export class StudySetsPage implements OnInit, OnDestroy {
   private refreshStudySetFromBackend(id: number, createdIds: number[] = []) {
     this.studySetsService.getStudySetById(id).subscribe({
       next: (freshStudySet) => {
-        const index = this.studySets.findIndex(s => s.flashcard_id === freshStudySet.flashcard_id);
+        const index = this.studySets.findIndex(
+          s => s.flashcard_id === freshStudySet.flashcard_id
+        );
         if (index !== -1) {
           this.studySets[index] = freshStudySet;
           console.log('Refreshed study set in local array');
@@ -628,17 +658,22 @@ export class StudySetsPage implements OnInit, OnDestroy {
           });
           
           const orderedNewFlashcards = createdIds
-            .map(id => newlyCreatedFlashcards.find(f => Number(f.flashcardId) === Number(id)))
+            .map(id =>
+              newlyCreatedFlashcards.find(
+                f => Number(f.flashcardId) === Number(id)
+              )
+            )
             .filter((f): f is NonNullable<typeof f> => f !== undefined);
           
-          this.flashcards = [...existingFlashcards, ...orderedNewFlashcards].map(f => ({
+          this.flashcards = [
+            ...existingFlashcards,
+            ...orderedNewFlashcards
+          ].map(f => ({
             flashcardId: f.flashcardId,
             term: f.keyTerm,
             definition: f.definition || '',
             isNew: false
           }));
-          
-          console.log('Updated flashcard order - existing:', existingFlashcards.length, 'new:', orderedNewFlashcards.length);
         }
       },
       error: (error) => {
@@ -652,7 +687,10 @@ export class StudySetsPage implements OnInit, OnDestroy {
     this.studySetsService.deleteStudySet(id).subscribe({
       next: () => {
         this.studySets = this.studySets.filter(s => s.flashcard_id !== id);
-        const maxPage = Math.max(0, Math.ceil(this.studySets.length / this.studySetsPerPage) - 1);
+        const maxPage = Math.max(
+          0,
+          Math.ceil(this.studySets.length / this.studySetsPerPage) - 1
+        );
         if (this.studySetsCurrentPage > maxPage) {
           this.studySetsCurrentPage = maxPage;
         }
@@ -876,7 +914,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error updating flashcard visibility:', error);
           this.isLoading = false;
-          alert('Flashcard was shared but visibility update failed.');
+          // alert('Flashcard was shared but visibility update failed.');
           this.closeShareModal();
         }
       });
@@ -928,7 +966,9 @@ export class StudySetsPage implements OnInit, OnDestroy {
       studySet.flashcards
     ).subscribe({
       next: (updatedStudySet) => {
-        const index = this.studySets.findIndex(s => s.flashcard_id === updatedStudySet.flashcard_id);
+        const index = this.studySets.findIndex(
+          s => s.flashcard_id === updatedStudySet.flashcard_id
+        );
         if (index !== -1) {
           this.studySets[index] = updatedStudySet;
         }
@@ -953,8 +993,13 @@ export class StudySetsPage implements OnInit, OnDestroy {
     const posts = this.communityService.getPosts();
 
     posts
-      .filter(post => post.slug && post.slug.startsWith(slugPrefix))
-      .forEach(post => this.communityService.deletePostPermanently(post.post_id));
+      .filter(
+        post => post.slug && post.slug.startsWith(slugPrefix)
+      )
+      .forEach(
+        post =>
+          this.communityService.deletePostPermanently(post.post_id)
+      );
   }
 
   enforceTitleLimit() {
@@ -985,5 +1030,49 @@ export class StudySetsPage implements OnInit, OnDestroy {
       flashcard.definition = flashcard.definition.substring(0, 150);
       this.openWarningPopup('Description can only take up to 150 characters.');
     }
+  }
+
+  get isShareDisabledForSelectedSet(): boolean {
+    if (this.selectedStudySetId == null) return false;
+    const set = this.studySets?.find(
+      (s: any) => s.flashcard_id === this.selectedStudySetId
+    );
+
+    return !!set?.is_public || (set?.flashcards?.length ?? 0) < 3;
+  }
+
+  get isPrivateDisabledForSelectedSet(): boolean {
+    if (this.selectedStudySetId == null) return false;
+    const set = this.studySets?.find(
+      (s: any) => s.flashcard_id === this.selectedStudySetId
+    );
+
+    return set?.is_public === false;
+  }
+
+  get canShareSelectedSet(): boolean {
+    if (this.selectedStudySetId == null) return false;
+    const set = this.studySets?.find(
+      (s: any) => s.flashcard_id === this.selectedStudySetId
+    );
+    return (set?.flashcards?.length ?? 0) >= 3;
+  }
+
+  openStudySetDeleteSuccessPopup() {
+    this.isStudySetDeleteSuccessPopupOpen = true;
+  }
+
+  closeStudySetDeleteSuccessPopup() {
+    this.isStudySetDeleteSuccessPopupOpen = false;
+  }
+
+  isStudySetCreateSuccessPopupOpen: boolean = false;
+
+  openStudySetCreateSuccessPopup() {
+    this.isStudySetCreateSuccessPopupOpen = true;
+  }
+
+  closeStudySetCreateSuccessPopup() {
+    this.isStudySetCreateSuccessPopupOpen = false;
   }
 }
