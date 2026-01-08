@@ -610,14 +610,17 @@
 
 .features-section h3 {
   font-family: 'Roboto', sans-serif;
-  font-size: 32px;
-  font-weight: 600;
+  font-size: 48px;
+  font-weight: 800;
   color: white;
   margin-bottom: 50px;
   text-align: center;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .feature-cards {
