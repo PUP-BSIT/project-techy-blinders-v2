@@ -674,23 +674,28 @@ export class QuizzesPage implements OnInit {
       []
     ).subscribe({
       next: () => {
-        const addObservables = quizItems.map(item => 
-          this.quizzesService.addQuizToSet(this.editingQuizId!, item)
-        );
+        const addQuizzesSequentially = (index: number = 0): void => {
+          if (index >= quizItems.length) {
+            this.loadQuizSetsFromBackend();
+            this.editingQuizId = null;
+            this.closeModal();
+            return;
+          }
 
-        if (addObservables.length > 0) {
-          import('rxjs').then(rxjs => {
-            rxjs.forkJoin(addObservables).subscribe({
-              next: () => {
-                this.loadQuizSetsFromBackend();
-                this.editingQuizId = null;
-                this.closeModal();
-              },
-              error: (error) => {
-                this.isLoading = false;
-              }
-            });
+          this.quizzesService.addQuizToSet(
+                    this.editingQuizId!, quizItems[index]).subscribe({
+            next: () => {
+              setTimeout(() => addQuizzesSequentially(index + 1), 10);
+            },
+            error: (error) => {
+              console.error('Error adding quiz:', error);
+              this.isLoading = false;
+            }
           });
+        };
+
+        if (quizItems.length > 0) {
+          addQuizzesSequentially();
         } else {
           this.loadQuizSetsFromBackend();
           this.editingQuizId = null;
@@ -712,7 +717,14 @@ export class QuizzesPage implements OnInit {
       this.quizTitle = quiz.title;
       this.quizDescription = quiz.description || '';
       this.selectedQuestionType = quiz.questionType;
-      this.questions = JSON.parse(JSON.stringify(quiz.questions));
+      
+      const sortedQuestions = [...quiz.questions].sort((a, b) => {
+        const aId = a.quizId || 0;
+        const bId = b.quizId || 0;
+        return aId - bId;
+      });
+      
+      this.questions = JSON.parse(JSON.stringify(sortedQuestions));
       this.currentPage = 0;
       this.isQuestionModalOpen = true;
     }
