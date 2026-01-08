@@ -39,20 +39,23 @@ export interface Quiz {
 export class QuizzesPage implements OnInit {
   get isShareDisabledForSelectedQuiz(): boolean {
     if (this.selectedQuizIdForPrivacy === null) return false;
-    const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizIdForPrivacy);
+    const quiz = this.quizzesList.find(
+        q => q.quiz_id === this.selectedQuizIdForPrivacy);
 
     return !!quiz?.is_public || (quiz?.questions?.length ?? 0) < 3;
   }
 
   get isPrivateDisabledForSelectedQuiz(): boolean {
     if (this.selectedQuizIdForPrivacy === null) return false;
-    const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizIdForPrivacy);
+    const quiz = this.quizzesList.find(
+        q => q.quiz_id === this.selectedQuizIdForPrivacy);
     return quiz?.is_public === false;
   }
 
   get canShareSelectedQuiz(): boolean {
     if (this.selectedQuizIdForPrivacy === null) return false;
-    const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizIdForPrivacy);
+    const quiz = this.quizzesList.find(
+        q => q.quiz_id === this.selectedQuizIdForPrivacy);
     return (quiz?.questions?.length ?? 0) >= 3;
   }
 
@@ -271,14 +274,16 @@ export class QuizzesPage implements OnInit {
     }
 
     this.quizzesList.forEach(quiz => {
-      this.quizzesService.getLatestQuizAttempt(currentUser.userId, quiz.quiz_id).subscribe({
+      this.quizzesService.getLatestQuizAttempt(
+            currentUser.userId, quiz.quiz_id).subscribe({
         next: (attempt) => {
           if (attempt) {
             this.latestAttempts.set(quiz.quiz_id, attempt);
           }
         },
         error: (error) => {
-          console.error(`Error loading attempt for quiz ${quiz.quiz_id}:`, error);
+          console.error(`Error loading attempt for quiz ${quiz.quiz_id}:`,
+               error);
         }
       });
     });
@@ -390,12 +395,14 @@ export class QuizzesPage implements OnInit {
     }
 
     this.questions.push(newQuestion);
-    this.currentPage = Math.floor((this.questions.length - 1) / this.itemsPerPage);
+    this.currentPage = Math.floor((this.questions.length - 1) /
+            this.itemsPerPage);
   }
 
   deleteQuestion(index: number) {
     this.questions.splice(index, 1);
-    const maxPage = Math.max(0, Math.ceil(this.questions.length / this.itemsPerPage) - 1);
+    const maxPage = Math.max(0, Math.ceil(this.questions.length / 
+            this.itemsPerPage) - 1);
     if (this.currentPage > maxPage) {
       this.currentPage = maxPage;
     }
@@ -424,10 +431,15 @@ export class QuizzesPage implements OnInit {
     }
   }
 
-  enforceOptionLimit(question: QuestionItem, optionKey: 'optionA' | 'optionB' | 'optionC' | 'optionD') {
+  enforceOptionLimit(question: QuestionItem, optionKey: 'optionA' | 
+            'optionB' | 
+            'optionC' | 
+            'optionD') {
     if (question[optionKey] && question[optionKey]!.length > 100) {
       question[optionKey] = question[optionKey]!.substring(0, 100);
-      this.openWarningPopup('Answer options can only take up to 100 characters.');
+      this.openWarningPopup(
+        'Answer options can only take up to 100 characters.'
+      );
     }
   }
 
@@ -489,7 +501,8 @@ export class QuizzesPage implements OnInit {
   }
 
   getPageDisplay(page: number | string): string {
-    return typeof page === 'number' ? String((page as number) + 1) : page as string;
+    return typeof page === 'number' ? 
+            String((page as number) + 1) : page as string;
   }
 
   goToPage(page: number) {
@@ -513,7 +526,8 @@ export class QuizzesPage implements OnInit {
   }
 
   saveQuiz() {
-    if (this.quizTitle.trim() && this.quizDescription.trim() && this.selectedQuestionType !== '') {
+    if (this.quizTitle.trim() && 
+            this.quizDescription.trim() && this.selectedQuestionType !== '') {
       const currentUser = this.authService.getCurrentUser();
       if (!currentUser || !currentUser.userId) {
         this.openWarningPopup('Please log in to create quiz sets.');
@@ -551,7 +565,9 @@ export class QuizzesPage implements OnInit {
         },
         error: (error) => {
           this.isLoading = false;
-          this.openWarningPopup('Failed to create quiz set. Please try again.');
+          this.openWarningPopup(
+            'Failed to create quiz set. Please try again.'
+          );
         }
       });
     }
@@ -575,7 +591,9 @@ export class QuizzesPage implements OnInit {
       if (hasEmpty) {
         this.isWarningPopupOpen = false;
         setTimeout(() => {
-          this.openWarningPopup('Please fill in all questions, inputs, and correct answers before saving.');
+          this.openWarningPopup(
+            'Please fill in all questions, inputs, and correct answers before' 
+            + ' saving.');
         }, 0);
         return;
       }
@@ -610,12 +628,11 @@ export class QuizzesPage implements OnInit {
         this.openQuizItemSaveSuccessPopup();
       }
 
-      // Since quiz set is already created when Continue was clicked,
-      // we always update the existing quiz set
       if (this.editingQuizId !== null) {
         this.quizzesService.getQuizSetById(this.editingQuizId).subscribe({
           next: (existingQuizSet) => {
-            const deleteObservables = existingQuizSet.quizzes.map((quiz: any) => 
+            const deleteObservables = 
+                    existingQuizSet.quizzes.map((quiz: any) => 
               this.quizzesService.deleteQuiz(quiz.quizId)
             );
 
@@ -623,7 +640,8 @@ export class QuizzesPage implements OnInit {
               import('rxjs').then(rxjs => {
                 rxjs.forkJoin(deleteObservables).subscribe({
                   next: () => {
-                    this.updateQuizSetAndAddQuizzes(currentUser.userId, quizType, quizItems);
+                    this.updateQuizSetAndAddQuizzes(
+                            currentUser.userId, quizType, quizItems);
                   },
                   error: (error) => {
                     this.isLoading = false;
@@ -631,7 +649,8 @@ export class QuizzesPage implements OnInit {
                 });
               });
             } else {
-              this.updateQuizSetAndAddQuizzes(currentUser.userId, quizType, quizItems);
+              this.updateQuizSetAndAddQuizzes(
+                      currentUser.userId, quizType, quizItems);
             }
           },
           error: (error) => {
@@ -642,7 +661,8 @@ export class QuizzesPage implements OnInit {
     }
   }
 
-  private updateQuizSetAndAddQuizzes(userId: number, quizType: QuizType, quizItems: QuizItem[]) {
+  private updateQuizSetAndAddQuizzes(
+          userId: number, quizType: QuizType, quizItems: QuizItem[]) {
     this.quizzesService.updateQuizSet(
       this.editingQuizId!,
       userId,
@@ -678,7 +698,8 @@ export class QuizzesPage implements OnInit {
       },
       error: (error) => {
         this.isLoading = false;
-        this.showNotification('Update Failed', 'Unable to update your quiz set. Please try again.', 'error');
+        this.showNotification('Update Failed', 
+                'Unable to update your quiz set. Please try again.', 'error');
       }
     });
   }
@@ -706,7 +727,9 @@ export class QuizzesPage implements OnInit {
     this.quizIdToDelete = null;
   }
 
-  showNotification(title: string, message: string, type: 'success' | 'error' | 'warning' = 'success') {
+  showNotification(title: string, 
+            message: string, 
+            type: 'success' | 'error' | 'warning' = 'success') {
     this.notificationTitle = title;
     this.notificationMessage = message;
     this.notificationType = type;
@@ -728,7 +751,8 @@ export class QuizzesPage implements OnInit {
     this.quizzesService.deleteQuizSet(this.quizIdToDelete).subscribe({
       next: () => {
         this.loadQuizSetsFromBackend();
-        const maxPage = Math.max(0, Math.ceil(this.quizzesList.length / this.quizzesPerPage) - 1);
+        const maxPage = Math.max(0, Math.ceil(
+                  this.quizzesList.length / this.quizzesPerPage) - 1);
         if (this.quizzesCurrentPage > maxPage) {
           this.quizzesCurrentPage = maxPage;
         }
@@ -741,7 +765,8 @@ export class QuizzesPage implements OnInit {
       error: (error) => {
         this.isLoading = false;
         this.quizIdToDelete = null;
-        this.showNotification('Delete Failed', 'Unable to delete your quiz set. Please try again.', 'error');
+        this.showNotification('Delete Failed', 
+                'Unable to delete your quiz set. Please try again.', 'error');
       }
     });
   }
@@ -846,7 +871,8 @@ export class QuizzesPage implements OnInit {
 
     posts
       .filter(post => post.slug && post.slug.startsWith(slugPrefix))
-      .forEach(post => this.communityService.deletePostPermanently(post.post_id));
+      .forEach(post => 
+              this.communityService.deletePostPermanently(post.post_id));
   }
 
   openShareModal(quizId?: number) {
@@ -883,21 +909,26 @@ export class QuizzesPage implements OnInit {
       this.shareTitle.trim() &&
       this.shareCategory.trim()
     ) {
-      const quiz = this.quizzesList.find(q => q.quiz_id === this.selectedQuizId);
+      const quiz = 
+              this.quizzesList.find(q => q.quiz_id === this.selectedQuizId);
       const currentUser = this.authService.getCurrentUser();
 
       if (quiz && currentUser) {
         if (quiz.questions.length < 3) {
           this.isWarningPopupOpen = false;
           setTimeout(() => {
-            this.openWarningPopup('You need at least 3 questions in this quiz set before you can share it publicly.');
+            this.openWarningPopup('You need at least 3 questions' 
+                  + ' in this quiz set before you can share it publicly.');
           }, 0);
           return;
         }
 
-        const quizContent = `${quiz.title} • ${quiz.description || 'A quiz set to test your knowledge!'} • ${this.getQuestionTypeLabel(quiz.questionType)}`;
+        const quizContent = `${quiz.title} • 
+                ${quiz.description || 'A quiz set to test your knowledge!'} 
+                • ${this.getQuestionTypeLabel(quiz.questionType)}`;
 
-        const quizSlug = `quiz-${quiz.quiz_id}-${this.slugify(this.shareTitle)}`;
+        const quizSlug = 
+                `quiz-${quiz.quiz_id}-${this.slugify(this.shareTitle)}`;
         
         this.communityService.createPost({
           user_id: String(currentUser.userId),
@@ -949,7 +980,8 @@ export class QuizzesPage implements OnInit {
             console.error('Error updating quiz visibility:', error);
             this.isWarningPopupOpen = false;
             setTimeout(() => {
-              this.openWarningPopup('Quiz was shared but visibility update failed.');
+              this.openWarningPopup(
+                    'Quiz was shared but visibility update failed.');
             }, 0);
           }
         });

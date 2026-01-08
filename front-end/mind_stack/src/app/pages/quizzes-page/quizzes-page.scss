@@ -1558,7 +1558,6 @@ $mobile-breakpoint: 768px;
     }
 }
 
-// validator message for share caption
 .validator-message {
     color: red;
     font-size: 0.95em;
@@ -2236,19 +2235,16 @@ $mobile-breakpoint: 768px;
     }
 }
 
-// Dropdown styling improvements
 select {
     &::-ms-expand {
         display: none;
     }
     
-    // Ensure consistent styling across browsers
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
 }
 
-// Custom dropdown styling for better cross-browser compatibility
 .custom-dropdown {
     position: relative;
     display: inline-block;

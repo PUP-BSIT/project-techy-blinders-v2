@@ -1,6 +1,8 @@
 <div class="container">
     <div class="content-wrapper">
-        <button (click)="openModal()" class="add add-desktop" [disabled]="isLoading">
+        <button (click)="openModal()" 
+                class="add add-desktop" 
+                [disabled]="isLoading">
             <span class="add-text">+ Create New Quiz Set</span>
             <span class="add-icon">+</span>
         </button>
@@ -11,46 +13,74 @@
             </div>
         }
 
-        <div class="study-sets-wrapper" [class.hidden]="quizzes.length === 0 || isLoading">
-            <button (click)="openModal()" class="add add-mobile" [disabled]="isLoading">
+        <div class="study-sets-wrapper" 
+                [class.hidden]="quizzes.length === 0 || isLoading">
+            <button (click)="openModal()" 
+                    class="add add-mobile" 
+                    [disabled]="isLoading">
                 <span class="add-text">+ Create New Quiz Set</span>
                 <span class="add-icon">+</span>
             </button>
 
             <div class="study-sets-list">
-                @for (quiz of paginatedQuizzes; track quiz.quiz_id; let i = $index) {
+                @for (quiz of paginatedQuizzes;
+                        track quiz.quiz_id;
+                        let i = $index) {
                 <div class="study-set-card">
                     <div class="card-left">
-                        <button class="play-btn" (click)="playQuiz(quiz.quiz_id)">
+                        <button class="play-btn" 
+                                (click)="playQuiz(quiz.quiz_id)">
                             ▶
                         </button>
                     </div>
                     <div class="study-set-info">
                         <h3 class="study-set-title">{{ quiz.title }}</h3>
-                        <p class="study-set-description">{{ quiz.description || 'About the Quiz' }} • {{ getQuestionTypeLabel(quiz.questionType) }}</p>
+                        <p class="study-set-description">
+                            {{ quiz.description || 'About the Quiz' }} •
+                            {{ getQuestionTypeLabel(quiz.questionType) }}
+                        </p>
                         @if (getLatestAttempt(quiz.quiz_id)) {
                         <div class="latest-attempt-info">
                             <span class="attempt-label">Score:</span>
-                            <span class="attempt-score">{{ getLatestAttempt(quiz.quiz_id)!.totalScore }}/{{ getLatestAttempt(quiz.quiz_id)!.maxScore }}</span>
-                            <span class="attempt-percentage">({{ getLatestAttempt(quiz.quiz_id)!.percentage.toFixed(1) }}%)</span>
+                            <span class="attempt-score">
+                                {{ getLatestAttempt(quiz.quiz_id)!.totalScore }} /
+                                {{ getLatestAttempt(quiz.quiz_id)!.maxScore }}
+                            </span>
+                            <span class="attempt-percentage">
+                                (
+                                    {{getLatestAttempt(quiz.quiz_id)!
+                                            .percentage
+                                            .toFixed(1)
+                                    }}%
+                                )
+                            </span>
                         </div>
                         }
-                        <button class="privacy-badge" (click)="openPrivacyModal(quiz.quiz_id)">
+                        <button class="privacy-badge" 
+                                (click)="openPrivacyModal(quiz.quiz_id)">
                             @if (quiz.is_public) {
-                                <img src="assets/globe-icon.png" alt="Public" class="privacy-icon">
+                                <img src="assets/globe-icon.png" 
+                                        alt="Public" 
+                                        class="privacy-icon">
                             }
                             @if (!quiz.is_public) {
-                                <img src="assets/lock.png" alt="Private" class="privacy-icon">
+                                <img src="assets/lock.png" 
+                                        alt="Private" 
+                                        class="privacy-icon">
                             }
-                            <span class="privacy-text">{{ quiz.is_public ? 'Public' : 'Private' }}</span>
+                            <span class="privacy-text">
+                                {{ quiz.is_public ? 'Public' : 'Private' }}
+                            </span>
                             <span class="dropdown-arrow">▼</span>
                         </button>
                     </div>
                     <div class="action-buttons">
-                        <button class="edit-btn" (click)="editQuiz(quiz.quiz_id)">
+                        <button class="edit-btn" 
+                                (click)="editQuiz(quiz.quiz_id)">
                             Edit
                         </button>
-                        <button class="delete-btn" (click)="deleteQuiz(quiz.quiz_id)">
+                        <button class="delete-btn" 
+                                (click)="deleteQuiz(quiz.quiz_id)">
                             Delete
                         </button>
                     </div>
@@ -58,7 +88,8 @@
                 }
             </div>
 
-            <div class="study-sets-pagination" [class.show]="quizzesTotalPages > 1">
+            <div class="study-sets-pagination" 
+                    [class.show]="quizzesTotalPages > 1">
                 <button class="pagination-btn prev" 
                             (click)="goToQuizzesPage(0)" 
                             [disabled]="quizzesCurrentPage === 0">
@@ -71,21 +102,27 @@
                 </button>
                 <div class="pagination-dots">
                     @for (page of quizzesPages; track page) {
-                    <span [class]="page === '...' ? 'pagination-ellipsis' : 'pagination-dot'"
-                          [class.active]="isPageNumber(page) && quizzesCurrentPage === page"
-                          (click)="isPageNumber(page) && goToQuizzesPage(getPageNumber(page))">
+                    <span [class]="page === '...' 
+                                ? 'pagination-ellipsis' 
+                                : 'pagination-dot'"
+                          [class.active]="isPageNumber(page) && 
+                                quizzesCurrentPage === page"
+                          (click)="isPageNumber(page) && 
+                          goToQuizzesPage(getPageNumber(page))">
                         {{ getPageDisplay(page) }}
                     </span>
                     }
                 </div>
                 <button class="pagination-btn next" 
                             (click)="nextQuizzesPage()" 
-                            [disabled]="quizzesCurrentPage === quizzesTotalPages - 1">
+                            [disabled]="quizzesCurrentPage === 
+                                quizzesTotalPages - 1">
                     ›
                 </button>
                 <button class="pagination-btn next" 
                             (click)="goToQuizzesPage(quizzesTotalPages - 1)" 
-                            [disabled]="quizzesCurrentPage === quizzesTotalPages - 1">
+                            [disabled]="quizzesCurrentPage === 
+                                quizzesTotalPages - 1">
                     ››
                 </button>
             </div>
@@ -106,7 +143,9 @@
                             [(ngModel)]="quizTitle"
                             maxlength="50"
                             (input)="enforceTitleLimit()"/>
-                    <div class="char-indicator">{{ quizTitle?.length || 0 }}/50</div>
+                    <div class="char-indicator">
+                        {{ quizTitle?.length || 0 }}/50
+                    </div>
                 </div>
                 <div class="form-group">
                     <input type="text" 
@@ -115,23 +154,32 @@
                             [(ngModel)]="quizDescription"
                             maxlength="50"
                             (input)="enforceDescriptionLimit()"/>
-                    <div class="char-indicator">{{ quizDescription?.length || 0 }}/50</div>
+                    <div class="char-indicator">
+                        {{ quizDescription?.length || 0 }}/50
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <select class="quiz-type-select" 
                             [(ngModel)]="selectedQuestionType"
                             (ngModelChange)="onQuestionTypeChange()">
-                        <option value="" disabled selected>Choose quiz type</option>
-                        <option [value]="QuestionType.IDENTIFICATION">Identification</option>
-                        <option [value]="QuestionType.MULTIPLE_CHOICE">Multiple Choice</option>
+                        <option value="" disabled selected>
+                            Choose quiz type
+                        </option>
+                        <option [value]="QuestionType.IDENTIFICATION">
+                            Identification
+                        </option>
+                        <option [value]="QuestionType.MULTIPLE_CHOICE">
+                            Multiple Choice
+                        </option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <button class="btn-ai-suggestion"
                             (click)="generateAiSuggestions()"
-                            [disabled]="isLoadingSuggestion || !quizTitle.trim()">
+                            [disabled]="isLoadingSuggestion ||
+                                !quizTitle.trim()">
 
                             @if (!isLoadingSuggestion) {
                                 <span>Generate Suggestion</span>
@@ -145,8 +193,17 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn-cancel" (click)="closeModal()" [disabled]="isLoading">Cancel</button>
-                <button class="btn-continue" (click)="saveQuiz()" [disabled]="isLoading || !quizTitle.trim() || !quizDescription.trim() || !selectedQuestionType">
+                <button class="btn-cancel" 
+                        (click)="closeModal()" 
+                        [disabled]="isLoading">
+                    Cancel
+                </button>
+                <button class="btn-continue" 
+                        (click)="saveQuiz()" 
+                        [disabled]="isLoading || 
+                            !quizTitle.trim() ||
+                            !quizDescription.trim() || 
+                            !selectedQuestionType">
                     {{ isLoading ? 'Loading...' : 'Continue' }}
                 </button>
             </div>
@@ -157,10 +214,16 @@
             [class.open]="isQuestionModalOpen">
         <div class="modal-content question-editor-modal">
             <div class="question-modal-header">
-                <div class="item-count">{{ questions.length }} Item<span [class.hidden]="questions.length === 1">s</span></div>
+                <div class="item-count">
+                    {{ questions.length }} Item
+                    <span [class.hidden]="questions.length === 1">
+                        s
+                    </span>
+                </div>
             </div>
 
-            <div class="carousel-wrapper" [class.has-flashcards]="questions.length > 0">
+            <div class="carousel-wrapper" 
+                    [class.has-flashcards]="questions.length > 0">
                 @if (questions.length === 0) {
                 <div class="empty-state">
                     <p class="empty-message">Create your first quiz item</p>
@@ -171,13 +234,18 @@
                 }
                 @if (questions.length > 0) {
                 <div class="flashcards-container">
-                    @for (question of paginatedQuestions; track $index; let i = $index) {
+                    @for (question of paginatedQuestions;
+                            track $index;
+                            let i = $index) {
                     <div class="flashcard-item mc-question" 
                          [class.hidden]="!isMultipleChoice()">
                         <div class="mc-question-header">
-                            <div class="question-number">{{ getActualIndex(i) + 1 }}</div>
+                            <div class="question-number">
+                                {{ getActualIndex(i) + 1 }}
+                            </div>
                             <button class="btn-delete-icon" 
-                                    (click)="deleteQuestion(getActualIndex(i))">
+                                    (click)="
+                                        deleteQuestion(getActualIndex(i))">
                                 ✕
                             </button>
                         </div>
@@ -188,7 +256,8 @@
                                         placeholder="Question"
                                         [(ngModel)]="question.question"
                                         maxlength="150"
-                                        (input)="enforceQuestionLimit(question)"/>
+                                        (input)="
+                                            enforceQuestionLimit(question)"/>
                                 <div class="char-indicator">
                                   {{ question.question?.length || 0 }}/150
                                 </div>
@@ -200,7 +269,11 @@
                                                 placeholder=""
                                                 [(ngModel)]="question.optionA"
                                                 maxlength="100"
-                                                (input)="enforceOptionLimit(question, 'optionA')"/>
+                                                (input)="enforceOptionLimit(
+                                                    question,
+                                                    'optionA'
+                                                )"
+                                        />
                                     </div>
                                     <div class="mc-option-left">
                                         <div class="option-label">b.</div>
@@ -209,7 +282,11 @@
                                                 placeholder=""
                                                 [(ngModel)]="question.optionB"
                                                 maxlength="100"
-                                                (input)="enforceOptionLimit(question, 'optionB')"/>
+                                                (input)="enforceOptionLimit(
+                                                    question, 
+                                                    'optionB'
+                                                )"
+                                        />
                                     </div>
                                     <div class="mc-option-left">
                                         <div class="option-label">c.</div>
@@ -218,7 +295,11 @@
                                                 placeholder=""
                                                 [(ngModel)]="question.optionC"
                                                 maxlength="100"
-                                                (input)="enforceOptionLimit(question, 'optionC')"/>
+                                                (input)="enforceOptionLimit(
+                                                    question, 
+                                                    'optionC'
+                                                )"
+                                        />
                                     </div>
                                     <div class="mc-option-left">
                                         <div class="option-label">d.</div>
@@ -227,39 +308,69 @@
                                                 placeholder=""
                                                 [(ngModel)]="question.optionD"
                                                 maxlength="100"
-                                                (input)="enforceOptionLimit(question, 'optionD')"/>
+                                                (input)="enforceOptionLimit(
+                                                    question, 
+                                                    'optionD'
+                                                )"
+                                        />
                                     </div>
                                 </div>
                             </div>
                             <div class="question-right-section">
-                                <div class="select-correct-label">Select Correct Answer</div>
+                                <div class="select-correct-label">
+                                    Select Correct Answer
+                                </div>
                                 <div class="mc-radios">
                                     <div class="option-radio-wrapper" 
-                                            (click)="setCorrectAnswer(question, 'A')">
+                                            (click)="setCorrectAnswer(
+                                                question, 
+                                                'A'
+                                            )">
                                         <div class="option-radio">
-                                            <div class="radio-dot" 
-                                                    [class.active]="question.correctAnswer === 'A'"></div>
+                                            <div 
+                                                class="radio-dot" 
+                                                [class.active]="
+                                                    question.correctAnswer === 
+                                                    'A'">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="option-radio-wrapper" 
-                                            (click)="setCorrectAnswer(question, 'B')">
+                                            (click)="setCorrectAnswer(
+                                                question,
+                                                'B'
+                                            )">
                                         <div class="option-radio">
                                             <div class="radio-dot" 
-                                                    [class.active]="question.correctAnswer === 'B'"></div>
+                                                    [class.active]="
+                                                        question.correctAnswer ===
+                                                        'B'"
+                                                    >
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="option-radio-wrapper" 
-                                            (click)="setCorrectAnswer(question, 'C')">
+                                            (click)="setCorrectAnswer(
+                                                    question, '
+                                                    C')">
                                         <div class="option-radio">
                                             <div class="radio-dot" 
-                                                    [class.active]="question.correctAnswer === 'C'"></div>
+                                                    [class.active]="
+                                                        question.correctAnswer === 
+                                                        'C'">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="option-radio-wrapper" 
-                                            (click)="setCorrectAnswer(question, 'D')">
+                                            (click)="setCorrectAnswer(
+                                                    question, 
+                                                    'D')">
                                         <div class="option-radio">
                                             <div class="radio-dot" 
-                                                    [class.active]="question.correctAnswer === 'D'"></div>
+                                                    [class.active]="
+                                                        question.correctAnswer === 
+                                                        'D'">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -267,13 +378,18 @@
                         </div>
                     </div>
                     }
-                    @for (question of paginatedQuestions; track $index; let i = $index) {
+                    @for (question of paginatedQuestions;
+                            track $index;
+                            let i = $index) {
                     <div class="flashcard-item identification-item" 
                          [class.hidden]="!isIdentification()">
                         <div class="identification-header">
-                            <div class="question-number">{{ getActualIndex(i) + 1 }}</div>
+                            <div class="question-number">
+                                {{ getActualIndex(i) + 1 }}
+                            </div>
                             <button class="btn-delete-icon" 
-                                    (click)="deleteQuestion(getActualIndex(i))">
+                                    (click)="deleteQuestion(getActualIndex(i))"
+                                    >
                                 ✕
                             </button>
                         </div>
@@ -300,7 +416,8 @@
                     </div>
                     }
                         <div class="add-item-section">
-                            <button class="add-item-btn" (click)="addQuestion()">
+                            <button class="add-item-btn" 
+                                    (click)="addQuestion()">
                                 <span class="plus-icon">+</span> Add Item
                             </button>
                         </div>
@@ -321,9 +438,13 @@
                 </button>
                 <div class="pagination-dots">
                     @for (page of questionPages; track page) {
-                    <span [class]="page === '...' ? 'pagination-ellipsis' : 'pagination-dot'"
-                          [class.active]="isPageNumber(page) && currentPage === page"
-                          (click)="isPageNumber(page) && goToPage(getPageNumber(page))">
+                    <span [class]="page === '...' 
+                                ? 'pagination-ellipsis' 
+                                : 'pagination-dot'"
+                          [class.active]="isPageNumber(page) && 
+                                currentPage === page"
+                          (click)="isPageNumber(page) && 
+                                goToPage(getPageNumber(page))">
                         {{ getPageDisplay(page) }}
                     </span>
                     }
@@ -365,14 +486,21 @@
                     This action cannot be undone.
             </p>
             <div class="confirm-actions">
-                <button class="btn-confirm-no" (click)="closeDeleteModal()">Cancel</button>
-                <button class="btn-confirm-yes" (click)="confirmDelete()">Delete</button>
+                <button class="btn-confirm-no" 
+                        (click)="closeDeleteModal()">
+                    Cancel
+                </button>
+                <button class="btn-confirm-yes" 
+                        (click)="confirmDelete()">
+                    Delete
+                </button>
             </div>
         </div>
     </div>
 
     <div class="confirm-overlay" 
-            [class.open]="isNotificationModalOpen" (click)="closeNotificationModal()">
+            [class.open]="isNotificationModalOpen" 
+            (click)="closeNotificationModal()">
         <div class="confirm-modal notification-modal" 
              [class.success]="notificationType === 'success'"
              [class.error]="notificationType === 'error'"
@@ -381,7 +509,10 @@
             <h3 class="confirm-title">{{ notificationTitle }}</h3>
             <p class="confirm-message">{{ notificationMessage }}</p>
             <div class="confirm-actions">
-                <button class="btn-confirm-yes" (click)="closeNotificationModal()">OK</button>
+                <button class="btn-confirm-yes" 
+                        (click)="closeNotificationModal()">
+                    OK
+                </button>
             </div>
         </div>
     </div>
@@ -414,10 +545,14 @@
                 <button class="privacy-option private" 
                         (click)="selectPrivateOption()" 
                         [disabled]="isPrivateDisabledForSelectedQuiz">
-                    <img src="assets/lock.png" alt="Private" class="option-icon">
+                    <img src="assets/lock.png" 
+                            alt="Private" 
+                            class="option-icon">
                     <div class="option-content">
                         <span>Private</span>
-                        <span class="option-description">Only you can access this quiz set</span>
+                        <span class="option-description">
+                            Only you can access this quiz set
+                        </span>
                     </div>
                 </button>
             </div>
@@ -447,33 +582,58 @@
                 <div class="form-group">
                     <label class="form-label">Category</label>
                     <select class="form-select" [(ngModel)]="shareCategory">
-                        <option value="" disabled selected>Select category</option>
-                        <option value="Study Tips">Study Tips</option>
-                        <option value="Product Updates">Product Updates</option>
-                        <option value="Learning Strategies">Learning Strategies</option>
-                        <option value="User Stories">User Stories</option>
-                        <option value="Tutorials">Tutorials</option>
-                        <option value="Announcements">Announcements</option>
-                        <option value="Educational Resources">Educational Resources</option>
+                        <option value="" disabled selected>
+                            Select category
+                        </option>
+                        <option value="Study Tips">
+                            Study Tips
+                        </option>
+                        <option value="Product Updates">
+                            Product Updates
+                        </option>
+                        <option value="Learning Strategies">
+                            Learning Strategies
+                        </option>
+                        <option value="User Stories">
+                            User Stories
+                        </option>
+                        <option value="Tutorials">
+                            Tutorials
+                        </option>
+                        <option value="Announcements">
+                            Announcements
+                        </option>
+                        <option value="Educational Resources">
+                            Educational Resources
+                        </option>
                     </select>
                 </div>
             </div>
 
             <div class="share-actions">
                 <button class="btn-share-save" (click)="saveShare()"
-                    [disabled]="!shareTitle || !shareCategory || shareTitle.length > 50">
+                    [disabled]="!shareTitle ||
+                            !shareCategory || 
+                            shareTitle.length > 50">
                     Share
                 </button>
-                <button class="btn-share-cancel" (click)="closeShareModal()">Cancel</button>
+                <button class="btn-share-cancel" 
+                        (click)="closeShareModal()">
+                    Cancel
+                </button>
             </div>
         </div>
     </div>
     
    <div class="modal-overlay" [class.open]="isAiSuggestionsModalOpen">
-        <div class="modal-content ai-suggestions-modal" (click)="$event.stopPropagation()">
+        <div class="modal-content ai-suggestions-modal" 
+                (click)="$event.stopPropagation()">
             <div class="suggestions-header">
                 <h3>Generated Questions</h3>
-                <button class="btn-close-suggestion" (click)="closeSuggestions()">×</button>
+                <button class="btn-close-suggestion" 
+                        (click)="closeSuggestions()">
+                    ×
+                </button>
             </div>
 
             <div class="suggestions-body">
@@ -488,8 +648,12 @@
                     <div class="suggestions-list">
                         @for (question of suggestedQuestions; track $index) {
                             <div class="suggestion-item">
-                                <span class="suggestion-number">{{ $index + 1 }}</span>
-                                <span class="suggestion-text">{{ question }}</span>
+                                <span class="suggestion-number">
+                                    {{ $index + 1 }}
+                                </span>
+                                <span class="suggestion-text">
+                                    {{ question }}
+                                </span>
                             </div>
                         }
                     </div>
