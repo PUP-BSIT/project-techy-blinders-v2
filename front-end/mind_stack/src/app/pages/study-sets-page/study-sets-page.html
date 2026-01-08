@@ -15,29 +15,47 @@
                 @for (studySet of paginatedStudySets; track $index) {
                 <div class="study-set-card">
                     <div class="card-left">
-                        <button class="play-btn" (click)="playStudySet(studySet.flashcard_id)">
+                        <button class="play-btn" 
+                            (click)="playStudySet(studySet.flashcard_id)">
                             ▶
                         </button>
                     </div>
                     <div class="study-set-info">
                         <h3 class="study-set-title">{{ studySet.title }}</h3>
-                        <p class="study-set-description">{{ studySet.description || 'Short Description About the Reviewer' }} • Flashcards</p>
-                        <button class="privacy-badge" (click)="openPrivacyModal(studySet.flashcard_id)">
+                        <p class="study-set-description">
+                            {{
+                                studySet.description ||
+                                'Short Description About the Reviewer'
+                            }}
+                            • Flashcards
+                        </p>
+                        <button class="privacy-badge" 
+                            (click)="openPrivacyModal(studySet.flashcard_id)">
                             @if (studySet.is_public) {
-                                <img src="assets/globe-icon.png" alt="Public" class="privacy-icon">
+                                <img 
+                                    src="assets/globe-icon.png" 
+                                    alt="Public" 
+                                    class="privacy-icon">
                             }
                             @if (!studySet.is_public) {
-                                <img src="assets/lock.png" alt="Private" class="privacy-icon">
+                                <img 
+                                    src="assets/lock.png" 
+                                    alt="Private" 
+                                    class="privacy-icon">
                             }
-                            <span class="privacy-text">{{ studySet.is_public ? 'Public' : 'Private' }}</span>
+                            <span class="privacy-text">
+                                {{ studySet.is_public ? 'Public' : 'Private' }}
+                            </span>
                             <span class="dropdown-arrow">▼</span>
                         </button>
                     </div>
                     <div class="action-buttons">
-                        <button class="edit-btn" (click)="editStudySet(studySet.flashcard_id)">
+                        <button class="edit-btn" 
+                            (click)="editStudySet(studySet.flashcard_id)">
                             Edit
                         </button>
-                        <button class="delete-btn" (click)="openDeleteConfirm(studySet.flashcard_id)">
+                        <button class="delete-btn" 
+                            (click)="openDeleteConfirm(studySet.flashcard_id)">
                             Delete
                         </button>
                     </div>
@@ -45,7 +63,8 @@
                 }
             </div>
 
-            <div class="study-sets-pagination" [class.show]="studySetsTotalPages > 1">
+            <div class="study-sets-pagination" 
+                [class.show]="studySetsTotalPages > 1">
                 <button class="pagination-btn prev" 
                             (click)="goToStudySetsPage(0)" 
                             [disabled]="studySetsCurrentPage === 0">
@@ -59,21 +78,30 @@
                 <div class="pagination-dots">
                     @for (page of studySetsPages; track $index) {
                         <span 
-                            [class]="page === '...' ? 'pagination-ellipsis' : 'pagination-dot'"
-                            [class.active]="isPageNumber(page) && studySetsCurrentPage === page"
-                            (click)="isPageNumber(page) && goToStudySetsPage(getPageNumber(page))">
+                            [class]="
+                                page === '...'
+                                    ? 'pagination-ellipsis'
+                                    : 'pagination-dot'"
+                            [class.active]="
+                                isPageNumber(page) &&
+                                studySetsCurrentPage === page"
+                            (click)="
+                                isPageNumber(page) &&
+                                goToStudySetsPage(getPageNumber(page))">
                             {{ getPageDisplay(page) }}
                         </span>
                     }
                 </div>
-                <button class="pagination-btn next" 
-                            (click)="nextStudySetsPage()" 
-                            [disabled]="studySetsCurrentPage === studySetsTotalPages - 1">
+                <button 
+                    class="pagination-btn next" 
+                    (click)="nextStudySetsPage()" 
+                    [disabled]="studySetsCurrentPage === studySetsTotalPages - 1">
                     ›
                 </button>
-                <button class="pagination-btn next" 
-                            (click)="goToStudySetsPage(studySetsTotalPages - 1)" 
-                            [disabled]="studySetsCurrentPage === studySetsTotalPages - 1">
+                <button 
+                    class="pagination-btn next" 
+                    (click)="goToStudySetsPage(studySetsTotalPages - 1)" 
+                    [disabled]="studySetsCurrentPage === studySetsTotalPages - 1">
                     ››
                 </button>
             </div>
@@ -85,7 +113,9 @@
         <div class="modal-content study-set-modal">
             <div class="modal-header">
                 <h2 class="modal-title">Add Title</h2>
-                <button class="btn-close" (click)="openConfirmModal()">×</button>
+                <button class="btn-close" (click)="openConfirmModal()">
+                    ×
+                </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -95,21 +125,27 @@
                             [(ngModel)]="studySetTitle"
                             maxlength="50"
                             (input)="enforceTitleLimit()"/>
-                    <div class="char-indicator">{{ studySetTitle?.length || 0 }}/50</div>
+                    <div class="char-indicator">
+                        {{ studySetTitle?.length || 0 }}/50
+                    </div>
                 </div>
                 <div class="form-group">
-                    <input type="text" 
-                            class="description-input" 
-                            placeholder="Description"
-                            [(ngModel)]="studySetDescription"
-                            maxlength="50"
-                            (input)="enforceDescriptionLimit()"/>
-                    <div class="char-indicator">{{ studySetDescription?.length || 0 }}/50</div>
+                    <input 
+                        type="text" 
+                        class="description-input" 
+                        placeholder="Description"
+                        [(ngModel)]="studySetDescription"
+                        maxlength="50"
+                        (input)="enforceDescriptionLimit()"/>
+                    <div class="char-indicator">
+                        {{ studySetDescription?.length || 0 }}/50
+                    </div>
                 </div>
                 <div class="form-group">
                     <button class="btn-ai-suggestion"
                             (click)="generateAiSuggestions()"
-                            [disabled]="isLoadingSuggestion || !studySetTitle.trim()">
+                            [disabled]="isLoadingSuggestion || 
+                                !studySetTitle.trim()">
 
                             @if (!isLoadingSuggestion) {
                                 <span>Generate Suggestion</span>
@@ -131,7 +167,10 @@
                 <button 
                     class="btn-continue" 
                     (click)="saveStudySet()" 
-                    [disabled]="isLoading || !studySetTitle.trim() || !studySetDescription.trim()">
+                    [disabled]="
+                        isLoading || 
+                        !studySetTitle.trim() || 
+                        !studySetDescription.trim()">
                     Continue
                 </button>
             </div>
@@ -147,16 +186,19 @@
                 </span>
             </div>
 
-            <div class="carousel-wrapper" [class.has-flashcards]="flashcards.length > 0">
+            <div class="carousel-wrapper" 
+                [class.has-flashcards]="flashcards.length > 0">
                 @if (flashcards.length > 0) {
                     <div class="flashcards-container">
                         @for (flashcard of paginatedFlashcards; track $index) {
                         <div class="flashcard-item">
                             <div class="flashcard-header">
-                                <span class="flashcard-number">{{ getActualIndex($index) + 1 }}</span>
+                                <span class="flashcard-number">
+                                    {{ getActualIndex($index) + 1 }}
+                                </span>
                                 <button class="btn-delete-icon" 
-                                            (click)="deleteFlashcard(getActualIndex($index))">
-                                        ×
+                                    (click)="deleteFlashcard(getActualIndex($index))">
+                                    ×
                                 </button>
                             </div>
                             <div class="flashcard-content">
@@ -168,7 +210,9 @@
                                             [(ngModel)]="flashcard.term"
                                             maxlength="150"
                                             (input)="enforceFlashcardTermLimit(getActualIndex($index))"/>
-                                    <div class="char-indicator">{{ flashcard.term?.length || 0 }}/150</div>
+                                    <div class="char-indicator">
+                                        {{ flashcard.term?.length || 0 }}/150
+                                    </div>
                                 </div>
                                 <div class="flashcard-right">
                                     <label class="flashcard-label">Description</label>
@@ -178,12 +222,15 @@
                                             [(ngModel)]="flashcard.definition"
                                             maxlength="150"
                                             (input)="enforceFlashcardDefinitionLimit(getActualIndex($index))"/>
-                                    <div class="char-indicator">{{ flashcard.definition?.length || 0 }}/150</div>
+                                    <div class="char-indicator">
+                                        {{ flashcard.definition?.length || 0 }}/150
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         }
-                        <button class="add-flashcard-btn" (click)="addFlashcard()">
+                        <button class="add-flashcard-btn" 
+                            (click)="addFlashcard()">
                             + Add Flashcard
                         </button>
                     </div>
@@ -223,13 +270,19 @@
             </div>
             
             <div class="modal-footer">
-                <button class="btn-cancel" (click)="closeFlashcardModal()">Cancel</button>
-                <button class="btn-save" (click)="saveFlashcards()">Save</button>
+                <button class="btn-cancel" (click)="closeFlashcardModal()">
+                    Cancel
+                </button>
+                <button class="btn-save" (click)="saveFlashcards()">
+                    Save
+                </button>
             </div>
         </div>
     </div>
 
-    <div class="confirm-overlay" [class.open]="isConfirmModalOpen" (click)="closeConfirmModal()">
+    <div class="confirm-overlay" 
+        [class.open]="isConfirmModalOpen" 
+        (click)="closeConfirmModal()">
         <div class="confirm-modal" (click)="$event.stopPropagation()">
             @if (pendingDeleteStudySetId !== null) {
                 <p class="confirm-message">
@@ -239,8 +292,12 @@
             }
             <div class="confirm-actions">
                 @if (pendingDeleteStudySetId !== null) {
-                    <button class="btn-confirm-no" (click)="cancelDelete()">No</button>
-                    <button class="btn-confirm-yes" (click)="confirmDelete()">Yes, Delete</button>
+                    <button class="btn-confirm-no" (click)="cancelDelete()">
+                        No
+                    </button>
+                    <button class="btn-confirm-yes" (click)="confirmDelete()">
+                        Yes, Delete
+                    </button>
                 }
             </div>
         </div>
@@ -251,8 +308,13 @@
         <div class="privacy-settings-modal" (click)="$event.stopPropagation()">
             <h3 class="privacy-settings-title">PRIVACY SETTINGS</h3>
             <div class="privacy-options">
-                <button class="privacy-option share" (click)="selectShareOption()" [disabled]="isShareDisabledForSelectedSet">
-                    <img src="assets/globe-icon.png" alt="Share" class="option-icon">
+                <button class="privacy-option share" 
+                    (click)="selectShareOption()" 
+                    [disabled]="isShareDisabledForSelectedSet">
+                    <img 
+                        src="assets/globe-icon.png" 
+                        alt="Share" 
+                        class="option-icon">
                     <div class="option-content">
                         <span>Share</span>
                         @if (canShareSelectedSet) {
@@ -267,11 +329,18 @@
                         }
                     </div>
                 </button>
-                <button class="privacy-option private" (click)="selectPrivateOption()" [disabled]="isPrivateDisabledForSelectedSet">
-                    <img src="assets/lock.png" alt="Private" class="option-icon">
+                <button class="privacy-option private" 
+                    (click)="selectPrivateOption()" 
+                    [disabled]="isPrivateDisabledForSelectedSet">
+                    <img 
+                        src="assets/lock.png" 
+                        alt="Private" 
+                        class="option-icon">
                     <div class="option-content">
                         <span>Private</span>
-                        <span class="option-description">Only you can access this study set</span>
+                        <span class="option-description">
+                            Only you can access this study set
+                        </span>
                     </div>
                 </button>
             </div>
@@ -300,32 +369,55 @@
                 <div class="form-group">
                     <label class="form-label">Category</label>
                     <select class="form-select" [(ngModel)]="shareCategory">
-                        <option value="" disabled selected>Select category</option>
-                        <option value="Study Tips">Study Tips</option>
-                        <option value="Product Updates">Product Updates</option>
-                        <option value="Learning Strategies">Learning Strategies</option>
-                        <option value="User Stories">User Stories</option>
-                        <option value="Tutorials">Tutorials</option>
-                        <option value="Announcements">Announcements</option>
-                        <option value="Educational Resources">Educational Resources</option>
+                        <option value="" disabled selected>
+                            Select category
+                        </option>
+                        <option value="Study Tips">
+                            Study Tips
+                        </option>
+                        <option value="Product Updates">
+                            Product Updates
+                        </option>
+                        <option value="Learning Strategies">
+                            Learning Strategies
+                        </option>
+                        <option value="User Stories">
+                            User Stories
+                        </option>
+                        <option value="Tutorials">
+                            Tutorials
+                        </option>
+                        <option value="Announcements">
+                            Announcements
+                        </option>
+                        <option value="Educational Resources">
+                            Educational Resources
+                        </option>
                     </select>
                 </div>
             </div>
 
             <div class="share-actions">
                 <button class="btn-share-save" (click)="saveShare()"
-                    [disabled]="!shareTitle || !shareCategory || shareTitle.length > 50">
+                    [disabled]="
+                        !shareTitle || 
+                        !shareCategory || 
+                        shareTitle.length > 50">
                     Share
                 </button>
-                <button class="btn-share-cancel" (click)="closeShareModal()">Cancel</button>
+                <button class="btn-share-cancel" (click)="closeShareModal()">
+                    Cancel
+                </button>
             </div>
         </div>
     </div>
     <div class="modal-overlay" [class.open]="isAiSuggestionsModalOpen">
-        <div class="modal-content ai-suggestions-modal" (click)="$event.stopPropagation()">
+        <div class="modal-content ai-suggestions-modal" 
+            (click)="$event.stopPropagation()">
             <div class="suggestions-header">
                 <h3>Generated Questions</h3>
-                <button class="btn-close-suggestion" (click)="closeSuggestions()">×</button>
+                <button class="btn-close-suggestion" 
+                    (click)="closeSuggestions()">×</button>
             </div>
 
             <div class="suggestions-body">
@@ -340,8 +432,12 @@
                     <div class="suggestions-list">
                         @for (question of suggestedQuestions; track $index) {
                             <div class="suggestion-item">
-                                <span class="suggestion-number">{{ $index + 1 }}</span>
-                                <span class="suggestion-text">{{ question }}</span>
+                                <span class="suggestion-number">
+                                    {{ $index + 1 }}
+                                </span>
+                                <span class="suggestion-text">
+                                    {{ question }}
+                                </span>
                             </div>
                         }
                     </div>
@@ -362,7 +458,8 @@
     }
 
     @if (isStudySetCreateSuccessPopupOpen) {
-        <div class="popup-alert" (click)="closeStudySetCreateSuccessPopup()">
+        <div class="popup-alert" 
+            (click)="closeStudySetCreateSuccessPopup()">
             <p>Flashcard set created!</p>
         </div>
     }
@@ -375,7 +472,8 @@
     }
 
     @if (isStudySetDeleteSuccessPopupOpen) {
-        <div class="popup-alert" (click)="closeStudySetDeleteSuccessPopup()">
+        <div class="popup-alert" 
+            (click)="closeStudySetDeleteSuccessPopup()">
             <p>Flashcard set deleted!</p>
         </div>
     }
