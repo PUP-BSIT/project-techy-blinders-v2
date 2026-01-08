@@ -1,17 +1,30 @@
 <div class="navigation-bar-class">
     <div class="nav-header">
-        <img src="assets/image-logo.png" alt="Mind Stack Logo" routerLink=" " class="logo">
-        <h2>Mindstack</h2>
+        <img src="assets/image-logo.png" 
+             alt="Mind Stack Logo" 
+             routerLink=" " 
+             class="logo">
+        <h2>MindStack</h2>
     </div>
-    <button class="hamburger" (click)="toggleMenu()" [class.active]="isMenuOpen">
+    <button class="hamburger" 
+            (click)="toggleMenu()" 
+            [class.active]="isMenuOpen">
         <span></span>
         <span></span>
         <span></span>
     </button>
     <ul [class.active]="isMenuOpen">
-        <li><a (click)="scrollToSection('home'); closeMenu()">Home</a></li>
-        <li><a (click)="scrollToSection('about'); closeMenu()">About us</a></li>
-        <li><a routerLink="/contact" (click)="closeMenu()">Contact us</a></li>
-        <li><a routerLink="/login" (click)="closeMenu()">Login</a></li>
+        <li>
+            <a (click)="scrollToSection('home'); closeMenu()">Home</a>
+        </li>
+        <li>
+            <a (click)="scrollToSection('about'); closeMenu()">About us</a>
+        </li>
+        <li>
+            <a routerLink="/contact" (click)="closeMenu()">Contact us</a>
+        </li>
+        <li>
+            <a routerLink="/login" (click)="closeMenu()">Login</a>
+        </li>
     </ul>  
 </div>
