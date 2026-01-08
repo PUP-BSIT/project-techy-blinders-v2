@@ -260,18 +260,19 @@ public class QuizServiceImpl implements QuizService {
         response.setQuizType(quizSet.getQuizType());
 
         List<QuizResponseDTO> quizzes = quizSet.getQuizzes().stream()
-                .map(q -> new QuizResponseDTO(
-                        q.getQuizId(),
-                        quizSet.getQuizSetId(),
-                        q.getQuizType(),
-                        q.getQuestion(),
-                        q.getOptionA(),
-                        q.getOptionB(),
-                        q.getOptionC(),
-                        q.getOptionD(),
-                        q.getCorrectAnswer(),
-                        q.getIdentificationAnswer()))
-                .collect(Collectors.toList());
+            .sorted((q1, q2) -> Long.compare(q1.getQuizId(), q2.getQuizId()))
+            .map(q -> new QuizResponseDTO(
+                q.getQuizId(),
+                quizSet.getQuizSetId(),
+                q.getQuizType(),
+                q.getQuestion(),
+                q.getOptionA(),
+                q.getOptionB(),
+                q.getOptionC(),
+                q.getOptionD(),
+                q.getCorrectAnswer(),
+                q.getIdentificationAnswer()))
+            .collect(Collectors.toList());
 
         response.setQuizzes(quizzes);
 

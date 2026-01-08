@@ -225,18 +225,20 @@ export class QuizzesService {
       is_public: resolvedIsPublic,
       quiz_type: response.quizType,
       slug: response.slug,
-      quizzes: (response.quizzes || []).map(q => ({
-        quizId: q.quizId,
-        quizType: q.quizType,
-        question: q.question,
-        optionA: q.optionA,
-        optionB: q.optionB,
-        optionC: q.optionC,
-        optionD: q.optionD,
-        correctAnswer: q.correctAnswer,
-        identificationAnswer: q.identificationAnswer,
-        points: 1
-      }))
+      quizzes: (response.quizzes || [])
+        .sort((a, b) => (a.quizId || 0) - (b.quizId || 0))
+        .map(q => ({
+          quizId: q.quizId,
+          quizType: q.quizType,
+          question: q.question,
+          optionA: q.optionA,
+          optionB: q.optionB,
+          optionC: q.optionC,
+          optionD: q.optionD,
+          correctAnswer: q.correctAnswer,
+          identificationAnswer: q.identificationAnswer,
+          points: 1
+        }))
     };
   }
 
@@ -271,4 +273,3 @@ export class QuizzesService {
     );
   }
 }
-
