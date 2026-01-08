@@ -39,8 +39,12 @@ export class ForgotPassword {
 
   constructor() {
     this.forgotPasswordForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email], [this.emailRegisteredValidator()]],
-      newPassword: ['', [Validators.required, Validators.minLength(8), this.strongPasswordValidator]],
+      email: ['', 
+          [Validators.required, Validators.email], 
+          [this.emailRegisteredValidator()]],
+      newPassword: ['', 
+          [Validators.required, Validators.minLength(8), 
+            this.strongPasswordValidator]],
       confirmPassword: ['', Validators.required],
       otp: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
     });
@@ -51,7 +55,9 @@ export class ForgotPassword {
     ]);
     this.forgotPasswordForm.get('confirmPassword')?.updateValueAndValidity();
     this.forgotPasswordForm.get('newPassword')?.valueChanges.subscribe(() => {
-      this.forgotPasswordForm.get('confirmPassword')?.updateValueAndValidity({ emitEvent: false });
+    this.forgotPasswordForm
+      .get('confirmPassword')
+      ?.updateValueAndValidity({ emitEvent: false });
     });
 
   }
@@ -118,7 +124,10 @@ export class ForgotPassword {
         this.forgotPasswordForm.get('confirmPassword')?.invalid) {
       return;
     }
-    if (this.forgotPasswordForm.get('newPassword')?.value !== this.forgotPasswordForm.get('confirmPassword')?.value) {
+    if (
+      this.forgotPasswordForm.get('newPassword')?.value !==
+      this.forgotPasswordForm.get('confirmPassword')?.value
+    ) {
       this.errorMessage.set('Passwords do not match.');
       return;
     }
@@ -135,7 +144,11 @@ export class ForgotPassword {
           this.currentStep.set(2);
         } else {
           const msg = (response.message || '').toLowerCase();
-          if (msg.includes('not found') || msg.includes('unregistered') || msg.includes('no account')) {
+          if (
+            msg.includes('not found') ||
+            msg.includes('unregistered') ||
+            msg.includes('no account')
+          ) {
             this.errorPopupMessage = 'Email not registered.';
             this.showErrorPopup.set(true);
           } else {
@@ -176,7 +189,11 @@ export class ForgotPassword {
         } else {
           // check email is not registered
           const msg = (response.message || '').toLowerCase();
-          if (msg.includes('not found') || msg.includes('unregistered') || msg.includes('no account')) {
+          if (
+            msg.includes('not found') ||
+            msg.includes('unregistered') ||
+            msg.includes('no account')
+          ) {
             this.errorPopupMessage = 'Email not registered.';
             this.showErrorPopup.set(true);
           } else {
@@ -213,7 +230,8 @@ export class ForgotPassword {
       next: (response) => {
         this.isLoading.set(false);
         if (response.success) {
-          this.successMessage.set(response.message || 'Password reset successful!');
+          this.successMessage.set(
+            response.message || 'Password reset successful!');
           this.showSuccessPopup.set(true);
           this.successPopupRedirect.set(true);
 
