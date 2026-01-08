@@ -316,6 +316,7 @@ public class FlashcardSetServiceImpl implements FlashCardService {
         response.setSlug(flashcardSet.getSlug());
 
         List<FlashcardResponseDTO> flashcards = flashcardSet.getFlashcards().stream()
+                .sorted((f1, f2) -> Long.compare(f1.getFlashcardId(), f2.getFlashcardId()))
                 .map(f -> new FlashcardResponseDTO(
                         f.getFlashcardId(),
                         flashcardSet.getStudySetId(),
