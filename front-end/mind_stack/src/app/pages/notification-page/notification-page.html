@@ -47,6 +47,10 @@
                             {{ n.isRead ? 'Read' : 'Unread' }}
                         </span>
                     </div>
+                } @empty {
+                    <div class="empty-state">
+                        <p>No notifications yet. Stay tuned for updates!</p>
+                    </div>
                 }
             </div>
         </div>
