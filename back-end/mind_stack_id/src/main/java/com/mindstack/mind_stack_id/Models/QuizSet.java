@@ -19,7 +19,7 @@ public class QuizSet {
     @Column(name = "title", length = 50, nullable = false)
     private String title;
     
-    @Column(name = "description", length = 50)
+    @Column(name = "description", length = 100)
     private String description;
     
     @Column(name = "is_public")
