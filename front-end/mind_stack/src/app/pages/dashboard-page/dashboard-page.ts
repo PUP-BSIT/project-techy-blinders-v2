@@ -112,7 +112,6 @@ export class DashboardPage implements OnInit, OnDestroy {
   }
 
   createFlashcards() {
-    console.log('Navigate to create flashcards');
     this.router.navigate(
       ['/app/study-sets'],
       {
@@ -124,7 +123,6 @@ export class DashboardPage implements OnInit, OnDestroy {
   }
 
   createQuiz() {
-    console.log('Navigate to create quiz');
     this.router.navigate(
       ['/app/quizzes'],
       {
