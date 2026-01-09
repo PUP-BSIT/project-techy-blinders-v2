@@ -1652,6 +1652,7 @@ $mobile-breakpoint: 768px;
     .question-input-section {
         flex: 1;
         margin-top: -1rem;
+        margin-right: 1rem;
     }
 
     .flashcard-term {
@@ -1682,6 +1683,7 @@ $mobile-breakpoint: 768px;
         gap: 0.55rem;
         padding-top: 0.25rem;
         margin-top: -12px;
+        margin-left: 0.5rem;
     }
 }
 
