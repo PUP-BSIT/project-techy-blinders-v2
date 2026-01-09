@@ -541,13 +541,13 @@ $transition-normal: 0.3s ease;
     color: $color-text-white;
     border: none;
     border-radius: 8px;
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 0.20rem;
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     transition: all $transition-fast;
     width: 30%;
-    margin-top: 10px;
+    margin-left: 0;
     display: block;
 
     &:hover {
@@ -1049,7 +1049,7 @@ $transition-normal: 0.3s ease;
     font-weight: 600;
     text-align: center;
     opacity: 0.7;
-    margin-top: 125px;
+    margin-left: -50px;
 }
 
 .modal-footer {
@@ -1661,20 +1661,20 @@ $transition-normal: 0.3s ease;
     .study-sets-list {
         gap: 1.5rem;
         padding: 0.75rem 1rem;
-        align-items: flex-start;
+        align-items: center;
     }
 
     .study-set-card {
         flex-direction: row;
-        padding: 0.1rem 0.75rem;
-        gap: 0.7rem;
-        width: calc(100% - 2rem);
-        max-width: 335px;
+        padding: 0.7rem 0.75rem;
+        gap: 0.75rem;
+        width: calc(100% - 3rem);
+        max-width: 500px;
         margin: 0 auto;
-        margin-left: 0%;
-        min-height: 145px;
+        min-height: 160px;
         border-radius: 12px;
         box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        margin-left: -1%;
     }
 
     .card-left {
@@ -1789,22 +1789,33 @@ $transition-normal: 0.3s ease;
     }
 
     .flashcard-modal {
-        height: auto;
-        max-height: calc(100vh - 2rem);
-        padding: 0.75rem;
+        height: calc(100vh - 9rem);
+        max-height: calc(100vh - 9rem);
+        padding: 0;
         overflow: hidden;
+        border-radius: 12px;
     }
 
     .flashcard-modal .flashcard-controls {
         margin-top: 0;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0;
+        padding: 1rem 1rem 0.5rem;
+        background: rgba(168, 216, 185, 0.85);
+        border-radius: 12px 12px 0 0;
+    }
+
+    .flashcard-modal .flashcard-count {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: $color-primary-darker;
     }
 
     .flashcard-modal .carousel-wrapper {
         flex: 1;
         min-height: 0;
         overflow-y: auto;
-        padding-bottom: 0.75rem;
+        padding: 1rem;
+        background: rgba(168, 216, 185, 0.85);
     }
 
     .flashcard-modal .flashcards-container {
@@ -1819,17 +1830,45 @@ $transition-normal: 0.3s ease;
         overflow: hidden;
     }
 
+    .flashcard-modal .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 300px;
+        gap: 1.5rem;
+        padding: 2rem 1rem;
+    }
+
+    .flashcard-modal .empty-message {
+        color: $color-primary-darker;
+        font-size: 1rem;
+        font-weight: 500;
+        text-align: center;
+        margin: 0;
+    }
+
     .flashcard-modal .add-flashcard-btn {
-        width: 100%;
-        max-width: 420px;
-        margin: 0.5rem auto 0;
+        width: fit-content;
+        max-width: fit-content;
+        min-width: 150px;
+        margin: 0 auto;
+        padding: 0.75rem 1.5rem;
+        background: $color-primary-dark;
+        color: white;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        white-space: nowrap;
     }
 
     .flashcard-modal .modal-footer {
         margin-top: 0;
-        padding-top: 0.75rem;
+        padding: 1rem;
         justify-content: space-between;
         gap: 0.75rem;
+        background: rgba(168, 216, 185, 0.85);
+        border-radius: 0 0 12px 12px;
     }
 
     .flashcard-modal .btn-cancel,
@@ -1837,5 +1876,24 @@ $transition-normal: 0.3s ease;
         flex: 1;
         min-width: 0;
         padding: 0.75rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .flashcard-modal .btn-cancel {
+        background: #16DC81;
+        color: white;
+    }
+
+    .flashcard-modal .btn-save {
+        background: $color-primary-dark;
+        color: white;
+    }
+
+    .empty-state-message {
+        margin-left: -60px;
+        margin-top: -60px;
+        width: 60%;
     }
 }
