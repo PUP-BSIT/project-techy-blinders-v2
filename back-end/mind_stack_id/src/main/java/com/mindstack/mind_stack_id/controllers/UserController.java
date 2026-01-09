@@ -23,12 +23,6 @@ import com.mindstack.mind_stack_id.security.JwtUtil;
 import org.springframework.security.core.Authentication;
 import java.util.HashMap;
 
-// @Autowired
-// private PasswordResetTokenRepository passwordResetTokenRepository;
-// 
-// @Autowired
-// private com.mindstack.mind_stack_id.services.BrevoEmailService brevoEmailService;
-// @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = {"http://localhost:4200", "https://techymindstack.site"}, allowCredentials = "true")
@@ -292,34 +286,6 @@ public class UserController {
         }
     }
 
-    // @PutMapping("/update-username")
-    // public ResponseEntity<?> updateUsername(
-    // @RequestBody UsernameUpdateRequest request,
-    // Authentication auth) {
-    // try {
-    // String email = auth.getName();
-    // User user = repo.findByEmail(email);
-
-    // if (user == null) {
-    // return ResponseEntity.status(404).body("User not found");
-    // }
-
-    // User updatedUser = userService.updateUsername(user.getUserId(),
-    // request.getNewUsername());
-
-    // return ResponseEntity.ok(new HashMap<>() {{
-    // put("success", true);
-    // put("message", "Username updated successfully");
-    // put("username", updatedUser.getUsername());
-    // }});
-    // } catch (RuntimeException e) {
-    // return ResponseEntity.status(400).body(new HashMap<>() {{
-    // put("success", false);
-    // put("message", e.getMessage());
-    // }});
-    // }
-    // }
-
     public static class PasswordUpdateRequest {
         private String currentPassword;
         private String newPassword;
@@ -352,54 +318,4 @@ public class UserController {
             this.newEmail = newEmail;
         }
     }
-
-    // public static class UsernameUpdateRequest {
-    // private String newUsername;
-
-    // public String getNewUsername() { return newUsername; }
-    // public void setNewUsername(String newUsername) { this.newUsername =
-    // newUsername; }
-    // }
-
-    /*
-    @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
-        try {
-            if (!request.getNewPassword().equals(request.getConfirmPassword())) {
-                return ResponseEntity.status(400).body(new HashMap<>() {
-                    {
-                        put("success", false);
-                        put("message", "Passwords do not match");
-                    }
-                });
-            }
-
-            if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
-                return ResponseEntity.status(400).body(new HashMap<>() {
-                    {
-                        put("success", false);
-                        put("message", "Email is required");
-                    }
-                });
-            }
-
-            userService.resetPasswordByEmail(request.getEmail(), request.getNewPassword());
-
-            return ResponseEntity.ok(new HashMap<>() {
-                {
-                    put("success", true);
-                    put("message", "Password has been reset successfully");
-                }
-            });
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(400).body(new HashMap<>() {
-                {
-                    put("success", false);
-                    put("message", e.getMessage());
-                }
-            });
-        }
-    }
-    */
-
 }

@@ -24,7 +24,6 @@ export class RegistrationPage {
   showPassword = false;
   showConfirmPassword = false;
 
-  // Signals
   isLoading = signal(false);
   successMessage = signal('');
   errorMessage = signal('');
@@ -50,12 +49,19 @@ export class RegistrationPage {
 
   constructor() {
     this.registrationForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
-      username: ['', [Validators.required, Validators.maxLength(20)]],
-      password: ['', [Validators.required, Validators.minLength(8), this.strongPasswordValidator]],
+      email: ['', [
+        Validators.required, 
+        Validators.email, 
+        Validators.maxLength(50)]],
+      username: ['', [
+        Validators.required, 
+        Validators.maxLength(20)]],
+      password: ['', [
+        Validators.required, 
+        Validators.minLength(8), 
+        this.strongPasswordValidator]],
       confirmPassword: ['', [Validators.required]]
     });
-
   }
 
   strongPasswordValidator(control: any) {
@@ -85,10 +91,21 @@ export class RegistrationPage {
     return Object.keys(errors).length ? errors : null;
   }
 
-  get emailControl() { return this.registrationForm.get('email'); }
-  get usernameControl() { return this.registrationForm.get('username'); }
-  get passwordControl() { return this.registrationForm.get('password'); }
-  get confirmPasswordControl() { return this.registrationForm.get('confirmPassword'); }
+  get emailControl() {
+    return this.registrationForm.get('email');
+  }
+
+  get usernameControl() {
+    return this.registrationForm.get('username');
+  }
+
+  get passwordControl() {
+    return this.registrationForm.get('password');
+  }
+
+  get confirmPasswordControl() {
+    return this.registrationForm.get('confirmPassword');
+  }
 
   isFormValid(): boolean {
     return this.registrationForm.valid &&
@@ -129,11 +146,14 @@ export class RegistrationPage {
         this.isLoading.set(false);
         // Check for email or username already in use
         if (err.status === 409 && err.error?.error === 'Email already in use') {
-          this.errorMessage.set('This email is already registered. Please use a different email.');
+          this.errorMessage.set(
+            'This email is already registered. Please use a different email.');
         } else if (err.status === 409 && err.error?.error === 'Username already in use') {
-          this.errorMessage.set('This username is already taken. Please choose another username.');
+          this.errorMessage.set(
+            'This username is already taken. Please choose another username.');
         } else {
-          this.errorMessage.set(err.error?.error || err.error?.message || 'Registration failed. Try again.');
+          this.errorMessage.set(
+            err.error?.error || err.error?.message || 'Registration failed. Try again.');
         }
         this.openSubmitPopup();
       }
