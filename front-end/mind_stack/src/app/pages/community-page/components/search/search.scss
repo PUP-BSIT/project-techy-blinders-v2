@@ -7,6 +7,8 @@
   margin-bottom: 20px;
   display: flex;
   justify-content: center;
+  overflow: hidden;
+  isolation: isolate;
 }
 
 .search-input {
@@ -27,6 +29,7 @@
   background-repeat: no-repeat;
   background-position: right 16px center;
   padding-right: 40px;
+  z-index: 1;
 }
 
 .search-input::placeholder {
@@ -43,7 +46,11 @@
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
+  width: 20px;
+  height: 20px;
+  max-width: 20px;
+  max-height: 20px;
 }
 
 @media (max-width: 768px) {

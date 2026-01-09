@@ -9,6 +9,7 @@
 .navigation-bar-class {
     background-color: #3dac78;
     position: relative;
+    z-index: 2000;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -130,6 +131,7 @@ ul li a:hover {
         top: 100%;
         left: 0;
         right: 0;
+        z-index: 1999;
         flex-direction: column;
         padding: 0;
         max-height: 0;
