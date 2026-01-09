@@ -169,7 +169,7 @@
 }
 
 .post-content-card {
-    background: #74c69d;
+    background: #3dac78;
     border-radius: 12px;
     padding: 20px;
     display: flex;
@@ -501,7 +501,7 @@
     transition: all 0.2s;
 
     &:hover {
-        background: #74c69d;
+        background: #3dac78;
     }
 }
 
@@ -749,7 +749,7 @@
 }
 
 .send-btn:hover:not(:disabled) {
-    background: #65c497;
+    background: #74c69d;
 }
 
 .send-btn:disabled {
