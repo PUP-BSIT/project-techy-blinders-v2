@@ -21,6 +21,10 @@ export class LandingPage {
     this.router.navigate(['login']);
   }
 
+  scrollToFeatures() {
+    this.scrollToSection('features');
+  }
+
   scrollToSection(sectionId: string) {
     const element = document.getElementById(sectionId);
     if (element) {
