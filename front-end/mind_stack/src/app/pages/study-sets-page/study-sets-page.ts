@@ -99,7 +99,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
         this.suggestedQuestions = response.questions;
         this.isShowSuggestion = true;
         this.isLoadingSuggestion = false;
-        console.log('AI Suggestions:', this.suggestedQuestions);
       },
 
       error:(error) => {
@@ -149,9 +148,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
           error: error?.error
         });
         this.isLoading = false;
-        // alert(
-        //   'Failed to load study sets. Please check the console for details.'
-        // );
       }
     });
   }
@@ -321,9 +317,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
             error: error?.error
           });
           this.isLoading = false;
-          // alert(
-          //   'Failed to create study set. Please check the console for details.'
-          // );
         }
       });
     }
@@ -354,14 +347,9 @@ export class StudySetsPage implements OnInit, OnDestroy {
       return;
     }
 
-    console.log('=== SAVE FLASHCARDS CALLED ===');
-    console.log('Current Study Set ID:', this.currentStudySetId);
-    console.log('Total Flashcards:', this.flashcards.length);
-
     if (this.currentStudySetId !== null) {
       const currentUser = this.authService.getCurrentUser();
       if (!currentUser) {
-        console.error('User not logged in');
         return;
       }
 
@@ -378,7 +366,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
           error: (error) => {
             console.error('Error fetching study set:', error);
             this.isLoading = false;
-            // alert('Failed to fetch study set. Please try again.');
           }
         });
       } else {
@@ -413,9 +400,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
       this.closeFlashcardModal();
       return;
     }
-
-    console.log('Saving flashcards (individual):', prepared);
-    console.log('Deleting flashcards:', this.deletedFlashcardIds);
 
     const studySetIdToRefresh = this.currentStudySetId as number;
 
@@ -486,9 +470,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
         console.error('Error saving/updating/deleting flashcards:', error);
         this.isLoading = false;
         this.deletedFlashcardIds = [];
-        // alert(
-        //   'Failed to save flashcards. Please check the console for details.'
-        // );
       }
     });
   }
@@ -500,15 +481,10 @@ export class StudySetsPage implements OnInit, OnDestroy {
       isNew: true
     };
     this.flashcards.push(newFlashcard);
-    console.log(
-      'Added new flashcard. Total count:',
-      this.flashcards.length
-    );
 
     this.currentPage = Math.floor(
       (this.flashcards.length - 1) / this.itemsPerPage
     );
-    console.log('Navigated to page:', this.currentPage);
   }
 
   editFlashcard(index: number) {
@@ -516,7 +492,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
     if (flashcard && flashcard.flashcardId) {
       flashcard.isNew = false;
     }
-    console.log('Editing flashcard:', index, flashcard);
   }
 
   deleteFlashcard(index: number) {
@@ -534,19 +509,7 @@ export class StudySetsPage implements OnInit, OnDestroy {
     if (this.currentPage > maxPage) {
       this.currentPage = maxPage;
     }
-    console.log(
-      'Flashcard removed from local list. Will be deleted on Save if it has ' +
-      'an ID.'
-    );
   }
-
-  // private deleteFlashcardsFromBackend(flashcardIds: number[]): Observable<any> {
-  //   if (flashcardIds.length === 0) {
-  //     return of([]);
-  //   }
-  //   const deleteObs = flashcardIds.map(id => this.studySetsService.deleteFlashcard(id));
-  //   return forkJoin(deleteObs);
-  // }
 
   ngOnDestroy() {
     try {
@@ -630,7 +593,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
         );
         if (index !== -1) {
           this.studySets[index] = freshStudySet;
-          console.log('Refreshed study set in local array');
         }
 
         if (this.currentStudySetId === id) {
@@ -886,7 +848,6 @@ export class StudySetsPage implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error updating flashcard visibility:', error);
           this.isLoading = false;
-          // alert('Flashcard was shared but visibility update failed.');
           this.closeShareModal();
         }
       });
