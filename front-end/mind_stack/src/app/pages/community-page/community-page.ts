@@ -111,7 +111,6 @@ export class CommunityPage implements OnInit, OnDestroy {
     this.communityService.posts$
       .pipe(takeUntil(this.destroy$))
       .subscribe(posts => {
-        console.log('Posts updated, count:', posts.length);
         this.posts = posts;
         this.applyFilter();
         this.cdr.detectChanges();
@@ -126,7 +125,6 @@ export class CommunityPage implements OnInit, OnDestroy {
             this.selectedPost = updatedPost;
           } else {
             // Post was deleted, close the modal
-            console.log('Selected post was deleted, closing modal');
             this.closePostModal();
           }
         }
@@ -145,7 +143,6 @@ export class CommunityPage implements OnInit, OnDestroy {
     this.communityService.comments$
       .pipe(takeUntil(this.destroy$))
       .subscribe(comments => {
-        console.log('Comments updated, count:', comments.length);
         this.allComments = comments;
         this.cdr.detectChanges();
       });
@@ -287,7 +284,7 @@ export class CommunityPage implements OnInit, OnDestroy {
     }
 
     if (hashBadwords) {
-      console.warn('Profanity deteced and cleaned');
+      console.warn('Profanity detected and cleaned');
     }
 
     if (this.selectedPost?.post_id) {
