@@ -237,10 +237,8 @@ export class OpenQuiz implements OnInit {
 
     this.quizzesService.submitQuizAttempt(request).subscribe({
       next: (response) => {
-        console.log('Quiz attempt submitted successfully:', response);
         this.latestAttempt.set(response);
         
-        // Add activity after successful submission
         if (quiz) {
           this.activityService.addActivity({
             type: 'quiz',
