@@ -13,6 +13,14 @@
             </div>
         }
 
+        @if (!isLoading && quizzes.length === 0) {
+            <div class="empty-state">
+                <p class="empty-state-message">
+                    No Quiz Set found. Create Now!
+                </p>
+            </div>
+        }
+
         <div class="study-sets-wrapper" 
                 [class.hidden]="quizzes.length === 0 || isLoading">
             <button (click)="openModal()" 
