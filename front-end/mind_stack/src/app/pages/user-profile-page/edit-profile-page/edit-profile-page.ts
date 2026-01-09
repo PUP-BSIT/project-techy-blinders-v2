@@ -28,7 +28,6 @@ export class EditProfilePage {
   }
 
   editInformation() {
-    console.log(this.editInformationForm.value);
     this.onCancel.emit();
   }
 

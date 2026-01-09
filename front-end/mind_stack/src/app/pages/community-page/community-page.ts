@@ -279,7 +279,6 @@ export class CommunityPage implements OnInit, OnDestroy {
     const cleanedContent = this.profanityService.clean(data.content);
 
     if (!cleanedContent.trim()) {
-      alert ('Comment cannot be empty');
       return;
     }
 

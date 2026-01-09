@@ -135,7 +135,6 @@ export class UserProfilePage implements OnInit {
 
     this.authService.getUserById(userId).subscribe({
       next: (profile: UserProfile) => {
-        console.log('Loaded user profile:', profile);
         this.displayUser = profile;
         
         this.quizzesCreated = profile.quizzesCreated;

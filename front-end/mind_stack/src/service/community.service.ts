@@ -181,10 +181,8 @@ export class CommunityService {
     const options = params ? { params, responseType: 'text' as 'json' } : { responseType: 'text' as 'json' };
     this.http.delete(`${this.apiUrl}/posts/${postId}`, options).subscribe({
       next: () => {
-        console.log('Post deleted successfully, updating state');
         const newPosts = this.postsSubject.value.filter(p => p.post_id !== postId);
         const newComments = this.commentsSubject.value.filter(c => c.post_id !== postId);
-        console.log('Posts before:', this.postsSubject.value.length, 'after:', newPosts.length);
         this.postsSubject.next(newPosts);
         this.commentsSubject.next(newComments);
         this.notificationService.removeNotificationsByPostId(postId);
@@ -327,10 +325,7 @@ export class CommunityService {
 
     this.http.post<any>(`${this.apiUrl}/comments`, payload).subscribe({
       next: created => {
-        console.log('Created comment from API:', created);
         const mapped = this.mapCommentFromApi(created);
-        console.log('Mapped comment:', mapped);
-        console.log('Created_at type:', typeof mapped.created_at, 'Value:', mapped.created_at);
         const comments = [...this.commentsSubject.value, mapped];
         this.commentsSubject.next(comments);
 
@@ -477,7 +472,6 @@ export class CommunityService {
   deleteComment(commentId: string): void {
     this.http.delete(`${this.apiUrl}/comments/${commentId}`, { responseType: 'text' as 'json' }).subscribe({
       next: () => {
-        console.log('Comment deleted successfully, updating state');
         const comments = this.commentsSubject.value;
         const target = comments.find(c => c.comment_id === commentId);
         
@@ -488,7 +482,6 @@ export class CommunityService {
         
         // Count how many comments (including replies) were removed
         const removedCount = comments.length - remainingComments.length;
-        console.log('Comments before:', comments.length, 'after:', remainingComments.length, 'removed:', removedCount);
         
         this.commentsSubject.next(remainingComments);
 
