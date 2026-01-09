@@ -18,7 +18,11 @@
         <form [formGroup]="loginForm" (ngSubmit)="login()">
             <div class="email-class">
                 <div><label>Email</label></div>
-                <input formControlName="email" type="text" placeholder="Enter your email">
+                <input 
+                    formControlName="email" 
+                    type="text" 
+                    placeholder="Enter your email" 
+                    maxlength="50">
 
                 @if (emailControl?.touched) {
                     @if(emailControl?.errors?.['required']) {
@@ -37,7 +41,8 @@
                     <input 
                         formControlName="password" 
                         [type]="showPassword ? 'text' : 'password'" 
-                        placeholder="Enter your password">
+                        placeholder="Enter your password" 
+                        maxlength="20">
                     <button 
                         type="button" 
                         class="show-password-btn" 
