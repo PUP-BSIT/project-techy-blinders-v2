@@ -12,7 +12,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       // Handle 401 Unauthorized (token expired or invalid)
       if (error.status === 401 && !req.url.includes('/login')) {
-        console.log('Token expired or invalid. Logging out...');
         authService.logout();
         router.navigate(['/login'], { 
           queryParams: { expired: 'true' } 
