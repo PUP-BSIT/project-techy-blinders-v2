@@ -451,9 +451,9 @@ export class QuizzesPage implements OnInit {
   }
 
   enforceDescriptionLimit() {
-    if (this.quizDescription && this.quizDescription.length > 50) {
-      this.quizDescription = this.quizDescription.substring(0, 50);
-      this.openWarningPopup('Description can only take up to 50 characters.');
+    if (this.quizDescription && this.quizDescription.length > 100) {
+      this.quizDescription = this.quizDescription.substring(0, 100);
+      this.openWarningPopup('Description can only take up to 100 characters.');
     }
   }
 

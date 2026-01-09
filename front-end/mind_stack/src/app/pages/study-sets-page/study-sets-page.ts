@@ -943,9 +943,9 @@ export class StudySetsPage implements OnInit, OnDestroy {
   }
 
   enforceDescriptionLimit() {
-    if (this.studySetDescription && this.studySetDescription.length > 50) {
-      this.studySetDescription = this.studySetDescription.substring(0, 50);
-      this.openWarningPopup('Description can only take up to 50 characters.');
+    if (this.studySetDescription && this.studySetDescription.length > 100) {
+      this.studySetDescription = this.studySetDescription.substring(0, 100);
+      this.openWarningPopup('Description can only take up to 100 characters.');
     }
   }
 

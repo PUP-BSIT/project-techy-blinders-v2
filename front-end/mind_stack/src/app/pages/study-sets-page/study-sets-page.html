@@ -143,10 +143,10 @@
                         class="description-input" 
                         placeholder="Description"
                         [(ngModel)]="studySetDescription"
-                        maxlength="50"
+                        maxlength="100"
                         (input)="enforceDescriptionLimit()"/>
                     <div class="char-indicator">
-                        {{ studySetDescription?.length || 0 }}/50
+                        {{ studySetDescription?.length || 0 }}/100
                     </div>
                 </div>
                 <div class="form-group">

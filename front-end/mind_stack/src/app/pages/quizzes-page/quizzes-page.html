@@ -160,10 +160,10 @@
                             class="description-input" 
                             placeholder="Description"
                             [(ngModel)]="quizDescription"
-                            maxlength="50"
+                            maxlength="100"
                             (input)="enforceDescriptionLimit()"/>
                     <div class="char-indicator">
-                        {{ quizDescription?.length || 0 }}/50
+                        {{ quizDescription?.length || 0 }}/100
                     </div>
                 </div>
 
