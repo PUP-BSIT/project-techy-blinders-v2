@@ -128,7 +128,6 @@ export class QuizzesService {
 
     return this.http.post<QuizSetResponse>(this.apiUrl, request).pipe(
       map(response => {
-        console.log('Create quiz set response:', response);
         return this.mapResponseToQuizSet(response);
       })
     );
@@ -137,7 +136,6 @@ export class QuizzesService {
   getQuizSetsByUserId(userId: number): Observable<QuizSet[]> {
     return this.http.get<QuizSetResponse[]>(`${this.apiUrl}/user/${userId}`).pipe(
       map(responses => {
-        console.log('Get quiz sets response:', responses);
         return (responses || []).map(response => this.mapResponseToQuizSet(response));
       })
     );

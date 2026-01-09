@@ -211,7 +211,6 @@ export class QuizzesPage implements OnInit {
         this.suggestedQuestions = response.questions;
         this.isShowSuggestion = true;
         this.isLoadingSuggestion = false;
-        console.log('AI Suggestions:', this.suggestedQuestions);
       },
 
       error:(error) => {
