@@ -1,557 +1,556 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
-:host {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #d8f3dc;
-    padding: 2rem 150px 50px 150px;
-    position: relative;
-}
+  :host {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #d8f3dc;
+      padding: 2rem 150px 50px 150px;
+      position: relative;
+  }
 
-.back-stack {
-    width: 100%;
-    max-width: 1000px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 12px;
-}
+  .back-stack {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 12px;
+  }
 
-.back-button {
-    position: relative;
-    background: white;
-    color: #2D6A4F;
-    border: none;
-    border-radius: 25px;
-    padding: 0.75rem 1.5rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    font-family: "Poppins", sans-serif;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
-    transition: all 0.3s ease;
+  .back-button {
+      position: relative;
+      background: white;
+      color: #2D6A4F;
+      border: none;
+      border-radius: 25px;
+      padding: 0.75rem 1.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      font-family: "Poppins", sans-serif;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
+      transition: all 0.3s ease;
 
-    svg {
-        stroke: #2D6A4F;
-        transition: stroke 0.3s ease;
-    }
+      svg {
+          stroke: #2D6A4F;
+          transition: stroke 0.3s ease;
+      }
 
-    &:hover {
-        background: #95D5B2;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-}
+      &:hover {
+          background: #95D5B2;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+  }
 
-.header-class {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 1000px;
-    padding: 30px 40px;
-    border-radius: 20px;
-    background-color: #3dac78;
-    box-shadow: 0 4px 12px rgba(61, 172, 120, 0.3);
-    margin-bottom: 50px;
-    position: relative;
-}
+  .header-class {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 1000px;
+      padding: 30px 40px;
+      border-radius: 20px;
+      background-color: #3dac78;
+      box-shadow: 0 4px 12px rgba(61, 172, 120, 0.3);
+      margin-bottom: 50px;
+      position: relative;
+  }
 
-.user-info {
-    flex: 1;
-}
+  .user-info {
+      flex: 1;
+  }
 
-.username {
-    font-size: 36px;
-    font-weight: 700;
-    color: white;
-    font-family: "Roboto", sans-serif;
-    margin: 0 0 8px 0;
-    margin-left: 0;
-}
+  .username {
+      font-size: 36px;
+      font-weight: 700;
+      color: white;
+      font-family: "Roboto", sans-serif;
+      margin: 5px 0 10px 10px;
+  }
 
-.email {
-    font-size: 16px;
-    font-weight: 500;
-    color: #185E3D;
-    font-family: "Roboto", sans-serif;
-    margin-left: 0;
-    padding: 5px 10px;
-}
+  .email {
+      font-size: 16px;
+      font-weight: 500;
+      color: #185E3D;
+      font-family: "Roboto", sans-serif;
+      margin: 0;
+      padding: 5px 10px;
+  }
 
-.button-class {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+  .button-class {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+  }
 
-.edit-profile-btn,
-.change-password-btn {
-    cursor: pointer;
-    border: none;
-    font-size: 15px;
-    width: 200px;
-    padding: 10px 28px;
-    color: white;
-    font-family: "Poppins", sans-serif;
-    border-radius: 12px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
+  .edit-profile-btn,
+  .change-password-btn {
+      cursor: pointer;
+      border: none;
+      font-size: 15px;
+      width: 200px;
+      padding: 10px 28px;
+      color: white;
+      font-family: "Poppins", sans-serif;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+  }
 
-.edit-profile-btn {
-    background-color: rgba(40, 124, 85, 0.8);
-}
+  .edit-profile-btn {
+      background-color: rgba(40, 124, 85, 0.8);
+  }
 
-.edit-profile-btn:hover {
-    background-color: rgba(40, 124, 85, 1);
-    transform: scale(1.05);
-}
+  .edit-profile-btn:hover {
+      background-color: rgba(40, 124, 85, 1);
+      transform: scale(1.05);
+  }
 
-.change-password-btn {
-    background-color: #1ed97f;
-}
+  .change-password-btn {
+      background-color: #1ed97f;
+  }
 
-.change-password-btn:hover {
-    background-color: #17b869;
-    transform: scale(1.05);
-}
+  .change-password-btn:hover {
+      background-color: #17b869;
+      transform: scale(1.05);
+  }
 
-.view-only {
-    color: #0b6a39;
-    font-weight: 600;
-    font-family: "Poppins", sans-serif;
-    padding: 8px 12px;
-    background: rgba(11, 106, 57, 0.08);
-    border-radius: 10px;
-    align-self: center;
-}
+  .view-only {
+      color: #0b6a39;
+      font-weight: 600;
+      font-family: "Poppins", sans-serif;
+      padding: 8px 12px;
+      background: rgba(11, 106, 57, 0.08);
+      border-radius: 10px;
+      align-self: center;
+  }
 
-.milestone-section {
-    width: 100%;
-    max-width: 1000px;
-}
+  .milestone-section {
+      width: 100%;
+      max-width: 1000px;
+  }
 
-.milestones-header {
-    color: #2d5f47;
-    font-family: "Roboto", sans-serif;
-    font-weight: 700;
-    font-size: 32px;
-    margin: 0 0 30px 0;
-}
+  .milestones-header {
+      color: #2d5f47;
+      font-family: "Roboto", sans-serif;
+      font-weight: 700;
+      font-size: 32px;
+      margin: 0 0 30px 0;
+  }
 
-.milestone-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
+  .milestone-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+  }
 
-.milestone-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 90%;
-    padding: 20px 30px;
-    background-color: #357d5d;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
-    margin-left: 2%;
-}
+  .milestone-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      padding: 20px 30px;
+      background-color: #357d5d;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+      margin-left: 2%;
+  }
 
-.milestone-label {
-    color: white;
-    font-family: "Poppins", sans-serif;
-    font-size: 20px;
-    font-weight: 600;
-}
+  .milestone-label {
+      color: white;
+      font-family: "Poppins", sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+  }
 
-.milestone-count {
-    color: white;
-    font-family: "Poppins", sans-serif;
-    font-size: 24px;
-    font-weight: 700;
-}
+  .milestone-count {
+      color: white;
+      font-family: "Poppins", sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+  }
 
-.modal-overlay {
+  .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+  }
+
+  .modal-content {
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 500px;
+      overflow: hidden;
+  }
+
+  .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 30px;
+      background-color: #3dac78;
+      color: white;
+
+      h2 {
+          margin: 0;
+          font-size: 24px;
+          font-weight: 600;
+          font-family: "Roboto", sans-serif;
+      }
+
+      .close-btn {
+          background: none;
+          border: none;
+          font-size: 28px;
+          color: white;
+          cursor: pointer;
+          padding: 0;
+          width: 30px;
+          height: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+
+          &:hover {
+              transform: scale(1.2);
+          }
+      }
+  }
+
+  .modal-body {
+      padding: 30px;
+  }
+
+  .edit-field {
+      margin-bottom: 25px;
+
+      &:last-child {
+          margin-bottom: 0;
+      }
+  }
+
+  .field-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 10px;
+      font-family: "Poppins", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+  }
+
+  .field-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+  }
+
+  .field-value {
+      flex: 1;
+      font-size: 16px;
+      color: #333;
+      padding: 10px 15px;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+      font-family: "Roboto", sans-serif;
+  }
+
+  .field-input {
+      flex: 1;
+      font-size: 16px;
+      padding: 10px 15px;
+      border: 2px solid #3dac78;
+      border-radius: 8px;
+      font-family: "Roboto", sans-serif;
+      transition: all 0.3s ease;
+
+      &:focus {
+          outline: none;
+          border-color: #1ed97f;
+          box-shadow: 0 0 8px rgba(30, 217, 127, 0.3);
+      }
+  }
+
+  .edit-btn,
+  .save-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: "Poppins", sans-serif;
+  }
+
+  .edit-btn {
+      background-color: #3dac78;
+      color: white;
+
+      &:hover {
+          background-color: #2d8f63;
+          transform: scale(1.05);
+      }
+  }
+
+  .save-btn {
+      background-color: #1ed97f;
+      color: white;
+
+      &:hover:not(:disabled) {
+          background-color: #17b869;
+          transform: scale(1.05);
+      }
+
+      &:disabled {
+          background-color: #999;
+          cursor: not-allowed;
+          opacity: 0.7;
+      }
+  }
+
+  .error-message {
+      background-color: #fee;
+      color: #c33;
+      padding: 12px 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      font-family: "Roboto", sans-serif;
+      border-left: 4px solid #c33;
+  }
+
+  .popup-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background-color: white;
-    border-radius: 15px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: 500px;
-    overflow: hidden;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 30px;
-    background-color: #3dac78;
-    color: white;
-
-    h2 {
-        margin: 0;
-        font-size: 24px;
-        font-weight: 600;
-        font-family: "Roboto", sans-serif;
-    }
-
-    .close-btn {
-        background: none;
-        border: none;
-        font-size: 28px;
-        color: white;
-        cursor: pointer;
-        padding: 0;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-
-        &:hover {
-            transform: scale(1.2);
-        }
-    }
-}
-
-.modal-body {
-    padding: 30px;
-}
-
-.edit-field {
-    margin-bottom: 25px;
-
-    &:last-child {
-        margin-bottom: 0;
-    }
-}
-
-.field-label {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 10px;
-    font-family: "Poppins", sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.field-content {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.field-value {
-    flex: 1;
-    font-size: 16px;
-    color: #333;
-    padding: 10px 15px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    font-family: "Roboto", sans-serif;
-}
-
-.field-input {
-    flex: 1;
-    font-size: 16px;
-    padding: 10px 15px;
-    border: 2px solid #3dac78;
-    border-radius: 8px;
-    font-family: "Roboto", sans-serif;
-    transition: all 0.3s ease;
-
-    &:focus {
-        outline: none;
-        border-color: #1ed97f;
-        box-shadow: 0 0 8px rgba(30, 217, 127, 0.3);
-    }
-}
-
-.edit-btn,
-.save-btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: "Poppins", sans-serif;
-}
-
-.edit-btn {
-    background-color: #3dac78;
-    color: white;
-
-    &:hover {
-        background-color: #2d8f63;
-        transform: scale(1.05);
-    }
-}
-
-.save-btn {
-    background-color: #1ed97f;
-    color: white;
-
-    &:hover:not(:disabled) {
-        background-color: #17b869;
-        transform: scale(1.05);
-    }
-
-    &:disabled {
-        background-color: #999;
-        cursor: not-allowed;
-        opacity: 0.7;
-    }
-}
-
-.error-message {
-    background-color: #fee;
-    color: #c33;
-    padding: 12px 15px;
-    border-radius: 6px;
-    margin-bottom: 20px;
-    font-size: 14px;
-    font-family: "Roboto", sans-serif;
-    border-left: 4px solid #c33;
-}
-
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.popup {
-  background: #fff;
-  padding: 25px;
-  width: 320px;
-  border-radius: 8px;
-  text-align: center;
-  animation: scaleIn 0.3s ease-in-out;
-
-  h2 {
-    color: #28a745;
-    margin-bottom: 10px;
-  }
-
-  p {
-    margin-bottom: 20px;
-  }
-
-  button {
-    background: #28a745;
-    color: #fff;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-
-    &:hover {
-      background: #218838;
-    }
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-@media (max-width: 768px) {
-  :host {
-    padding: 70px 16px 20px 16px;
-    min-height: calc(100vh - 70px);
-    align-items: center;
-    justify-content: flex-start;
-  }
-
-  .back-stack {
-    margin-bottom: 16px;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .back-button {
-    padding: 10px 16px;
-    font-size: 14px;
-    border-radius: 20px;
-  }
-
-  .header-class {
-    flex-direction: column;
-    padding: 20px 16px;
-    margin-bottom: 20px;
-    text-align: center;
-    gap: 12px;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  .user-info {
-    margin-bottom: 0;
-    width: 100%;
-  }
-
-  .username {
-    font-size: 22px;
-    margin-bottom: 4px;
-  }
-
-  .email {
-    font-size: 13px;
-    padding: 3px 6px;
-  }
-
-  .button-class {
-    width: 100%;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .edit-profile-btn,
-  .change-password-btn {
-    width: 100%;
-    max-width: 160px;
-    padding: 10px 16px;
-    font-size: 13px;
-  }
-
-  .milestone-section {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .milestones-header {
-    font-size: 18px;
-    margin-bottom: 12px;
-    text-align: left;
-  }
-
-  .milestone-cards {
-    width: 100%;
-    gap: 16px;
-  }
-
-  .milestone-card {
-    width: 100% !important;
-    margin-left: 0 !important;
-    padding: 12px 16px;
-    box-sizing: border-box;
-  }
-
-  .milestone-label {
-    font-size: 15px;
-  }
-
-  .milestone-count {
-    font-size: 16px;
-  }
-
-  .modal-content {
-    width: 92%;
-    max-width: 420px;
-    margin: 16px;
-  }
-
-  .modal-header {
-    padding: 16px 20px;
-
-    h2 {
-      font-size: 18px;
-    }
-
-    .close-btn {
-      font-size: 22px;
-      width: 26px;
-      height: 26px;
-    }
-  }
-
-  .modal-body {
-    padding: 20px;
-  }
-
-  .edit-field {
-    margin-bottom: 18px;
-  }
-
-  .field-label {
-    font-size: 12px;
-    margin-bottom: 8px;
-  }
-
-  .field-value,
-  .field-input {
-    font-size: 15px;
-    padding: 12px 14px;
-  }
-
-  .edit-btn,
-  .save-btn {
-    padding: 10px 16px;
-    font-size: 13px;
   }
 
   .popup {
-    width: 88%;
-    max-width: 340px;
-    margin: 16px;
-    padding: 18px 16px;
+    background: #fff;
+    padding: 25px;
+    width: 320px;
+    border-radius: 8px;
+    text-align: center;
+    animation: scaleIn 0.3s ease-in-out;
+
+    h2 {
+      color: #28a745;
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin-bottom: 20px;
+    }
+
+    button {
+      background: #28a745;
+      color: #fff;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+
+      &:hover {
+        background: #218838;
+      }
+    }
   }
 
-  .popup h2 {
-    font-size: 17px;
-    margin-bottom: 8px;
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 
-  .popup p {
-    font-size: 14px;
-    margin-bottom: 14px;
-  }
+  @media (max-width: 768px) {
+    :host {
+      padding: 70px 16px 20px 16px;
+      min-height: calc(100vh - 70px);
+      align-items: center;
+      justify-content: flex-start;
+    }
 
-  .popup button {
-    padding: 10px 20px;
-    font-size: 14px;
+    .back-stack {
+      margin-bottom: 16px;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .back-button {
+      padding: 10px 16px;
+      font-size: 14px;
+      border-radius: 20px;
+    }
+
+    .header-class {
+      flex-direction: column;
+      padding: 20px 16px;
+      margin-bottom: 20px;
+      text-align: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    .user-info {
+      margin-bottom: 0;
+      width: 100%;
+    }
+
+    .username {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .email {
+      font-size: 13px;
+      padding: 3px 6px;
+    }
+
+    .button-class {
+      width: 100%;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .edit-profile-btn,
+    .change-password-btn {
+      width: 100%;
+      max-width: 160px;
+      padding: 10px 16px;
+      font-size: 13px;
+    }
+
+    .milestone-section {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .milestones-header {
+      font-size: 18px;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+
+    .milestone-cards {
+      width: 100%;
+      gap: 16px;
+    }
+
+    .milestone-card {
+      width: 100% !important;
+      margin-left: 0 !important;
+      padding: 12px 16px;
+      box-sizing: border-box;
+    }
+
+    .milestone-label {
+      font-size: 15px;
+    }
+
+    .milestone-count {
+      font-size: 16px;
+    }
+
+    .modal-content {
+      width: 92%;
+      max-width: 420px;
+      margin: 16px;
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+
+      h2 {
+        font-size: 18px;
+      }
+
+      .close-btn {
+        font-size: 22px;
+        width: 26px;
+        height: 26px;
+      }
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .edit-field {
+      margin-bottom: 18px;
+    }
+
+    .field-label {
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .field-value,
+    .field-input {
+      font-size: 15px;
+      padding: 12px 14px;
+    }
+
+    .edit-btn,
+    .save-btn {
+      padding: 10px 16px;
+      font-size: 13px;
+    }
+
+    .popup {
+      width: 88%;
+      max-width: 340px;
+      margin: 16px;
+      padding: 18px 16px;
+    }
+
+    .popup h2 {
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .popup p {
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .popup button {
+      padding: 10px 20px;
+      font-size: 14px;
+    }
   }
-}
