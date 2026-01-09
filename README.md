@@ -19,8 +19,8 @@ It allows students to:
 - **Deployment:** VPS Hostinger
 
 ## 🌐 API specification and documentation
-API Specification and documentation: [https://techymindstack.site/swagger-ui/index.html](https://techymindstack.site/swagger-ui/index.html)
 
+API Specification and documentation: [https://techymindstack.site/swagger-ui/index.html](https://techymindstack.site/swagger-ui/index.html)
 
 ## 🗎 Live Demo / Web hosting
 
@@ -28,8 +28,8 @@ Visit our live application: [https://techymindstack.site](https://techymindstack
 
 ## 👨🏻‍💻 Sample User
 
-email: testaccount@gmail.com
-password: thenumber123
+email: mindstacktest@gmail.com
+password: Thenumber123@
 
 ## 🌱 Git Workflow
 
