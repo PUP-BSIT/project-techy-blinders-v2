@@ -238,16 +238,23 @@
 .show-password-btn {
   position: absolute;
   right: 10px;
-  margin-top: 8px;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
+  padding: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 4px;
   transition: background-color 0.2s ease;
+
+  img {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
 }
 
 @media (max-width: 768px) {
