@@ -44,14 +44,11 @@ export class CommunityService {
   }
 
   private refreshPosts(): void {
-    console.log('Fetching published posts from:', `${this.apiUrl}/posts/published`);
     const currentUser = this.authService.getCurrentUser();
     const userId = currentUser?.userId;
 
     this.http.get<any[]>(`${this.apiUrl}/posts/published`, { params: userId ? { userId: String(userId) } : {} }).subscribe({
       next: posts => {
-        console.log('✓ Raw API Response:', posts);
-        console.log('First post sample:', posts[0]);
         const mapped = posts.map(p => this.mapPostFromApi(p));
         this.postsSubject.next(this.sortPostsByNewest(mapped));
       },
@@ -64,13 +61,11 @@ export class CommunityService {
   }
 
   private refreshComments(): void {
-    console.log('Fetching comments from:', `${this.apiUrl}/comments`);
     const currentUser = this.authService.getCurrentUser();
     const userId = currentUser?.userId;
 
     this.http.get<any[]>(`${this.apiUrl}/comments`, { params: userId ? { userId: String(userId) } : {} }).subscribe({
       next: comments => {
-        console.log('✓ Comments fetched successfully:', comments);
         const mapped = comments.map(c => this.mapCommentFromApi(c));
         this.commentsSubject.next(mapped);
         this.recomputeCommentCounts(mapped);
@@ -182,7 +177,6 @@ export class CommunityService {
   }
 
   deletePostPermanently(postId: string, setPrivate: boolean = true): void {
-    console.log('Deleting post permanently:', postId);
     const params = setPrivate ? { setPrivate: 'true' } : undefined;
     const options = params ? { params, responseType: 'text' as 'json' } : { responseType: 'text' as 'json' };
     this.http.delete(`${this.apiUrl}/posts/${postId}`, options).subscribe({
@@ -481,7 +475,6 @@ export class CommunityService {
   }
 
   deleteComment(commentId: string): void {
-    console.log('Deleting comment:', commentId);
     this.http.delete(`${this.apiUrl}/comments/${commentId}`, { responseType: 'text' as 'json' }).subscribe({
       next: () => {
         console.log('Comment deleted successfully, updating state');
@@ -523,7 +516,6 @@ export class CommunityService {
   }
 
   private mapPostFromApi(post: any): Post {
-    console.log('Mapping post:', post);
     // Handle different possible field names from API response
     const resolvedUserId = String(post.userId ?? post.user_id ?? '0');
     const resolvedUsername = (post.username ?? post.userName ?? '').toString().trim();
@@ -550,14 +542,11 @@ export class CommunityService {
       userDisliked: Boolean(post.userDisliked ?? post.user_disliked ?? false),
       edited: Boolean(post.edited ?? post.isEdited ?? false)
     };
-    console.log('Mapped post:', mapped);
     return mapped;
   }
 
   private mapCommentFromApi(comment: any): Comment {
-    console.log('Mapping comment:', comment);
     const createdDate = comment.createdAt ? this.parseBackendDate(comment.createdAt) : comment.created_at ? this.parseBackendDate(comment.created_at) : new Date();
-    console.log('Comment created_at raw:', comment.createdAt ?? comment.created_at, 'parsed to:', createdDate);
     return {
       comment_id: String(comment.commentId ?? comment.comment_id ?? ''),
       post_id: String(comment.postId ?? comment.post_id ?? ''),
