@@ -38,8 +38,8 @@
             (click)="onStartNow()" 
             class="regis-button">Start now</button>
     <button type="button" 
-            (click)="onLogin()" 
-            class="login-button">Log in</button>
+            (click)="scrollToFeatures()" 
+            class="learn-more-button">Learn more</button>
   </div>
 
   <div class="laptop-section">
@@ -48,7 +48,7 @@
        effective, and stress-free studying"
     </h2>
     <div class="laptop-container">
-      <img src="assets/laptop-dashboard.png" 
+      <img src="assets/laptops.png" 
            alt="Dashboard Preview" />
     </div>
   </div>
@@ -80,82 +80,49 @@
   </div>
 
   <div class="reviewers-section" id="reviewers">
-    <h3>Card Design Preview</h3>
-    <div class="review-item study-set-card">
+    <div class="section-header">
+      <h3>Create Your Study Sets</h3>
+      <p class="section-description">
+        Build personalized flashcard and quizzes collections with full control 
+        over privacy, content, and organization. Share with classmates or keep them private.
+      </p>
+    </div>
+    <div class="review-item study-set-card preview-card">
+      <span class="preview-badge">Preview</span>
       <div class="card-left">
-        <button class="play-btn">
+        <button class="play-btn" aria-label="Start studying">
           ▶
         </button>
       </div>
       <div class="study-set-info">
-        <h3 class="study-set-title">Title</h3>
+        <h3 class="study-set-title">Biology: Cell Structure</h3>
         <p class="study-set-description">
-          Body text for whatever you'd like to say. Add main takeaway points, 
-          quotes, anecdotes, or even a very very short story.
+            Guide to cell parts, organelles, and functions. • Flashcards
         </p>
-        <button class="privacy-badge">
+        <button class="privacy-badge" aria-label="Privacy settings">
           <img src="assets/globe-icon.png" 
-               alt="Public" 
+               alt="" 
                class="privacy-icon">
           <span class="privacy-text">Public</span>
           <span class="dropdown-arrow">▼</span>
         </button>
       </div>
       <div class="action-buttons">
-        <button class="edit-btn">Edit</button>
-        <button class="delete-btn">Delete</button>
-      </div>
-    </div>
-    <div class="review-item study-set-card">
-      <div class="card-left">
-        <button class="play-btn">
-          ▶
+        <button class="edit-btn" aria-label="Edit study set">
+          Edit
         </button>
-      </div>
-      <div class="study-set-info">
-        <h3 class="study-set-title">Title</h3>
-        <p class="study-set-description">
-          Body text for whatever you'd like to say. Add main takeaway points, 
-          quotes, anecdotes, or even a very very short story.
-        </p>
-        <button class="privacy-badge">
-          <img src="assets/lock.png" alt="Private" class="privacy-icon">
-          <span class="privacy-text">Private</span>
-          <span class="dropdown-arrow">▼</span>
+        <button class="delete-btn" aria-label="Delete study set">
+          Delete
         </button>
-      </div>
-      <div class="action-buttons">
-        <button class="edit-btn">Edit</button>
-        <button class="delete-btn">Delete</button>
-      </div>
-    </div>
-    <div class="review-item study-set-card">
-      <div class="card-left">
-        <button class="play-btn">
-          ▶
-        </button>
-      </div>
-      <div class="study-set-info">
-        <h3 class="study-set-title">Title</h3>
-        <p class="study-set-description">
-          Body text for whatever you'd like to say. Add main takeaway points, 
-          quotes, anecdotes, or even a very very short story.
-        </p>
-        <button class="privacy-badge">
-          <img src="assets/globe-icon.png" alt="Public" class="privacy-icon">
-          <span class="privacy-text">Public</span>
-          <span class="dropdown-arrow">▼</span>
-        </button>
-      </div>
-      <div class="action-buttons">
-        <button class="edit-btn">Edit</button>
-        <button class="delete-btn">Delete</button>
       </div>
     </div>
   </div>
 
   <div class="features-section" id="features">
-    <h3>Why students love our platform</h3>
+    <div class="features-header">
+      <h2 class="features-title">KEY FEATURES</h2>
+      <p class="features-subtitle">Everything you need to succeed in your studies</p>
+    </div>
     <div class="feature-cards">
       <div class="feature-card">
         <div class="feature-icon">📚</div>
