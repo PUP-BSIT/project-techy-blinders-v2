@@ -1025,9 +1025,22 @@ $transition-normal: 0.3s ease;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 300px;
+    min-height: calc(100vh - 200px);
     gap: 1.5rem;
     padding: 2rem;
+    width: 100%;
+}
+
+.empty-state-message {
+    color: $color-primary-dark;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    opacity: 0.8;
+    background-color: rgba(255, 255, 255, 0.6);
+    padding: 2rem 3rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .empty-message {

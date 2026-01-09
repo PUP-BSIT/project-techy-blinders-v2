@@ -10,6 +10,14 @@
             </div>
         }
 
+        @if (!isLoading && studySets.length === 0) {
+            <div class="empty-state">
+                <p class="empty-state-message">
+                    No Flashcard Set found. Create Now!
+                </p>
+            </div>
+        }
+
         <div class="study-sets-wrapper" [class.hidden]="studySets.length === 0">
             <div class="study-sets-list">
                 @for (studySet of paginatedStudySets; track $index) {
@@ -273,8 +281,10 @@
                 <button class="btn-cancel" (click)="closeFlashcardModal()">
                     Cancel
                 </button>
-                <button class="btn-save" (click)="saveFlashcards()">
-                    Save
+                <button class="btn-save" 
+                        (click)="saveFlashcards()" 
+                        [disabled]="isLoading">
+                    {{ isLoading ? 'Saving...' : 'Save' }}
                 </button>
             </div>
         </div>
