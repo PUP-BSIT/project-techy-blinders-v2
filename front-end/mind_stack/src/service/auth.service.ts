@@ -31,14 +31,29 @@ export interface UserProfile {
   providedIn: 'root'
 })
 export class AuthService {
-    // Reset password using token
-    resetPasswordWithToken(request: { token: string; newPassword: string; confirmPassword: string }): Observable<ResetPasswordResponse> {
-      return this.http.post<ResetPasswordResponse>(`${this.apiUrl}/reset-password`, request);
+  // Reset password using token
+  resetPasswordWithToken(
+    request: {
+      token: string;
+      newPassword: string;
+      confirmPassword: string;
     }
-    // Request password reset
-    forgotPassword(request: { email: string }): Observable<ResetPasswordResponse> {
-      return this.http.post<ResetPasswordResponse>(`${this.apiUrl}/forgot-password`, request);
-    }
+  ): Observable<ResetPasswordResponse> {
+    return this.http.post<ResetPasswordResponse>(
+      `${this.apiUrl}/reset-password`,
+      request
+    );
+  }
+
+  // Request password reset
+  forgotPassword(
+    request: { email: string }
+  ): Observable<ResetPasswordResponse> {
+    return this.http.post<ResetPasswordResponse>(
+      `${this.apiUrl}/forgot-password`,
+      request
+    );
+  }
   private http = inject(HttpClient);
   private apiUrl = 'https://techymindstack.site/api/users';
 
@@ -108,27 +123,50 @@ export class AuthService {
   // Update username
   updateUsername(newUsername: string): Observable<any> {
     const body = { newUsername };
-    return this.http.put<any>(`${this.apiUrl}/update-username`, body);
+    return this.http.put<any>(
+      `${this.apiUrl}/update-username`,
+      body
+    );
   }
 
   // Request OTP for password reset
-  requestOtp(request: { email: string }): Observable<ResetPasswordResponse> {
-    return this.http.post<ResetPasswordResponse>(`${this.apiUrl}/forgot-password`, request);
+  requestOtp(
+    request: { email: string }
+  ): Observable<ResetPasswordResponse> {
+    return this.http.post<ResetPasswordResponse>(
+      `${this.apiUrl}/forgot-password`,
+      request
+    );
   }
 
   // Reset password using OTP
-  resetPasswordWithOtp(request: { email: string; otp: string; newPassword: string; confirmPassword: string }): Observable<ResetPasswordResponse> {
-    return this.http.post<ResetPasswordResponse>(`${this.apiUrl}/reset-password`, request);
+  resetPasswordWithOtp(
+    request: {
+      email: string;
+      otp: string;
+      newPassword: string;
+      confirmPassword: string;
+    }
+  ): Observable<ResetPasswordResponse> {
+    return this.http.post<ResetPasswordResponse>(
+      `${this.apiUrl}/reset-password`,
+      request
+    );
   }
 
   // Get user profile by ID
   getUserById(userId: number): Observable<UserProfile> {
-    return this.http.get<UserProfile>(`${this.apiUrl}/${userId}`);
+    return this.http.get<UserProfile>(
+      `${this.apiUrl}/${userId}`
+    );
   }
 
   // Check if email exists (forgot password)
   checkEmailExists(email: string): Observable<boolean> {
-    return this.http.get<{ exists: boolean }>(`${this.apiUrl}/check-email?email=${encodeURIComponent(email)}`)
+    return this.http
+      .get<{ exists: boolean }>(
+        `${this.apiUrl}/check-email?email=${encodeURIComponent(email)}`
+      )
       .pipe(map(res => res.exists));
   }
 

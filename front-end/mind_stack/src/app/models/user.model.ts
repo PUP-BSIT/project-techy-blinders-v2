@@ -1,15 +1,15 @@
 export interface User {
-    userId: number;
-    username: string;
-    email: string;
-    createdAt: Date;
-    updatedAt: Date;
+  userId: number;
+  username: string;
+  email: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface RegisterRequest {
-    username: string;
-    email: string;
-    password: string;
+  username: string;
+  email: string;
+  password: string;
 }
 
 export interface RegisterResponse {
@@ -18,8 +18,8 @@ export interface RegisterResponse {
 }
 
 export interface LoginRequest {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 }
 
 export interface LoginResponse {

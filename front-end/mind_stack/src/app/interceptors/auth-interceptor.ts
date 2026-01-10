@@ -8,7 +8,13 @@ export const AuthInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
   const token = authService.getToken();
 
   // Skip adding token for public endpoints
-  if (req.url.includes('/forgot-password') || req.url.includes('/reset-password') || req.url.includes('/login') || req.url.includes('/register')) {
+  const isPublicEndpoint =
+    req.url.includes('/forgot-password') ||
+    req.url.includes('/reset-password') ||
+    req.url.includes('/login') ||
+    req.url.includes('/register');
+
+  if (isPublicEndpoint) {
     return next(req);
   }
 
