@@ -1,6 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ApplicationRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { StudySet, StudySetsService } from '../../../../service/study-sets.service';
 import { ActivityService } from '../../../../service/activity.service';
 
@@ -11,30 +12,41 @@ import { ActivityService } from '../../../../service/activity.service';
   templateUrl: './open-study-set.html',
   styleUrls: ['./open-study-set.scss']
 })
-export class OpenStudySet implements OnInit {
+export class OpenStudySet implements OnInit, OnDestroy {
   studySet: StudySet | null = null;
   currentCardIndex: number = 0;
   isDefinitionRevealed: boolean = false;
   isLoading: boolean = false;
   errorMessage: string = '';
-
+  
+  private routeSubscription?: Subscription;
   private studySetsService = inject(StudySetsService);
   private activityService = inject(ActivityService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private appRef = inject(ApplicationRef);
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.loadStudySet(Number(id));
-    } else {
-      this.errorMessage = 'No study set ID provided';
-    }
+    // Subscribe to route params to handle navigation properly
+    this.routeSubscription = this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.loadStudySet(Number(id));
+      } else {
+        this.errorMessage = 'No study set ID provided';
+      }
+    });
+  }
+  
+  ngOnDestroy() {
+    this.routeSubscription?.unsubscribe();
   }
 
   loadStudySet(id: number) {
     this.isLoading = true;
     this.errorMessage = '';
+    this.currentCardIndex = 0;
+    this.isDefinitionRevealed = false;
     
     this.studySetsService.getStudySetById(id).subscribe({
       next: (studySet) => {
@@ -45,6 +57,14 @@ export class OpenStudySet implements OnInit {
         if (!studySet.flashcards || studySet.flashcards.length === 0) {
           this.currentCardIndex = 0;
         }
+        
+        // Force multiple change detection cycles to ensure rendering
+        setTimeout(() => {
+          this.appRef.tick();
+          setTimeout(() => {
+            this.appRef.tick();
+          }, 50);
+        }, 0);
       },
       error: (error) => {
         console.error('Error loading study set:', error);

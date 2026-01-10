@@ -1,95 +1,97 @@
-<div class="container">
-    <button class="back-btn" (click)="goBack()">
-        ‹ Back
-    </button>
-    
-    <!-- Loading State -->
-    @if (isLoading) {
-        <div class="loading-container">
-            <p>Loading study set...</p>
-        </div>
-    }
-
-    <!-- Error State -->
-    @if (!isLoading && errorMessage) {
-        <div class="error-container">
-            <div class="error-message">
-                <h2>Error</h2>
-                <p>{{ errorMessage }}</p>
-                <button class="btn btn-primary" (click)="goBack()">
-                    Go Back to Study Sets
-                </button>
+@if (!isLoading && (studySet || errorMessage)) {
+    <div class="container">
+        <button class="back-btn" (click)="goBack()">
+            ‹ Back
+        </button>
+        
+        <!-- Error State -->
+        @if (errorMessage) {
+            <div class="error-container">
+                <div class="error-message">
+                    <h2>Error</h2>
+                    <p>{{ errorMessage }}</p>
+                    <button class="btn btn-primary" (click)="goBack()">
+                        Go Back to Study Sets
+                    </button>
+                </div>
             </div>
-        </div>
-    }
+        }
 
-    <!-- Study Set Not Found -->
-    @if (!isLoading && !errorMessage && !studySet) {
-        <div class="error-container">
-            <div class="error-message">
-                <h2>Study Set Not Found</h2>
-                <p>The study set you're looking for doesn't exist.</p>
-                <button class="btn btn-primary" (click)="goBack()">
-                    Go Back to Study Sets
-                </button>
+        <!-- Study Set Not Found -->
+        @if (!errorMessage && !studySet) {
+            <div class="error-container">
+                <div class="error-message">
+                    <h2>Study Set Not Found</h2>
+                    <p>The study set you're looking for doesn't exist.</p>
+                    <button class="btn btn-primary" (click)="goBack()">
+                        Go Back to Study Sets
+                    </button>
+                </div>
             </div>
-        </div>
-    }
+        }
 
-    <!-- No Flashcards -->
-    @if (!isLoading && studySet && !hasFlashcards) {
-        <div class="error-container">
-            <div class="error-message">
-                <h2>No Flashcards</h2>
-                <p>This study set doesn't have any flashcards yet.</p>
-                <button class="btn btn-primary" (click)="goBack()">
-                    Go Back to Study Sets
-                </button>
+        <!-- No Flashcards -->
+        @if (studySet && !hasFlashcards) {
+            <div class="error-container">
+                <div class="error-message">
+                    <h2>No Flashcards</h2>
+                    <p>This study set doesn't have any flashcards yet.</p>
+                    <button class="btn btn-primary" (click)="goBack()">
+                        Go Back to Study Sets
+                    </button>
+                </div>
             </div>
-        </div>
-    }
-    
-    <!-- Flashcard Display -->
-    @if (!isLoading && studySet && hasFlashcards) {
-        <div class="play-wrapper">
-            <div class="play-card" (click)="toggleDefinition()">
-                <div class="grad-cap-icon">
-                    <img src="/assets/image-logo.png" alt="Logo">
+        }
+        
+        <!-- Flashcard Display -->
+        @if (studySet && hasFlashcards) {
+            <div class="play-wrapper">
+                <div class="play-card" (click)="toggleDefinition()">
+                    <div class="grad-cap-icon">
+                        <img src="/assets/image-logo.png" alt="Logo">
+                    </div>
+
+                    <div class="play-card-content">
+                        <div class="question-section" [class.hidden]="isDefinitionRevealed">
+                            <h2 class="question-text">{{ currentCard?.keyTerm }}</h2>
+                            <h6>Click to reveal the definition/answer</h6>
+                        </div>
+                        <div class="answer-section" [class.hidden]="!isDefinitionRevealed">
+                            <h2 class="answer-text">{{ currentCard?.definition }}</h2>
+                            <h6>Click to see the term/question</h6>
+                        </div>
+                    </div>
+
+                    <span class="page-indicator">
+                        Flashcard {{ currentCardIndex + 1 }} of {{ totalCards }}
+                    </span>
                 </div>
 
-                <div class="play-card-content">
-                    <div class="question-section" [class.hidden]="isDefinitionRevealed">
-                        <h2 class="question-text">{{ currentCard?.keyTerm }}</h2>
-                        <h6>Click to reveal the definition/answer</h6>
-                    </div>
-                    <div class="answer-section" [class.hidden]="!isDefinitionRevealed">
-                        <h2 class="answer-text">{{ currentCard?.definition }}</h2>
-                        <h6>Click to see the term/question</h6>
-                    </div>
+                <div class="play-navigation">
+                    <button
+                        class="nav-btn prev"
+                        (click)="previousCard(); $event.stopPropagation()"
+                        [disabled]="currentCardIndex === 0"
+                    >
+                        ‹
+                    </button>
+
+                    <button
+                        class="nav-btn next"
+                        (click)="nextCard(); $event.stopPropagation()"
+                        [disabled]="currentCardIndex === totalCards - 1"
+                    >
+                        ›
+                    </button>
                 </div>
-
-                <span class="page-indicator">
-                    Flashcard {{ currentCardIndex + 1 }} of {{ totalCards }}
-                </span>
             </div>
+        }
+    </div>
+}
 
-            <div class="play-navigation">
-                <button
-                    class="nav-btn prev"
-                    (click)="previousCard(); $event.stopPropagation()"
-                    [disabled]="currentCardIndex === 0"
-                >
-                    ‹
-                </button>
-
-                <button
-                    class="nav-btn next"
-                    (click)="nextCard(); $event.stopPropagation()"
-                    [disabled]="currentCardIndex === totalCards - 1"
-                >
-                    ›
-                </button>
-            </div>
-        </div>
-    }
-</div>
+<!-- Loading State -->
+@if (isLoading) {
+    <div class="loading-container">
+        <p>Loading study set...</p>
+    </div>
+}
