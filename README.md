@@ -26,6 +26,9 @@ API Specification and documentation: [https://techymindstack.site/swagger-ui/ind
 
 Visit our live application: [https://techymindstack.site](https://techymindstack.site)
 
+## 🎥 Project presentation Recording
+Project presentation recording: [https://youtu.be/EObVwcGIWHw](https://youtu.be/EObVwcGIWHw)
+
 ## 👨🏻‍💻 Sample User
 
 email: mindstacktest@gmail.com
